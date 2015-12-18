@@ -1,0 +1,5 @@
+proprietary-test-data/**
+**/.idea
+**/.DS_Store
+**/*.pyc
+push-to-github.sh
