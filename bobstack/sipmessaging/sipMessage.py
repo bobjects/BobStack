@@ -1,4 +1,5 @@
+from sipStartLine import SIPStartLine
 
-
-class sipMessage:
+class SIPMessage(object):
+    # TODO
     pass

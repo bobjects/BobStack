@@ -1,4 +1,0 @@
-
-
-class ProtoSIPMessage:
-    pass

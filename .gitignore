@@ -3,3 +3,4 @@ proprietary-test-data/**
 **/.DS_Store
 **/*.pyc
 push-to-github.sh
+**/*.~vsd
