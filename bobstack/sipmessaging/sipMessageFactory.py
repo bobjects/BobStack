@@ -32,7 +32,7 @@ class SIPMessageFactory(EventSourceMixin):
             return MalformedSIPStartLine
 
     def sipMessageClassForStartLine(self, aSIPStartLine):
-        # TODO:  this will get fleshed out as we defined SIP messages.
+        # TODO:  this will get fleshed out as we define SIP messages.
         if aSIPStartLine.isRequest:
             if True:
                 return UnknownSIPRequest

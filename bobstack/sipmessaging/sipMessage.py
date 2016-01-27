@@ -1,5 +1,7 @@
 from cStringIO import StringIO
 from sipStartLine import SIPStartLine
+from contentLengthSIPHeaderField import ContentLengthSIPHeaderField
+from unknownSIPHeaderField import UnknownSIPHeaderField
 
 class SIPMessage(object):
     def __init__(self, aString, aSIPStartLine):
@@ -19,7 +21,11 @@ class SIPMessage(object):
 
     @property
     def isValid(self):
-        return False
+        if self.isMalformed:
+            return False
+        else:
+            # TODO: check if header fields include a valid Content-Length header field, and that the content is the correct length.
+            return True
 
     @property
     def isKnown(self):
@@ -30,5 +36,8 @@ class SIPMessage(object):
         return False
 
     def headerFieldForLine(self, aString):
-        # TODO
-        pass
+        if ContentLengthSIPHeaderField.matchesLine(aString):
+            return ContentLengthSIPHeaderField(aString)
+        # TODO - this will get fleshed out as we define more header fields.
+        else:
+            return UnknownSIPHeaderField(aString)
