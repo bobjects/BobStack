@@ -1,3 +1,4 @@
+import re
 from sipHeaderField import SIPHeaderField
 
 
@@ -10,11 +11,13 @@ class ContentLengthSIPHeaderField(SIPHeaderField):
 
     @property
     def isValid(self):
-        return SIPHeaderField.isValid(self) and self.value is not None
+        # TODO: Can we call the superclass property like this?  Hmm...
+        # return SIPHeaderField.isValid(self) and self.value is not None
+        return super(ContentLengthSIPHeaderField, self).isValid and self.value is not None
 
     @property
     def value(self):
         try:
-            return int(self.__class__.regexToMatch().group(1))
+            return int(self.__class__.regexToMatch().match(self.rawString).group(1))
         except ValueError:
             return None

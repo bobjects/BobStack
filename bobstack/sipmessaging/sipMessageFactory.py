@@ -11,8 +11,7 @@ from eventSourceMixin import EventSourceMixin
 
 class SIPMessageFactory(EventSourceMixin):
     def __init__(self):
-        # TODO
-        pass
+        EventSourceMixin.__init__(self)
 
     def nextPutAll(self, aString):
         # TODO:  SIP messages are terminted by CRLF.  does readline strip both the CR and LF?  That's what we want.
@@ -26,7 +25,7 @@ class SIPMessageFactory(EventSourceMixin):
     def sipStartLineClassForString(self, aString):
         if SIPRequestStartLine.matchesLine(aString):
             return SIPRequestStartLine
-        elif SIPRequestStartLine.matchesLine(aString):
+        elif SIPResponseStartLine.matchesLine(aString):
             return SIPResponseStartLine
         else:
             return MalformedSIPStartLine

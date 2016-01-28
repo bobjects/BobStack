@@ -1,7 +1,7 @@
 import re
 
 
-class SIPHeaderField:
+class SIPHeaderField(object):
     def __init__(self, aString=""):
         self.rawString = aString
 

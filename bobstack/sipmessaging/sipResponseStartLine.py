@@ -14,7 +14,7 @@ class SIPResponseStartLine(SIPStartLine):
     @classmethod
     def regexToMatch(cls):
         if not cls._regexToMatch:
-            cls._regexToMatch = re._compile('^SIP/2.0\s(+[^\s])+\s+(.+)$')
+            cls._regexToMatch = re._compile('^SIP/2.0\s+(+[^\d])+\s+(.+)$')
         return cls._regexToMatch
 
     @classmethod
