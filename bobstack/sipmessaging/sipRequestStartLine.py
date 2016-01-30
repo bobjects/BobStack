@@ -1,6 +1,7 @@
 import re
 from sipStartLine import SIPStartLine
 
+
 class SIPRequestStartLine(SIPStartLine):
     def __init__(self, aString=""):
         SIPStartLine.__init__(self, aString)

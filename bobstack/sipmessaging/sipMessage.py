@@ -1,7 +1,7 @@
 from cStringIO import StringIO
-from sipStartLine import SIPStartLine
 from contentLengthSIPHeaderField import ContentLengthSIPHeaderField
 from unknownSIPHeaderField import UnknownSIPHeaderField
+
 
 class SIPMessage(object):
     def __init__(self, aString, aSIPStartLine):

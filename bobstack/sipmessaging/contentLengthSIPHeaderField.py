@@ -5,15 +5,22 @@ from sipHeaderField import SIPHeaderField
 class ContentLengthSIPHeaderField(SIPHeaderField):
     @classmethod
     def regexToMatch(cls):
-        if not cls._regexToMatch:
-            cls._regexToMatch = re.compile('^Content-Length[:\s]\s*(.*)')
-        return cls._regexToMatch
+        try:
+            return cls._regexToMatch
+        except AttributeError:
+            cls._regexToMatch = re.compile('^Content-Length\s*:\s*(\d*)', re.I)
+            # cls._regexToMatch = re.compile('Content', re.I)
+            return cls._regexToMatch
 
     @property
     def isValid(self):
         # TODO: Can we call the superclass property like this?  Hmm...
         # return SIPHeaderField.isValid(self) and self.value is not None
         return super(ContentLengthSIPHeaderField, self).isValid and self.value is not None
+
+    @property
+    def isContentLength(self):
+        return True
 
     @property
     def value(self):

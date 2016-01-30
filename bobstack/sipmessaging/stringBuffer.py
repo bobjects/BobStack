@@ -1,11 +1,12 @@
 import threading
-import io
+import re
 try:
     from cStringIO import StringIO
 except ImportError:
     from StringIO import StringIO
 
-MAX_BUFFER = 1024**2*4
+MAX_BUFFER = 1024 ** 2 * 4
+
 
 class StringBuffer(object):
     def __init__(self, max_size=MAX_BUFFER):
@@ -51,7 +52,7 @@ class StringBuffer(object):
                     del self.buffers[0]
                     self.read_pos = 0
                 else:
-                    #we limited the read so either we exhausted the buffer or not:
+                    # we limited the read so either we exhausted the buffer or not:
                     remaining = length - read_buf.tell()
                     if remaining > 0:
                         # exhausted, remove buffer, read more.
@@ -79,7 +80,7 @@ class StringBuffer(object):
         # TODO - very inefficient, fix that.
         # TODO - left off testing this.  Python never returned from this function.  Presumably a problem with peek().  Debug with PyCharm's debugger.
         asString = self.peek()
-        match = re.search(u'^(.*)\r\n',asString)
+        match = re.search(u'^(.*)\r\n', asString)
         if match:
             return match.group(0)
         else:

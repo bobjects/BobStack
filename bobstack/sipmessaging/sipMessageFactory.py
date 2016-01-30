@@ -9,6 +9,7 @@ from unknownSIPResponse import UnknownSIPResponse
 from malformedSIPMessage import MalformedSIPMessage
 from eventSourceMixin import EventSourceMixin
 
+
 class SIPMessageFactory(EventSourceMixin):
     def __init__(self):
         EventSourceMixin.__init__(self)

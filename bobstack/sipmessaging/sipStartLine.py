@@ -1,5 +1,3 @@
-import re
-
 class SIPStartLine(object):
     def __init__(self, aString=""):
         self.rawString = aString
