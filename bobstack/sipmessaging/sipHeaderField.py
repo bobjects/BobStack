@@ -7,7 +7,7 @@ class SIPHeaderField(object):
 
     @classmethod
     def regexToMatch(cls):
-        return re._compile('^NEVERMATCH')
+        return re.compile('^NEVERMATCH')
 
     @classmethod
     def matchesLine(cls, aString):

@@ -6,7 +6,7 @@ class ContentLengthSIPHeaderField(SIPHeaderField):
     @classmethod
     def regexToMatch(cls):
         if not cls._regexToMatch:
-            cls._regexToMatch = re._compile('^Content-Length[:\s]\s*(.*)')
+            cls._regexToMatch = re.compile('^Content-Length[:\s]\s*(.*)')
         return cls._regexToMatch
 
     @property

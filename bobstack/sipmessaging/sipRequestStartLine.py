@@ -12,9 +12,11 @@ class SIPRequestStartLine(SIPStartLine):
 
     @classmethod
     def regexToMatch(cls):
-        if not cls._regexToMatch:
-            cls._regexToMatch = re._compile('^([^\s]+)\s+([^\s]+)\s+SIP/2.0$')
-        return cls._regexToMatch
+        try:
+            return cls._regexToMatch
+        except AttributeError:
+            cls._regexToMatch = re.compile('^([^\s]+)\s+([^\s]+)\s+SIP/2.0$')
+            return cls._regexToMatch
 
     @classmethod
     def matchesLine(cls, aString):

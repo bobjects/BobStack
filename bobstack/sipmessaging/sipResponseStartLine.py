@@ -13,9 +13,11 @@ class SIPResponseStartLine(SIPStartLine):
 
     @classmethod
     def regexToMatch(cls):
-        if not cls._regexToMatch:
-            cls._regexToMatch = re._compile('^SIP/2.0\s+(+[^\d])+\s+(.+)$')
-        return cls._regexToMatch
+        try:
+            return cls._regexToMatch
+        except AttributeError:
+            cls._regexToMatch = re.compile("^SIP/2.0\s+([\d]+)+\s+(.+)$")
+            return cls._regexToMatch
 
     @classmethod
     def matchesLine(cls, aString):
