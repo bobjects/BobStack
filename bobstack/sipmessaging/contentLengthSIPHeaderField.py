@@ -1,16 +1,42 @@
+try:
+    from cStringIO import StringIO
+except ImportError:
+    from StringIO import StringIO
 import re
 from sipHeaderField import SIPHeaderField
 
 
 class ContentLengthSIPHeaderField(SIPHeaderField):
+    def __init__(self, stringToParse=None, value=0):
+        SIPHeaderField.__init__(self, stringToParse=stringToParse)
+        # on the off chance that stringToParse and the other parameters are all specified,
+        # ignore the other parameters, and populate our attributes by parsing.
+        if not stringToParse:
+            self.value = value
+        else:
+            self.parseAttributesFromRawString()
+
+    def parseAttributesFromRawString(self):
+        self.value = 0
+        match = self.__class__.regexForParsing().search(self._rawString)
+        if match:
+            self.value = int(match.group(1))
+
+    def renderRawStringFromAttributes(self):
+        stringio = StringIO()
+        stringio.write("Content-Length: ")
+        stringio.write(str(self.value))
+        self._rawString = stringio.getvalue()
+        stringio.close()
+
     @classmethod
-    def regexToMatch(cls):
+    def regexForParsing(cls):
         try:
-            return cls._regexToMatch
+            return cls._regexForParsing
         except AttributeError:
-            cls._regexToMatch = re.compile('^Content-Length\s*:\s*(\d*)', re.I)
-            # cls._regexToMatch = re.compile('Content', re.I)
-            return cls._regexToMatch
+            cls._regexForParsing = re.compile('^Content-Length\s*:\s*(\d*)', re.I)
+            # cls._regexForParsing = re.compile('Content', re.I)
+            return cls._regexForParsing
 
     @property
     def isValid(self):
@@ -22,9 +48,3 @@ class ContentLengthSIPHeaderField(SIPHeaderField):
     def isContentLength(self):
         return True
 
-    @property
-    def value(self):
-        try:
-            return int(self.__class__.regexToMatch().match(self.rawString).group(1))
-        except ValueError:
-            return None

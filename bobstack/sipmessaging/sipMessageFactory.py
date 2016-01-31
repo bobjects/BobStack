@@ -1,6 +1,9 @@
 # from stringBuffer import StringBuffer
 # from protoSIPMessage import ProtoSIPMessage
-from cStringIO import StringIO
+try:
+    from cStringIO import StringIO
+except ImportError:
+    from StringIO import StringIO
 from malformedSIPStartLine import MalformedSIPStartLine
 from sipRequestStartLine import SIPRequestStartLine
 from sipResponseStartLine import SIPResponseStartLine
@@ -24,9 +27,9 @@ class SIPMessageFactory(EventSourceMixin):
         return sipMessage
 
     def sipStartLineClassForString(self, aString):
-        if SIPRequestStartLine.matchesLine(aString):
+        if SIPRequestStartLine.canParseString(aString):
             return SIPRequestStartLine
-        elif SIPResponseStartLine.matchesLine(aString):
+        elif SIPResponseStartLine.canParseString(aString):
             return SIPResponseStartLine
         else:
             return MalformedSIPStartLine

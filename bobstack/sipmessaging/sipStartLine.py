@@ -1,6 +1,6 @@
 class SIPStartLine(object):
-    def __init__(self, aString=""):
-        self.rawString = aString
+    def __init__(self, stringToParse=None):
+        self._rawString = stringToParse
 
     @property
     def isResponse(self):
@@ -13,3 +13,13 @@ class SIPStartLine(object):
     @property
     def isMalformed(self):
         return False
+
+    @property
+    def rawString(self):
+        if not self._rawString:
+            self.renderRawStringFromAttributes()
+            pass
+        return self._rawString
+
+    def renderRawStringFromAttributes(self):
+        pass

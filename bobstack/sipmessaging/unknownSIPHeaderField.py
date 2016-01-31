@@ -4,12 +4,12 @@ from sipHeaderField import SIPHeaderField
 
 class UnknownSIPHeaderField(SIPHeaderField):
     @classmethod
-    def regexToMatch(cls):
+    def regexForParsing(cls):
         try:
-            return cls._regexToMatch
+            return cls._regexForParsing
         except AttributeError:
-            cls._regexToMatch = re.compile('^NEVERMATCH')
-            return cls._regexToMatch
+            cls._regexForParsing = re.compile('^NEVERMATCH')
+            return cls._regexForParsing
 
     @property
     def isKnown(self):

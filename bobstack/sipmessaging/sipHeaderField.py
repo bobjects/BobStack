@@ -2,11 +2,11 @@ import re
 
 
 class SIPHeaderField(object):
-    def __init__(self, aString=""):
-        self.rawString = aString
+    def __init__(self, stringToParse=None):
+        self._rawString = stringToParse
 
     @classmethod
-    def regexToMatch(cls):
+    def regexForParsing(cls):
         return cls.regexToNeverMatch()
 
     @classmethod
@@ -18,8 +18,8 @@ class SIPHeaderField(object):
             return cls._regexToNeverMatch
 
     @classmethod
-    def matchesLine(cls, aString):
-        return cls.regexToMatch().match(aString) is not None
+    def canParseString(cls, aString):
+        return cls.regexForParsing().match(aString) is not None
 
     @property
     def isValid(self):
@@ -34,4 +34,13 @@ class SIPHeaderField(object):
     def isKnown(self):
         return True
 
+    @property
+    def rawString(self):
+        if not self._rawString:
+            self.renderRawStringFromAttributes()
+            pass
+        return self._rawString
+
+    def renderRawStringFromAttributes(self):
+        pass
 

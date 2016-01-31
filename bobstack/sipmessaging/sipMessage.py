@@ -1,16 +1,20 @@
-from cStringIO import StringIO
+try:
+    from cStringIO import StringIO
+except ImportError:
+    from StringIO import StringIO
 from contentLengthSIPHeaderField import ContentLengthSIPHeaderField
 from unknownSIPHeaderField import UnknownSIPHeaderField
 
 
 class SIPMessage(object):
-    def __init__(self, aString, aSIPStartLine):
-        self.rawString = aString
+    def __init__(self, stringToParse=None, aSIPStartLine=None):
+        # TODO: need to handle generation as well as parsing.
+        self.rawString = stringToParse
         self.startLine = aSIPStartLine
         # TODO:  SIP messages are terminted by CRLF.  does readline strip both the CR and LF?  That's what we want.
         self.content = ""
         self.headerFieldLines = []
-        with StringIO(aString) as stringIO:
+        with StringIO(stringToParse) as stringIO:
             stringIO.readline()  # skip the first line.  We've already parsed it.
             lineString = stringIO.readline()
             while lineString.__len__() > 0:
@@ -36,7 +40,7 @@ class SIPMessage(object):
         return False
 
     def headerFieldForLine(self, aString):
-        if ContentLengthSIPHeaderField.matchesLine(aString):
+        if ContentLengthSIPHeaderField.canParseString(aString):
             return ContentLengthSIPHeaderField(aString)
         # TODO - this will get fleshed out as we define more header fields.
         else:
