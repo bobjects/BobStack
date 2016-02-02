@@ -22,6 +22,14 @@ class SIPHeaderField(object):
         return cls.regexForParsing().match(aString) is not None
 
     @property
+    def isUnknown(self):
+        return not self.isKnown
+
+    @property
+    def isKnown(self):
+        return True
+
+    @property
     def isValid(self):
         # TODO - test if it's well-formed.
         return True
@@ -31,12 +39,8 @@ class SIPHeaderField(object):
         return False
 
     @property
-    def isKnown(self):
-        return True
-
-    @property
     def rawString(self):
-        if not self._rawString:
+        if self._rawString is None:
             self.renderRawStringFromAttributes()
             pass
         return self._rawString

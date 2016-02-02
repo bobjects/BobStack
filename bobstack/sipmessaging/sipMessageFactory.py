@@ -7,8 +7,8 @@ except ImportError:
 from malformedSIPStartLine import MalformedSIPStartLine
 from sipRequestStartLine import SIPRequestStartLine
 from sipResponseStartLine import SIPResponseStartLine
+from sipResponse import SIPResponse
 from unknownSIPRequest import UnknownSIPRequest
-from unknownSIPResponse import UnknownSIPResponse
 from malformedSIPMessage import MalformedSIPMessage
 from eventSourceMixin import EventSourceMixin
 
@@ -18,14 +18,15 @@ class SIPMessageFactory(EventSourceMixin):
         EventSourceMixin.__init__(self)
 
     def nextPutAll(self, aString):
-        # TODO:  SIP messages are terminted by CRLF.  does readline strip both the CR and LF?  That's what we want.
-        with StringIO(aString) as stringIO:
-            firstLine = stringIO.readline()
+        stringIO = StringIO(aString)
+        firstLine = stringIO.readline().rstrip('\r\n')
+        stringIO.close()
         sipStartLine = self.sipStartLineClassForString(firstLine)(firstLine)
         sipMessage = self.sipMessageClassForStartLine(sipStartLine)(aString, sipStartLine)
         self.triggerEventForSIPMessage(sipMessage)
         return sipMessage
 
+    # TODO:  This is copied / pasted in SIPMessage.  Refactor into a factory.
     def sipStartLineClassForString(self, aString):
         if SIPRequestStartLine.canParseString(aString):
             return SIPRequestStartLine
@@ -42,10 +43,7 @@ class SIPMessageFactory(EventSourceMixin):
             else:
                 return UnknownSIPRequest
         elif aSIPStartLine.isResponse:
-            if True:
-                return UnknownSIPResponse
-            else:
-                return UnknownSIPResponse
+            return SIPResponse
         else:
             return MalformedSIPMessage
 
