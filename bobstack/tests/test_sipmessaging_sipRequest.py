@@ -3,7 +3,10 @@ import sys
 sys.path.append("..")
 from sipmessaging.unknownSIPRequest import UnknownSIPRequest
 from sipmessaging.optionsSIPRequest import OPTIONSSIPRequest
+from sipmessaging.sipHeader import SIPHeader
 from sipmessaging.contentLengthSIPHeaderField import ContentLengthSIPHeaderField
+from sipmessaging.unknownSIPHeaderField import UnknownSIPHeaderField
+from sipmessaging.sipRequestStartLine import SIPRequestStartLine
 
 
 class TestUnknownSIPRequest(TestCase):
@@ -25,7 +28,7 @@ class TestOPTIONSSIPRequest(TestCase):
              'Contact: <sip:invalid@200.25.3.150:5061;transport=tls>\r\n'
              'Route: <sip:200.30.10.12:5061;transport=tls;lr>\r\n'
              'Expires: 0\r\n'
-             'Content-Length:     11\r\n'
+             'Content-Length: 11\r\n'
              '\r\n'
              'Foo Content')
         ]
@@ -33,23 +36,40 @@ class TestOPTIONSSIPRequest(TestCase):
     def test_parsing(self):
         for messageString in self.canonicalStrings:
             request = OPTIONSSIPRequest(stringToParse=messageString)
-            # print [x.rawString for x in request.headerFields]
-            self.assertTrue(request.isKnown)
-            self.assertTrue(request.isValid)
-            self.assertTrue(request.isRequest)
-            self.assertFalse(request.isResponse)
-            self.assertTrue(request.isKnown)
-            self.assertTrue(request.isOPTIONSRequest)
-            self.assertFalse(request.isMalformed)
-            self.assertEqual(1, [headerField for headerField in request.headerFields if headerField.isContentLength].__len__())
-            self.assertEqual(11, next(headerField for headerField in request.headerFields if headerField.isContentLength).value)
-            self.assertEqual(10, [headerField for headerField in request.headerFields if headerField.isUnknown].__len__())
-            self.assertTrue(request.startLine.isRequest)
-            self.assertEqual('Foo Content', request.content)
-            self.assertEqual('OPTIONS', request.startLine.sipMethod)
-            self.assertEqual('sip:example.com', request.startLine.requestURI)
+            self.runAssertionsForRequest(request)
 
     def test_rendering(self):
-        # TODO
-        pass
+        headerFields = [
+            UnknownSIPHeaderField(fieldName='From', fieldValue='<sip:200.25.3.150:5061>;tag=0ee8d3e272e31c9195299efc500'),
+            UnknownSIPHeaderField(fieldName='To', fieldValue='<sip:example.com:5061>'),
+            UnknownSIPHeaderField(fieldName='Call-ID', fieldValue='0ee8d3e272e31c9195299efc500'),
+            UnknownSIPHeaderField(fieldName='CSeq', fieldValue='6711 OPTIONS'),
+            UnknownSIPHeaderField(fieldName='Max-Forwards', fieldValue='70'),
+            UnknownSIPHeaderField(fieldName='Via', fieldValue='SIP/2.0/TLS 200.25.3.150;branch=z9hG4bK0ee8d3e272e31ca195299efc500'),
+            UnknownSIPHeaderField(fieldName='User-Agent', fieldValue='Example User Agent'),
+            UnknownSIPHeaderField(fieldName='Contact', fieldValue='<sip:invalid@200.25.3.150:5061;transport=tls>'),
+            UnknownSIPHeaderField(fieldName='Route', fieldValue='<sip:200.30.10.12:5061;transport=tls;lr>'),
+            UnknownSIPHeaderField(fieldName='Expires', fieldValue='0'),
+            ContentLengthSIPHeaderField(value=11)]
+        request = OPTIONSSIPRequest(sipMethod='OPTIONS', requestURI='sip:example.com', content='Foo Content', header=SIPHeader(headerFields=headerFields))
+        self.runAssertionsForRequest(request)
 
+    def runAssertionsForRequest(self, aSIPRequest):
+        self.assertEqual(aSIPRequest.rawString, self.canonicalStrings[0])
+        self.assertTrue(aSIPRequest.isKnown)
+        self.assertTrue(aSIPRequest.isValid)
+        self.assertTrue(aSIPRequest.isRequest)
+        self.assertFalse(aSIPRequest.isResponse)
+        self.assertTrue(aSIPRequest.isKnown)
+        self.assertTrue(aSIPRequest.isOPTIONSRequest)
+        self.assertFalse(aSIPRequest.isMalformed)
+        # self.assertEqual(1, [headerField for headerField in aSIPRequest.header.headerFields if headerField.isContentLength].__len__())
+        # self.assertEqual(11, next(headerField for headerField in aSIPRequest.header.headerFields if headerField.isContentLength).value)
+        # self.assertEqual(10, [headerField for headerField in aSIPRequest.header.headerFields if headerField.isUnknown].__len__())
+        self.assertIsNotNone(aSIPRequest.header.contentLengthHeaderField)
+        self.assertEqual(11, aSIPRequest.header.contentLength)
+        self.assertEqual(10, aSIPRequest.header.unknownHeaderFields.__len__())
+        self.assertTrue(aSIPRequest.startLine.isRequest)
+        self.assertEqual('Foo Content', aSIPRequest.content)
+        self.assertEqual('OPTIONS', aSIPRequest.startLine.sipMethod)
+        self.assertEqual('sip:example.com', aSIPRequest.startLine.requestURI)

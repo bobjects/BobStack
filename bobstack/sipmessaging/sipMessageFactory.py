@@ -4,10 +4,12 @@ try:
     from cStringIO import StringIO
 except ImportError:
     from StringIO import StringIO
-from malformedSIPStartLine import MalformedSIPStartLine
-from sipRequestStartLine import SIPRequestStartLine
-from sipResponseStartLine import SIPResponseStartLine
+# from malformedSIPStartLine import MalformedSIPStartLine
+# from sipRequestStartLine import SIPRequestStartLine
+# from sipResponseStartLine import SIPResponseStartLine
+from sipStartLineFactory import SIPStartLineFactory
 from sipResponse import SIPResponse
+from optionsSIPRequest import OPTIONSSIPRequest
 from unknownSIPRequest import UnknownSIPRequest
 from malformedSIPMessage import MalformedSIPMessage
 from eventSourceMixin import EventSourceMixin
@@ -17,29 +19,20 @@ class SIPMessageFactory(EventSourceMixin):
     def __init__(self):
         EventSourceMixin.__init__(self)
 
-    def nextPutAll(self, aString):
+    def nextForString(self, aString):
         stringIO = StringIO(aString)
-        firstLine = stringIO.readline().rstrip('\r\n')
+        sipStartLine = SIPStartLineFactory().nextForStringIO(stringIO)
         stringIO.close()
-        sipStartLine = self.sipStartLineClassForString(firstLine)(firstLine)
         sipMessage = self.sipMessageClassForStartLine(sipStartLine)(aString, sipStartLine)
         self.triggerEventForSIPMessage(sipMessage)
         return sipMessage
 
-    # TODO:  This is copied / pasted in SIPMessage.  Refactor into a factory.
-    def sipStartLineClassForString(self, aString):
-        if SIPRequestStartLine.canParseString(aString):
-            return SIPRequestStartLine
-        elif SIPResponseStartLine.canParseString(aString):
-            return SIPResponseStartLine
-        else:
-            return MalformedSIPStartLine
-
     def sipMessageClassForStartLine(self, aSIPStartLine):
         # TODO:  this will get fleshed out as we define SIP messages.
+        # TODO:  use a dictionary instead of a if elif else.
         if aSIPStartLine.isRequest:
-            if True:
-                return UnknownSIPRequest
+            if aSIPStartLine.sipMethod == 'OPTIONS':
+                return OPTIONSSIPRequest
             else:
                 return UnknownSIPRequest
         elif aSIPStartLine.isResponse:
