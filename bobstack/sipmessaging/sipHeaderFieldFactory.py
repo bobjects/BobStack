@@ -20,7 +20,6 @@ class SIPHeaderFieldFactory(object):
             lineString = aStringIO.readline().rstrip('\r\n')
         return [self.nextForString(line) for line in headerFieldLines]
 
-
     def nextForString(self, aString):
         if ContentLengthSIPHeaderField.canParseString(aString):
             return ContentLengthSIPHeaderField(aString)

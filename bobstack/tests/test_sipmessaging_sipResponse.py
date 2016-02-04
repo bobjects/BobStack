@@ -7,7 +7,8 @@ from sipmessaging.contentLengthSIPHeaderField import ContentLengthSIPHeaderField
 from sipmessaging.unknownSIPHeaderField import UnknownSIPHeaderField
 # from sipmessaging.sipResponseStartLine import SIPResponseStartLine
 
-class TestUnknownSIPRequest(TestCase):
+
+class TestSIPResponse(TestCase):
     @property
     def canonicalStrings(self):
         return [
@@ -56,6 +57,7 @@ class TestUnknownSIPRequest(TestCase):
         self.assertEqual(5, aSIPResponse.header.unknownHeaderFields.__len__())
         self.assertTrue(aSIPResponse.startLine.isResponse)
         self.assertFalse(aSIPResponse.startLine.isRequest)
+        self.assertFalse(aSIPResponse.startLine.isMalformed)
         self.assertEqual('Foo Content', aSIPResponse.content)
         self.assertEqual(100, aSIPResponse.startLine.statusCode)
         self.assertEqual('Trying', aSIPResponse.startLine.reasonPhrase)

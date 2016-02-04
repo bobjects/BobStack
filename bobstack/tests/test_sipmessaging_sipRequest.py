@@ -67,6 +67,7 @@ class TestUnknownSIPRequest(TestCase):
         self.assertEqual(10, aSIPRequest.header.unknownHeaderFields.__len__())
         self.assertTrue(aSIPRequest.startLine.isRequest)
         self.assertFalse(aSIPRequest.startLine.isResponse)
+        self.assertFalse(aSIPRequest.startLine.isMalformed)
         self.assertEqual('Foo Content', aSIPRequest.content)
         self.assertEqual('UNKNOWN', aSIPRequest.startLine.sipMethod)
         self.assertEqual('sip:example.com', aSIPRequest.startLine.requestURI)

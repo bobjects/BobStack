@@ -31,8 +31,8 @@ class SIPMessageFactory(EventSourceMixin):
         # TODO:  this will get fleshed out as we define SIP messages.
         if aSIPStartLine.isRequest:
             return {
-                   'OPTIONS': OPTIONSSIPRequest
-                   }.get(aSIPStartLine.sipMethod, UnknownSIPRequest)
+                'OPTIONS': OPTIONSSIPRequest
+            }.get(aSIPStartLine.sipMethod, UnknownSIPRequest)
             # if aSIPStartLine.sipMethod == 'OPTIONS':
             #     return OPTIONSSIPRequest
             # else:

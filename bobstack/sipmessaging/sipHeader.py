@@ -4,6 +4,7 @@ except ImportError:
     from StringIO import StringIO
 from sipHeaderFieldFactory import SIPHeaderFieldFactory
 
+
 class SIPHeader(object):
     def __init__(self, stringioToParse=None, headerFields=None):
         # on the off chance that stringioToParse and the other parameters are all specified,

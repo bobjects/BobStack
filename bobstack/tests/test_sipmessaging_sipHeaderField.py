@@ -20,6 +20,8 @@ class TestUnknownSipHeaderField(TestCase):
             self.assertFalse(UnknownSIPHeaderField.canParseString(line))
             self.assertFalse(ContentLengthSIPHeaderField.canParseString(line))
             headerField = UnknownSIPHeaderField(stringToParse=line)
+            # TODO:  A couple of those canonical strings should not be considered valid.
+            # I.e. this assertTrue should break.  Work on that.
             self.assertTrue(headerField.isValid)
             self.assertFalse(headerField.isContentLength)
             self.assertFalse(headerField.isKnown)
