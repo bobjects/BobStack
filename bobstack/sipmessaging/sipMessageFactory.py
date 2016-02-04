@@ -29,12 +29,14 @@ class SIPMessageFactory(EventSourceMixin):
 
     def sipMessageClassForStartLine(self, aSIPStartLine):
         # TODO:  this will get fleshed out as we define SIP messages.
-        # TODO:  use a dictionary instead of a if elif else.
         if aSIPStartLine.isRequest:
-            if aSIPStartLine.sipMethod == 'OPTIONS':
-                return OPTIONSSIPRequest
-            else:
-                return UnknownSIPRequest
+            return {
+                   'OPTIONS': OPTIONSSIPRequest
+                   }.get(aSIPStartLine.sipMethod, UnknownSIPRequest)
+            # if aSIPStartLine.sipMethod == 'OPTIONS':
+            #     return OPTIONSSIPRequest
+            # else:
+            #     return UnknownSIPRequest
         elif aSIPStartLine.isResponse:
             return SIPResponse
         else:

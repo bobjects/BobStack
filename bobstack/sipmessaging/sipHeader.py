@@ -31,11 +31,12 @@ class SIPHeader(object):
             return self.contentLengthHeaderField.value
         return 0
 
-    # TODO:  Look into @cache decorator.
+    # TODO:  Need to cache.  Look into @cache decorator.
     @property
     def contentLengthHeaderField(self):
         return next(headerField for headerField in self.headerFields if headerField.isContentLength)
 
+    # TODO:  Need to cache.  Look into @cache decorator.
     @property
     def unknownHeaderFields(self):
         return [headerField for headerField in self.headerFields if headerField.isUnknown]

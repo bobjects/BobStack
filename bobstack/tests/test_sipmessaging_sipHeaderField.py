@@ -54,7 +54,7 @@ class TestContentLengthSipHeaderField(TestCase):
             self.assertTrue(headerField.isKnown, line)
             self.assertEqual(headerField.rawString, line, line)
             self.assertIsInstance(headerField.value, (int, long), line)
-            # TODO:  Right now, these objects are immutable.  Do we want to make them have setters for the attributes?  If so, uncomment:
+            # TODO:  Right now, these objects are immutable.  Do we want to make them have setters for the rawString?  If so, uncomment:
             # headerField.rawString = 'Content-Length: 301'
             # self.assertEqual(301, headerField.value)
             # self.assertEqual('Content-Length: 301', headerField.rawString)
