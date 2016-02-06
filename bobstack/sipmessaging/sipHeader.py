@@ -6,6 +6,9 @@ from sipHeaderFieldFactory import SIPHeaderFieldFactory
 
 
 class SIPHeader(object):
+    # TODO: Make separate constructors, as with SIPStartLine and SIPHeaderField.
+    # TODO: Make isValid property, which answers True if all header fields are valid.
+    # TODO: Change SIPMessage isValid send isValid to us.
     def __init__(self, stringioToParse=None, headerFields=None):
         # on the off chance that stringioToParse and the other parameters are all specified,
         # ignore the other parameters, and populate our attributes by parsing.
@@ -35,7 +38,7 @@ class SIPHeader(object):
     # TODO:  Need to cache.  Look into @cache decorator.
     @property
     def contentLengthHeaderField(self):
-        return next(headerField for headerField in self.headerFields if headerField.isContentLength)
+        return next((headerField for headerField in self.headerFields if headerField.isContentLength), None)
 
     # TODO:  Need to cache.  Look into @cache decorator.
     @property

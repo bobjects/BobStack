@@ -21,6 +21,8 @@ class ContentLengthSIPHeaderField(SIPHeaderField):
     def value(self):
         if self._value is None:
             self.parseAttributesFromRawString()
+        if self._value is None:
+            return 0
         return self._value
 
     @value.setter
@@ -32,10 +34,17 @@ class ContentLengthSIPHeaderField(SIPHeaderField):
         self._value = None
 
     def parseAttributesFromRawString(self):
-        self._value = 0
+        # self._value = None
+        self._value = None
+        # TODO: globally replace search() with match()???
         match = self.__class__.regexForParsing().search(self._rawString)
         if match:
-            self._value = int(match.group(1))
+            matchGroup = match.group(1)
+            if matchGroup:
+                self._value = int(matchGroup)
+            else:
+                # Will get here is the Content-Length header field is present, but there is no value.
+                self._value = None
 
     def renderRawStringFromAttributes(self):
         stringio = StringIO()
@@ -55,7 +64,9 @@ class ContentLengthSIPHeaderField(SIPHeaderField):
 
     @property
     def isValid(self):
-        return super(ContentLengthSIPHeaderField, self).isValid and self.value is not None
+        # Answer false if the value is not present.
+        test = self.value  # Make sure the attributes are lazily initialized.
+        return super(ContentLengthSIPHeaderField, self).isValid and self._value is not None
 
     @property
     def isContentLength(self):

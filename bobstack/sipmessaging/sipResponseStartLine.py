@@ -67,7 +67,7 @@ class SIPResponseStartLine(SIPStartLine):
         try:
             return cls._regexForParsing
         except AttributeError:
-            cls._regexForParsing = re.compile("^SIP/2.0\s+([\d]+)+\s+(.+)$")
+            cls._regexForParsing = re.compile("^SIP/2.0\s+([\d]+)+\s+(.+)\s*$")
             return cls._regexForParsing
 
     @classmethod

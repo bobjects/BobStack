@@ -1,8 +1,97 @@
+try:
+    from cStringIO import StringIO
+except ImportError:
+    from StringIO import StringIO
+import pyperclip
+import unittest
 from unittest import TestCase
 import sys
 sys.path.append("..")
 from sipmessaging.sipMessageFactory import SIPMessageFactory
 
+class TestSIPMessageFactoryForSanitizedLogFile(TestCase):
+    def setUp(self):
+        self.malformedSIPMessageCount = 0
+        self.validSIPMessageCount = 0
+        self.invalidSIPMessageCount = 0
+        self.validKnownSIPMessageCount = 0
+        self.validUnknownSIPMessageCount = 0
+
+    # @unittest.skip("skipping test")
+    def test_parsing_sanitized_log_file(self):
+        sanitizedFilePathName = '/Users/bob/bobstack/proprietary-test-data/ft-huachuca-test-logs-sanitized/sanitized.txt'
+        factory = SIPMessageFactory()
+        factory.whenEventDo("malformedSIPMessage", self.handleMalformedSIPMessage)
+        factory.whenEventDo("validSIPMessage", self.handleValidSIPMessage)
+        factory.whenEventDo("invalidSIPMessage", self.handleInvalidSIPMessage)
+        factory.whenEventDo("validKnownSIPMessage", self.handleValidKnownSIPMessage)
+        factory.whenEventDo("validUnknownSIPMessage", self.handleValidUnknownSIPMessage)
+        with open(sanitizedFilePathName, "r") as sanitizedFile:
+            stringio = StringIO()
+            count = 0
+            for line in sanitizedFile:
+                if line.startswith("__MESSAGESEPARATOR__"):
+                    count += 1
+                    messageString = stringio.getvalue()
+                    self.assertTrue(messageString)
+
+                    # with open("latesttestedmessage.txt", "w") as f:
+                    #    f.write(messageString)
+                    # pyperclip.copy(str(count) + "\n\n" + messageString)
+                    if count % 5000 == 0:
+                        print str(count)
+
+
+                    sipMessage = factory.nextForString(messageString)
+                    self.runAssertionsForSIPMessage(sipMessage)
+                    stringio.close()
+                    stringio = StringIO()
+                else:
+                    stringio.write(line)
+        self.printSIPMessageCounts()
+
+    def printSIPMessageCounts(self):
+        print "malformed: " + str(self.malformedSIPMessageCount)
+        print "valid: " + str(self.validSIPMessageCount)
+        print "invalid: " + str(self.invalidSIPMessageCount)
+        print "valid known: " + str(self.validKnownSIPMessageCount)
+        print "valid unknown: " + str(self.validUnknownSIPMessageCount)
+
+    def handleMalformedSIPMessage(self):
+        self.malformedSIPMessageCount += 1
+
+    def handleValidSIPMessage(self):
+        self.validSIPMessageCount += 1
+
+    def handleInvalidSIPMessage(self):
+        self.invalidSIPMessageCount += 1
+
+    def handleValidKnownSIPMessage(self):
+        self.validKnownSIPMessageCount += 1
+
+    def handleValidUnknownSIPMessage(self):
+        self.validUnknownSIPMessageCount += 1
+
+
+    def runAssertionsForSIPMessage(self, aSIPMessage):
+        self.assertTrue(aSIPMessage.rawString)
+        self.assertIsInstance(aSIPMessage.isKnown, bool)
+        self.assertIsInstance(aSIPMessage.isUnknown, bool)
+        self.assertIsInstance(aSIPMessage.isValid, bool)
+        self.assertIsInstance(aSIPMessage.isRequest, bool)
+        self.assertIsInstance(aSIPMessage.isResponse, bool)
+        self.assertIsInstance(aSIPMessage.isOPTIONSRequest, bool)
+        self.assertIsInstance(aSIPMessage.isMalformed, bool)
+        # self.assertIsNotNone(aSIPMessage.header.contentLengthHeaderField)
+        self.assertIsInstance(aSIPMessage.header.contentLength, (int, long))
+        self.assertIsInstance(aSIPMessage.header.unknownHeaderFields, list)
+        self.assertFalse(aSIPMessage.isMalformed)
+        self.assertFalse(aSIPMessage.startLine.isMalformed)
+        self.assertIsInstance(aSIPMessage.startLine.isRequest, bool)
+        self.assertIsInstance(aSIPMessage.startLine.isResponse, bool)
+        self.assertIsInstance(aSIPMessage.content, basestring)
+        # self.assertEqual(aSIPMessage.content__len__(), aSIPMessage.header.contentLength)
+        # self.assertTrue(aSIPMessage.content__len__() in [aSIPMessage.header.contentLength, aSIPMessage.header.contentLength + 2)
 
 class TestSIPMessageFactoryForMalformedSIPRequest(TestCase):
     @property

@@ -8,7 +8,6 @@ from sipmessaging.contentLengthSIPHeaderField import ContentLengthSIPHeaderField
 from sipmessaging.unknownSIPHeaderField import UnknownSIPHeaderField
 # from sipmessaging.sipRequestStartLine import SIPRequestStartLine
 
-
 class TestUnknownSIPRequest(TestCase):
     @property
     def canonicalStrings(self):
