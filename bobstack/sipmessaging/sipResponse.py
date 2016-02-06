@@ -9,7 +9,7 @@ class SIPResponse(SIPMessage):
             # ignore the other parameters, and populate our attributes by parsing.
             SIPMessage.__init__(self, stringToParse=stringToParse, alreadyParsedSIPStartLine=alreadyParsedSIPStartLine)
         else:
-            startLine = SIPResponseStartLine(statusCode=statusCode, reasonPhrase=reasonPhrase)
+            startLine = SIPResponseStartLine.newForAttributes(statusCode=statusCode, reasonPhrase=reasonPhrase)
             SIPMessage.__init__(self, startLine=startLine, content=content, header=header)
 
     @property

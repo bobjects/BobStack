@@ -46,7 +46,7 @@ class TestMalformedSipMessage(TestCase):
             UnknownSIPHeaderField(fieldName='Route', fieldValue='<sip:200.30.10.12:5061;transport=tls;lr>'),
             UnknownSIPHeaderField(fieldName='Expires', fieldValue='0'),
             ContentLengthSIPHeaderField(value=11)]
-        request = MalformedSIPMessage(startLine=MalformedSIPStartLine(stringToParse='Malformed start line'), content='Foo Content', header=SIPHeader(headerFields=headerFields))
+        request = MalformedSIPMessage(startLine=MalformedSIPStartLine.newParsedFrom('Malformed start line'), content='Foo Content', header=SIPHeader(headerFields=headerFields))
         self.runAssertionsForRequest(request)
 
     def runAssertionsForRequest(self, aSIPRequest):

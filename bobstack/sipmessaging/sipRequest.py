@@ -9,7 +9,7 @@ class SIPRequest(SIPMessage):
             # ignore the other parameters, and populate our attributes by parsing.
             SIPMessage.__init__(self, stringToParse=stringToParse, alreadyParsedSIPStartLine=alreadyParsedSIPStartLine)
         else:
-            startLine = SIPRequestStartLine(sipMethod=sipMethod, requestURI=requestURI)
+            startLine = SIPRequestStartLine.newForAttributes(sipMethod=sipMethod, requestURI=requestURI)
             SIPMessage.__init__(self, startLine=startLine, content=content, header=header)
 
     @property

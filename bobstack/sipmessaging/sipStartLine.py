@@ -1,6 +1,35 @@
 class SIPStartLine(object):
-    def __init__(self, stringToParse=None):
-        self._rawString = stringToParse
+    @classmethod
+    def newParsedFrom(cls, aString):
+        answer = cls()
+        answer.rawString = aString
+        return answer
+
+    def __init__(self):
+        self._rawString = None
+
+    @property
+    def rawString(self):
+        if self._rawString is None:
+            self.renderRawStringFromAttributes()
+        return self._rawString
+
+    @rawString.setter
+    def rawString(self, aString):
+        self._rawString = aString
+        self.clearAttributes()
+
+    def clearRawString(self):
+        self._rawString = None
+
+    def clearAttributes(self):
+        pass
+
+    def parseAttributesFromRawString(self):
+        pass
+
+    def renderRawStringFromAttributes(self):
+        pass
 
     @property
     def isResponse(self):
@@ -14,12 +43,3 @@ class SIPStartLine(object):
     def isMalformed(self):
         return False
 
-    @property
-    def rawString(self):
-        if not self._rawString:
-            self.renderRawStringFromAttributes()
-            pass
-        return self._rawString
-
-    def renderRawStringFromAttributes(self):
-        pass

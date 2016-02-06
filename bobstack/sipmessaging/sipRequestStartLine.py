@@ -7,28 +7,56 @@ from sipStartLine import SIPStartLine
 
 
 class SIPRequestStartLine(SIPStartLine):
-    def __init__(self, stringToParse=None, sipMethod="", requestURI=""):
-        SIPStartLine.__init__(self, stringToParse=stringToParse)
-        # on the off chance that stringToParse and the other parameters are all specified,
-        # ignore the other parameters, and populate our attributes by parsing.
-        if not stringToParse:
-            self.sipMethod = sipMethod
-            self.requestURI = requestURI
-        else:
+    @classmethod
+    def newForAttributes(cls, sipMethod="", requestURI=""):
+        answer = cls()
+        answer.sipMethod = sipMethod
+        answer.requestURI = requestURI
+        return answer
+
+    def __init__(self):
+        SIPStartLine.__init__(self)
+        self._sipMethod = None
+        self._requestURI = None
+
+    @property
+    def sipMethod(self):
+        if self._sipMethod is None:
             self.parseAttributesFromRawString()
+        return self._sipMethod
+
+    @sipMethod.setter
+    def sipMethod(self, aString):
+        self._sipMethod = aString
+        self.clearRawString()
+
+    @property
+    def requestURI(self):
+        if self._requestURI is None:
+            self.parseAttributesFromRawString()
+        return self._requestURI
+
+    @requestURI.setter
+    def requestURI(self, aString):
+        self._requestURI = aString
+        self.clearRawString()
+
+    def clearAttributes(self):
+        self._sipMethod = None
+        self._requestURI = None
 
     def parseAttributesFromRawString(self):
-        self.sipMethod = ""
-        self.requestURI = ""
+        self._sipMethod = ""
+        self._requestURI = ""
         match = self.__class__.regexForParsing().search(self._rawString)
         if match:
-            self.sipMethod, self.requestURI = match.group(1, 2)
+            self._sipMethod, self._requestURI = match.group(1, 2)
 
     def renderRawStringFromAttributes(self):
         stringio = StringIO()
-        stringio.write(str(self.sipMethod))
+        stringio.write(str(self._sipMethod))
         stringio.write(" ")
-        stringio.write(str(self.requestURI))
+        stringio.write(str(self._requestURI))
         stringio.write(" SIP/2.0")
         self._rawString = stringio.getvalue()
         stringio.close()

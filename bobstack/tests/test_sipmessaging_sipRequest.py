@@ -35,6 +35,42 @@ class TestUnknownSIPRequest(TestCase):
             self.runAssertionsForRequest(request)
 
     def test_rendering(self):
+        # TODO:
+        '''
+        This works great, but it's awkward.  Let's experiment with methods that let you specify
+        header fields via an OrderedDict, keyed to the field name with value of keyValue.  If a specified
+        field name is known, then the known HeaderField subclass will automatically be instantiated. Alternative
+        value can include a dict of headerfield-specific attributes.  Hypothetical E.g.:
+
+        headerFields = OrderedDict([('From', '<sip:200.25.3.150:5061>;tag=0ee8d3e272e31c9195299efc500'),
+                                    ('To', '<sip:example.com:5061>'),
+                                    ('Call-ID', '0ee8d3e272e31c9195299efc500'),
+                                    ('CSeq', '6711 OPTIONS'),
+                                    ('Max-Forwards', 70),  # note the integer value.
+                                    ('Via', 'SIP/2.0/TLS 200.25.3.150;branch=z9hG4bK0ee8d3e272e31ca195299efc500'),
+                                    ('User-Agent', 'Example User Agent'),
+                                    ('Contact', '<sip:invalid@200.25.3.150:5061;transport=tls>'),
+                                    ('Route', '<sip:200.30.10.12:5061;transport=tls;lr>'),
+                                    ('Expires', 0),
+                                    ('Content-Length', 11)])  # This last one would actually instantiate a ContentLengthSIPHeaderField, and could alternatively be specified as ('Content-Length', {'value': 11}) which would invoke the value setter on the ContentLengthSIPHeaderField instance
+
+        Taking this a step further, to make it even more readable, we could just specify a normal dict, and have
+        the header fields sorted automatically (unknown header fields would be unsorted at the end, but before Content-Length.
+        Hypothetical E.g.:
+
+        headerFields = {'From': '<sip:200.25.3.150:5061>;tag=0ee8d3e272e31c9195299efc500',
+                       'To': '<sip:example.com:5061>',
+                       'Call-ID': '0ee8d3e272e31c9195299efc500',
+                       'CSeq': '6711 OPTIONS',
+                       'Max-Forwards': 70,  # note the integer value.
+                       'Via': 'SIP/2.0/TLS 200.25.3.150;branch=z9hG4bK0ee8d3e272e31ca195299efc500',
+                       'User-Agent': 'Example User Agent',
+                       'Contact': '<sip:invalid@200.25.3.150:5061;transport=tls>',
+                       'Route': '<sip:200.30.10.12:5061;transport=tls;lr>',
+                       'Expires': 0,
+                       'Content-Length': 11}
+
+        '''
         headerFields = [
             UnknownSIPHeaderField(fieldName='From', fieldValue='<sip:200.25.3.150:5061>;tag=0ee8d3e272e31c9195299efc500'),
             UnknownSIPHeaderField(fieldName='To', fieldValue='<sip:example.com:5061>'),

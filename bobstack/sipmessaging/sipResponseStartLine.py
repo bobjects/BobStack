@@ -7,30 +7,58 @@ from sipStartLine import SIPStartLine
 
 
 class SIPResponseStartLine(SIPStartLine):
-    def __init__(self, stringToParse=None, statusCode=500, reasonPhrase=""):
-        SIPStartLine.__init__(self, stringToParse=stringToParse)
-        # on the off chance that stringToParse and the other parameters are all specified,
-        # ignore the other parameters, and populate our attributes by parsing.
-        if not stringToParse:
-            self.statusCode = statusCode
-            self.reasonPhrase = reasonPhrase
-        else:
+    @classmethod
+    def newForAttributes(cls, statusCode="", reasonPhrase=""):
+        answer = cls()
+        answer.statusCode = statusCode
+        answer.reasonPhrase = reasonPhrase
+        return answer
+
+    def __init__(self):
+        SIPStartLine.__init__(self)
+        self._statusCode = None
+        self._reasonPhrase = None
+
+    @property
+    def statusCode(self):
+        if self._statusCode is None:
             self.parseAttributesFromRawString()
+        return self._statusCode
+
+    @statusCode.setter
+    def statusCode(self, aString):
+        self._statusCode = aString
+        self.clearRawString()
+
+    @property
+    def reasonPhrase(self):
+        if self._reasonPhrase is None:
+            self.parseAttributesFromRawString()
+        return self._reasonPhrase
+
+    @reasonPhrase.setter
+    def reasonPhrase(self, aString):
+        self._reasonPhrase = aString
+        self.clearRawString()
+
+    def clearAttributes(self):
+        self._statusCode = None
+        self._reasonPhrase = None
 
     def parseAttributesFromRawString(self):
-        self.statusCode = 500
-        self.reasonPhrase = ""
+        self._statusCode = 500
+        self._reasonPhrase = ""
         match = self.__class__.regexForParsing().search(self._rawString)
         if match:
-            self.statusCode, self.reasonPhrase = match.group(1, 2)
-            self.statusCode = int(self.statusCode)
+            self._statusCode, self._reasonPhrase = match.group(1, 2)
+            self._statusCode = int(self._statusCode)
 
     def renderRawStringFromAttributes(self):
         stringio = StringIO()
         stringio.write("SIP/2.0 ")
-        stringio.write(str(self.statusCode))
+        stringio.write(str(self._statusCode))
         stringio.write(" ")
-        stringio.write(str(self.reasonPhrase))
+        stringio.write(str(self._reasonPhrase))
         self._rawString = stringio.getvalue()
         stringio.close()
 
