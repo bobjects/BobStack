@@ -2,8 +2,37 @@ import re
 
 
 class SIPHeaderField(object):
-    def __init__(self, stringToParse=None):
-        self._rawString = stringToParse
+    @classmethod
+    def newParsedFrom(cls, aString):
+        answer = cls()
+        answer.rawString = aString
+        return answer
+
+    def __init__(self):
+        self._rawString = None
+
+    @property
+    def rawString(self):
+        if self._rawString is None:
+            self.renderRawStringFromAttributes()
+        return self._rawString
+
+    @rawString.setter
+    def rawString(self, aString):
+        self._rawString = aString
+        self.clearAttributes()
+
+    def clearRawString(self):
+        self._rawString = None
+
+    def clearAttributes(self):
+        pass
+
+    def parseAttributesFromRawString(self):
+        pass
+
+    def renderRawStringFromAttributes(self):
+        pass
 
     @classmethod
     def regexForParsing(cls):
@@ -37,14 +66,4 @@ class SIPHeaderField(object):
     @property
     def isContentLength(self):
         return False
-
-    @property
-    def rawString(self):
-        if self._rawString is None:
-            self.renderRawStringFromAttributes()
-            pass
-        return self._rawString
-
-    def renderRawStringFromAttributes(self):
-        pass
 

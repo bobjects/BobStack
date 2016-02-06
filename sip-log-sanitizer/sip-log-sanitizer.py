@@ -17,26 +17,21 @@ with open(interimFile1PathName, "w") as interimFile1:
                 if re.search("^>>>>>>>>>>  [^>]*>>>>>>>>>>>", line):
                     #print "."
                     line = "\r\n"
-                    pass
                 # if re.search("^>>>>>>>>>>  [^\s]*  >>>>>>>>>>$", line):
                 if re.search("^>>>>>>>>>>  [^>]*>>>>>>>>>>", line):
                     #print "."
                     line = "\r\n"
-                    pass
                 # if re.search("^<<<<<<<<<<\s\s[^\s]*\s\s<<<<<<<<<<", line):
                 if re.search("^<<<<<<<<<<  [^>]*<<<<<<<<<<", line):
                 #  '^Resource-Priority:\s+([^-]+)-(\d+)\.(\d)' ) search: 'Resource-Priority: uc-000000.2'
                     #print "."
                     line = "\r\n"
-                    pass
                 if re.search("^\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\* [^\*]*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*", line):
                     #print "."
                     line = "\r\n"
-                    pass
                 if re.search("^##################################### [^#]*##########################", line):
                     #print "."
                     line = "\r\n"
-                    pass
                 interimFile1.write(line)
                 # interimFile1.write("\r\n")
             interimFile1.write("\r\n")

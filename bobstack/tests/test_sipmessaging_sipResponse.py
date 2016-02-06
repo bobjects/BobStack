@@ -25,19 +25,19 @@ class TestSIPResponse(TestCase):
 
     def test_parsing(self):
         for messageString in self.canonicalStrings:
-            response = SIPResponse(stringToParse=messageString)
+            response = SIPResponse.newParsedFrom(messageString)
             self.runAssertionsForResponse(response)
 
     def test_rendering(self):
         headerFields = [
-            UnknownSIPHeaderField(fieldName='From', fieldValue='"3125551212"<sip:3125551212@example.com:5064;user=phone>;tag=e95a00000022137fe518'),
-            UnknownSIPHeaderField(fieldName='To', fieldValue='"3125551313"<sip:3125551313@example.com:5064;user=phone>'),
-            UnknownSIPHeaderField(fieldName='Call-ID', fieldValue='a12d6210342b0183745ef9750992682d90d7edce@200.23.3.241'),
-            UnknownSIPHeaderField(fieldName='CSeq', fieldValue='615 INVITE'),
-            # UnknownSIPHeaderField(fieldName='Max-Forwards', fieldValue='70'),
-            UnknownSIPHeaderField(fieldName='Via', fieldValue='SIP/2.0/UDP 200.23.3.241:5064;received=200.30.10.15;branch=z9hG4bK-3f04bd-f62a8381-4ebadacb-0x692748a8'),
-            ContentLengthSIPHeaderField(value=11)]
-        response = SIPResponse(statusCode=100, reasonPhrase='Trying', content='Foo Content', header=SIPHeader(headerFields=headerFields))
+            UnknownSIPHeaderField.newForAttributes(fieldName='From', fieldValue='"3125551212"<sip:3125551212@example.com:5064;user=phone>;tag=e95a00000022137fe518'),
+            UnknownSIPHeaderField.newForAttributes(fieldName='To', fieldValue='"3125551313"<sip:3125551313@example.com:5064;user=phone>'),
+            UnknownSIPHeaderField.newForAttributes(fieldName='Call-ID', fieldValue='a12d6210342b0183745ef9750992682d90d7edce@200.23.3.241'),
+            UnknownSIPHeaderField.newForAttributes(fieldName='CSeq', fieldValue='615 INVITE'),
+            # UnknownSIPHeaderField.newForAttributes(fieldName='Max-Forwards', fieldValue='70'),
+            UnknownSIPHeaderField.newForAttributes(fieldName='Via', fieldValue='SIP/2.0/UDP 200.23.3.241:5064;received=200.30.10.15;branch=z9hG4bK-3f04bd-f62a8381-4ebadacb-0x692748a8'),
+            ContentLengthSIPHeaderField.newForAttributes(value=11)]
+        response = SIPResponse.newForAttributes(statusCode=100, reasonPhrase='Trying', content='Foo Content', header=SIPHeader(headerFields=headerFields))
         self.runAssertionsForResponse(response)
 
     def runAssertionsForResponse(self, aSIPResponse):

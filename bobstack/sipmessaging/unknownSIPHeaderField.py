@@ -7,28 +7,56 @@ from sipHeaderField import SIPHeaderField
 
 
 class UnknownSIPHeaderField(SIPHeaderField):
-    def __init__(self, stringToParse=None, fieldName="", fieldValue=""):
-        SIPHeaderField.__init__(self, stringToParse=stringToParse)
-        # on the off chance that stringToParse and the other parameters are all specified,
-        # ignore the other parameters, and populate our attributes by parsing.
-        if not stringToParse:
-            self.fieldName = fieldName
-            self.fieldValue = fieldValue
-        else:
+    @classmethod
+    def newForAttributes(cls, fieldName="", fieldValue=""):
+        answer = cls()
+        answer.fieldName = fieldName
+        answer.fieldValue = fieldValue
+        return answer
+
+    def __init__(self):
+        SIPHeaderField.__init__(self)
+        self._fieldName = None
+        self._fieldValue = None
+
+    @property
+    def fieldName(self):
+        if self._fieldName is None:
             self.parseAttributesFromRawString()
+        return self._fieldName
+
+    @fieldName.setter
+    def fieldName(self, aString):
+        self._fieldName = aString
+        self.clearRawString()
+
+    @property
+    def fieldValue(self):
+        if self._fieldValue is None:
+            self.parseAttributesFromRawString()
+        return self._fieldValue
+
+    @fieldValue.setter
+    def fieldValue(self, aString):
+        self._fieldValue = aString
+        self.clearRawString()
+
+    def clearAttributes(self):
+        self._fieldName = None
+        self._fieldValue = None
 
     def parseAttributesFromRawString(self):
-        self.fieldName = ""
-        self.fieldValue = ""
+        self._fieldName = ""
+        self._fieldValue = ""
         match = self.__class__.regexForParsingFieldAndValue().search(self._rawString)
         if match:
-            self.fieldName, self.fieldValue = match.group(1, 2)
+            self._fieldName, self._fieldValue = match.group(1, 2)
 
     def renderRawStringFromAttributes(self):
         stringio = StringIO()
-        stringio.write(str(self.fieldName))
+        stringio.write(str(self._fieldName))
         stringio.write(": ")
-        stringio.write(str(self.fieldValue))
+        stringio.write(str(self._fieldValue))
         self._rawString = stringio.getvalue()
         stringio.close()
 

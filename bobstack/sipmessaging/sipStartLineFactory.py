@@ -10,9 +10,6 @@ from malformedSIPStartLine import MalformedSIPStartLine
 
 
 class SIPStartLineFactory(object):
-    def __init__(self):
-        pass
-
     def nextForStringIO(self, aStringIO):
         lineString = aStringIO.readline().rstrip('\r\n')
         return self.nextForString(lineString)

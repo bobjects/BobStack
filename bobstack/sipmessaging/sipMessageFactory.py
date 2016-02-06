@@ -23,7 +23,7 @@ class SIPMessageFactory(EventSourceMixin):
         stringIO = StringIO(aString)
         sipStartLine = SIPStartLineFactory().nextForStringIO(stringIO)
         stringIO.close()
-        sipMessage = self.sipMessageClassForStartLine(sipStartLine)(aString, sipStartLine)
+        sipMessage = self.sipMessageClassForStartLine(sipStartLine).newParsedFrom(aString)
         self.triggerEventForSIPMessage(sipMessage)
         return sipMessage
 

@@ -9,9 +9,6 @@ from unknownSIPHeaderField import UnknownSIPHeaderField
 
 
 class SIPHeaderFieldFactory(object):
-    def __init__(self):
-        pass
-
     def allForStringIO(self, aStringIO):
         headerFieldLines = []
         lineString = aStringIO.readline().rstrip('\r\n')
@@ -22,8 +19,8 @@ class SIPHeaderFieldFactory(object):
 
     def nextForString(self, aString):
         if ContentLengthSIPHeaderField.canParseString(aString):
-            return ContentLengthSIPHeaderField(aString)
+            return ContentLengthSIPHeaderField.newParsedFrom(aString)
         # TODO - this will get fleshed out as we define more header fields.
         else:
-            return UnknownSIPHeaderField(aString)
+            return UnknownSIPHeaderField.newParsedFrom(aString)
 

@@ -19,7 +19,7 @@ class TestUnknownSipHeaderField(TestCase):
         for line in self.canonicalStrings:
             self.assertFalse(UnknownSIPHeaderField.canParseString(line))
             self.assertFalse(ContentLengthSIPHeaderField.canParseString(line))
-            headerField = UnknownSIPHeaderField(stringToParse=line)
+            headerField = UnknownSIPHeaderField.newParsedFrom(line)
             # TODO:  A couple of those canonical strings should not be considered valid.
             # I.e. this assertTrue should break.  Work on that.
             self.assertTrue(headerField.isValid)
@@ -50,28 +50,26 @@ class TestContentLengthSipHeaderField(TestCase):
         for line in self.canonicalStrings:
             self.assertFalse(UnknownSIPHeaderField.canParseString(line), line)
             self.assertTrue(ContentLengthSIPHeaderField.canParseString(line), line)
-            headerField = ContentLengthSIPHeaderField(stringToParse=line)
+            headerField = ContentLengthSIPHeaderField.newParsedFrom(line)
             self.assertTrue(headerField.isValid, line)
             self.assertTrue(headerField.isContentLength, line)
             self.assertTrue(headerField.isKnown, line)
             self.assertEqual(headerField.rawString, line, line)
             self.assertIsInstance(headerField.value, (int, long), line)
-            # TODO:  Right now, these objects are immutable.  Do we want to make them have setters for the rawString?  If so, uncomment:
-            # headerField.rawString = 'Content-Length: 301'
-            # self.assertEqual(301, headerField.value)
-            # self.assertEqual('Content-Length: 301', headerField.rawString)
+            headerField.rawString = 'Content-Length: 301'
+            self.assertEqual(301, headerField.value)
+            self.assertEqual('Content-Length: 301', headerField.rawString)
         for line in self.canonicalStrings:
-            self.assertEqual(ContentLengthSIPHeaderField(stringToParse=line).value, 489, "Info: line is " + line)
+            self.assertEqual(ContentLengthSIPHeaderField.newParsedFrom(line).value, 489, "Info: line is " + line)
 
     def test_rendering(self):
-        headerField = ContentLengthSIPHeaderField(value=300)
+        headerField = ContentLengthSIPHeaderField.newForAttributes(value=300)
         self.assertTrue(headerField.isValid)
         self.assertTrue(headerField.isContentLength)
         self.assertTrue(headerField.isKnown)
         self.assertEqual(headerField.rawString, 'Content-Length: 300')
         self.assertIsInstance(headerField.value, (int, long))
         self.assertEqual(headerField.value, 300)
-        # TODO:  Right now, these objects are immutable.  Do we want to make them have setters for the attributes?  If so, uncomment:
-        # headerField.value = 301
-        # self.assertEqual(301, headerField.value)
-        # self.assertEqual('Content-Length: 301', headerField.rawString)
+        headerField.value = 301
+        self.assertEqual(301, headerField.value)
+        self.assertEqual('Content-Length: 301', headerField.rawString)
