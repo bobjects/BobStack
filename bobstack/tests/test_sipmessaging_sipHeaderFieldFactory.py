@@ -21,22 +21,30 @@ class TestSIPHeaderFieldFactoryForUnknown(TestCase):
     def test_parsing(self):
         for line in self.canonicalStrings:
             headerField = SIPHeaderFieldFactory().nextForString(line)
-            # TODO:  A couple of those canonical strings should not be considered valid.
-            # I.e. this assertTrue should break.  Work on that.
-            self.assertTrue(headerField.isValid)
+            if line.split().__len__() < 2:
+                self.assertFalse(headerField.isValid)
+            else:
+                if ":" not in line:
+                    self.assertFalse(headerField.isValid)
+                else:
+                    self.assertTrue(headerField.isValid)
             self.assertFalse(headerField.isContentLength)
             self.assertFalse(headerField.isKnown)
             self.assertEqual(headerField.rawString, line)
             if line:
                 stringio = StringIO(line + '\r\n')
                 headerField = SIPHeaderFieldFactory().allForStringIO(stringio)[0]
-                # TODO:  A couple of those canonical strings should not be considered valid.
-                # I.e. this assertTrue should break.  Work on that.
-                self.assertTrue(headerField.isValid)
-                self.assertFalse(headerField.isContentLength)
-                self.assertFalse(headerField.isKnown)
-                self.assertEqual(headerField.rawString, line)
-                stringio.close()
+                if line.split().__len__() < 2:
+                    self.assertFalse(headerField.isValid)
+                else:
+                    if ":" not in line:
+                        self.assertFalse(headerField.isValid)
+                    else:
+                        self.assertTrue(headerField.isValid)
+                    self.assertFalse(headerField.isContentLength)
+                    self.assertFalse(headerField.isKnown)
+                    self.assertEqual(headerField.rawString, line)
+                    stringio.close()
 
 
 class TestSIPHeaderFieldFactoryForContentLength(TestCase):

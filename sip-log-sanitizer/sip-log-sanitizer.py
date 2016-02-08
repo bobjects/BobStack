@@ -1,4 +1,7 @@
 #!/usr/bin/python
+import sys
+sys.path.append("../bobstack")
+from sipmessaging.sipMessageFactory import SIPMessageFactory
 import os
 import re
 import timeit
@@ -11,18 +14,17 @@ sanitizedFilePathName = '/Users/bob/bobstack/proprietary-test-data/ft-huachuca-t
 rawLogFileDirectoryPathNames = [ '/Users/bob/bobstack/proprietary-test-data/ft-huachuca-test-logs-raw', '/Users/bob/bobstack/proprietary-test-data/vance-logs-raw' ]
 messageSeparator = "__MESSAGESEPARATOR__"
 rawFileMessageSeparatorRegexes = [ "^>>>>>>>>>>  [^>]*>>>>>>>>>>>",
-                                   "^>>>>>>>>>>  [^>]*>>>>>>>>>>",
-                                   "^<<<<<<<<<<  [^>]*<<<<<<<<<<",
+                                   "^>>>>>>>>>>  [^>]*>>>>>>>>>>", # for some reason, this is not catching 8 lines.
+                                   "^<<<<<<<<<<  [^<]*<<<<<<<<<<", # for some reason, this is not catching 32 lines.
                                    "^\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\* [^\*]*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*",
                                    "^##################################### [^#]*##########################" ]
 rawFileMessageSeparatorRegexes = [re.compile(s) for s in rawFileMessageSeparatorRegexes]
 sanitizedMessageSeparatorRegex = re.compile("^__MESSAGESEPARATOR__")
 startLineRegexes = ["^SIP/2.0\s+([\d]+)+\s+(.+)\s*$", "^([^\s]+)\s+([^\s]+)\s+SIP/2.0\s*$"]
-# startLineRegexes = ["^([^\s]+)\s+([^\s]+)\s+SIP/2.0$"]
-#startLineRegexes = ["^([^\s]+)\s+([^\s]+)\s+SIP/2.0\s*$"]
 startLineRegexes = [re.compile(s) for s in startLineRegexes]
 
-def createInterimFile():
+def createInterim1File():
+    print "creating interim file 1"
     with open(interimFile1PathName, "w") as interimFile1:
         for rawLogFileDirectoryPathName in rawLogFileDirectoryPathNames:
             for rawLogFilePathName in os.listdir(rawLogFileDirectoryPathName):
@@ -35,27 +37,62 @@ def createInterimFile():
                         interimFile1.write(line)
                     interimFile1.write("\r\n")
 
-def processInterimFile():
-    with open(sanitizedFilePathName, "w") as sanitizedFile:
-        with open(interimFile1PathName, "r") as interimFile1:
+def createInterim2File():
+    print "creating interim file 2"
+    with open(interimFile1PathName, "r") as interimFile1:
+        with open(interimFile2PathName, "w") as interimFile2:
             currentlyInMessage = False
             totalSIPMessages = 0
             for line in interimFile1:
                 if currentlyInMessage:
                     if sanitizedMessageSeparatorRegex.match(line):
-                        sanitizedFile.write(line)
+                        interimFile2.write(line)
                         currentlyInMessage = False
                     else:
-                        sanitizedFile.write(line)
+                        interimFile2.write(line)
                 else:
                     if any(regex.match(line) for regex in startLineRegexes):
                         # print "."
                         totalSIPMessages += 1
                         currentlyInMessage = True
+                        interimFile2.write(line)
+            print str(totalSIPMessages) + " total SIP messages"
+
+def processInterimFile():
+    print "processing interim file 2"
+    with open(sanitizedFilePathName, "w") as sanitizedFile:
+        with open(interimFile1PathName, "r") as interimFile1:
+            currentlyInMessage = False
+            currentMessageString = ''
+            totalSIPMessages = 0
+            for line in interimFile1:
+                if currentlyInMessage:
+                    if sanitizedMessageSeparatorRegex.match(line):
+                        # some messages are two bytes too long, because of weirdness in our logging code!
+                        # No real way to figure out which
+                        # ones, except by instantiating a SIPMessage and checking.  Look for messages
+                        # that are exactly two bytes too long, and chop them down.
+                        sipMessage = SIPMessageFactory().nextForString(currentMessageString)
+                        truncateBytes = sipMessage.content.__len__() - sipMessage.header.contentLength
+                        if truncateBytes == 2:
+                            currentMessageString = currentMessageString[:currentMessageString.__len__()-2]
+
+                        sanitizedFile.write(currentMessageString)
+                        sanitizedFile.write(line)
+                        currentlyInMessage = False
+                    else:
+                        currentMessageString += line
+                else:
+                    if any(regex.match(line) for regex in startLineRegexes):
+                        # print "."
+                        totalSIPMessages += 1
+                        currentlyInMessage = True
+                        currentMessageString = ''
                         sanitizedFile.write(line)
             print str(totalSIPMessages) + " total SIP messages"
 
 
 if __name__ == '__main__':
-    print timeit.timeit(createInterimFile, number=1)
+    print timeit.timeit(createInterim1File, number=1)
+    print timeit.timeit(createInterim2File, number=1)
     print timeit.timeit(processInterimFile, number=1)

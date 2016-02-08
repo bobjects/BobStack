@@ -37,7 +37,7 @@ class TestSIPResponse(TestCase):
             # UnknownSIPHeaderField.newForAttributes(fieldName='Max-Forwards', fieldValue='70'),
             UnknownSIPHeaderField.newForAttributes(fieldName='Via', fieldValue='SIP/2.0/UDP 200.23.3.241:5064;received=200.30.10.15;branch=z9hG4bK-3f04bd-f62a8381-4ebadacb-0x692748a8'),
             ContentLengthSIPHeaderField.newForAttributes(value=11)]
-        response = SIPResponse.newForAttributes(statusCode=100, reasonPhrase='Trying', content='Foo Content', header=SIPHeader(headerFields=headerFields))
+        response = SIPResponse.newForAttributes(statusCode=100, reasonPhrase='Trying', content='Foo Content', header=SIPHeader.newForAttributes(headerFields=headerFields))
         self.runAssertionsForResponse(response)
 
     def runAssertionsForResponse(self, aSIPResponse):

@@ -18,7 +18,7 @@ class SIPHeaderFieldFactory(object):
         return [self.nextForString(line) for line in headerFieldLines]
 
     def nextForString(self, aString):
-        if ContentLengthSIPHeaderField.canParseString(aString):
+        if ContentLengthSIPHeaderField.canMatchString(aString):
             return ContentLengthSIPHeaderField.newParsedFrom(aString)
         # TODO - this will get fleshed out as we define more header fields.
         else:

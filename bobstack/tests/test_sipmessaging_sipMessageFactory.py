@@ -16,17 +16,44 @@ class TestSIPMessageFactoryForSanitizedLogFile(TestCase):
         self.invalidSIPMessageCount = 0
         self.validKnownSIPMessageCount = 0
         self.validUnknownSIPMessageCount = 0
+        with open(self.malformedSIPMessagesPathName, "w") as f:
+            pass
+        with open(self.validSIPMessagesPathName, "w") as f:
+            pass
+        with open(self.invalidSIPMessagesPathName, "w") as f:
+            pass
+        with open(self.validKnownSIPMessagesPathName, "w") as f:
+            pass
+        with open(self.validUnknownSIPMessagesPathName, "w") as f:
+            pass
+        with open(self.knownSIPStartLinesPathName, "w") as f:
+            pass
+        with open(self.unknownSIPStartLinesPathName, "w") as f:
+            pass
+        with open(self.knownSIPMethodsPathName, "w") as f:
+            pass
+        with open(self.unknownSIPMethodsPathName, "w") as f:
+            pass
+        with open(self.knownHeaderFieldsPathName, "w") as f:
+            pass
+        with open(self.knownHeaderFieldNamesPathName, "w") as f:
+            pass
+        with open(self.unknownHeaderFieldsPathName, "w") as f:
+            pass
+        with open(self.unknownHeaderFieldNamesPathName, "w") as f:
+            pass
 
     # @unittest.skip("skipping test")
     def test_parsing_sanitized_log_file(self):
-        sanitizedFilePathName = '/Users/bob/bobstack/proprietary-test-data/ft-huachuca-test-logs-sanitized/sanitized.txt'
+        # TODO:  Lots of invalid messages, because the sip log sanitizer is off by 2 for a lot of
+        # the messages, i.e. an extra CRLF was originally inserted for some of the strings that it is replacing
         factory = SIPMessageFactory()
         factory.whenEventDo("malformedSIPMessage", self.handleMalformedSIPMessage)
         factory.whenEventDo("validSIPMessage", self.handleValidSIPMessage)
         factory.whenEventDo("invalidSIPMessage", self.handleInvalidSIPMessage)
         factory.whenEventDo("validKnownSIPMessage", self.handleValidKnownSIPMessage)
         factory.whenEventDo("validUnknownSIPMessage", self.handleValidUnknownSIPMessage)
-        with open(sanitizedFilePathName, "r") as sanitizedFile:
+        with open(self.sanitizedFilePathName, "r") as sanitizedFile:
             stringio = StringIO()
             count = 0
             for line in sanitizedFile:
@@ -57,21 +84,82 @@ class TestSIPMessageFactoryForSanitizedLogFile(TestCase):
         print "valid known: " + str(self.validKnownSIPMessageCount)
         print "valid unknown: " + str(self.validUnknownSIPMessageCount)
 
-    def handleMalformedSIPMessage(self):
+    def handleMalformedSIPMessage(self, aSIPMessage):
         self.malformedSIPMessageCount += 1
+        with open(self.malformedSIPMessagesPathName, "a") as f:
+            f.write(aSIPMessage.rawString)
+            f.write(self.messageSeparator)
 
-    def handleValidSIPMessage(self):
+    def handleValidSIPMessage(self, aSIPMessage):
         self.validSIPMessageCount += 1
+        with open(self.validSIPMessagesPathName, "a") as f:
+            f.write(aSIPMessage.rawString)
+            f.write(self.messageSeparator)
+        with open(self.knownHeaderFieldsPathName, "a") as f:
+            for headerField in aSIPMessage.header.knownHeaderFields:
+                f.write(headerField.rawString)
+                f.write("\r\n")
+        with open(self.knownHeaderFieldNamesPathName, "a") as f:
+            for headerField in aSIPMessage.header.knownHeaderFields:
+                f.write(headerField.fieldName)
+                f.write("\r\n")
+        with open(self.unknownHeaderFieldsPathName, "a") as f:
+            for headerField in aSIPMessage.header.unknownHeaderFields:
+                f.write(headerField.rawString)
+                f.write("\r\n")
+        with open(self.unknownHeaderFieldNamesPathName, "a") as f:
+            for headerField in aSIPMessage.header.unknownHeaderFields:
+                f.write(headerField.fieldName)
+                f.write("\r\n")
 
-    def handleInvalidSIPMessage(self):
+
+    def handleInvalidSIPMessage(self, aSIPMessage):
         self.invalidSIPMessageCount += 1
+        with open(self.invalidSIPMessagesPathName, "a") as f:
+            f.write(aSIPMessage.rawString)
+            f.write(self.messageSeparator)
 
-    def handleValidKnownSIPMessage(self):
+    def handleValidKnownSIPMessage(self, aSIPMessage):
         self.validKnownSIPMessageCount += 1
+        with open(self.validKnownSIPMessagesPathName, "a") as f:
+            f.write(aSIPMessage.rawString)
+            f.write(self.messageSeparator)
+        if aSIPMessage.isRequest:
+            with open(self.knownSIPStartLinesPathName, "a") as f:
+                f.write(aSIPMessage.startLine.rawString)
+                f.write("\r\n")
+            with open(self.knownSIPMethodsPathName, "a") as f:
+                f.write(aSIPMessage.startLine.sipMethod)
+                f.write("\r\n")
+        # with open(self.knownHeaderFieldsPathName, "a") as f:
+        #     for headerField in aSIPMessage.header.headerFields:
+        #         f.write(headerField.rawString)
+        #         f.write("\r\n")
+        # with open(self.knownHeaderFieldNamesPathName, "a") as f:
+        #     for headerField in aSIPMessage.header.headerFields:
+        #         f.write(headerField.fieldName)
+        #         f.write("\r\n")
 
-    def handleValidUnknownSIPMessage(self):
+    def handleValidUnknownSIPMessage(self, aSIPMessage):
         self.validUnknownSIPMessageCount += 1
-
+        with open(self.validUnknownSIPMessagesPathName, "a") as f:
+            f.write(aSIPMessage.rawString)
+            f.write(self.messageSeparator)
+        if aSIPMessage.isRequest:
+            with open(self.unknownSIPStartLinesPathName, "a") as f:
+                f.write(aSIPMessage.startLine.rawString)
+                f.write("\r\n")
+            with open(self.unknownSIPMethodsPathName, "a") as f:
+                f.write(aSIPMessage.startLine.sipMethod)
+                f.write("\r\n")
+        # with open(self.unknownHeaderFieldsPathName, "a") as f:
+        #     for headerField in aSIPMessage.header.headerFields:
+        #         f.write(headerField.rawString)
+        #         f.write("\r\n")
+        # with open(self.unknownHeaderFieldNamesPathName, "a") as f:
+        #     for headerField in aSIPMessage.header.headerFields:
+        #         f.write(headerField.fieldName)
+        #         f.write("\r\n")
 
     def runAssertionsForSIPMessage(self, aSIPMessage):
         self.assertTrue(aSIPMessage.rawString)
@@ -92,6 +180,68 @@ class TestSIPMessageFactoryForSanitizedLogFile(TestCase):
         self.assertIsInstance(aSIPMessage.content, basestring)
         # self.assertEqual(aSIPMessage.content__len__(), aSIPMessage.header.contentLength)
         # self.assertTrue(aSIPMessage.content__len__() in [aSIPMessage.header.contentLength, aSIPMessage.header.contentLength + 2)
+
+    @property
+    def sanitizedFilePathName(self):
+        return '/Users/bob/bobstack/proprietary-test-data/ft-huachuca-test-logs-sanitized/sanitized.txt'
+
+    @property
+    def validSIPMessagesPathName(self):
+        return '/Users/bob/bobstack/proprietary-test-data/ft-huachuca-test-logs-sanitized/validSIPMessages.txt'
+
+    @property
+    def invalidSIPMessagesPathName(self):
+        return '/Users/bob/bobstack/proprietary-test-data/ft-huachuca-test-logs-sanitized/invalidSIPMessages.txt'
+
+    @property
+    def malformedSIPMessagesPathName(self):
+        return '/Users/bob/bobstack/proprietary-test-data/ft-huachuca-test-logs-sanitized/malformedSIPMessages.txt'
+
+    @property
+    def messageSeparator(self):
+        return "__MESSAGESEPARATOR__\r\n"
+
+    @property
+    def validKnownSIPMessagesPathName(self):
+        return '/Users/bob/bobstack/proprietary-test-data/ft-huachuca-test-logs-sanitized/validKnownSIPMessages.txt'
+
+    @property
+    def validUnknownSIPMessagesPathName(self):
+        return '/Users/bob/bobstack/proprietary-test-data/ft-huachuca-test-logs-sanitized/validUnknownSIPMessages.txt'
+
+    @property
+    def knownSIPStartLinesPathName(self):
+        return '/Users/bob/bobstack/proprietary-test-data/ft-huachuca-test-logs-sanitized/knownSIPStartLines.txt'
+
+    @property
+    def unknownSIPStartLinesPathName(self):
+        return '/Users/bob/bobstack/proprietary-test-data/ft-huachuca-test-logs-sanitized/unknownSIPStartLines.txt'
+
+    @property
+    def knownSIPMethodsPathName(self):
+        return '/Users/bob/bobstack/proprietary-test-data/ft-huachuca-test-logs-sanitized/knownSIPMethods.txt'
+
+    @property
+    def unknownSIPMethodsPathName(self):
+        return '/Users/bob/bobstack/proprietary-test-data/ft-huachuca-test-logs-sanitized/unknownSIPMethods.txt'
+
+    @property
+    def knownHeaderFieldsPathName(self):
+        return '/Users/bob/bobstack/proprietary-test-data/ft-huachuca-test-logs-sanitized/knownHeaderFields.txt'
+
+    @property
+    def unknownHeaderFieldsPathName(self):
+        return '/Users/bob/bobstack/proprietary-test-data/ft-huachuca-test-logs-sanitized/unknownHeaderFields.txt'
+
+    @property
+    def knownHeaderFieldNamesPathName(self):
+        return '/Users/bob/bobstack/proprietary-test-data/ft-huachuca-test-logs-sanitized/knownHeaderFieldNames.txt'
+
+    @property
+    def unknownHeaderFieldNamesPathName(self):
+        return '/Users/bob/bobstack/proprietary-test-data/ft-huachuca-test-logs-sanitized/unknownHeaderFieldNames.txt'
+
+
 
 class TestSIPMessageFactoryForMalformedSIPRequest(TestCase):
     @property

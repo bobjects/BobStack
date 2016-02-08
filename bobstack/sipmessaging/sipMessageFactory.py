@@ -44,12 +44,12 @@ class SIPMessageFactory(EventSourceMixin):
 
     def triggerEventForSIPMessage(self, aSIPMessage):
         if aSIPMessage.isMalformed:
-            self.triggerEvent("malformedSIPMessage")
+            self.triggerEvent("malformedSIPMessage", aSIPMessage)
         if aSIPMessage.isValid:
-            self.triggerEvent("validSIPMessage")
+            self.triggerEvent("validSIPMessage", aSIPMessage)
             if aSIPMessage.isKnown:
-                self.triggerEvent("validKnownSIPMessage")
+                self.triggerEvent("validKnownSIPMessage", aSIPMessage)
             else:
-                self.triggerEvent("validUnknownSIPMessage")
+                self.triggerEvent("validUnknownSIPMessage", aSIPMessage)
         else:
-            self.triggerEvent("invalidSIPMessage")
+            self.triggerEvent("invalidSIPMessage", aSIPMessage)

@@ -1,3 +1,7 @@
+try:
+    from cStringIO import StringIO
+except ImportError:
+    from StringIO import StringIO
 import re
 
 
@@ -8,8 +12,21 @@ class SIPHeaderField(object):
         answer.rawString = aString
         return answer
 
+    @classmethod
+    def newForAttributes(cls, fieldName="", fieldValue=""):
+        return cls.newForFieldAttributes(fieldName=fieldName, fieldValue=fieldValue)
+
+    @classmethod
+    def newForFieldAttributes(cls, fieldName="", fieldValue=""):
+        answer = cls()
+        answer.fieldName = fieldName
+        answer.fieldValue = fieldValue
+        return answer
+
     def __init__(self):
         self._rawString = None
+        self._fieldName = None
+        self._fieldValue = None
 
     @property
     def rawString(self):
@@ -22,17 +39,53 @@ class SIPHeaderField(object):
         self._rawString = aString
         self.clearAttributes()
 
+    @property
+    def fieldName(self):
+        if self._fieldName is None:
+            self.parseAttributesFromRawString()
+        return self._fieldName
+
+    @fieldName.setter
+    def fieldName(self, aString):
+        self._fieldName = aString
+        self.clearRawString()
+
+    @property
+    def fieldValue(self):
+        if self._fieldValue is None:
+            self.parseAttributesFromRawString()
+        return self._fieldValue
+
+    @fieldValue.setter
+    def fieldValue(self, aString):
+        self._fieldValue = aString
+        self.clearRawString()
+
     def clearRawString(self):
         self._rawString = None
 
     def clearAttributes(self):
-        pass
+        self._fieldName = None
+        self._fieldValue = None
 
     def parseAttributesFromRawString(self):
-        pass
+        self._fieldName = ""
+        self._fieldValue = ""
+        match = self.__class__.regexForParsingFieldAndValue().search(self._rawString)
+        if match:
+            self._fieldName, self._fieldValue = match.group(1, 2)
 
     def renderRawStringFromAttributes(self):
-        pass
+        stringio = StringIO()
+        stringio.write(str(self._fieldName))
+        stringio.write(": ")
+        stringio.write(str(self._fieldValue))
+        self._rawString = stringio.getvalue()
+        stringio.close()
+
+    @classmethod
+    def regexForMatching(cls):
+        return cls.regexForParsing()
 
     @classmethod
     def regexForParsing(cls):
@@ -47,8 +100,16 @@ class SIPHeaderField(object):
             return cls._regexToNeverMatch
 
     @classmethod
-    def canParseString(cls, aString):
-        return cls.regexForParsing().match(aString) is not None
+    def regexForParsingFieldAndValue(cls):
+        try:
+            return cls._regexForParsingFieldAndValue
+        except AttributeError:
+            cls._regexForParsingFieldAndValue = re.compile('^([^\s:]+)\s*:\s*(.*)$')
+            return cls._regexForParsingFieldAndValue
+
+    @classmethod
+    def canMatchString(cls, aString):
+        return cls.regexForMatching().match(aString) is not None
 
     @property
     def isUnknown(self):
@@ -60,7 +121,10 @@ class SIPHeaderField(object):
 
     @property
     def isValid(self):
-        # TODO - test if it's well-formed.
+        if not self.fieldName:  # fail if None or empty fieldName.
+            return False
+        if self.fieldValue is None:
+            return False
         return True
 
     @property

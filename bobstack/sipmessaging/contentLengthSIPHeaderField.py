@@ -9,7 +9,7 @@ from sipHeaderField import SIPHeaderField
 class ContentLengthSIPHeaderField(SIPHeaderField):
     @classmethod
     def newForAttributes(cls, value=0):
-        answer = cls()
+        answer = cls.newForFieldAttributes(fieldName="Content-Length", fieldValue=str(value))
         answer.value = value
         return answer
 
@@ -28,13 +28,15 @@ class ContentLengthSIPHeaderField(SIPHeaderField):
     @value.setter
     def value(self, anInteger):
         self._value = anInteger
+        self.fieldValue = str(anInteger)
         self.clearRawString()
 
     def clearAttributes(self):
+        super(ContentLengthSIPHeaderField, self).clearAttributes()
         self._value = None
 
     def parseAttributesFromRawString(self):
-        # self._value = None
+        super(ContentLengthSIPHeaderField, self).parseAttributesFromRawString()
         self._value = None
         # TODO: globally replace search() with match()???
         match = self.__class__.regexForParsing().search(self._rawString)
@@ -46,12 +48,20 @@ class ContentLengthSIPHeaderField(SIPHeaderField):
                 # Will get here is the Content-Length header field is present, but there is no value.
                 self._value = None
 
-    def renderRawStringFromAttributes(self):
-        stringio = StringIO()
-        stringio.write("Content-Length: ")
-        stringio.write(str(self._value))
-        self._rawString = stringio.getvalue()
-        stringio.close()
+    # def renderRawStringFromAttributes(self):
+    #     stringio = StringIO()
+    #     stringio.write("Content-Length: ")
+    #     stringio.write(str(self._value))
+    #     self._rawString = stringio.getvalue()
+    #     stringio.close()
+
+    @classmethod
+    def regexForMatching(cls):
+        try:
+            return cls._regexForMatching
+        except AttributeError:
+            cls._regexForMatching = re.compile('^Content-Length\s*:', re.I)
+            return cls._regexForMatching
 
     @classmethod
     def regexForParsing(cls):
@@ -59,7 +69,6 @@ class ContentLengthSIPHeaderField(SIPHeaderField):
             return cls._regexForParsing
         except AttributeError:
             cls._regexForParsing = re.compile('^Content-Length\s*:\s*(\d*)', re.I)
-            # cls._regexForParsing = re.compile('Content', re.I)
             return cls._regexForParsing
 
     @property

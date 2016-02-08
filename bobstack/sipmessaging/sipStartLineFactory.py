@@ -15,9 +15,9 @@ class SIPStartLineFactory(object):
         return self.nextForString(lineString)
 
     def nextForString(self, aString):
-        if SIPRequestStartLine.canParseString(aString):
+        if SIPRequestStartLine.canMatchString(aString):
             return SIPRequestStartLine.newParsedFrom(aString)
-        elif SIPResponseStartLine.canParseString(aString):
+        elif SIPResponseStartLine.canMatchString(aString):
             return SIPResponseStartLine.newParsedFrom(aString)
         else:
             return MalformedSIPStartLine.newParsedFrom(aString)

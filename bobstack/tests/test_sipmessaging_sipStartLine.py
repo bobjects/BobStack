@@ -20,8 +20,8 @@ class TestMalformedSIPStartLine(TestCase):
 
     def test_parsing(self):
         for line in self.canonicalStrings:
-            self.assertFalse(SIPRequestStartLine.canParseString(line))
-            self.assertFalse(SIPResponseStartLine.canParseString(line))
+            self.assertFalse(SIPRequestStartLine.canMatchString(line))
+            self.assertFalse(SIPResponseStartLine.canMatchString(line))
             startLine = MalformedSIPStartLine.newParsedFrom(line)
             self.assertFalse(startLine.isRequest)
             self.assertFalse(startLine.isResponse)
@@ -38,8 +38,8 @@ class TestSIPResponseStartLine(TestCase):
 
     def test_parsing(self):
         for line in self.canonicalStrings:
-            self.assertFalse(SIPRequestStartLine.canParseString(line))
-            self.assertTrue(SIPResponseStartLine.canParseString(line))
+            self.assertFalse(SIPRequestStartLine.canMatchString(line))
+            self.assertTrue(SIPResponseStartLine.canMatchString(line))
             startLine = SIPResponseStartLine.newParsedFrom(line)
             self.assertFalse(startLine.isRequest)
             self.assertTrue(startLine.isResponse)
@@ -77,8 +77,8 @@ class TestSIPRequestStartLine(TestCase):
 
     def test_parsing(self):
         for line in self.canonicalStrings:
-            self.assertTrue(SIPRequestStartLine.canParseString(line))
-            self.assertFalse(SIPResponseStartLine.canParseString(line))
+            self.assertTrue(SIPRequestStartLine.canMatchString(line))
+            self.assertFalse(SIPResponseStartLine.canMatchString(line))
             startLine = SIPRequestStartLine.newParsedFrom(line)
             self.assertTrue(startLine.isRequest)
             self.assertFalse(startLine.isResponse)

@@ -17,15 +17,21 @@ class TestUnknownSipHeaderField(TestCase):
 
     def test_parsing(self):
         for line in self.canonicalStrings:
-            self.assertFalse(UnknownSIPHeaderField.canParseString(line))
-            self.assertFalse(ContentLengthSIPHeaderField.canParseString(line))
+            self.assertFalse(UnknownSIPHeaderField.canMatchString(line))
+            self.assertFalse(ContentLengthSIPHeaderField.canMatchString(line))
             headerField = UnknownSIPHeaderField.newParsedFrom(line)
-            # TODO:  A couple of those canonical strings should not be considered valid.
-            # I.e. this assertTrue should break.  Work on that.
-            self.assertTrue(headerField.isValid)
+            if line.split().__len__() < 2:
+                self.assertFalse(headerField.isValid)
+            else:
+                if ":" not in line:
+                    self.assertFalse(headerField.isValid)
+                else:
+                    self.assertTrue(headerField.isValid)
             self.assertFalse(headerField.isContentLength)
             self.assertFalse(headerField.isKnown)
             self.assertEqual(headerField.rawString, line)
+            self.assertIsInstance(headerField.fieldName, basestring)
+            self.assertIsInstance(headerField.fieldValue, basestring)
 
 
 class TestContentLengthSipHeaderField(TestCase):
@@ -48,16 +54,21 @@ class TestContentLengthSipHeaderField(TestCase):
 
     def test_parsing(self):
         for line in self.canonicalStrings:
-            self.assertFalse(UnknownSIPHeaderField.canParseString(line), line)
-            self.assertTrue(ContentLengthSIPHeaderField.canParseString(line), line)
+            self.assertFalse(UnknownSIPHeaderField.canMatchString(line), line)
+            self.assertTrue(ContentLengthSIPHeaderField.canMatchString(line), line)
             headerField = ContentLengthSIPHeaderField.newParsedFrom(line)
             self.assertTrue(headerField.isValid, line)
             self.assertTrue(headerField.isContentLength, line)
             self.assertTrue(headerField.isKnown, line)
             self.assertEqual(headerField.rawString, line, line)
             self.assertIsInstance(headerField.value, (int, long), line)
+            self.assertEqual(headerField.value, 489, "Info: line is " + line)
+            self.assertEqual(headerField.fieldName.lower(), "Content-Length".lower())
+            self.assertEqual(headerField.fieldValue, "489")
             headerField.rawString = 'Content-Length: 301'
             self.assertEqual(301, headerField.value)
+            self.assertEqual(headerField.fieldName.lower(), "Content-Length".lower())
+            self.assertEqual(headerField.fieldValue, "301")
             self.assertEqual('Content-Length: 301', headerField.rawString)
         for line in self.canonicalStrings:
             self.assertEqual(ContentLengthSIPHeaderField.newParsedFrom(line).value, 489, "Info: line is " + line)

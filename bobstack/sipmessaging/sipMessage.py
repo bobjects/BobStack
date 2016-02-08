@@ -50,7 +50,7 @@ class SIPMessage(object):
         self._content = ""
         stringIO = StringIO(self._rawString)
         self._startLine = SIPStartLineFactory().nextForStringIO(stringIO)
-        self._header = SIPHeader(stringioToParse=stringIO)
+        self._header = SIPHeader.newParsedFrom(stringIO)
         self._content = stringIO.read()
         stringIO.close()
 
@@ -100,9 +100,13 @@ class SIPMessage(object):
     def isValid(self):
         if self.isMalformed:
             return False
-        else:
-            # TODO: check if header fields include a valid Content-Length header field, and that the content is the correct length.
-            return True
+        if not self.header.isValid:
+            return False
+        if self.header.contentLength is not None:
+            if self.header.contentLength != self.content.__len__():
+            # if False:
+                return False
+        return True
 
     @property
     def isUnknown(self):

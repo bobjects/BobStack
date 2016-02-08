@@ -63,6 +63,10 @@ class SIPResponseStartLine(SIPStartLine):
         stringio.close()
 
     @classmethod
+    def regexForMatching(cls):
+        return cls.regexForParsing()
+
+    @classmethod
     def regexForParsing(cls):
         try:
             return cls._regexForParsing
@@ -71,8 +75,8 @@ class SIPResponseStartLine(SIPStartLine):
             return cls._regexForParsing
 
     @classmethod
-    def canParseString(cls, aString):
-        return cls.regexForParsing().match(aString) is not None
+    def canMatchString(cls, aString):
+        return cls.regexForMatching().match(aString) is not None
 
     @property
     def isResponse(self):
