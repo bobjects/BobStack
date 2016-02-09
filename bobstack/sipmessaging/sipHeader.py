@@ -70,19 +70,26 @@ class SIPHeader(object):
         return self._headerFields
 
     @headerFields.setter
-    def headerFields(self, aCollection):
-        # TODO:  work in progress
-        # TODO:  NOTE:  WE CANNOT USE DICT OR ORDEREDDICT, BECAUSE WE NEED TO HAVE MULTIPLE HEADERS WITH SAME FIELD NAMES.
-        # TODO:  INSTEAD, USE LIST OF TUPLES OR LIST OF LISTS
-
-        if aCollection.__class__ == list:
-            self._headerFields = aCollection
-        elif aCollection.__class__ == dict:
-            # TODO
-            pass
-        elif aCollection.__class__ == OrderedDict:
-            # TODO
-            pass
+    def headerFields(self, aList):
+        if not aList:
+            self._headerFields = []
         else:
-            raise(ValueError, "headerFields must be a list, dict, or OrderedDictionary")
+            if not isinstance(aList[0], (list, tuple)):
+                self._headerFields = aList  # list of SIPHeaderField instances
+            else:  # list of field names and field values
+                factory = SIPHeaderFieldFactory()
+                headerFields = []
+                for fieldName, fieldValue in aList:
+                    if isinstance(fieldValue, dict):  # fieldValue is dict of property names and values.
+                        headerField = factory.nextForFieldName(fieldName)
+                        for propertyName, propertyValue in fieldValue.iteritems():
+                            prop = headerField.__class__.__dict__.get(propertyName, None)
+                            if type(prop) is property:
+                                setter = prop.fset
+                                if setter:
+                                    setter(headerField, propertyValue)
+                        headerFields.append(headerField)
+                    else:
+                        headerFields.append(factory.nextForFieldNameAndFieldValue(fieldName, str(fieldValue)))
+                self._headerFields = headerFields
 

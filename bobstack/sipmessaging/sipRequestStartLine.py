@@ -48,7 +48,7 @@ class SIPRequestStartLine(SIPStartLine):
     def parseAttributesFromRawString(self):
         self._sipMethod = ""
         self._requestURI = ""
-        match = self.__class__.regexForParsing().search(self._rawString)
+        match = self.__class__.regexForParsing().match(self._rawString)
         if match:
             self._sipMethod, self._requestURI = match.group(1, 2)
 

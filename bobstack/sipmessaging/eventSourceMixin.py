@@ -1,5 +1,6 @@
 from inspect import getargspec
 
+
 class EventSourceMixin(object):
     def __init__(self):
         self.eventsAndObservingMethods = {}

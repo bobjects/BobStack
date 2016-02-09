@@ -71,7 +71,7 @@ class SIPHeaderField(object):
     def parseAttributesFromRawString(self):
         self._fieldName = ""
         self._fieldValue = ""
-        match = self.__class__.regexForParsingFieldAndValue().search(self._rawString)
+        match = self.__class__.regexForParsingFieldAndValue().match(self._rawString)
         if match:
             self._fieldName, self._fieldValue = match.group(1, 2)
 
@@ -82,6 +82,10 @@ class SIPHeaderField(object):
         stringio.write(str(self._fieldValue))
         self._rawString = stringio.getvalue()
         stringio.close()
+
+    @classmethod
+    def regexForMatchingFieldName(cls):
+        return cls.regexToNeverMatch()
 
     @classmethod
     def regexForMatching(cls):
@@ -110,6 +114,10 @@ class SIPHeaderField(object):
     @classmethod
     def canMatchString(cls, aString):
         return cls.regexForMatching().match(aString) is not None
+
+    @classmethod
+    def canMatchFieldName(cls, aString):
+        return cls.regexForMatchingFieldName().match(aString) is not None
 
     @property
     def isUnknown(self):

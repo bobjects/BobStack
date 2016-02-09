@@ -48,7 +48,7 @@ class SIPResponseStartLine(SIPStartLine):
     def parseAttributesFromRawString(self):
         self._statusCode = 500
         self._reasonPhrase = ""
-        match = self.__class__.regexForParsing().search(self._rawString)
+        match = self.__class__.regexForParsing().match(self._rawString)
         if match:
             self._statusCode, self._reasonPhrase = match.group(1, 2)
             self._statusCode = int(self._statusCode)

@@ -2,12 +2,12 @@ try:
     from cStringIO import StringIO
 except ImportError:
     from StringIO import StringIO
-import pyperclip
-import unittest
 from unittest import TestCase
+import unittest
 import sys
 sys.path.append("..")
 from sipmessaging.sipMessageFactory import SIPMessageFactory
+
 
 class TestSIPMessageFactoryForSanitizedLogFile(TestCase):
     def setUp(self):
@@ -16,37 +16,35 @@ class TestSIPMessageFactoryForSanitizedLogFile(TestCase):
         self.invalidSIPMessageCount = 0
         self.validKnownSIPMessageCount = 0
         self.validUnknownSIPMessageCount = 0
-        with open(self.malformedSIPMessagesPathName, "w") as f:
+        with open(self.malformedSIPMessagesPathName, "w"):
             pass
-        with open(self.validSIPMessagesPathName, "w") as f:
+        with open(self.validSIPMessagesPathName, "w"):
             pass
-        with open(self.invalidSIPMessagesPathName, "w") as f:
+        with open(self.invalidSIPMessagesPathName, "w"):
             pass
-        with open(self.validKnownSIPMessagesPathName, "w") as f:
+        with open(self.validKnownSIPMessagesPathName, "w"):
             pass
-        with open(self.validUnknownSIPMessagesPathName, "w") as f:
+        with open(self.validUnknownSIPMessagesPathName, "w"):
             pass
-        with open(self.knownSIPStartLinesPathName, "w") as f:
+        with open(self.knownSIPStartLinesPathName, "w"):
             pass
-        with open(self.unknownSIPStartLinesPathName, "w") as f:
+        with open(self.unknownSIPStartLinesPathName, "w"):
             pass
-        with open(self.knownSIPMethodsPathName, "w") as f:
+        with open(self.knownSIPMethodsPathName, "w"):
             pass
-        with open(self.unknownSIPMethodsPathName, "w") as f:
+        with open(self.unknownSIPMethodsPathName, "w"):
             pass
-        with open(self.knownHeaderFieldsPathName, "w") as f:
+        with open(self.knownHeaderFieldsPathName, "w"):
             pass
-        with open(self.knownHeaderFieldNamesPathName, "w") as f:
+        with open(self.knownHeaderFieldNamesPathName, "w"):
             pass
-        with open(self.unknownHeaderFieldsPathName, "w") as f:
+        with open(self.unknownHeaderFieldsPathName, "w"):
             pass
-        with open(self.unknownHeaderFieldNamesPathName, "w") as f:
+        with open(self.unknownHeaderFieldNamesPathName, "w"):
             pass
 
     # @unittest.skip("skipping test")
     def test_parsing_sanitized_log_file(self):
-        # TODO:  Lots of invalid messages, because the sip log sanitizer is off by 2 for a lot of
-        # the messages, i.e. an extra CRLF was originally inserted for some of the strings that it is replacing
         factory = SIPMessageFactory()
         factory.whenEventDo("malformedSIPMessage", self.handleMalformedSIPMessage)
         factory.whenEventDo("validSIPMessage", self.handleValidSIPMessage)
@@ -67,8 +65,6 @@ class TestSIPMessageFactoryForSanitizedLogFile(TestCase):
                     # pyperclip.copy(str(count) + "\n\n" + messageString)
                     if count % 5000 == 0:
                         print str(count)
-
-
                     sipMessage = factory.nextForString(messageString)
                     self.runAssertionsForSIPMessage(sipMessage)
                     stringio.close()
@@ -111,7 +107,6 @@ class TestSIPMessageFactoryForSanitizedLogFile(TestCase):
             for headerField in aSIPMessage.header.unknownHeaderFields:
                 f.write(headerField.fieldName)
                 f.write("\r\n")
-
 
     def handleInvalidSIPMessage(self, aSIPMessage):
         self.invalidSIPMessageCount += 1
@@ -240,7 +235,6 @@ class TestSIPMessageFactoryForSanitizedLogFile(TestCase):
     @property
     def unknownHeaderFieldNamesPathName(self):
         return '/Users/bob/bobstack/proprietary-test-data/ft-huachuca-test-logs-sanitized/unknownHeaderFieldNames.txt'
-
 
 
 class TestSIPMessageFactoryForMalformedSIPRequest(TestCase):
@@ -404,7 +398,7 @@ class TestSIPMessageFactoryForSIPResponse(TestCase):
             self.runAssertionsForResponse(response)
 
     def test_eventTriggering(self):
-        # TODO
+        # This is thoroughly exercised in the TestSIPMessageFactoryForSanitizedLogFile class
         pass
 
     def runAssertionsForResponse(self, aSIPResponse):

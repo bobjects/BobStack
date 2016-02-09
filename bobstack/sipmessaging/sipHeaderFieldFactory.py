@@ -24,3 +24,17 @@ class SIPHeaderFieldFactory(object):
         else:
             return UnknownSIPHeaderField.newParsedFrom(aString)
 
+    def nextForFieldName(self, aString):
+        if ContentLengthSIPHeaderField.canMatchFieldName(aString):
+            return ContentLengthSIPHeaderField.newForAttributes()
+        # TODO - this will get fleshed out as we define more header fields.
+        else:
+            return UnknownSIPHeaderField.newParsedFrom(aString)
+
+    def nextForFieldNameAndFieldValue(self, fieldName, fieldValue):
+        if ContentLengthSIPHeaderField.canMatchFieldName(fieldName):
+            return ContentLengthSIPHeaderField.newForFieldAttributes(fieldName=fieldName, fieldValue=fieldValue)
+        # TODO - this will get fleshed out as we define more header fields.
+        else:
+            return UnknownSIPHeaderField.newForFieldAttributes(fieldName=fieldName, fieldValue=fieldValue)
+

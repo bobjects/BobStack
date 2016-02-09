@@ -104,7 +104,6 @@ class SIPMessage(object):
             return False
         if self.header.contentLength is not None:
             if self.header.contentLength != self.content.__len__():
-            # if False:
                 return False
         return True
 

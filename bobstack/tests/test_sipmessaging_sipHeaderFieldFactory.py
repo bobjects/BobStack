@@ -76,8 +76,6 @@ class TestSIPHeaderFieldFactoryForContentLength(TestCase):
             self.assertEqual(headerField.value, 489, line)
             stringio = StringIO(line + '\r\n')
             headerField = SIPHeaderFieldFactory().allForStringIO(stringio)[0]
-            # TODO:  A couple of those canonical strings should not be considered valid.
-            # I.e. this assertTrue should break.  Work on that.
             self.assertTrue(headerField.isValid, line)
             self.assertTrue(headerField.isContentLength, line)
             self.assertTrue(headerField.isKnown, line)

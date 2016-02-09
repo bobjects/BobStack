@@ -38,8 +38,7 @@ class ContentLengthSIPHeaderField(SIPHeaderField):
     def parseAttributesFromRawString(self):
         super(ContentLengthSIPHeaderField, self).parseAttributesFromRawString()
         self._value = None
-        # TODO: globally replace search() with match()???
-        match = self.__class__.regexForParsing().search(self._rawString)
+        match = self.__class__.regexForParsing().match(self._rawString)
         if match:
             matchGroup = match.group(1)
             if matchGroup:
@@ -54,6 +53,14 @@ class ContentLengthSIPHeaderField(SIPHeaderField):
     #     stringio.write(str(self._value))
     #     self._rawString = stringio.getvalue()
     #     stringio.close()
+
+    @classmethod
+    def regexForMatchingFieldName(cls):
+        try:
+            return cls._regexForMatchingFieldName
+        except AttributeError:
+            cls._regexForMatchingFieldName = re.compile('^Content-Length$', re.I)
+            return cls._regexForMatchingFieldName
 
     @classmethod
     def regexForMatching(cls):

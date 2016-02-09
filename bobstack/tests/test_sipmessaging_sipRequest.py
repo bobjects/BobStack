@@ -1,5 +1,4 @@
 from unittest import TestCase
-from collections import OrderedDict
 import sys
 sys.path.append("..")
 from sipmessaging.unknownSIPRequest import UnknownSIPRequest
@@ -8,6 +7,7 @@ from sipmessaging.sipHeader import SIPHeader
 from sipmessaging.contentLengthSIPHeaderField import ContentLengthSIPHeaderField
 from sipmessaging.unknownSIPHeaderField import UnknownSIPHeaderField
 # from sipmessaging.sipRequestStartLine import SIPRequestStartLine
+
 
 class TestUnknownSIPRequest(TestCase):
     @property
@@ -35,45 +35,6 @@ class TestUnknownSIPRequest(TestCase):
             self.runAssertionsForRequest(request)
 
     def test_rendering_from_list_of_header_fields(self):
-        # TODO:
-        '''
-        This works great, but it's awkward.  Let's experiment with methods that let you specify
-        header fields via an OrderedDict, keyed to the field name with value of keyValue.  If a specified
-        field name is known, then the known HeaderField subclass will automatically be instantiated. Alternative
-        value can include a dict of headerfield-specific attributes.  Hypothetical E.g.:
-
-        NOTE:  WE CANNOT USE DICT OR ORDEREDDICT, BECAUSE WE NEED TO HAVE MULTIPLE HEADERS WITH SAME FIELD NAMES.
-        INSTEAD, USE LIST OF TUPLES OR LIST OF LISTS
-
-        headerFields = OrderedDict([('From', '<sip:200.25.3.150:5061>;tag=0ee8d3e272e31c9195299efc500'),
-                                    ('To', '<sip:example.com:5061>'),
-                                    ('Call-ID', '0ee8d3e272e31c9195299efc500'),
-                                    ('CSeq', '6711 OPTIONS'),
-                                    ('Max-Forwards', 70),  # note the integer value.
-                                    ('Via', 'SIP/2.0/TLS 200.25.3.150;branch=z9hG4bK0ee8d3e272e31ca195299efc500'),
-                                    ('User-Agent', 'Example User Agent'),
-                                    ('Contact', '<sip:invalid@200.25.3.150:5061;transport=tls>'),
-                                    ('Route', '<sip:200.30.10.12:5061;transport=tls;lr>'),
-                                    ('Expires', 0),
-                                    ('Content-Length', 11)])  # This last one would actually instantiate a ContentLengthSIPHeaderField, and could alternatively be specified as ('Content-Length', {'value': 11}) which would invoke the value setter on the ContentLengthSIPHeaderField instance
-
-        Taking this a step further, to make it even more readable, we could just specify a normal dict, and have
-        the header fields sorted automatically (unknown header fields would be unsorted at the end, but before Content-Length.
-        Hypothetical E.g.:
-
-        headerFields = {'From': '<sip:200.25.3.150:5061>;tag=0ee8d3e272e31c9195299efc500',
-                       'To': '<sip:example.com:5061>',
-                       'Call-ID': '0ee8d3e272e31c9195299efc500',
-                       'CSeq': '6711 OPTIONS',
-                       'Max-Forwards': 70,  # note the integer value.
-                       'Via': 'SIP/2.0/TLS 200.25.3.150;branch=z9hG4bK0ee8d3e272e31ca195299efc500',
-                       'User-Agent': 'Example User Agent',
-                       'Contact': '<sip:invalid@200.25.3.150:5061;transport=tls>',
-                       'Route': '<sip:200.30.10.12:5061;transport=tls;lr>',
-                       'Expires': 0,
-                       'Content-Length': 11}
-
-        '''
         headerFields = [
             UnknownSIPHeaderField.newForAttributes(fieldName='From', fieldValue='<sip:200.25.3.150:5061>;tag=0ee8d3e272e31c9195299efc500'),
             UnknownSIPHeaderField.newForAttributes(fieldName='To', fieldValue='<sip:example.com:5061>'),
@@ -89,23 +50,36 @@ class TestUnknownSIPRequest(TestCase):
         request = UnknownSIPRequest.newForAttributes(sipMethod='UNKNOWN', requestURI='sip:example.com', content='Foo Content', header=SIPHeader.newForAttributes(headerFields=headerFields))
         self.runAssertionsForRequest(request)
 
-    def test_rendering_from_ordered_dict(self):
-        # TODO: NOTE:  WE CANNOT USE DICT OR ORDEREDDICT, BECAUSE WE NEED TO HAVE MULTIPLE HEADERS WITH SAME FIELD NAMES.
-        # INSTEAD, USE LIST OF TUPLES OR LIST OF LISTS
-        pass
-        # headerFields = OrderedDict([('From', '<sip:200.25.3.150:5061>;tag=0ee8d3e272e31c9195299efc500'),
-        #                             ('To', '<sip:example.com:5061>'),
-        #                             ('Call-ID', '0ee8d3e272e31c9195299efc500'),
-        #                             ('CSeq', '6711 OPTIONS'),
-        #                             ('Max-Forwards', 70),  # note the integer value.
-        #                             ('Via', 'SIP/2.0/TLS 200.25.3.150;branch=z9hG4bK0ee8d3e272e31ca195299efc500'),
-        #                             ('User-Agent', 'Example User Agent'),
-        #                             ('Contact', '<sip:invalid@200.25.3.150:5061;transport=tls>'),
-        #                             ('Route', '<sip:200.30.10.12:5061;transport=tls;lr>'),
-        #                             ('Expires', 0),
-        #                             ('Content-Length', 11)])  # This last one would actually instantiate a ContentLengthSIPHeaderField, and could alternatively be specified as ('Content-Length', {'value': 11}) which would invoke the value setter on the ContentLengthSIPHeaderField instance
-        # request = UnknownSIPRequest.newForAttributes(sipMethod='UNKNOWN', requestURI='sip:example.com', content='Foo Content', header=SIPHeader.newForAttributes(headerFields=headerFields))
-        # self.runAssertionsForRequest(request)
+    def test_rendering_from_list_of_field_names_and_values(self):
+        headerFields = [('From', '<sip:200.25.3.150:5061>;tag=0ee8d3e272e31c9195299efc500'),
+                        ('To', '<sip:example.com:5061>'),
+                        ('Call-ID', '0ee8d3e272e31c9195299efc500'),
+                        ('CSeq', '6711 OPTIONS'),
+                        ('Max-Forwards', 70),  # note the integer value.
+                        ('Via', 'SIP/2.0/TLS 200.25.3.150;branch=z9hG4bK0ee8d3e272e31ca195299efc500'),
+                        ('User-Agent', 'Example User Agent'),
+                        ('Contact', '<sip:invalid@200.25.3.150:5061;transport=tls>'),
+                        ('Route', '<sip:200.30.10.12:5061;transport=tls;lr>'),
+                        ('Expires', 0),
+                        ('Content-Length', 11)]  # This last one actually instantiates a ContentLengthSIPHeaderField.
+        # , and could alternatively be specified as ('Content-Length', {'value': 11}) which would invoke the value setter on the ContentLengthSIPHeaderField instance
+        request = UnknownSIPRequest.newForAttributes(sipMethod='UNKNOWN', requestURI='sip:example.com', content='Foo Content', header=SIPHeader.newForAttributes(headerFields=headerFields))
+        self.runAssertionsForRequest(request)
+
+    def test_rendering_from_list_of_field_names_and_values_including_property_dict(self):
+        headerFields = [('From', '<sip:200.25.3.150:5061>;tag=0ee8d3e272e31c9195299efc500'),
+                        ('To', '<sip:example.com:5061>'),
+                        ('Call-ID', '0ee8d3e272e31c9195299efc500'),
+                        ('CSeq', '6711 OPTIONS'),
+                        ('Max-Forwards', 70),  # note the integer value.
+                        ('Via', 'SIP/2.0/TLS 200.25.3.150;branch=z9hG4bK0ee8d3e272e31ca195299efc500'),
+                        ('User-Agent', 'Example User Agent'),
+                        ('Contact', '<sip:invalid@200.25.3.150:5061;transport=tls>'),
+                        ('Route', '<sip:200.30.10.12:5061;transport=tls;lr>'),
+                        ('Expires', 0),
+                        ('Content-Length', {"value": 11})]  # This last one actually instantiates a ContentLengthSIPHeaderField.
+        request = UnknownSIPRequest.newForAttributes(sipMethod='UNKNOWN', requestURI='sip:example.com', content='Foo Content', header=SIPHeader.newForAttributes(headerFields=headerFields))
+        self.runAssertionsForRequest(request)
 
     def runAssertionsForRequest(self, aSIPRequest):
         self.assertEqual(aSIPRequest.rawString, self.canonicalStrings[0])
@@ -155,7 +129,7 @@ class TestOPTIONSSIPRequest(TestCase):
             request = OPTIONSSIPRequest.newParsedFrom(messageString)
             self.runAssertionsForRequest(request)
 
-    def test_rendering(self):
+    def test_rendering_from_list_of_header_fields(self):
         headerFields = [
             UnknownSIPHeaderField.newForAttributes(fieldName='From', fieldValue='<sip:200.25.3.150:5061>;tag=0ee8d3e272e31c9195299efc500'),
             UnknownSIPHeaderField.newForAttributes(fieldName='To', fieldValue='<sip:example.com:5061>'),
@@ -168,6 +142,36 @@ class TestOPTIONSSIPRequest(TestCase):
             UnknownSIPHeaderField.newForAttributes(fieldName='Route', fieldValue='<sip:200.30.10.12:5061;transport=tls;lr>'),
             UnknownSIPHeaderField.newForAttributes(fieldName='Expires', fieldValue='0'),
             ContentLengthSIPHeaderField.newForAttributes(value=11)]
+        request = OPTIONSSIPRequest.newForAttributes(sipMethod='OPTIONS', requestURI='sip:example.com', content='Foo Content', header=SIPHeader.newForAttributes(headerFields=headerFields))
+        self.runAssertionsForRequest(request)
+
+    def test_rendering_from_list_of_field_names_and_values(self):
+        headerFields = [('From', '<sip:200.25.3.150:5061>;tag=0ee8d3e272e31c9195299efc500'),
+                        ('To', '<sip:example.com:5061>'),
+                        ('Call-ID', '0ee8d3e272e31c9195299efc500'),
+                        ('CSeq', '6711 OPTIONS'),
+                        ('Max-Forwards', 70),  # note the integer value.
+                        ('Via', 'SIP/2.0/TLS 200.25.3.150;branch=z9hG4bK0ee8d3e272e31ca195299efc500'),
+                        ('User-Agent', 'Example User Agent'),
+                        ('Contact', '<sip:invalid@200.25.3.150:5061;transport=tls>'),
+                        ('Route', '<sip:200.30.10.12:5061;transport=tls;lr>'),
+                        ('Expires', 0),
+                        ('Content-Length', {"value": 11})]  # This last one actually instantiates a ContentLengthSIPHeaderField.
+        request = OPTIONSSIPRequest.newForAttributes(sipMethod='OPTIONS', requestURI='sip:example.com', content='Foo Content', header=SIPHeader.newForAttributes(headerFields=headerFields))
+        self.runAssertionsForRequest(request)
+
+    def test_rendering_from_list_of_field_names_and_values_using_property_dict(self):
+        headerFields = [('From', '<sip:200.25.3.150:5061>;tag=0ee8d3e272e31c9195299efc500'),
+                        ('To', '<sip:example.com:5061>'),
+                        ('Call-ID', '0ee8d3e272e31c9195299efc500'),
+                        ('CSeq', '6711 OPTIONS'),
+                        ('Max-Forwards', 70),  # note the integer value.
+                        ('Via', 'SIP/2.0/TLS 200.25.3.150;branch=z9hG4bK0ee8d3e272e31ca195299efc500'),
+                        ('User-Agent', 'Example User Agent'),
+                        ('Contact', '<sip:invalid@200.25.3.150:5061;transport=tls>'),
+                        ('Route', '<sip:200.30.10.12:5061;transport=tls;lr>'),
+                        ('Expires', 0),
+                        ('Content-Length', {"value": 11})]  # This last one actually instantiates a ContentLengthSIPHeaderField.
         request = OPTIONSSIPRequest.newForAttributes(sipMethod='OPTIONS', requestURI='sip:example.com', content='Foo Content', header=SIPHeader.newForAttributes(headerFields=headerFields))
         self.runAssertionsForRequest(request)
 
