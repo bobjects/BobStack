@@ -4,3 +4,4 @@ proprietary-test-data/**
 **/*.pyc
 push-to-github.sh
 **/*.~vsd
+rsync250.sh
