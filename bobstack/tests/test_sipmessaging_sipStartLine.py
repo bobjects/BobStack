@@ -1,9 +1,9 @@
 from unittest import TestCase
 import sys
 sys.path.append("..")
-from sipmessaging.sipRequestStartLine import SIPRequestStartLine
-from sipmessaging.sipResponseStartLine import SIPResponseStartLine
-from sipmessaging.malformedSIPStartLine import MalformedSIPStartLine
+from sipmessaging import SIPRequestStartLine
+from sipmessaging import SIPResponseStartLine
+from sipmessaging import MalformedSIPStartLine
 
 
 class TestMalformedSIPStartLine(TestCase):

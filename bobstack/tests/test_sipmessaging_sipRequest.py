@@ -1,12 +1,12 @@
 from unittest import TestCase
 import sys
 sys.path.append("..")
-from sipmessaging.unknownSIPRequest import UnknownSIPRequest
-from sipmessaging.optionsSIPRequest import OPTIONSSIPRequest
-from sipmessaging.sipHeader import SIPHeader
-from sipmessaging.contentLengthSIPHeaderField import ContentLengthSIPHeaderField
-from sipmessaging.unknownSIPHeaderField import UnknownSIPHeaderField
-# from sipmessaging.sipRequestStartLine import SIPRequestStartLine
+from sipmessaging import UnknownSIPRequest
+from sipmessaging import OPTIONSSIPRequest
+from sipmessaging import SIPHeader
+from sipmessaging import ContentLengthSIPHeaderField
+from sipmessaging import UnknownSIPHeaderField
+# from sipmessaging import SIPRequestStartLine
 
 
 class TestUnknownSIPRequest(TestCase):
@@ -47,6 +47,36 @@ class TestUnknownSIPRequest(TestCase):
             UnknownSIPHeaderField.newForAttributes(fieldName='Route', fieldValue='<sip:200.30.10.12:5061;transport=tls;lr>'),
             UnknownSIPHeaderField.newForAttributes(fieldName='Expires', fieldValue='0'),
             ContentLengthSIPHeaderField.newForAttributes(value=11)]
+        request = UnknownSIPRequest.newForAttributes(sipMethod='UNKNOWN', requestURI='sip:example.com', content='Foo Content', header=SIPHeader.newForAttributes(headerFields=headerFields))
+        self.runAssertionsForRequest(request)
+
+    def test_rendering_from_one_big_header_strings(self):
+        headerFields = ('From: <sip:200.25.3.150:5061>;tag=0ee8d3e272e31c9195299efc500\r\n'
+                        'To: <sip:example.com:5061>\r\n'
+                        'Call-ID: 0ee8d3e272e31c9195299efc500\r\n'
+                        'CSeq: 6711 OPTIONS\r\n'
+                        'Max-Forwards: 70\r\n'
+                        'Via: SIP/2.0/TLS 200.25.3.150;branch=z9hG4bK0ee8d3e272e31ca195299efc500\r\n'
+                        'User-Agent: Example User Agent\r\n'
+                        'Contact: <sip:invalid@200.25.3.150:5061;transport=tls>\r\n'
+                        'Route: <sip:200.30.10.12:5061;transport=tls;lr>\r\n'
+                        'Expires: 0\r\n'
+                        'Content-Length: 11')  # This last one actually instantiates a ContentLengthSIPHeaderField.
+        request = UnknownSIPRequest.newForAttributes(sipMethod='UNKNOWN', requestURI='sip:example.com', content='Foo Content', header=SIPHeader.newForAttributes(headerFields=headerFields))
+        self.runAssertionsForRequest(request)
+
+    def test_rendering_from_list_of_header_field_strings(self):
+        headerFields = ['From: <sip:200.25.3.150:5061>;tag=0ee8d3e272e31c9195299efc500',
+                        'To: <sip:example.com:5061>',
+                        'Call-ID: 0ee8d3e272e31c9195299efc500',
+                        'CSeq: 6711 OPTIONS',
+                        'Max-Forwards: 70',
+                        'Via: SIP/2.0/TLS 200.25.3.150;branch=z9hG4bK0ee8d3e272e31ca195299efc500',
+                        'User-Agent: Example User Agent',
+                        'Contact: <sip:invalid@200.25.3.150:5061;transport=tls>',
+                        'Route: <sip:200.30.10.12:5061;transport=tls;lr>',
+                        'Expires: 0',
+                        'Content-Length: 11']  # This last one actually instantiates a ContentLengthSIPHeaderField.
         request = UnknownSIPRequest.newForAttributes(sipMethod='UNKNOWN', requestURI='sip:example.com', content='Foo Content', header=SIPHeader.newForAttributes(headerFields=headerFields))
         self.runAssertionsForRequest(request)
 
@@ -142,6 +172,36 @@ class TestOPTIONSSIPRequest(TestCase):
             UnknownSIPHeaderField.newForAttributes(fieldName='Route', fieldValue='<sip:200.30.10.12:5061;transport=tls;lr>'),
             UnknownSIPHeaderField.newForAttributes(fieldName='Expires', fieldValue='0'),
             ContentLengthSIPHeaderField.newForAttributes(value=11)]
+        request = OPTIONSSIPRequest.newForAttributes(sipMethod='OPTIONS', requestURI='sip:example.com', content='Foo Content', header=SIPHeader.newForAttributes(headerFields=headerFields))
+        self.runAssertionsForRequest(request)
+
+    def test_rendering_from_one_big_header_strings(self):
+        headerFields = ('From: <sip:200.25.3.150:5061>;tag=0ee8d3e272e31c9195299efc500\r\n'
+                        'To: <sip:example.com:5061>\r\n'
+                        'Call-ID: 0ee8d3e272e31c9195299efc500\r\n'
+                        'CSeq: 6711 OPTIONS\r\n'
+                        'Max-Forwards: 70\r\n'
+                        'Via: SIP/2.0/TLS 200.25.3.150;branch=z9hG4bK0ee8d3e272e31ca195299efc500\r\n'
+                        'User-Agent: Example User Agent\r\n'
+                        'Contact: <sip:invalid@200.25.3.150:5061;transport=tls>\r\n'
+                        'Route: <sip:200.30.10.12:5061;transport=tls;lr>\r\n'
+                        'Expires: 0\r\n'
+                        'Content-Length: 11')  # This last one actually instantiates a ContentLengthSIPHeaderField.
+        request = OPTIONSSIPRequest.newForAttributes(sipMethod='OPTIONS', requestURI='sip:example.com', content='Foo Content', header=SIPHeader.newForAttributes(headerFields=headerFields))
+        self.runAssertionsForRequest(request)
+
+    def test_rendering_from_list_of_header_field_strings(self):
+        headerFields = ['From: <sip:200.25.3.150:5061>;tag=0ee8d3e272e31c9195299efc500',
+                        'To: <sip:example.com:5061>',
+                        'Call-ID: 0ee8d3e272e31c9195299efc500',
+                        'CSeq: 6711 OPTIONS',
+                        'Max-Forwards: 70',
+                        'Via: SIP/2.0/TLS 200.25.3.150;branch=z9hG4bK0ee8d3e272e31ca195299efc500',
+                        'User-Agent: Example User Agent',
+                        'Contact: <sip:invalid@200.25.3.150:5061;transport=tls>',
+                        'Route: <sip:200.30.10.12:5061;transport=tls;lr>',
+                        'Expires: 0',
+                        'Content-Length: 11']  # This last one actually instantiates a ContentLengthSIPHeaderField.
         request = OPTIONSSIPRequest.newForAttributes(sipMethod='OPTIONS', requestURI='sip:example.com', content='Foo Content', header=SIPHeader.newForAttributes(headerFields=headerFields))
         self.runAssertionsForRequest(request)
 

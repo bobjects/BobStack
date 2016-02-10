@@ -5,7 +5,7 @@ except ImportError:
 from unittest import TestCase
 import sys
 sys.path.append("..")
-from sipmessaging.sipHeaderFieldFactory import SIPHeaderFieldFactory
+from sipmessaging import SIPHeaderFieldFactory
 
 
 class TestSIPHeaderFieldFactoryForUnknown(TestCase):

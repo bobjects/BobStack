@@ -1,10 +1,10 @@
 from unittest import TestCase
 import sys
 sys.path.append("..")
-from sipmessaging.sipResponse import SIPResponse
-from sipmessaging.sipHeader import SIPHeader
-from sipmessaging.contentLengthSIPHeaderField import ContentLengthSIPHeaderField
-from sipmessaging.unknownSIPHeaderField import UnknownSIPHeaderField
+from sipmessaging import SIPResponse
+from sipmessaging import SIPHeader
+from sipmessaging import ContentLengthSIPHeaderField
+from sipmessaging import UnknownSIPHeaderField
 # from sipmessaging.sipResponseStartLine import SIPResponseStartLine
 
 
@@ -37,6 +37,28 @@ class TestSIPResponse(TestCase):
             # UnknownSIPHeaderField.newForAttributes(fieldName='Max-Forwards', fieldValue='70'),
             UnknownSIPHeaderField.newForAttributes(fieldName='Via', fieldValue='SIP/2.0/UDP 200.23.3.241:5064;received=200.30.10.15;branch=z9hG4bK-3f04bd-f62a8381-4ebadacb-0x692748a8'),
             ContentLengthSIPHeaderField.newForAttributes(value=11)]
+        response = SIPResponse.newForAttributes(statusCode=100, reasonPhrase='Trying', content='Foo Content', header=SIPHeader.newForAttributes(headerFields=headerFields))
+        self.runAssertionsForResponse(response)
+
+    def test_rendering_from_one_big_header_strings(self):
+        headerFields = ('From: "3125551212"<sip:3125551212@example.com:5064;user=phone>;tag=e95a00000022137fe518\r\n'
+                        'To: "3125551313"<sip:3125551313@example.com:5064;user=phone>\r\n'
+                        'Call-ID: a12d6210342b0183745ef9750992682d90d7edce@200.23.3.241\r\n'
+                        'CSeq: 615 INVITE\r\n'
+                        # 'Max-Forwards: 70\r\n'
+                        'Via: SIP/2.0/UDP 200.23.3.241:5064;received=200.30.10.15;branch=z9hG4bK-3f04bd-f62a8381-4ebadacb-0x692748a8\r\n'
+                        'Content-Length: 11')  # This last one actually instantiates a ContentLengthSIPHeaderField.
+        response = SIPResponse.newForAttributes(statusCode=100, reasonPhrase='Trying', content='Foo Content', header=SIPHeader.newForAttributes(headerFields=headerFields))
+        self.runAssertionsForResponse(response)
+
+    def test_rendering_from_list_of_header_field_strings(self):
+        headerFields = ['From: "3125551212"<sip:3125551212@example.com:5064;user=phone>;tag=e95a00000022137fe518',
+                        'To: "3125551313"<sip:3125551313@example.com:5064;user=phone>',
+                        'Call-ID: a12d6210342b0183745ef9750992682d90d7edce@200.23.3.241',
+                        'CSeq: 615 INVITE',
+                        # 'Max-Forwards: 70',
+                        'Via: SIP/2.0/UDP 200.23.3.241:5064;received=200.30.10.15;branch=z9hG4bK-3f04bd-f62a8381-4ebadacb-0x692748a8',
+                        'Content-Length: 11']  # This last one actually instantiates a ContentLengthSIPHeaderField.
         response = SIPResponse.newForAttributes(statusCode=100, reasonPhrase='Trying', content='Foo Content', header=SIPHeader.newForAttributes(headerFields=headerFields))
         self.runAssertionsForResponse(response)
 

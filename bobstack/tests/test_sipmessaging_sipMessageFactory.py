@@ -6,7 +6,7 @@ from unittest import TestCase
 import unittest
 import sys
 sys.path.append("..")
-from sipmessaging.sipMessageFactory import SIPMessageFactory
+from sipmessaging import SIPMessageFactory
 
 
 class TestSIPMessageFactoryForSanitizedLogFile(TestCase):
@@ -178,19 +178,19 @@ class TestSIPMessageFactoryForSanitizedLogFile(TestCase):
 
     @property
     def sanitizedFilePathName(self):
-        return '/Users/bob/bobstack/proprietary-test-data/ft-huachuca-test-logs-sanitized/sanitized.txt'
+        return '../../proprietary-test-data/ft-huachuca-test-logs-sanitized/sanitized.txt'
 
     @property
     def validSIPMessagesPathName(self):
-        return '/Users/bob/bobstack/proprietary-test-data/ft-huachuca-test-logs-sanitized/validSIPMessages.txt'
+        return '../../proprietary-test-data/ft-huachuca-test-logs-sanitized/validSIPMessages.txt'
 
     @property
     def invalidSIPMessagesPathName(self):
-        return '/Users/bob/bobstack/proprietary-test-data/ft-huachuca-test-logs-sanitized/invalidSIPMessages.txt'
+        return '../../proprietary-test-data/ft-huachuca-test-logs-sanitized/invalidSIPMessages.txt'
 
     @property
     def malformedSIPMessagesPathName(self):
-        return '/Users/bob/bobstack/proprietary-test-data/ft-huachuca-test-logs-sanitized/malformedSIPMessages.txt'
+        return '../../proprietary-test-data/ft-huachuca-test-logs-sanitized/malformedSIPMessages.txt'
 
     @property
     def messageSeparator(self):
@@ -198,43 +198,43 @@ class TestSIPMessageFactoryForSanitizedLogFile(TestCase):
 
     @property
     def validKnownSIPMessagesPathName(self):
-        return '/Users/bob/bobstack/proprietary-test-data/ft-huachuca-test-logs-sanitized/validKnownSIPMessages.txt'
+        return '../../proprietary-test-data/ft-huachuca-test-logs-sanitized/validKnownSIPMessages.txt'
 
     @property
     def validUnknownSIPMessagesPathName(self):
-        return '/Users/bob/bobstack/proprietary-test-data/ft-huachuca-test-logs-sanitized/validUnknownSIPMessages.txt'
+        return '../../proprietary-test-data/ft-huachuca-test-logs-sanitized/validUnknownSIPMessages.txt'
 
     @property
     def knownSIPStartLinesPathName(self):
-        return '/Users/bob/bobstack/proprietary-test-data/ft-huachuca-test-logs-sanitized/knownSIPStartLines.txt'
+        return '../../proprietary-test-data/ft-huachuca-test-logs-sanitized/knownSIPStartLines.txt'
 
     @property
     def unknownSIPStartLinesPathName(self):
-        return '/Users/bob/bobstack/proprietary-test-data/ft-huachuca-test-logs-sanitized/unknownSIPStartLines.txt'
+        return '../../proprietary-test-data/ft-huachuca-test-logs-sanitized/unknownSIPStartLines.txt'
 
     @property
     def knownSIPMethodsPathName(self):
-        return '/Users/bob/bobstack/proprietary-test-data/ft-huachuca-test-logs-sanitized/knownSIPMethods.txt'
+        return '../../proprietary-test-data/ft-huachuca-test-logs-sanitized/knownSIPMethods.txt'
 
     @property
     def unknownSIPMethodsPathName(self):
-        return '/Users/bob/bobstack/proprietary-test-data/ft-huachuca-test-logs-sanitized/unknownSIPMethods.txt'
+        return '../../proprietary-test-data/ft-huachuca-test-logs-sanitized/unknownSIPMethods.txt'
 
     @property
     def knownHeaderFieldsPathName(self):
-        return '/Users/bob/bobstack/proprietary-test-data/ft-huachuca-test-logs-sanitized/knownHeaderFields.txt'
+        return '../../proprietary-test-data/ft-huachuca-test-logs-sanitized/knownHeaderFields.txt'
 
     @property
     def unknownHeaderFieldsPathName(self):
-        return '/Users/bob/bobstack/proprietary-test-data/ft-huachuca-test-logs-sanitized/unknownHeaderFields.txt'
+        return '../../proprietary-test-data/ft-huachuca-test-logs-sanitized/unknownHeaderFields.txt'
 
     @property
     def knownHeaderFieldNamesPathName(self):
-        return '/Users/bob/bobstack/proprietary-test-data/ft-huachuca-test-logs-sanitized/knownHeaderFieldNames.txt'
+        return '../../proprietary-test-data/ft-huachuca-test-logs-sanitized/knownHeaderFieldNames.txt'
 
     @property
     def unknownHeaderFieldNamesPathName(self):
-        return '/Users/bob/bobstack/proprietary-test-data/ft-huachuca-test-logs-sanitized/unknownHeaderFieldNames.txt'
+        return '../../proprietary-test-data/ft-huachuca-test-logs-sanitized/unknownHeaderFieldNames.txt'
 
 
 class TestSIPMessageFactoryForMalformedSIPRequest(TestCase):

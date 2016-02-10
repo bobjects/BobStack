@@ -5,7 +5,7 @@ except ImportError:
 from unittest import TestCase
 import sys
 sys.path.append("..")
-from sipmessaging.sipStartLineFactory import SIPStartLineFactory
+from sipmessaging import SIPStartLineFactory
 
 
 class TestSIPStartLineFactoryForResponse(TestCase):

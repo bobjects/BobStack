@@ -1,11 +1,11 @@
 from unittest import TestCase
 import sys
 sys.path.append("..")
-from sipmessaging.malformedSIPStartLine import MalformedSIPStartLine
-from sipmessaging.malformedSIPMessage import MalformedSIPMessage
-from sipmessaging.contentLengthSIPHeaderField import ContentLengthSIPHeaderField
-from sipmessaging.unknownSIPHeaderField import UnknownSIPHeaderField
-from sipmessaging.sipHeader import SIPHeader
+from sipmessaging import MalformedSIPStartLine
+from sipmessaging import MalformedSIPMessage
+from sipmessaging import ContentLengthSIPHeaderField
+from sipmessaging import UnknownSIPHeaderField
+from sipmessaging import SIPHeader
 
 
 class TestMalformedSipMessage(TestCase):

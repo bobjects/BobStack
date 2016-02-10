@@ -1,8 +1,8 @@
 from unittest import TestCase
 import sys
 sys.path.append("..")
-from sipmessaging.unknownSIPHeaderField import UnknownSIPHeaderField
-from sipmessaging.contentLengthSIPHeaderField import ContentLengthSIPHeaderField
+from sipmessaging import UnknownSIPHeaderField
+from sipmessaging import ContentLengthSIPHeaderField
 
 
 class TestUnknownSipHeaderField(TestCase):
