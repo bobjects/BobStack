@@ -97,6 +97,16 @@ class SIPMessage(object):
         self.clearRawString()
 
     @property
+    def transactionHash(self):
+        # TODO
+        return 0
+
+    @property
+    def dialogHash(self):
+        # TODO
+        return 0
+
+    @property
     def isValid(self):
         if self.isMalformed:
             return False

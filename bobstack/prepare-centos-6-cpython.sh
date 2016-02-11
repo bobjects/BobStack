@@ -5,15 +5,25 @@ set -e
 PYTHONVERSION=2.7.11
 SETUPTOOLSVERSION=1.4.2
 
-sudo yum -y update
-sudo yum groupinstall -y development
-sudo yum install -y zlib-dev openssl-devel sqlite-devel bzip2-devel xz-libs wget man
 cd ~
 if [ ! -d src ]
 then
 	mkdir src
 fi
 cd src
+
+# Notes for installing pypy:
+# sudo yum install ncurses-devel libffi-devel expat-devel
+# sudo rpm -Uvh http://pkgs.repoforge.org/mercurial/mercurial-2.2.2-1.el6.rfx.x86_64.rpm
+# hg clone http://bitbucket.org/pypy/pypy pypy
+# cd pypy/pypy/goal
+# python ../../rpython/bin/rpython --opt=jit
+
+sudo yum -y update
+sudo wget http://pkgs.repoforge.org/rpmforge-release/rpmforge-release-0.5.3-1.el6.rf.x86_64.rpm
+sudo rpm -Uhv rpmforge-release*.rf.x86_64.rpm
+sudo yum groupinstall -y development
+sudo yum install -y zlib-dev openssl-devel sqlite-devel bzip2-devel xz-libs wget man htop
 wget -c http://www.python.org/ftp/python/$PYTHONVERSION/Python-$PYTHONVERSION.tar.xz
 xz -dk Python-$PYTHONVERSION.tar.xz
 tar -xvf Python-$PYTHONVERSION.tar
