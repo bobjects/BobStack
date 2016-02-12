@@ -139,3 +139,7 @@ class SIPHeaderField(object):
     def isContentLength(self):
         return False
 
+    @property
+    def isVia(self):
+        return False
+

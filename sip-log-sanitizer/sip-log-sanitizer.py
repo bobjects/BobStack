@@ -1,16 +1,17 @@
 #!/usr/bin/python
 import sys
-sys.path.append("../bobstack")
-from sipmessaging.sipMessageFactory import SIPMessageFactory
+sys.path.append("..")
+# from sipmessaging.sipMessageFactory import SIPMessageFactory
+from bobstack.sipmessaging import SIPMessageFactory
 import os
 import re
 import timeit
 
 # interimFile1PathName = '/tmp/interim1.txt'
 # interimFile2PathName = '/tmp/interim2.txt'
-interimFile1PathName = '../proprietary-test-data/ft-huachuca-test-logs-sanitized/interim1.txt'
-interimFile2PathName = '../proprietary-test-data/ft-huachuca-test-logs-sanitized/interim2.txt'
-sanitizedFilePathName = '../proprietary-test-data/ft-huachuca-test-logs-sanitized/sanitized.txt'
+interimFile1PathName = '../proprietary-test-data/sanitized/interim1.txt'
+interimFile2PathName = '../proprietary-test-data/sanitized/interim2.txt'
+sanitizedFilePathName = '../proprietary-test-data/sanitized/sanitized.txt'
 rawLogFileDirectoryPathNames = [ '../proprietary-test-data/ft-huachuca-test-logs-raw', '../proprietary-test-data/vance-logs-raw' ]
 messageSeparator = "__MESSAGESEPARATOR__"
 rawFileMessageSeparatorRegexes = [ "^>>>>>>>>>>  [^>]*>>>>>>>>>>>",

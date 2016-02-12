@@ -138,6 +138,46 @@ class SIPMessage(object):
         return False
 
     @property
+    def isACKRequest(self):
+        return False
+
+    @property
+    def isBYERequest(self):
+        return False
+
+    @property
+    def isCANCELRequest(self):
+        return False
+
+    @property
+    def isINFORequest(self):
+        return False
+
+    @property
+    def isINVITERequest(self):
+        return False
+
+    @property
+    def isNOTIFYRequest(self):
+        return False
+
+    @property
     def isOPTIONSRequest(self):
+        return False
+
+    @property
+    def isREFERRequest(self):
+        return False
+
+    @property
+    def isREGISTERRequest(self):
+        return False
+
+    @property
+    def isSUBSCRIBERequest(self):
+        return False
+
+    @property
+    def isUPDATERequest(self):
         return False
 

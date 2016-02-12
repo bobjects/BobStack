@@ -27,6 +27,7 @@ class SIPHeader(object):
         self._knownHeaderFields = None
         self._unknownHeaderFields = None
         self._contentLengthHeaderField = None
+        self._viaHeaderFields = None
 
     def parseAttributesFromStringIO(self, stringioToParse):
         self._headerFields = SIPHeaderFieldFactory().allForStringIO(stringioToParse)
@@ -45,9 +46,21 @@ class SIPHeader(object):
 
     @property
     def contentLengthHeaderField(self):
-        if not self._contentLengthHeaderField:
+        if self._contentLengthHeaderField is None:
             self._contentLengthHeaderField = next((headerField for headerField in self.headerFields if headerField.isContentLength), None)
         return self._contentLengthHeaderField
+
+    @property
+    def vias(self):
+        if self._viaHeaderFields is not None:
+            return [x.fieldValue for x in self._viaHeaderFields]
+        return []
+
+    @property
+    def viaHeaderFields(self):
+        if self._viaHeaderFields is None:
+            self._viaHeaderFields = [headerField for headerField in self.headerFields if headerField.isVia]
+        return self._viaHeaderFields
 
     @property
     def knownHeaderFields(self):

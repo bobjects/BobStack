@@ -3,7 +3,9 @@ try:
 except ImportError:
     from StringIO import StringIO
 import re
-from sipHeaderField import SIPHeaderField
+import sys
+sys.path.append("../../..")
+from bobstack.sipmessaging import SIPHeaderField
 
 
 class ContentLengthSIPHeaderField(SIPHeaderField):
@@ -46,13 +48,6 @@ class ContentLengthSIPHeaderField(SIPHeaderField):
             else:
                 # Will get here is the Content-Length header field is present, but there is no value.
                 self._value = None
-
-    # def renderRawStringFromAttributes(self):
-    #     stringio = StringIO()
-    #     stringio.write("Content-Length: ")
-    #     stringio.write(str(self._value))
-    #     self._rawString = stringio.getvalue()
-    #     stringio.close()
 
     @classmethod
     def regexForMatchingFieldName(cls):

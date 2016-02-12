@@ -5,8 +5,10 @@ except ImportError:
 from unittest import TestCase
 import unittest
 import sys
-sys.path.append("..")
-from sipmessaging import SIPMessageFactory
+#sys.path.append("..")
+#from sipmessaging import SIPMessageFactory
+sys.path.append("../..")
+from bobstack.sipmessaging import SIPMessageFactory
 
 
 class TestSIPMessageFactoryForSanitizedLogFile(TestCase):
@@ -43,7 +45,7 @@ class TestSIPMessageFactoryForSanitizedLogFile(TestCase):
         with open(self.unknownHeaderFieldNamesPathName, "w"):
             pass
 
-    # @unittest.skip("skipping test")
+    @unittest.skip("skipping test")
     def test_parsing_sanitized_log_file(self):
         factory = SIPMessageFactory()
         factory.whenEventDo("malformedSIPMessage", self.handleMalformedSIPMessage)
@@ -164,6 +166,16 @@ class TestSIPMessageFactoryForSanitizedLogFile(TestCase):
         self.assertIsInstance(aSIPMessage.isRequest, bool)
         self.assertIsInstance(aSIPMessage.isResponse, bool)
         self.assertIsInstance(aSIPMessage.isOPTIONSRequest, bool)
+        self.assertIsInstance(aSIPMessage.isACKRequest, bool)
+        self.assertIsInstance(aSIPMessage.isBYERequest, bool)
+        self.assertIsInstance(aSIPMessage.isCANCELRequest, bool)
+        self.assertIsInstance(aSIPMessage.isINFORequest, bool)
+        self.assertIsInstance(aSIPMessage.isINVITERequest, bool)
+        self.assertIsInstance(aSIPMessage.isNOTIFYRequest, bool)
+        self.assertIsInstance(aSIPMessage.isREFERRequest, bool)
+        self.assertIsInstance(aSIPMessage.isREGISTERRequest, bool)
+        self.assertIsInstance(aSIPMessage.isSUBSCRIBERequest, bool)
+        self.assertIsInstance(aSIPMessage.isUPDATERequest, bool)
         self.assertIsInstance(aSIPMessage.isMalformed, bool)
         # self.assertIsNotNone(aSIPMessage.header.contentLengthHeaderField)
         self.assertIsInstance(aSIPMessage.header.contentLength, (int, long))
@@ -178,19 +190,19 @@ class TestSIPMessageFactoryForSanitizedLogFile(TestCase):
 
     @property
     def sanitizedFilePathName(self):
-        return '../../proprietary-test-data/ft-huachuca-test-logs-sanitized/sanitized.txt'
+        return '../../proprietary-test-data/sanitized/sanitized.txt'
 
     @property
     def validSIPMessagesPathName(self):
-        return '../../proprietary-test-data/ft-huachuca-test-logs-sanitized/validSIPMessages.txt'
+        return '../../proprietary-test-data/sanitized/validSIPMessages.txt'
 
     @property
     def invalidSIPMessagesPathName(self):
-        return '../../proprietary-test-data/ft-huachuca-test-logs-sanitized/invalidSIPMessages.txt'
+        return '../../proprietary-test-data/sanitized/invalidSIPMessages.txt'
 
     @property
     def malformedSIPMessagesPathName(self):
-        return '../../proprietary-test-data/ft-huachuca-test-logs-sanitized/malformedSIPMessages.txt'
+        return '../../proprietary-test-data/sanitized/malformedSIPMessages.txt'
 
     @property
     def messageSeparator(self):
@@ -198,43 +210,43 @@ class TestSIPMessageFactoryForSanitizedLogFile(TestCase):
 
     @property
     def validKnownSIPMessagesPathName(self):
-        return '../../proprietary-test-data/ft-huachuca-test-logs-sanitized/validKnownSIPMessages.txt'
+        return '../../proprietary-test-data/sanitized/validKnownSIPMessages.txt'
 
     @property
     def validUnknownSIPMessagesPathName(self):
-        return '../../proprietary-test-data/ft-huachuca-test-logs-sanitized/validUnknownSIPMessages.txt'
+        return '../../proprietary-test-data/sanitized/validUnknownSIPMessages.txt'
 
     @property
     def knownSIPStartLinesPathName(self):
-        return '../../proprietary-test-data/ft-huachuca-test-logs-sanitized/knownSIPStartLines.txt'
+        return '../../proprietary-test-data/sanitized/knownSIPStartLines.txt'
 
     @property
     def unknownSIPStartLinesPathName(self):
-        return '../../proprietary-test-data/ft-huachuca-test-logs-sanitized/unknownSIPStartLines.txt'
+        return '../../proprietary-test-data/sanitized/unknownSIPStartLines.txt'
 
     @property
     def knownSIPMethodsPathName(self):
-        return '../../proprietary-test-data/ft-huachuca-test-logs-sanitized/knownSIPMethods.txt'
+        return '../../proprietary-test-data/sanitized/knownSIPMethods.txt'
 
     @property
     def unknownSIPMethodsPathName(self):
-        return '../../proprietary-test-data/ft-huachuca-test-logs-sanitized/unknownSIPMethods.txt'
+        return '../../proprietary-test-data/sanitized/unknownSIPMethods.txt'
 
     @property
     def knownHeaderFieldsPathName(self):
-        return '../../proprietary-test-data/ft-huachuca-test-logs-sanitized/knownHeaderFields.txt'
+        return '../../proprietary-test-data/sanitized/knownHeaderFields.txt'
 
     @property
     def unknownHeaderFieldsPathName(self):
-        return '../../proprietary-test-data/ft-huachuca-test-logs-sanitized/unknownHeaderFields.txt'
+        return '../../proprietary-test-data/sanitized/unknownHeaderFields.txt'
 
     @property
     def knownHeaderFieldNamesPathName(self):
-        return '../../proprietary-test-data/ft-huachuca-test-logs-sanitized/knownHeaderFieldNames.txt'
+        return '../../proprietary-test-data/sanitized/knownHeaderFieldNames.txt'
 
     @property
     def unknownHeaderFieldNamesPathName(self):
-        return '../../proprietary-test-data/ft-huachuca-test-logs-sanitized/unknownHeaderFieldNames.txt'
+        return '../../proprietary-test-data/sanitized/unknownHeaderFieldNames.txt'
 
 
 class TestSIPMessageFactoryForMalformedSIPRequest(TestCase):
@@ -269,7 +281,17 @@ class TestSIPMessageFactoryForMalformedSIPRequest(TestCase):
         self.assertFalse(aSIPRequest.isValid)
         self.assertFalse(aSIPRequest.isRequest)
         self.assertFalse(aSIPRequest.isResponse)
+        self.assertFalse(aSIPRequest.isACKRequest)
+        self.assertFalse(aSIPRequest.isBYERequest)
+        self.assertFalse(aSIPRequest.isCANCELRequest)
+        self.assertFalse(aSIPRequest.isINFORequest)
+        self.assertFalse(aSIPRequest.isINVITERequest)
+        self.assertFalse(aSIPRequest.isNOTIFYRequest)
         self.assertFalse(aSIPRequest.isOPTIONSRequest)
+        self.assertFalse(aSIPRequest.isREFERRequest)
+        self.assertFalse(aSIPRequest.isREGISTERRequest)
+        self.assertFalse(aSIPRequest.isSUBSCRIBERequest)
+        self.assertFalse(aSIPRequest.isUPDATERequest)
         self.assertTrue(aSIPRequest.isMalformed)
         self.assertIsNotNone(aSIPRequest.header.contentLengthHeaderField)
         self.assertEqual(11, aSIPRequest.header.contentLength)
@@ -313,7 +335,17 @@ class TestSIPMessageFactoryForUnknownSIPRequest(TestCase):
         self.assertTrue(aSIPRequest.isValid)
         self.assertTrue(aSIPRequest.isRequest)
         self.assertFalse(aSIPRequest.isResponse)
+        self.assertFalse(aSIPRequest.isACKRequest)
+        self.assertFalse(aSIPRequest.isBYERequest)
+        self.assertFalse(aSIPRequest.isCANCELRequest)
+        self.assertFalse(aSIPRequest.isINFORequest)
+        self.assertFalse(aSIPRequest.isINVITERequest)
+        self.assertFalse(aSIPRequest.isNOTIFYRequest)
         self.assertFalse(aSIPRequest.isOPTIONSRequest)
+        self.assertFalse(aSIPRequest.isREFERRequest)
+        self.assertFalse(aSIPRequest.isREGISTERRequest)
+        self.assertFalse(aSIPRequest.isSUBSCRIBERequest)
+        self.assertFalse(aSIPRequest.isUPDATERequest)
         self.assertFalse(aSIPRequest.isMalformed)
         # self.assertEqual(1, [headerField for headerField in aSIPRequest.header.headerFields if headerField.isContentLength].__len__())
         # self.assertEqual(11, next(headerField for headerField in aSIPRequest.header.headerFields if headerField.isContentLength).value)
@@ -362,6 +394,16 @@ class TestSIPMessageFactoryForOPTIONSSIPRequest(TestCase):
         self.assertTrue(aSIPRequest.isRequest)
         self.assertFalse(aSIPRequest.isResponse)
         self.assertTrue(aSIPRequest.isOPTIONSRequest)
+        self.assertFalse(aSIPRequest.isACKRequest)
+        self.assertFalse(aSIPRequest.isBYERequest)
+        self.assertFalse(aSIPRequest.isCANCELRequest)
+        self.assertFalse(aSIPRequest.isINFORequest)
+        self.assertFalse(aSIPRequest.isINVITERequest)
+        self.assertFalse(aSIPRequest.isNOTIFYRequest)
+        self.assertFalse(aSIPRequest.isREFERRequest)
+        self.assertFalse(aSIPRequest.isREGISTERRequest)
+        self.assertFalse(aSIPRequest.isSUBSCRIBERequest)
+        self.assertFalse(aSIPRequest.isUPDATERequest)
         self.assertFalse(aSIPRequest.isMalformed)
         # self.assertEqual(1, [headerField for headerField in aSIPRequest.header.headerFields if headerField.isContentLength].__len__())
         # self.assertEqual(11, next(headerField for headerField in aSIPRequest.header.headerFields if headerField.isContentLength).value)
@@ -374,6 +416,586 @@ class TestSIPMessageFactoryForOPTIONSSIPRequest(TestCase):
         self.assertFalse(aSIPRequest.startLine.isMalformed)
         self.assertEqual('Foo Content', aSIPRequest.content)
         self.assertEqual('OPTIONS', aSIPRequest.startLine.sipMethod)
+        self.assertEqual('sip:example.com', aSIPRequest.startLine.requestURI)
+
+
+class TestSIPMessageFactoryForACKSIPRequest(TestCase):
+    @property
+    def canonicalStrings(self):
+        return [
+            ('ACK sip:example.com SIP/2.0\r\n'
+             'From: <sip:200.25.3.150:5061>;tag=0ee8d3e272e31c9195299efc500\r\n'
+             'To: <sip:example.com:5061>\r\n'
+             'Call-ID: 0ee8d3e272e31c9195299efc500\r\n'
+             'CSeq: 6711 ACK\r\n'
+             'Max-Forwards: 70\r\n'
+             'Via: SIP/2.0/TLS 200.25.3.150;branch=z9hG4bK0ee8d3e272e31ca195299efc500\r\n'
+             'User-Agent: Example User Agent\r\n'
+             'Contact: <sip:invalid@200.25.3.150:5061;transport=tls>\r\n'
+             'Route: <sip:200.30.10.12:5061;transport=tls;lr>\r\n'
+             'Expires: 0\r\n'
+             'Content-Length: 11\r\n'
+             '\r\n'
+             'Foo Content')
+        ]
+
+    def test_parsing(self):
+        for messageString in self.canonicalStrings:
+            request = SIPMessageFactory().nextForString(messageString)
+            self.runAssertionsForRequest(request)
+
+    def runAssertionsForRequest(self, aSIPRequest):
+        self.assertEqual(aSIPRequest.rawString, self.canonicalStrings[0])
+        self.assertTrue(aSIPRequest.isKnown)
+        self.assertFalse(aSIPRequest.isUnknown)
+        self.assertTrue(aSIPRequest.isValid)
+        self.assertTrue(aSIPRequest.isRequest)
+        self.assertFalse(aSIPRequest.isResponse)
+        self.assertTrue(aSIPRequest.isACKRequest)
+        self.assertFalse(aSIPRequest.isOPTIONSRequest)
+        self.assertFalse(aSIPRequest.isBYERequest)
+        self.assertFalse(aSIPRequest.isCANCELRequest)
+        self.assertFalse(aSIPRequest.isINFORequest)
+        self.assertFalse(aSIPRequest.isINVITERequest)
+        self.assertFalse(aSIPRequest.isNOTIFYRequest)
+        self.assertFalse(aSIPRequest.isREFERRequest)
+        self.assertFalse(aSIPRequest.isREGISTERRequest)
+        self.assertFalse(aSIPRequest.isSUBSCRIBERequest)
+        self.assertFalse(aSIPRequest.isUPDATERequest)
+        self.assertFalse(aSIPRequest.isMalformed)
+        # self.assertEqual(1, [headerField for headerField in aSIPRequest.header.headerFields if headerField.isContentLength].__len__())
+        # self.assertEqual(11, next(headerField for headerField in aSIPRequest.header.headerFields if headerField.isContentLength).value)
+        # self.assertEqual(10, [headerField for headerField in aSIPRequest.header.headerFields if headerField.isUnknown].__len__())
+        self.assertIsNotNone(aSIPRequest.header.contentLengthHeaderField)
+        self.assertEqual(11, aSIPRequest.header.contentLength)
+        self.assertEqual(10, aSIPRequest.header.unknownHeaderFields.__len__())
+        self.assertTrue(aSIPRequest.startLine.isRequest)
+        self.assertFalse(aSIPRequest.startLine.isResponse)
+        self.assertFalse(aSIPRequest.startLine.isMalformed)
+        self.assertEqual('Foo Content', aSIPRequest.content)
+        self.assertEqual('ACK', aSIPRequest.startLine.sipMethod)
+        self.assertEqual('sip:example.com', aSIPRequest.startLine.requestURI)
+
+
+class TestSIPMessageFactoryForBYESIPRequest(TestCase):
+    @property
+    def canonicalStrings(self):
+        return [
+            ('BYE sip:example.com SIP/2.0\r\n'
+             'From: <sip:200.25.3.150:5061>;tag=0ee8d3e272e31c9195299efc500\r\n'
+             'To: <sip:example.com:5061>\r\n'
+             'Call-ID: 0ee8d3e272e31c9195299efc500\r\n'
+             'CSeq: 6711 BYE\r\n'
+             'Max-Forwards: 70\r\n'
+             'Via: SIP/2.0/TLS 200.25.3.150;branch=z9hG4bK0ee8d3e272e31ca195299efc500\r\n'
+             'User-Agent: Example User Agent\r\n'
+             'Contact: <sip:invalid@200.25.3.150:5061;transport=tls>\r\n'
+             'Route: <sip:200.30.10.12:5061;transport=tls;lr>\r\n'
+             'Expires: 0\r\n'
+             'Content-Length: 11\r\n'
+             '\r\n'
+             'Foo Content')
+        ]
+
+    def test_parsing(self):
+        for messageString in self.canonicalStrings:
+            request = SIPMessageFactory().nextForString(messageString)
+            self.runAssertionsForRequest(request)
+
+    def runAssertionsForRequest(self, aSIPRequest):
+        self.assertEqual(aSIPRequest.rawString, self.canonicalStrings[0])
+        self.assertTrue(aSIPRequest.isKnown)
+        self.assertFalse(aSIPRequest.isUnknown)
+        self.assertTrue(aSIPRequest.isValid)
+        self.assertTrue(aSIPRequest.isRequest)
+        self.assertFalse(aSIPRequest.isResponse)
+        self.assertTrue(aSIPRequest.isBYERequest)
+        self.assertFalse(aSIPRequest.isACKRequest)
+        self.assertFalse(aSIPRequest.isOPTIONSRequest)
+        self.assertFalse(aSIPRequest.isCANCELRequest)
+        self.assertFalse(aSIPRequest.isINFORequest)
+        self.assertFalse(aSIPRequest.isINVITERequest)
+        self.assertFalse(aSIPRequest.isNOTIFYRequest)
+        self.assertFalse(aSIPRequest.isREFERRequest)
+        self.assertFalse(aSIPRequest.isREGISTERRequest)
+        self.assertFalse(aSIPRequest.isSUBSCRIBERequest)
+        self.assertFalse(aSIPRequest.isUPDATERequest)
+        self.assertFalse(aSIPRequest.isMalformed)
+        # self.assertEqual(1, [headerField for headerField in aSIPRequest.header.headerFields if headerField.isContentLength].__len__())
+        # self.assertEqual(11, next(headerField for headerField in aSIPRequest.header.headerFields if headerField.isContentLength).value)
+        # self.assertEqual(10, [headerField for headerField in aSIPRequest.header.headerFields if headerField.isUnknown].__len__())
+        self.assertIsNotNone(aSIPRequest.header.contentLengthHeaderField)
+        self.assertEqual(11, aSIPRequest.header.contentLength)
+        self.assertEqual(10, aSIPRequest.header.unknownHeaderFields.__len__())
+        self.assertTrue(aSIPRequest.startLine.isRequest)
+        self.assertFalse(aSIPRequest.startLine.isResponse)
+        self.assertFalse(aSIPRequest.startLine.isMalformed)
+        self.assertEqual('Foo Content', aSIPRequest.content)
+        self.assertEqual('BYE', aSIPRequest.startLine.sipMethod)
+        self.assertEqual('sip:example.com', aSIPRequest.startLine.requestURI)
+
+
+class TestSIPMessageFactoryForCANCELSIPRequest(TestCase):
+    @property
+    def canonicalStrings(self):
+        return [
+            ('CANCEL sip:example.com SIP/2.0\r\n'
+             'From: <sip:200.25.3.150:5061>;tag=0ee8d3e272e31c9195299efc500\r\n'
+             'To: <sip:example.com:5061>\r\n'
+             'Call-ID: 0ee8d3e272e31c9195299efc500\r\n'
+             'CSeq: 6711 CANCEL\r\n'
+             'Max-Forwards: 70\r\n'
+             'Via: SIP/2.0/TLS 200.25.3.150;branch=z9hG4bK0ee8d3e272e31ca195299efc500\r\n'
+             'User-Agent: Example User Agent\r\n'
+             'Contact: <sip:invalid@200.25.3.150:5061;transport=tls>\r\n'
+             'Route: <sip:200.30.10.12:5061;transport=tls;lr>\r\n'
+             'Expires: 0\r\n'
+             'Content-Length: 11\r\n'
+             '\r\n'
+             'Foo Content')
+        ]
+
+    def test_parsing(self):
+        for messageString in self.canonicalStrings:
+            request = SIPMessageFactory().nextForString(messageString)
+            self.runAssertionsForRequest(request)
+
+    def runAssertionsForRequest(self, aSIPRequest):
+        self.assertEqual(aSIPRequest.rawString, self.canonicalStrings[0])
+        self.assertTrue(aSIPRequest.isKnown)
+        self.assertFalse(aSIPRequest.isUnknown)
+        self.assertTrue(aSIPRequest.isValid)
+        self.assertTrue(aSIPRequest.isRequest)
+        self.assertFalse(aSIPRequest.isResponse)
+        self.assertTrue(aSIPRequest.isCANCELRequest)
+        self.assertFalse(aSIPRequest.isACKRequest)
+        self.assertFalse(aSIPRequest.isBYERequest)
+        self.assertFalse(aSIPRequest.isOPTIONSRequest)
+        self.assertFalse(aSIPRequest.isINFORequest)
+        self.assertFalse(aSIPRequest.isINVITERequest)
+        self.assertFalse(aSIPRequest.isNOTIFYRequest)
+        self.assertFalse(aSIPRequest.isREFERRequest)
+        self.assertFalse(aSIPRequest.isREGISTERRequest)
+        self.assertFalse(aSIPRequest.isSUBSCRIBERequest)
+        self.assertFalse(aSIPRequest.isUPDATERequest)
+        self.assertFalse(aSIPRequest.isMalformed)
+        # self.assertEqual(1, [headerField for headerField in aSIPRequest.header.headerFields if headerField.isContentLength].__len__())
+        # self.assertEqual(11, next(headerField for headerField in aSIPRequest.header.headerFields if headerField.isContentLength).value)
+        # self.assertEqual(10, [headerField for headerField in aSIPRequest.header.headerFields if headerField.isUnknown].__len__())
+        self.assertIsNotNone(aSIPRequest.header.contentLengthHeaderField)
+        self.assertEqual(11, aSIPRequest.header.contentLength)
+        self.assertEqual(10, aSIPRequest.header.unknownHeaderFields.__len__())
+        self.assertTrue(aSIPRequest.startLine.isRequest)
+        self.assertFalse(aSIPRequest.startLine.isResponse)
+        self.assertFalse(aSIPRequest.startLine.isMalformed)
+        self.assertEqual('Foo Content', aSIPRequest.content)
+        self.assertEqual('CANCEL', aSIPRequest.startLine.sipMethod)
+        self.assertEqual('sip:example.com', aSIPRequest.startLine.requestURI)
+
+
+class TestSIPMessageFactoryForINFOSIPRequest(TestCase):
+    @property
+    def canonicalStrings(self):
+        return [
+            ('INFO sip:example.com SIP/2.0\r\n'
+             'From: <sip:200.25.3.150:5061>;tag=0ee8d3e272e31c9195299efc500\r\n'
+             'To: <sip:example.com:5061>\r\n'
+             'Call-ID: 0ee8d3e272e31c9195299efc500\r\n'
+             'CSeq: 6711 INFO\r\n'
+             'Max-Forwards: 70\r\n'
+             'Via: SIP/2.0/TLS 200.25.3.150;branch=z9hG4bK0ee8d3e272e31ca195299efc500\r\n'
+             'User-Agent: Example User Agent\r\n'
+             'Contact: <sip:invalid@200.25.3.150:5061;transport=tls>\r\n'
+             'Route: <sip:200.30.10.12:5061;transport=tls;lr>\r\n'
+             'Expires: 0\r\n'
+             'Content-Length: 11\r\n'
+             '\r\n'
+             'Foo Content')
+        ]
+
+    def test_parsing(self):
+        for messageString in self.canonicalStrings:
+            request = SIPMessageFactory().nextForString(messageString)
+            self.runAssertionsForRequest(request)
+
+    def runAssertionsForRequest(self, aSIPRequest):
+        self.assertEqual(aSIPRequest.rawString, self.canonicalStrings[0])
+        self.assertTrue(aSIPRequest.isKnown)
+        self.assertFalse(aSIPRequest.isUnknown)
+        self.assertTrue(aSIPRequest.isValid)
+        self.assertTrue(aSIPRequest.isRequest)
+        self.assertFalse(aSIPRequest.isResponse)
+        self.assertTrue(aSIPRequest.isINFORequest)
+        self.assertFalse(aSIPRequest.isACKRequest)
+        self.assertFalse(aSIPRequest.isBYERequest)
+        self.assertFalse(aSIPRequest.isCANCELRequest)
+        self.assertFalse(aSIPRequest.isOPTIONSRequest)
+        self.assertFalse(aSIPRequest.isINVITERequest)
+        self.assertFalse(aSIPRequest.isNOTIFYRequest)
+        self.assertFalse(aSIPRequest.isREFERRequest)
+        self.assertFalse(aSIPRequest.isREGISTERRequest)
+        self.assertFalse(aSIPRequest.isSUBSCRIBERequest)
+        self.assertFalse(aSIPRequest.isUPDATERequest)
+        self.assertFalse(aSIPRequest.isMalformed)
+        # self.assertEqual(1, [headerField for headerField in aSIPRequest.header.headerFields if headerField.isContentLength].__len__())
+        # self.assertEqual(11, next(headerField for headerField in aSIPRequest.header.headerFields if headerField.isContentLength).value)
+        # self.assertEqual(10, [headerField for headerField in aSIPRequest.header.headerFields if headerField.isUnknown].__len__())
+        self.assertIsNotNone(aSIPRequest.header.contentLengthHeaderField)
+        self.assertEqual(11, aSIPRequest.header.contentLength)
+        self.assertEqual(10, aSIPRequest.header.unknownHeaderFields.__len__())
+        self.assertTrue(aSIPRequest.startLine.isRequest)
+        self.assertFalse(aSIPRequest.startLine.isResponse)
+        self.assertFalse(aSIPRequest.startLine.isMalformed)
+        self.assertEqual('Foo Content', aSIPRequest.content)
+        self.assertEqual('INFO', aSIPRequest.startLine.sipMethod)
+        self.assertEqual('sip:example.com', aSIPRequest.startLine.requestURI)
+
+
+class TestSIPMessageFactoryForINVITESIPRequest(TestCase):
+    @property
+    def canonicalStrings(self):
+        return [
+            ('INVITE sip:example.com SIP/2.0\r\n'
+             'From: <sip:200.25.3.150:5061>;tag=0ee8d3e272e31c9195299efc500\r\n'
+             'To: <sip:example.com:5061>\r\n'
+             'Call-ID: 0ee8d3e272e31c9195299efc500\r\n'
+             'CSeq: 6711 INVITE\r\n'
+             'Max-Forwards: 70\r\n'
+             'Via: SIP/2.0/TLS 200.25.3.150;branch=z9hG4bK0ee8d3e272e31ca195299efc500\r\n'
+             'User-Agent: Example User Agent\r\n'
+             'Contact: <sip:invalid@200.25.3.150:5061;transport=tls>\r\n'
+             'Route: <sip:200.30.10.12:5061;transport=tls;lr>\r\n'
+             'Expires: 0\r\n'
+             'Content-Length: 11\r\n'
+             '\r\n'
+             'Foo Content')
+        ]
+
+    def test_parsing(self):
+        for messageString in self.canonicalStrings:
+            request = SIPMessageFactory().nextForString(messageString)
+            self.runAssertionsForRequest(request)
+
+    def runAssertionsForRequest(self, aSIPRequest):
+        self.assertEqual(aSIPRequest.rawString, self.canonicalStrings[0])
+        self.assertTrue(aSIPRequest.isKnown)
+        self.assertFalse(aSIPRequest.isUnknown)
+        self.assertTrue(aSIPRequest.isValid)
+        self.assertTrue(aSIPRequest.isRequest)
+        self.assertFalse(aSIPRequest.isResponse)
+        self.assertTrue(aSIPRequest.isINVITERequest)
+        self.assertFalse(aSIPRequest.isACKRequest)
+        self.assertFalse(aSIPRequest.isBYERequest)
+        self.assertFalse(aSIPRequest.isCANCELRequest)
+        self.assertFalse(aSIPRequest.isINFORequest)
+        self.assertFalse(aSIPRequest.isOPTIONSRequest)
+        self.assertFalse(aSIPRequest.isNOTIFYRequest)
+        self.assertFalse(aSIPRequest.isREFERRequest)
+        self.assertFalse(aSIPRequest.isREGISTERRequest)
+        self.assertFalse(aSIPRequest.isSUBSCRIBERequest)
+        self.assertFalse(aSIPRequest.isUPDATERequest)
+        self.assertFalse(aSIPRequest.isMalformed)
+        # self.assertEqual(1, [headerField for headerField in aSIPRequest.header.headerFields if headerField.isContentLength].__len__())
+        # self.assertEqual(11, next(headerField for headerField in aSIPRequest.header.headerFields if headerField.isContentLength).value)
+        # self.assertEqual(10, [headerField for headerField in aSIPRequest.header.headerFields if headerField.isUnknown].__len__())
+        self.assertIsNotNone(aSIPRequest.header.contentLengthHeaderField)
+        self.assertEqual(11, aSIPRequest.header.contentLength)
+        self.assertEqual(10, aSIPRequest.header.unknownHeaderFields.__len__())
+        self.assertTrue(aSIPRequest.startLine.isRequest)
+        self.assertFalse(aSIPRequest.startLine.isResponse)
+        self.assertFalse(aSIPRequest.startLine.isMalformed)
+        self.assertEqual('Foo Content', aSIPRequest.content)
+        self.assertEqual('INVITE', aSIPRequest.startLine.sipMethod)
+        self.assertEqual('sip:example.com', aSIPRequest.startLine.requestURI)
+
+
+class TestSIPMessageFactoryForNOTIFYSIPRequest(TestCase):
+    @property
+    def canonicalStrings(self):
+        return [
+            ('NOTIFY sip:example.com SIP/2.0\r\n'
+             'From: <sip:200.25.3.150:5061>;tag=0ee8d3e272e31c9195299efc500\r\n'
+             'To: <sip:example.com:5061>\r\n'
+             'Call-ID: 0ee8d3e272e31c9195299efc500\r\n'
+             'CSeq: 6711 NOTIFY\r\n'
+             'Max-Forwards: 70\r\n'
+             'Via: SIP/2.0/TLS 200.25.3.150;branch=z9hG4bK0ee8d3e272e31ca195299efc500\r\n'
+             'User-Agent: Example User Agent\r\n'
+             'Contact: <sip:invalid@200.25.3.150:5061;transport=tls>\r\n'
+             'Route: <sip:200.30.10.12:5061;transport=tls;lr>\r\n'
+             'Expires: 0\r\n'
+             'Content-Length: 11\r\n'
+             '\r\n'
+             'Foo Content')
+        ]
+
+    def test_parsing(self):
+        for messageString in self.canonicalStrings:
+            request = SIPMessageFactory().nextForString(messageString)
+            self.runAssertionsForRequest(request)
+
+    def runAssertionsForRequest(self, aSIPRequest):
+        self.assertEqual(aSIPRequest.rawString, self.canonicalStrings[0])
+        self.assertTrue(aSIPRequest.isKnown)
+        self.assertFalse(aSIPRequest.isUnknown)
+        self.assertTrue(aSIPRequest.isValid)
+        self.assertTrue(aSIPRequest.isRequest)
+        self.assertFalse(aSIPRequest.isResponse)
+        self.assertTrue(aSIPRequest.isNOTIFYRequest)
+        self.assertFalse(aSIPRequest.isACKRequest)
+        self.assertFalse(aSIPRequest.isBYERequest)
+        self.assertFalse(aSIPRequest.isCANCELRequest)
+        self.assertFalse(aSIPRequest.isINFORequest)
+        self.assertFalse(aSIPRequest.isINVITERequest)
+        self.assertFalse(aSIPRequest.isOPTIONSRequest)
+        self.assertFalse(aSIPRequest.isREFERRequest)
+        self.assertFalse(aSIPRequest.isREGISTERRequest)
+        self.assertFalse(aSIPRequest.isSUBSCRIBERequest)
+        self.assertFalse(aSIPRequest.isUPDATERequest)
+        self.assertFalse(aSIPRequest.isMalformed)
+        # self.assertEqual(1, [headerField for headerField in aSIPRequest.header.headerFields if headerField.isContentLength].__len__())
+        # self.assertEqual(11, next(headerField for headerField in aSIPRequest.header.headerFields if headerField.isContentLength).value)
+        # self.assertEqual(10, [headerField for headerField in aSIPRequest.header.headerFields if headerField.isUnknown].__len__())
+        self.assertIsNotNone(aSIPRequest.header.contentLengthHeaderField)
+        self.assertEqual(11, aSIPRequest.header.contentLength)
+        self.assertEqual(10, aSIPRequest.header.unknownHeaderFields.__len__())
+        self.assertTrue(aSIPRequest.startLine.isRequest)
+        self.assertFalse(aSIPRequest.startLine.isResponse)
+        self.assertFalse(aSIPRequest.startLine.isMalformed)
+        self.assertEqual('Foo Content', aSIPRequest.content)
+        self.assertEqual('NOTIFY', aSIPRequest.startLine.sipMethod)
+        self.assertEqual('sip:example.com', aSIPRequest.startLine.requestURI)
+
+
+class TestSIPMessageFactoryForREFERSIPRequest(TestCase):
+    @property
+    def canonicalStrings(self):
+        return [
+            ('REFER sip:example.com SIP/2.0\r\n'
+             'From: <sip:200.25.3.150:5061>;tag=0ee8d3e272e31c9195299efc500\r\n'
+             'To: <sip:example.com:5061>\r\n'
+             'Call-ID: 0ee8d3e272e31c9195299efc500\r\n'
+             'CSeq: 6711 REFER\r\n'
+             'Max-Forwards: 70\r\n'
+             'Via: SIP/2.0/TLS 200.25.3.150;branch=z9hG4bK0ee8d3e272e31ca195299efc500\r\n'
+             'User-Agent: Example User Agent\r\n'
+             'Contact: <sip:invalid@200.25.3.150:5061;transport=tls>\r\n'
+             'Route: <sip:200.30.10.12:5061;transport=tls;lr>\r\n'
+             'Expires: 0\r\n'
+             'Content-Length: 11\r\n'
+             '\r\n'
+             'Foo Content')
+        ]
+
+    def test_parsing(self):
+        for messageString in self.canonicalStrings:
+            request = SIPMessageFactory().nextForString(messageString)
+            self.runAssertionsForRequest(request)
+
+    def runAssertionsForRequest(self, aSIPRequest):
+        self.assertEqual(aSIPRequest.rawString, self.canonicalStrings[0])
+        self.assertTrue(aSIPRequest.isKnown)
+        self.assertFalse(aSIPRequest.isUnknown)
+        self.assertTrue(aSIPRequest.isValid)
+        self.assertTrue(aSIPRequest.isRequest)
+        self.assertFalse(aSIPRequest.isResponse)
+        self.assertTrue(aSIPRequest.isREFERRequest)
+        self.assertFalse(aSIPRequest.isACKRequest)
+        self.assertFalse(aSIPRequest.isBYERequest)
+        self.assertFalse(aSIPRequest.isCANCELRequest)
+        self.assertFalse(aSIPRequest.isINFORequest)
+        self.assertFalse(aSIPRequest.isINVITERequest)
+        self.assertFalse(aSIPRequest.isNOTIFYRequest)
+        self.assertFalse(aSIPRequest.isOPTIONSRequest)
+        self.assertFalse(aSIPRequest.isREGISTERRequest)
+        self.assertFalse(aSIPRequest.isSUBSCRIBERequest)
+        self.assertFalse(aSIPRequest.isUPDATERequest)
+        self.assertFalse(aSIPRequest.isMalformed)
+        # self.assertEqual(1, [headerField for headerField in aSIPRequest.header.headerFields if headerField.isContentLength].__len__())
+        # self.assertEqual(11, next(headerField for headerField in aSIPRequest.header.headerFields if headerField.isContentLength).value)
+        # self.assertEqual(10, [headerField for headerField in aSIPRequest.header.headerFields if headerField.isUnknown].__len__())
+        self.assertIsNotNone(aSIPRequest.header.contentLengthHeaderField)
+        self.assertEqual(11, aSIPRequest.header.contentLength)
+        self.assertEqual(10, aSIPRequest.header.unknownHeaderFields.__len__())
+        self.assertTrue(aSIPRequest.startLine.isRequest)
+        self.assertFalse(aSIPRequest.startLine.isResponse)
+        self.assertFalse(aSIPRequest.startLine.isMalformed)
+        self.assertEqual('Foo Content', aSIPRequest.content)
+        self.assertEqual('REFER', aSIPRequest.startLine.sipMethod)
+        self.assertEqual('sip:example.com', aSIPRequest.startLine.requestURI)
+
+
+class TestSIPMessageFactoryForREGISTERSIPRequest(TestCase):
+    @property
+    def canonicalStrings(self):
+        return [
+            ('REGISTER sip:example.com SIP/2.0\r\n'
+             'From: <sip:200.25.3.150:5061>;tag=0ee8d3e272e31c9195299efc500\r\n'
+             'To: <sip:example.com:5061>\r\n'
+             'Call-ID: 0ee8d3e272e31c9195299efc500\r\n'
+             'CSeq: 6711 REGISTER\r\n'
+             'Max-Forwards: 70\r\n'
+             'Via: SIP/2.0/TLS 200.25.3.150;branch=z9hG4bK0ee8d3e272e31ca195299efc500\r\n'
+             'User-Agent: Example User Agent\r\n'
+             'Contact: <sip:invalid@200.25.3.150:5061;transport=tls>\r\n'
+             'Route: <sip:200.30.10.12:5061;transport=tls;lr>\r\n'
+             'Expires: 0\r\n'
+             'Content-Length: 11\r\n'
+             '\r\n'
+             'Foo Content')
+        ]
+
+    def test_parsing(self):
+        for messageString in self.canonicalStrings:
+            request = SIPMessageFactory().nextForString(messageString)
+            self.runAssertionsForRequest(request)
+
+    def runAssertionsForRequest(self, aSIPRequest):
+        self.assertEqual(aSIPRequest.rawString, self.canonicalStrings[0])
+        self.assertTrue(aSIPRequest.isKnown)
+        self.assertFalse(aSIPRequest.isUnknown)
+        self.assertTrue(aSIPRequest.isValid)
+        self.assertTrue(aSIPRequest.isRequest)
+        self.assertFalse(aSIPRequest.isResponse)
+        self.assertTrue(aSIPRequest.isREGISTERRequest)
+        self.assertFalse(aSIPRequest.isACKRequest)
+        self.assertFalse(aSIPRequest.isBYERequest)
+        self.assertFalse(aSIPRequest.isCANCELRequest)
+        self.assertFalse(aSIPRequest.isINFORequest)
+        self.assertFalse(aSIPRequest.isINVITERequest)
+        self.assertFalse(aSIPRequest.isNOTIFYRequest)
+        self.assertFalse(aSIPRequest.isREFERRequest)
+        self.assertFalse(aSIPRequest.isOPTIONSRequest)
+        self.assertFalse(aSIPRequest.isSUBSCRIBERequest)
+        self.assertFalse(aSIPRequest.isUPDATERequest)
+        self.assertFalse(aSIPRequest.isMalformed)
+        # self.assertEqual(1, [headerField for headerField in aSIPRequest.header.headerFields if headerField.isContentLength].__len__())
+        # self.assertEqual(11, next(headerField for headerField in aSIPRequest.header.headerFields if headerField.isContentLength).value)
+        # self.assertEqual(10, [headerField for headerField in aSIPRequest.header.headerFields if headerField.isUnknown].__len__())
+        self.assertIsNotNone(aSIPRequest.header.contentLengthHeaderField)
+        self.assertEqual(11, aSIPRequest.header.contentLength)
+        self.assertEqual(10, aSIPRequest.header.unknownHeaderFields.__len__())
+        self.assertTrue(aSIPRequest.startLine.isRequest)
+        self.assertFalse(aSIPRequest.startLine.isResponse)
+        self.assertFalse(aSIPRequest.startLine.isMalformed)
+        self.assertEqual('Foo Content', aSIPRequest.content)
+        self.assertEqual('REGISTER', aSIPRequest.startLine.sipMethod)
+        self.assertEqual('sip:example.com', aSIPRequest.startLine.requestURI)
+
+
+class TestSIPMessageFactoryForSUBSCRIBESIPRequest(TestCase):
+    @property
+    def canonicalStrings(self):
+        return [
+            ('SUBSCRIBE sip:example.com SIP/2.0\r\n'
+             'From: <sip:200.25.3.150:5061>;tag=0ee8d3e272e31c9195299efc500\r\n'
+             'To: <sip:example.com:5061>\r\n'
+             'Call-ID: 0ee8d3e272e31c9195299efc500\r\n'
+             'CSeq: 6711 SUBSCRIBE\r\n'
+             'Max-Forwards: 70\r\n'
+             'Via: SIP/2.0/TLS 200.25.3.150;branch=z9hG4bK0ee8d3e272e31ca195299efc500\r\n'
+             'User-Agent: Example User Agent\r\n'
+             'Contact: <sip:invalid@200.25.3.150:5061;transport=tls>\r\n'
+             'Route: <sip:200.30.10.12:5061;transport=tls;lr>\r\n'
+             'Expires: 0\r\n'
+             'Content-Length: 11\r\n'
+             '\r\n'
+             'Foo Content')
+        ]
+
+    def test_parsing(self):
+        for messageString in self.canonicalStrings:
+            request = SIPMessageFactory().nextForString(messageString)
+            self.runAssertionsForRequest(request)
+
+    def runAssertionsForRequest(self, aSIPRequest):
+        self.assertEqual(aSIPRequest.rawString, self.canonicalStrings[0])
+        self.assertTrue(aSIPRequest.isKnown)
+        self.assertFalse(aSIPRequest.isUnknown)
+        self.assertTrue(aSIPRequest.isValid)
+        self.assertTrue(aSIPRequest.isRequest)
+        self.assertFalse(aSIPRequest.isResponse)
+        self.assertTrue(aSIPRequest.isSUBSCRIBERequest)
+        self.assertFalse(aSIPRequest.isACKRequest)
+        self.assertFalse(aSIPRequest.isBYERequest)
+        self.assertFalse(aSIPRequest.isCANCELRequest)
+        self.assertFalse(aSIPRequest.isINFORequest)
+        self.assertFalse(aSIPRequest.isINVITERequest)
+        self.assertFalse(aSIPRequest.isNOTIFYRequest)
+        self.assertFalse(aSIPRequest.isREFERRequest)
+        self.assertFalse(aSIPRequest.isREGISTERRequest)
+        self.assertFalse(aSIPRequest.isOPTIONSRequest)
+        self.assertFalse(aSIPRequest.isUPDATERequest)
+        self.assertFalse(aSIPRequest.isMalformed)
+        # self.assertEqual(1, [headerField for headerField in aSIPRequest.header.headerFields if headerField.isContentLength].__len__())
+        # self.assertEqual(11, next(headerField for headerField in aSIPRequest.header.headerFields if headerField.isContentLength).value)
+        # self.assertEqual(10, [headerField for headerField in aSIPRequest.header.headerFields if headerField.isUnknown].__len__())
+        self.assertIsNotNone(aSIPRequest.header.contentLengthHeaderField)
+        self.assertEqual(11, aSIPRequest.header.contentLength)
+        self.assertEqual(10, aSIPRequest.header.unknownHeaderFields.__len__())
+        self.assertTrue(aSIPRequest.startLine.isRequest)
+        self.assertFalse(aSIPRequest.startLine.isResponse)
+        self.assertFalse(aSIPRequest.startLine.isMalformed)
+        self.assertEqual('Foo Content', aSIPRequest.content)
+        self.assertEqual('SUBSCRIBE', aSIPRequest.startLine.sipMethod)
+        self.assertEqual('sip:example.com', aSIPRequest.startLine.requestURI)
+
+
+class TestSIPMessageFactoryForUPDATESIPRequest(TestCase):
+    @property
+    def canonicalStrings(self):
+        return [
+            ('UPDATE sip:example.com SIP/2.0\r\n'
+             'From: <sip:200.25.3.150:5061>;tag=0ee8d3e272e31c9195299efc500\r\n'
+             'To: <sip:example.com:5061>\r\n'
+             'Call-ID: 0ee8d3e272e31c9195299efc500\r\n'
+             'CSeq: 6711 UPDATE\r\n'
+             'Max-Forwards: 70\r\n'
+             'Via: SIP/2.0/TLS 200.25.3.150;branch=z9hG4bK0ee8d3e272e31ca195299efc500\r\n'
+             'User-Agent: Example User Agent\r\n'
+             'Contact: <sip:invalid@200.25.3.150:5061;transport=tls>\r\n'
+             'Route: <sip:200.30.10.12:5061;transport=tls;lr>\r\n'
+             'Expires: 0\r\n'
+             'Content-Length: 11\r\n'
+             '\r\n'
+             'Foo Content')
+        ]
+
+    def test_parsing(self):
+        for messageString in self.canonicalStrings:
+            request = SIPMessageFactory().nextForString(messageString)
+            self.runAssertionsForRequest(request)
+
+    def runAssertionsForRequest(self, aSIPRequest):
+        self.assertEqual(aSIPRequest.rawString, self.canonicalStrings[0])
+        self.assertTrue(aSIPRequest.isKnown)
+        self.assertFalse(aSIPRequest.isUnknown)
+        self.assertTrue(aSIPRequest.isValid)
+        self.assertTrue(aSIPRequest.isRequest)
+        self.assertFalse(aSIPRequest.isResponse)
+        self.assertTrue(aSIPRequest.isUPDATERequest)
+        self.assertFalse(aSIPRequest.isACKRequest)
+        self.assertFalse(aSIPRequest.isBYERequest)
+        self.assertFalse(aSIPRequest.isCANCELRequest)
+        self.assertFalse(aSIPRequest.isINFORequest)
+        self.assertFalse(aSIPRequest.isINVITERequest)
+        self.assertFalse(aSIPRequest.isNOTIFYRequest)
+        self.assertFalse(aSIPRequest.isREFERRequest)
+        self.assertFalse(aSIPRequest.isREGISTERRequest)
+        self.assertFalse(aSIPRequest.isSUBSCRIBERequest)
+        self.assertFalse(aSIPRequest.isOPTIONSRequest)
+        self.assertFalse(aSIPRequest.isMalformed)
+        # self.assertEqual(1, [headerField for headerField in aSIPRequest.header.headerFields if headerField.isContentLength].__len__())
+        # self.assertEqual(11, next(headerField for headerField in aSIPRequest.header.headerFields if headerField.isContentLength).value)
+        # self.assertEqual(10, [headerField for headerField in aSIPRequest.header.headerFields if headerField.isUnknown].__len__())
+        self.assertIsNotNone(aSIPRequest.header.contentLengthHeaderField)
+        self.assertEqual(11, aSIPRequest.header.contentLength)
+        self.assertEqual(10, aSIPRequest.header.unknownHeaderFields.__len__())
+        self.assertTrue(aSIPRequest.startLine.isRequest)
+        self.assertFalse(aSIPRequest.startLine.isResponse)
+        self.assertFalse(aSIPRequest.startLine.isMalformed)
+        self.assertEqual('Foo Content', aSIPRequest.content)
+        self.assertEqual('UPDATE', aSIPRequest.startLine.sipMethod)
         self.assertEqual('sip:example.com', aSIPRequest.startLine.requestURI)
 
 
@@ -408,7 +1030,17 @@ class TestSIPMessageFactoryForSIPResponse(TestCase):
         self.assertTrue(aSIPResponse.isValid)
         self.assertFalse(aSIPResponse.isRequest)
         self.assertTrue(aSIPResponse.isResponse)
+        self.assertFalse(aSIPResponse.isACKRequest)
+        self.assertFalse(aSIPResponse.isBYERequest)
+        self.assertFalse(aSIPResponse.isCANCELRequest)
+        self.assertFalse(aSIPResponse.isINFORequest)
+        self.assertFalse(aSIPResponse.isINVITERequest)
+        self.assertFalse(aSIPResponse.isNOTIFYRequest)
         self.assertFalse(aSIPResponse.isOPTIONSRequest)
+        self.assertFalse(aSIPResponse.isREFERRequest)
+        self.assertFalse(aSIPResponse.isREGISTERRequest)
+        self.assertFalse(aSIPResponse.isSUBSCRIBERequest)
+        self.assertFalse(aSIPResponse.isUPDATERequest)
         self.assertFalse(aSIPResponse.isMalformed)
         # self.assertEqual(1, [headerField for headerField in aSIPResponse.header.headerFields if headerField.isContentLength].__len__())
         # self.assertEqual(11, next(headerField for headerField in aSIPResponse.header.headerFields if headerField.isContentLength).value)

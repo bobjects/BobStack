@@ -1,4 +1,6 @@
-from sipRequest import SIPRequest
+import sys
+sys.path.append("../../..")
+from bobstack.sipmessaging import SIPRequest
 
 
 class OPTIONSSIPRequest(SIPRequest):

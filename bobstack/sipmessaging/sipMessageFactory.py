@@ -9,7 +9,17 @@ except ImportError:
 # from sipResponseStartLine import SIPResponseStartLine
 from sipStartLineFactory import SIPStartLineFactory
 from sipResponse import SIPResponse
-from optionsSIPRequest import OPTIONSSIPRequest
+from concretesipmessages import ACKSIPRequest
+from concretesipmessages import BYESIPRequest
+from concretesipmessages import CANCELSIPRequest
+from concretesipmessages import INFOSIPRequest
+from concretesipmessages import INVITESIPRequest
+from concretesipmessages import NOTIFYSIPRequest
+from concretesipmessages import OPTIONSSIPRequest
+from concretesipmessages import REFERSIPRequest
+from concretesipmessages import REGISTERSIPRequest
+from concretesipmessages import SUBSCRIBESIPRequest
+from concretesipmessages import UPDATESIPRequest
 from unknownSIPRequest import UnknownSIPRequest
 from malformedSIPMessage import MalformedSIPMessage
 from eventSourceMixin import EventSourceMixin
@@ -28,10 +38,19 @@ class SIPMessageFactory(EventSourceMixin):
         return sipMessage
 
     def sipMessageClassForStartLine(self, aSIPStartLine):
-        # TODO:  this will get fleshed out as we define SIP messages.
         if aSIPStartLine.isRequest:
             return {
-                'OPTIONS': OPTIONSSIPRequest
+                'ACK': ACKSIPRequest,
+                'BYE': BYESIPRequest,
+                'CANCEL': CANCELSIPRequest,
+                'INFO': INFOSIPRequest,
+                'INVITE': INVITESIPRequest,
+                'NOTIFY': NOTIFYSIPRequest,
+                'OPTIONS': OPTIONSSIPRequest,
+                'REFER': REFERSIPRequest,
+                'REGISTER': REGISTERSIPRequest,
+                'SUBSCRIBE': SUBSCRIBESIPRequest,
+                'UPDATE': UPDATESIPRequest
             }.get(aSIPStartLine.sipMethod, UnknownSIPRequest)
             # if aSIPStartLine.sipMethod == 'OPTIONS':
             #     return OPTIONSSIPRequest
