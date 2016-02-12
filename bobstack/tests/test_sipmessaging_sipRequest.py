@@ -15,6 +15,7 @@ from sipmessaging import SUBSCRIBESIPRequest
 from sipmessaging import UPDATESIPRequest
 from sipmessaging import SIPHeader
 from sipmessaging import ContentLengthSIPHeaderField
+from sipmessaging import ViaSIPHeaderField
 from sipmessaging import UnknownSIPHeaderField
 # from sipmessaging import SIPRequestStartLine
 
@@ -51,7 +52,7 @@ class TestUnknownSIPRequest(TestCase):
             UnknownSIPHeaderField.newForAttributes(fieldName='Call-ID', fieldValue='0ee8d3e272e31c9195299efc500'),
             UnknownSIPHeaderField.newForAttributes(fieldName='CSeq', fieldValue='6711 OPTIONS'),
             UnknownSIPHeaderField.newForAttributes(fieldName='Max-Forwards', fieldValue='70'),
-            UnknownSIPHeaderField.newForAttributes(fieldName='Via', fieldValue='SIP/2.0/TLS 200.25.3.150;branch=z9hG4bK0ee8d3e272e31ca195299efc500'),
+            ViaSIPHeaderField.newForAttributes(fieldName='Via', fieldValue='SIP/2.0/TLS 200.25.3.150;branch=z9hG4bK0ee8d3e272e31ca195299efc500'),
             UnknownSIPHeaderField.newForAttributes(fieldName='User-Agent', fieldValue='Example User Agent'),
             UnknownSIPHeaderField.newForAttributes(fieldName='Contact', fieldValue='<sip:invalid@200.25.3.150:5061;transport=tls>'),
             UnknownSIPHeaderField.newForAttributes(fieldName='Route', fieldValue='<sip:200.30.10.12:5061;transport=tls;lr>'),
@@ -145,7 +146,10 @@ class TestUnknownSIPRequest(TestCase):
         # self.assertEqual(10, [headerField for headerField in aSIPRequest.header.headerFields if headerField.isUnknown].__len__())
         self.assertIsNotNone(aSIPRequest.header.contentLengthHeaderField)
         self.assertEqual(11, aSIPRequest.header.contentLength)
-        self.assertEqual(10, aSIPRequest.header.unknownHeaderFields.__len__())
+        self.assertEqual(1, aSIPRequest.header.viaHeaderFields.__len__())
+        self.assertEqual(1, aSIPRequest.header.vias.__len__())
+        self.assertEqual('SIP/2.0/TLS 200.25.3.150;branch=z9hG4bK0ee8d3e272e31ca195299efc500', aSIPRequest.header.vias[0])
+        self.assertEqual(9, aSIPRequest.header.unknownHeaderFields.__len__())
         self.assertTrue(aSIPRequest.startLine.isRequest)
         self.assertFalse(aSIPRequest.startLine.isResponse)
         self.assertFalse(aSIPRequest.startLine.isMalformed)
@@ -186,7 +190,7 @@ class TestOPTIONSSIPRequest(TestCase):
             UnknownSIPHeaderField.newForAttributes(fieldName='Call-ID', fieldValue='0ee8d3e272e31c9195299efc500'),
             UnknownSIPHeaderField.newForAttributes(fieldName='CSeq', fieldValue='6711 OPTIONS'),
             UnknownSIPHeaderField.newForAttributes(fieldName='Max-Forwards', fieldValue='70'),
-            UnknownSIPHeaderField.newForAttributes(fieldName='Via', fieldValue='SIP/2.0/TLS 200.25.3.150;branch=z9hG4bK0ee8d3e272e31ca195299efc500'),
+            ViaSIPHeaderField.newForAttributes(fieldName='Via', fieldValue='SIP/2.0/TLS 200.25.3.150;branch=z9hG4bK0ee8d3e272e31ca195299efc500'),
             UnknownSIPHeaderField.newForAttributes(fieldName='User-Agent', fieldValue='Example User Agent'),
             UnknownSIPHeaderField.newForAttributes(fieldName='Contact', fieldValue='<sip:invalid@200.25.3.150:5061;transport=tls>'),
             UnknownSIPHeaderField.newForAttributes(fieldName='Route', fieldValue='<sip:200.30.10.12:5061;transport=tls;lr>'),
@@ -279,7 +283,10 @@ class TestOPTIONSSIPRequest(TestCase):
         # self.assertEqual(10, [headerField for headerField in aSIPRequest.header.headerFields if headerField.isUnknown].__len__())
         self.assertIsNotNone(aSIPRequest.header.contentLengthHeaderField)
         self.assertEqual(11, aSIPRequest.header.contentLength)
-        self.assertEqual(10, aSIPRequest.header.unknownHeaderFields.__len__())
+        self.assertEqual(1, aSIPRequest.header.viaHeaderFields.__len__())
+        self.assertEqual(1, aSIPRequest.header.vias.__len__())
+        self.assertEqual('SIP/2.0/TLS 200.25.3.150;branch=z9hG4bK0ee8d3e272e31ca195299efc500', aSIPRequest.header.vias[0])
+        self.assertEqual(9, aSIPRequest.header.unknownHeaderFields.__len__())
         self.assertTrue(aSIPRequest.startLine.isRequest)
         self.assertFalse(aSIPRequest.startLine.isResponse)
         self.assertEqual('Foo Content', aSIPRequest.content)
@@ -319,7 +326,7 @@ class TestACKSIPRequest(TestCase):
             UnknownSIPHeaderField.newForAttributes(fieldName='Call-ID', fieldValue='0ee8d3e272e31c9195299efc500'),
             UnknownSIPHeaderField.newForAttributes(fieldName='CSeq', fieldValue='6711 ACK'),
             UnknownSIPHeaderField.newForAttributes(fieldName='Max-Forwards', fieldValue='70'),
-            UnknownSIPHeaderField.newForAttributes(fieldName='Via', fieldValue='SIP/2.0/TLS 200.25.3.150;branch=z9hG4bK0ee8d3e272e31ca195299efc500'),
+            ViaSIPHeaderField.newForAttributes(fieldName='Via', fieldValue='SIP/2.0/TLS 200.25.3.150;branch=z9hG4bK0ee8d3e272e31ca195299efc500'),
             UnknownSIPHeaderField.newForAttributes(fieldName='User-Agent', fieldValue='Example User Agent'),
             UnknownSIPHeaderField.newForAttributes(fieldName='Contact', fieldValue='<sip:invalid@200.25.3.150:5061;transport=tls>'),
             UnknownSIPHeaderField.newForAttributes(fieldName='Route', fieldValue='<sip:200.30.10.12:5061;transport=tls;lr>'),
@@ -412,7 +419,10 @@ class TestACKSIPRequest(TestCase):
         # self.assertEqual(10, [headerField for headerField in aSIPRequest.header.headerFields if headerField.isUnknown].__len__())
         self.assertIsNotNone(aSIPRequest.header.contentLengthHeaderField)
         self.assertEqual(11, aSIPRequest.header.contentLength)
-        self.assertEqual(10, aSIPRequest.header.unknownHeaderFields.__len__())
+        self.assertEqual(1, aSIPRequest.header.viaHeaderFields.__len__())
+        self.assertEqual(1, aSIPRequest.header.vias.__len__())
+        self.assertEqual('SIP/2.0/TLS 200.25.3.150;branch=z9hG4bK0ee8d3e272e31ca195299efc500', aSIPRequest.header.vias[0])
+        self.assertEqual(9, aSIPRequest.header.unknownHeaderFields.__len__())
         self.assertTrue(aSIPRequest.startLine.isRequest)
         self.assertFalse(aSIPRequest.startLine.isResponse)
         self.assertEqual('Foo Content', aSIPRequest.content)
@@ -452,7 +462,7 @@ class TestBYESIPRequest(TestCase):
             UnknownSIPHeaderField.newForAttributes(fieldName='Call-ID', fieldValue='0ee8d3e272e31c9195299efc500'),
             UnknownSIPHeaderField.newForAttributes(fieldName='CSeq', fieldValue='6711 BYE'),
             UnknownSIPHeaderField.newForAttributes(fieldName='Max-Forwards', fieldValue='70'),
-            UnknownSIPHeaderField.newForAttributes(fieldName='Via', fieldValue='SIP/2.0/TLS 200.25.3.150;branch=z9hG4bK0ee8d3e272e31ca195299efc500'),
+            ViaSIPHeaderField.newForAttributes(fieldName='Via', fieldValue='SIP/2.0/TLS 200.25.3.150;branch=z9hG4bK0ee8d3e272e31ca195299efc500'),
             UnknownSIPHeaderField.newForAttributes(fieldName='User-Agent', fieldValue='Example User Agent'),
             UnknownSIPHeaderField.newForAttributes(fieldName='Contact', fieldValue='<sip:invalid@200.25.3.150:5061;transport=tls>'),
             UnknownSIPHeaderField.newForAttributes(fieldName='Route', fieldValue='<sip:200.30.10.12:5061;transport=tls;lr>'),
@@ -545,7 +555,10 @@ class TestBYESIPRequest(TestCase):
         # self.assertEqual(10, [headerField for headerField in aSIPRequest.header.headerFields if headerField.isUnknown].__len__())
         self.assertIsNotNone(aSIPRequest.header.contentLengthHeaderField)
         self.assertEqual(11, aSIPRequest.header.contentLength)
-        self.assertEqual(10, aSIPRequest.header.unknownHeaderFields.__len__())
+        self.assertEqual(1, aSIPRequest.header.viaHeaderFields.__len__())
+        self.assertEqual(1, aSIPRequest.header.vias.__len__())
+        self.assertEqual('SIP/2.0/TLS 200.25.3.150;branch=z9hG4bK0ee8d3e272e31ca195299efc500', aSIPRequest.header.vias[0])
+        self.assertEqual(9, aSIPRequest.header.unknownHeaderFields.__len__())
         self.assertTrue(aSIPRequest.startLine.isRequest)
         self.assertFalse(aSIPRequest.startLine.isResponse)
         self.assertEqual('Foo Content', aSIPRequest.content)
@@ -585,7 +598,7 @@ class TestCANCELSIPRequest(TestCase):
             UnknownSIPHeaderField.newForAttributes(fieldName='Call-ID', fieldValue='0ee8d3e272e31c9195299efc500'),
             UnknownSIPHeaderField.newForAttributes(fieldName='CSeq', fieldValue='6711 CANCEL'),
             UnknownSIPHeaderField.newForAttributes(fieldName='Max-Forwards', fieldValue='70'),
-            UnknownSIPHeaderField.newForAttributes(fieldName='Via', fieldValue='SIP/2.0/TLS 200.25.3.150;branch=z9hG4bK0ee8d3e272e31ca195299efc500'),
+            ViaSIPHeaderField.newForAttributes(fieldName='Via', fieldValue='SIP/2.0/TLS 200.25.3.150;branch=z9hG4bK0ee8d3e272e31ca195299efc500'),
             UnknownSIPHeaderField.newForAttributes(fieldName='User-Agent', fieldValue='Example User Agent'),
             UnknownSIPHeaderField.newForAttributes(fieldName='Contact', fieldValue='<sip:invalid@200.25.3.150:5061;transport=tls>'),
             UnknownSIPHeaderField.newForAttributes(fieldName='Route', fieldValue='<sip:200.30.10.12:5061;transport=tls;lr>'),
@@ -678,7 +691,10 @@ class TestCANCELSIPRequest(TestCase):
         # self.assertEqual(10, [headerField for headerField in aSIPRequest.header.headerFields if headerField.isUnknown].__len__())
         self.assertIsNotNone(aSIPRequest.header.contentLengthHeaderField)
         self.assertEqual(11, aSIPRequest.header.contentLength)
-        self.assertEqual(10, aSIPRequest.header.unknownHeaderFields.__len__())
+        self.assertEqual(1, aSIPRequest.header.viaHeaderFields.__len__())
+        self.assertEqual(1, aSIPRequest.header.vias.__len__())
+        self.assertEqual('SIP/2.0/TLS 200.25.3.150;branch=z9hG4bK0ee8d3e272e31ca195299efc500', aSIPRequest.header.vias[0])
+        self.assertEqual(9, aSIPRequest.header.unknownHeaderFields.__len__())
         self.assertTrue(aSIPRequest.startLine.isRequest)
         self.assertFalse(aSIPRequest.startLine.isResponse)
         self.assertEqual('Foo Content', aSIPRequest.content)
@@ -718,7 +734,7 @@ class TestINFOSIPRequest(TestCase):
             UnknownSIPHeaderField.newForAttributes(fieldName='Call-ID', fieldValue='0ee8d3e272e31c9195299efc500'),
             UnknownSIPHeaderField.newForAttributes(fieldName='CSeq', fieldValue='6711 INFO'),
             UnknownSIPHeaderField.newForAttributes(fieldName='Max-Forwards', fieldValue='70'),
-            UnknownSIPHeaderField.newForAttributes(fieldName='Via', fieldValue='SIP/2.0/TLS 200.25.3.150;branch=z9hG4bK0ee8d3e272e31ca195299efc500'),
+            ViaSIPHeaderField.newForAttributes(fieldName='Via', fieldValue='SIP/2.0/TLS 200.25.3.150;branch=z9hG4bK0ee8d3e272e31ca195299efc500'),
             UnknownSIPHeaderField.newForAttributes(fieldName='User-Agent', fieldValue='Example User Agent'),
             UnknownSIPHeaderField.newForAttributes(fieldName='Contact', fieldValue='<sip:invalid@200.25.3.150:5061;transport=tls>'),
             UnknownSIPHeaderField.newForAttributes(fieldName='Route', fieldValue='<sip:200.30.10.12:5061;transport=tls;lr>'),
@@ -811,7 +827,10 @@ class TestINFOSIPRequest(TestCase):
         # self.assertEqual(10, [headerField for headerField in aSIPRequest.header.headerFields if headerField.isUnknown].__len__())
         self.assertIsNotNone(aSIPRequest.header.contentLengthHeaderField)
         self.assertEqual(11, aSIPRequest.header.contentLength)
-        self.assertEqual(10, aSIPRequest.header.unknownHeaderFields.__len__())
+        self.assertEqual(1, aSIPRequest.header.viaHeaderFields.__len__())
+        self.assertEqual(1, aSIPRequest.header.vias.__len__())
+        self.assertEqual('SIP/2.0/TLS 200.25.3.150;branch=z9hG4bK0ee8d3e272e31ca195299efc500', aSIPRequest.header.vias[0])
+        self.assertEqual(9, aSIPRequest.header.unknownHeaderFields.__len__())
         self.assertTrue(aSIPRequest.startLine.isRequest)
         self.assertFalse(aSIPRequest.startLine.isResponse)
         self.assertEqual('Foo Content', aSIPRequest.content)
@@ -851,7 +870,7 @@ class TestINVITESIPRequest(TestCase):
             UnknownSIPHeaderField.newForAttributes(fieldName='Call-ID', fieldValue='0ee8d3e272e31c9195299efc500'),
             UnknownSIPHeaderField.newForAttributes(fieldName='CSeq', fieldValue='6711 INVITE'),
             UnknownSIPHeaderField.newForAttributes(fieldName='Max-Forwards', fieldValue='70'),
-            UnknownSIPHeaderField.newForAttributes(fieldName='Via', fieldValue='SIP/2.0/TLS 200.25.3.150;branch=z9hG4bK0ee8d3e272e31ca195299efc500'),
+            ViaSIPHeaderField.newForAttributes(fieldName='Via', fieldValue='SIP/2.0/TLS 200.25.3.150;branch=z9hG4bK0ee8d3e272e31ca195299efc500'),
             UnknownSIPHeaderField.newForAttributes(fieldName='User-Agent', fieldValue='Example User Agent'),
             UnknownSIPHeaderField.newForAttributes(fieldName='Contact', fieldValue='<sip:invalid@200.25.3.150:5061;transport=tls>'),
             UnknownSIPHeaderField.newForAttributes(fieldName='Route', fieldValue='<sip:200.30.10.12:5061;transport=tls;lr>'),
@@ -944,7 +963,10 @@ class TestINVITESIPRequest(TestCase):
         # self.assertEqual(10, [headerField for headerField in aSIPRequest.header.headerFields if headerField.isUnknown].__len__())
         self.assertIsNotNone(aSIPRequest.header.contentLengthHeaderField)
         self.assertEqual(11, aSIPRequest.header.contentLength)
-        self.assertEqual(10, aSIPRequest.header.unknownHeaderFields.__len__())
+        self.assertEqual(1, aSIPRequest.header.viaHeaderFields.__len__())
+        self.assertEqual(1, aSIPRequest.header.vias.__len__())
+        self.assertEqual('SIP/2.0/TLS 200.25.3.150;branch=z9hG4bK0ee8d3e272e31ca195299efc500', aSIPRequest.header.vias[0])
+        self.assertEqual(9, aSIPRequest.header.unknownHeaderFields.__len__())
         self.assertTrue(aSIPRequest.startLine.isRequest)
         self.assertFalse(aSIPRequest.startLine.isResponse)
         self.assertEqual('Foo Content', aSIPRequest.content)
@@ -984,7 +1006,7 @@ class TestNOTIFYSIPRequest(TestCase):
             UnknownSIPHeaderField.newForAttributes(fieldName='Call-ID', fieldValue='0ee8d3e272e31c9195299efc500'),
             UnknownSIPHeaderField.newForAttributes(fieldName='CSeq', fieldValue='6711 NOTIFY'),
             UnknownSIPHeaderField.newForAttributes(fieldName='Max-Forwards', fieldValue='70'),
-            UnknownSIPHeaderField.newForAttributes(fieldName='Via', fieldValue='SIP/2.0/TLS 200.25.3.150;branch=z9hG4bK0ee8d3e272e31ca195299efc500'),
+            ViaSIPHeaderField.newForAttributes(fieldName='Via', fieldValue='SIP/2.0/TLS 200.25.3.150;branch=z9hG4bK0ee8d3e272e31ca195299efc500'),
             UnknownSIPHeaderField.newForAttributes(fieldName='User-Agent', fieldValue='Example User Agent'),
             UnknownSIPHeaderField.newForAttributes(fieldName='Contact', fieldValue='<sip:invalid@200.25.3.150:5061;transport=tls>'),
             UnknownSIPHeaderField.newForAttributes(fieldName='Route', fieldValue='<sip:200.30.10.12:5061;transport=tls;lr>'),
@@ -1077,7 +1099,10 @@ class TestNOTIFYSIPRequest(TestCase):
         # self.assertEqual(10, [headerField for headerField in aSIPRequest.header.headerFields if headerField.isUnknown].__len__())
         self.assertIsNotNone(aSIPRequest.header.contentLengthHeaderField)
         self.assertEqual(11, aSIPRequest.header.contentLength)
-        self.assertEqual(10, aSIPRequest.header.unknownHeaderFields.__len__())
+        self.assertEqual(1, aSIPRequest.header.viaHeaderFields.__len__())
+        self.assertEqual(1, aSIPRequest.header.vias.__len__())
+        self.assertEqual('SIP/2.0/TLS 200.25.3.150;branch=z9hG4bK0ee8d3e272e31ca195299efc500', aSIPRequest.header.vias[0])
+        self.assertEqual(9, aSIPRequest.header.unknownHeaderFields.__len__())
         self.assertTrue(aSIPRequest.startLine.isRequest)
         self.assertFalse(aSIPRequest.startLine.isResponse)
         self.assertEqual('Foo Content', aSIPRequest.content)
@@ -1117,7 +1142,7 @@ class TestREFERSIPRequest(TestCase):
             UnknownSIPHeaderField.newForAttributes(fieldName='Call-ID', fieldValue='0ee8d3e272e31c9195299efc500'),
             UnknownSIPHeaderField.newForAttributes(fieldName='CSeq', fieldValue='6711 REFER'),
             UnknownSIPHeaderField.newForAttributes(fieldName='Max-Forwards', fieldValue='70'),
-            UnknownSIPHeaderField.newForAttributes(fieldName='Via', fieldValue='SIP/2.0/TLS 200.25.3.150;branch=z9hG4bK0ee8d3e272e31ca195299efc500'),
+            ViaSIPHeaderField.newForAttributes(fieldName='Via', fieldValue='SIP/2.0/TLS 200.25.3.150;branch=z9hG4bK0ee8d3e272e31ca195299efc500'),
             UnknownSIPHeaderField.newForAttributes(fieldName='User-Agent', fieldValue='Example User Agent'),
             UnknownSIPHeaderField.newForAttributes(fieldName='Contact', fieldValue='<sip:invalid@200.25.3.150:5061;transport=tls>'),
             UnknownSIPHeaderField.newForAttributes(fieldName='Route', fieldValue='<sip:200.30.10.12:5061;transport=tls;lr>'),
@@ -1210,7 +1235,10 @@ class TestREFERSIPRequest(TestCase):
         # self.assertEqual(10, [headerField for headerField in aSIPRequest.header.headerFields if headerField.isUnknown].__len__())
         self.assertIsNotNone(aSIPRequest.header.contentLengthHeaderField)
         self.assertEqual(11, aSIPRequest.header.contentLength)
-        self.assertEqual(10, aSIPRequest.header.unknownHeaderFields.__len__())
+        self.assertEqual(1, aSIPRequest.header.viaHeaderFields.__len__())
+        self.assertEqual(1, aSIPRequest.header.vias.__len__())
+        self.assertEqual('SIP/2.0/TLS 200.25.3.150;branch=z9hG4bK0ee8d3e272e31ca195299efc500', aSIPRequest.header.vias[0])
+        self.assertEqual(9, aSIPRequest.header.unknownHeaderFields.__len__())
         self.assertTrue(aSIPRequest.startLine.isRequest)
         self.assertFalse(aSIPRequest.startLine.isResponse)
         self.assertEqual('Foo Content', aSIPRequest.content)
@@ -1250,7 +1278,7 @@ class TestREGISTERSIPRequest(TestCase):
             UnknownSIPHeaderField.newForAttributes(fieldName='Call-ID', fieldValue='0ee8d3e272e31c9195299efc500'),
             UnknownSIPHeaderField.newForAttributes(fieldName='CSeq', fieldValue='6711 REGISTER'),
             UnknownSIPHeaderField.newForAttributes(fieldName='Max-Forwards', fieldValue='70'),
-            UnknownSIPHeaderField.newForAttributes(fieldName='Via', fieldValue='SIP/2.0/TLS 200.25.3.150;branch=z9hG4bK0ee8d3e272e31ca195299efc500'),
+            ViaSIPHeaderField.newForAttributes(fieldName='Via', fieldValue='SIP/2.0/TLS 200.25.3.150;branch=z9hG4bK0ee8d3e272e31ca195299efc500'),
             UnknownSIPHeaderField.newForAttributes(fieldName='User-Agent', fieldValue='Example User Agent'),
             UnknownSIPHeaderField.newForAttributes(fieldName='Contact', fieldValue='<sip:invalid@200.25.3.150:5061;transport=tls>'),
             UnknownSIPHeaderField.newForAttributes(fieldName='Route', fieldValue='<sip:200.30.10.12:5061;transport=tls;lr>'),
@@ -1343,7 +1371,10 @@ class TestREGISTERSIPRequest(TestCase):
         # self.assertEqual(10, [headerField for headerField in aSIPRequest.header.headerFields if headerField.isUnknown].__len__())
         self.assertIsNotNone(aSIPRequest.header.contentLengthHeaderField)
         self.assertEqual(11, aSIPRequest.header.contentLength)
-        self.assertEqual(10, aSIPRequest.header.unknownHeaderFields.__len__())
+        self.assertEqual(1, aSIPRequest.header.viaHeaderFields.__len__())
+        self.assertEqual(1, aSIPRequest.header.vias.__len__())
+        self.assertEqual('SIP/2.0/TLS 200.25.3.150;branch=z9hG4bK0ee8d3e272e31ca195299efc500', aSIPRequest.header.vias[0])
+        self.assertEqual(9, aSIPRequest.header.unknownHeaderFields.__len__())
         self.assertTrue(aSIPRequest.startLine.isRequest)
         self.assertFalse(aSIPRequest.startLine.isResponse)
         self.assertEqual('Foo Content', aSIPRequest.content)
@@ -1383,7 +1414,7 @@ class TestSUBSCRIBESIPRequest(TestCase):
             UnknownSIPHeaderField.newForAttributes(fieldName='Call-ID', fieldValue='0ee8d3e272e31c9195299efc500'),
             UnknownSIPHeaderField.newForAttributes(fieldName='CSeq', fieldValue='6711 SUBSCRIBE'),
             UnknownSIPHeaderField.newForAttributes(fieldName='Max-Forwards', fieldValue='70'),
-            UnknownSIPHeaderField.newForAttributes(fieldName='Via', fieldValue='SIP/2.0/TLS 200.25.3.150;branch=z9hG4bK0ee8d3e272e31ca195299efc500'),
+            ViaSIPHeaderField.newForAttributes(fieldName='Via', fieldValue='SIP/2.0/TLS 200.25.3.150;branch=z9hG4bK0ee8d3e272e31ca195299efc500'),
             UnknownSIPHeaderField.newForAttributes(fieldName='User-Agent', fieldValue='Example User Agent'),
             UnknownSIPHeaderField.newForAttributes(fieldName='Contact', fieldValue='<sip:invalid@200.25.3.150:5061;transport=tls>'),
             UnknownSIPHeaderField.newForAttributes(fieldName='Route', fieldValue='<sip:200.30.10.12:5061;transport=tls;lr>'),
@@ -1476,7 +1507,10 @@ class TestSUBSCRIBESIPRequest(TestCase):
         # self.assertEqual(10, [headerField for headerField in aSIPRequest.header.headerFields if headerField.isUnknown].__len__())
         self.assertIsNotNone(aSIPRequest.header.contentLengthHeaderField)
         self.assertEqual(11, aSIPRequest.header.contentLength)
-        self.assertEqual(10, aSIPRequest.header.unknownHeaderFields.__len__())
+        self.assertEqual(1, aSIPRequest.header.viaHeaderFields.__len__())
+        self.assertEqual(1, aSIPRequest.header.vias.__len__())
+        self.assertEqual('SIP/2.0/TLS 200.25.3.150;branch=z9hG4bK0ee8d3e272e31ca195299efc500', aSIPRequest.header.vias[0])
+        self.assertEqual(9, aSIPRequest.header.unknownHeaderFields.__len__())
         self.assertTrue(aSIPRequest.startLine.isRequest)
         self.assertFalse(aSIPRequest.startLine.isResponse)
         self.assertEqual('Foo Content', aSIPRequest.content)
@@ -1516,7 +1550,7 @@ class TestUPDATESIPRequest(TestCase):
             UnknownSIPHeaderField.newForAttributes(fieldName='Call-ID', fieldValue='0ee8d3e272e31c9195299efc500'),
             UnknownSIPHeaderField.newForAttributes(fieldName='CSeq', fieldValue='6711 UPDATE'),
             UnknownSIPHeaderField.newForAttributes(fieldName='Max-Forwards', fieldValue='70'),
-            UnknownSIPHeaderField.newForAttributes(fieldName='Via', fieldValue='SIP/2.0/TLS 200.25.3.150;branch=z9hG4bK0ee8d3e272e31ca195299efc500'),
+            ViaSIPHeaderField.newForAttributes(fieldName='Via', fieldValue='SIP/2.0/TLS 200.25.3.150;branch=z9hG4bK0ee8d3e272e31ca195299efc500'),
             UnknownSIPHeaderField.newForAttributes(fieldName='User-Agent', fieldValue='Example User Agent'),
             UnknownSIPHeaderField.newForAttributes(fieldName='Contact', fieldValue='<sip:invalid@200.25.3.150:5061;transport=tls>'),
             UnknownSIPHeaderField.newForAttributes(fieldName='Route', fieldValue='<sip:200.30.10.12:5061;transport=tls;lr>'),
@@ -1609,7 +1643,10 @@ class TestUPDATESIPRequest(TestCase):
         # self.assertEqual(10, [headerField for headerField in aSIPRequest.header.headerFields if headerField.isUnknown].__len__())
         self.assertIsNotNone(aSIPRequest.header.contentLengthHeaderField)
         self.assertEqual(11, aSIPRequest.header.contentLength)
-        self.assertEqual(10, aSIPRequest.header.unknownHeaderFields.__len__())
+        self.assertEqual(1, aSIPRequest.header.viaHeaderFields.__len__())
+        self.assertEqual(1, aSIPRequest.header.vias.__len__())
+        self.assertEqual('SIP/2.0/TLS 200.25.3.150;branch=z9hG4bK0ee8d3e272e31ca195299efc500', aSIPRequest.header.vias[0])
+        self.assertEqual(9, aSIPRequest.header.unknownHeaderFields.__len__())
         self.assertTrue(aSIPRequest.startLine.isRequest)
         self.assertFalse(aSIPRequest.startLine.isResponse)
         self.assertEqual('Foo Content', aSIPRequest.content)

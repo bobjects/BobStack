@@ -4,6 +4,7 @@ sys.path.append("..")
 from sipmessaging import SIPResponse
 from sipmessaging import SIPHeader
 from sipmessaging import ContentLengthSIPHeaderField
+from sipmessaging import ViaSIPHeaderField
 from sipmessaging import UnknownSIPHeaderField
 # from sipmessaging.sipResponseStartLine import SIPResponseStartLine
 
@@ -35,7 +36,7 @@ class TestSIPResponse(TestCase):
             UnknownSIPHeaderField.newForAttributes(fieldName='Call-ID', fieldValue='a12d6210342b0183745ef9750992682d90d7edce@200.23.3.241'),
             UnknownSIPHeaderField.newForAttributes(fieldName='CSeq', fieldValue='615 INVITE'),
             # UnknownSIPHeaderField.newForAttributes(fieldName='Max-Forwards', fieldValue='70'),
-            UnknownSIPHeaderField.newForAttributes(fieldName='Via', fieldValue='SIP/2.0/UDP 200.23.3.241:5064;received=200.30.10.15;branch=z9hG4bK-3f04bd-f62a8381-4ebadacb-0x692748a8'),
+            ViaSIPHeaderField.newForAttributes(fieldName='Via', fieldValue='SIP/2.0/UDP 200.23.3.241:5064;received=200.30.10.15;branch=z9hG4bK-3f04bd-f62a8381-4ebadacb-0x692748a8'),
             ContentLengthSIPHeaderField.newForAttributes(value=11)]
         response = SIPResponse.newForAttributes(statusCode=100, reasonPhrase='Trying', content='Foo Content', header=SIPHeader.newForAttributes(headerFields=headerFields))
         self.runAssertionsForResponse(response)
@@ -108,7 +109,10 @@ class TestSIPResponse(TestCase):
         # self.assertEqual(5, [headerField for headerField in aSIPResponse.header.headerFields if headerField.isUnknown].__len__())
         self.assertIsNotNone(aSIPResponse.header.contentLengthHeaderField)
         self.assertEqual(11, aSIPResponse.header.contentLength)
-        self.assertEqual(5, aSIPResponse.header.unknownHeaderFields.__len__())
+        self.assertEqual(1, aSIPResponse.header.viaHeaderFields.__len__())
+        self.assertEqual(1, aSIPResponse.header.vias.__len__())
+        self.assertEqual('SIP/2.0/UDP 200.23.3.241:5064;received=200.30.10.15;branch=z9hG4bK-3f04bd-f62a8381-4ebadacb-0x692748a8', aSIPResponse.header.vias[0])
+        self.assertEqual(4, aSIPResponse.header.unknownHeaderFields.__len__())
         self.assertTrue(aSIPResponse.startLine.isResponse)
         self.assertFalse(aSIPResponse.startLine.isRequest)
         self.assertFalse(aSIPResponse.startLine.isMalformed)

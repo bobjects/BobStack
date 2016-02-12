@@ -1,5 +1,6 @@
 from sipHeaderField import SIPHeaderField
 from concreteheaderfields import ContentLengthSIPHeaderField
+from concreteheaderfields import ViaSIPHeaderField
 
 from sipRequest import SIPRequest
 from concretesipmessages import ACKSIPRequest
