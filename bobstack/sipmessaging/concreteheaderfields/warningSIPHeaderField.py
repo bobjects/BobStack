@@ -9,6 +9,10 @@ from bobstack.sipmessaging import SIPHeaderField
 
 
 class WarningSIPHeaderField(SIPHeaderField):
+    @classmethod
+    def newForAttributes(cls, fieldName="Warning", fieldValue=""):
+        return cls.newForFieldAttributes(fieldName=fieldName, fieldValue=fieldValue)
+
     # @classmethod
     # def newForAttributes(cls, value=0):
     #     answer = cls.newForFieldAttributes(fieldName="Warning", fieldValue=str(value))

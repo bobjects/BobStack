@@ -9,6 +9,10 @@ from bobstack.sipmessaging import SIPHeaderField
 
 
 class ContentTypeSIPHeaderField(SIPHeaderField):
+    @classmethod
+    def newForAttributes(cls, fieldName="Content-Type", fieldValue=""):
+        return cls.newForFieldAttributes(fieldName=fieldName, fieldValue=fieldValue)
+
     # @classmethod
     # def newForAttributes(cls, value=0):
     #     answer = cls.newForFieldAttributes(fieldName="Content-Type", fieldValue=str(value))

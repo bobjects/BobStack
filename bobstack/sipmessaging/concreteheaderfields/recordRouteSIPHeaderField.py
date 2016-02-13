@@ -9,6 +9,10 @@ from bobstack.sipmessaging import SIPHeaderField
 
 
 class RecordRouteSIPHeaderField(SIPHeaderField):
+    @classmethod
+    def newForAttributes(cls, fieldName="Record-Route", fieldValue=""):
+        return cls.newForFieldAttributes(fieldName=fieldName, fieldValue=fieldValue)
+
     # @classmethod
     # def newForAttributes(cls, value=0):
     #     answer = cls.newForFieldAttributes(fieldName="Record-Route", fieldValue=str(value))

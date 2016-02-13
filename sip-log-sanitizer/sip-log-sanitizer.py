@@ -12,7 +12,7 @@ import timeit
 interimFile1PathName = '../proprietary-test-data/sanitized/interim1.txt'
 interimFile2PathName = '../proprietary-test-data/sanitized/interim2.txt'
 sanitizedFilePathName = '../proprietary-test-data/sanitized/sanitized.txt'
-rawLogFileDirectoryPathNames = [ '../proprietary-test-data/ft-huachuca-test-logs-raw', '../proprietary-test-data/vance-logs-raw' ]
+rawLogFileDirectoryPathNames = [ '../proprietary-test-data/big-lab-test-logs-raw', '../proprietary-test-data/cust-1-logs-raw' ]
 messageSeparator = "__MESSAGESEPARATOR__"
 rawFileMessageSeparatorRegexes = [ "^>>>>>>>>>>  [^>]*>>>>>>>>>>>",
                                    "^>>>>>>>>>>  [^>]*>>>>>>>>>>", # for some reason, this is not catching 8 lines.

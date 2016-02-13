@@ -45,7 +45,7 @@ class TestSIPMessageFactoryForSanitizedLogFile(TestCase):
         with open(self.unknownHeaderFieldNamesPathName, "w"):
             pass
 
-    @unittest.skip("skipping test")
+    # @unittest.skip("skipping test")
     def test_parsing_sanitized_log_file(self):
         factory = SIPMessageFactory()
         factory.whenEventDo("malformedSIPMessage", self.handleMalformedSIPMessage)
@@ -248,7 +248,7 @@ class TestSIPMessageFactoryForSanitizedLogFile(TestCase):
     def unknownHeaderFieldNamesPathName(self):
         return '../../proprietary-test-data/sanitized/unknownHeaderFieldNames.txt'
 
-
+#TODO:  Need to do new header fields.  Other canonicalStrings in this file as well.  And don't forget the asserts.
 class TestSIPMessageFactoryForMalformedSIPRequest(TestCase):
     @property
     def canonicalStrings(self):
@@ -264,6 +264,28 @@ class TestSIPMessageFactoryForMalformedSIPRequest(TestCase):
              'Contact: <sip:invalid@200.25.3.150:5061;transport=tls>\r\n'
              'Route: <sip:200.30.10.12:5061;transport=tls;lr>\r\n'
              'Expires: 0\r\n'
+             'Accept: application/sdp,application/isup,application/dtmf,application/dtmf-relay,multipart/mixed\r\n'
+             'Accept-Encoding: x-nortel-short\r\n'
+             'Accept-Language: en-us,fr-fr\r\n'
+             'Allow:  ACK,BYE,CANCEL,INFO,INVITE,OPTIONS,REGISTER,SUBSCRIBE,UPDATE\r\n'
+             'Authorization: Digest username="3122221000",realm="SomeRealm",nonce="1111790769596",uri="sip:3122211004@example.com",response="9bf77d8238664fe08dafd4d2abb6f1cb",algorithm=MD5\r\n'
+             'Call-Info: <https://lsc14pa.example.com:443/pa/direct/pictureServlet?user=3126805100@example.com>;Purpose=icon\r\n'
+             'Content-Disposition: session;handling=required\r\n'
+             'Content-Type: application/sdp\r\n'
+             'Date: Sat, 01 Feb 2014 22:07:34 GMT\r\n'
+             'Record-Route: <sip:200.25.3.230:5061;transport=tls;lr>\r\n'
+             'Require: sdp-anat\r\n'
+             'Retry-After: 30\r\n'
+             'Server: Blargomatic 2.0\r\n'
+             'Session-Expires: 1200;refresher=uac\r\n'
+             'Supported: 100rel,histinfo,join,replaces,sdp-anat,timer\r\n'
+             'Timestamp: 1392061773\r\n'
+             'WWW-Authenticate: Digest algorithm=MD5,nonce="1111790769596",realm="SomeRealm"\r\n'
+             'Warning: 370 200.21.3.10 "Insufficient Bandwidth"\r\n'
+             'X-RTP-Stat:  PR=0;ER=0;PL=0;RB=0/0;DE=PCMU;EN=PCMU;JI=0;DL=0,0;IP=10.1.0.33:16384,132.52.127.200:20048\r\n'
+             'x-channel:  ds/ds1-3/12;IP=132.52.127.16\r\n'
+             'Referred-By: <sip:6006665100@example.com;user=phone> ; CorrelationID="0508817f84e7ce64745ef9753e2fbff4664321a4@200.23.3.240"\r\n'
+             'Refer-To: <sip:6006665499;rfrid=28661859@example.com;user=phone?x-nt-resource-priority=YNBvf.2j00qao>\r\n'
              'Content-Length: 11\r\n'
              '\r\n'
              'Foo Content')
@@ -298,7 +320,7 @@ class TestSIPMessageFactoryForMalformedSIPRequest(TestCase):
         self.assertEqual(1, aSIPRequest.header.viaHeaderFields.__len__())
         self.assertEqual(1, aSIPRequest.header.vias.__len__())
         self.assertEqual('SIP/2.0/TLS 200.25.3.150;branch=z9hG4bK0ee8d3e272e31ca195299efc500', aSIPRequest.header.vias[0])
-        self.assertEqual(0, aSIPRequest.header.unknownHeaderFields.__len__())
+        self.assertEqual(4, aSIPRequest.header.unknownHeaderFields.__len__())
         self.assertFalse(aSIPRequest.startLine.isRequest)
         self.assertFalse(aSIPRequest.startLine.isResponse)
         self.assertTrue(aSIPRequest.startLine.isMalformed)
@@ -321,6 +343,28 @@ class TestSIPMessageFactoryForUnknownSIPRequest(TestCase):
              'Contact: <sip:invalid@200.25.3.150:5061;transport=tls>\r\n'
              'Route: <sip:200.30.10.12:5061;transport=tls;lr>\r\n'
              'Expires: 0\r\n'
+             'Accept: application/sdp,application/isup,application/dtmf,application/dtmf-relay,multipart/mixed\r\n'
+             'Accept-Encoding: x-nortel-short\r\n'
+             'Accept-Language: en-us,fr-fr\r\n'
+             'Allow:  ACK,BYE,CANCEL,INFO,INVITE,OPTIONS,REGISTER,SUBSCRIBE,UPDATE\r\n'
+             'Authorization: Digest username="3122221000",realm="SomeRealm",nonce="1111790769596",uri="sip:3122211004@example.com",response="9bf77d8238664fe08dafd4d2abb6f1cb",algorithm=MD5\r\n'
+             'Call-Info: <https://lsc14pa.example.com:443/pa/direct/pictureServlet?user=3126805100@example.com>;Purpose=icon\r\n'
+             'Content-Disposition: session;handling=required\r\n'
+             'Content-Type: application/sdp\r\n'
+             'Date: Sat, 01 Feb 2014 22:07:34 GMT\r\n'
+             'Record-Route: <sip:200.25.3.230:5061;transport=tls;lr>\r\n'
+             'Require: sdp-anat\r\n'
+             'Retry-After: 30\r\n'
+             'Server: Blargomatic 2.0\r\n'
+             'Session-Expires: 1200;refresher=uac\r\n'
+             'Supported: 100rel,histinfo,join,replaces,sdp-anat,timer\r\n'
+             'Timestamp: 1392061773\r\n'
+             'WWW-Authenticate: Digest algorithm=MD5,nonce="1111790769596",realm="SomeRealm"\r\n'
+             'Warning: 370 200.21.3.10 "Insufficient Bandwidth"\r\n'
+             'X-RTP-Stat:  PR=0;ER=0;PL=0;RB=0/0;DE=PCMU;EN=PCMU;JI=0;DL=0,0;IP=10.1.0.33:16384,132.52.127.200:20048\r\n'
+             'x-channel:  ds/ds1-3/12;IP=132.52.127.16\r\n'
+             'Referred-By: <sip:6006665100@example.com;user=phone> ; CorrelationID="0508817f84e7ce64745ef9753e2fbff4664321a4@200.23.3.240"\r\n'
+             'Refer-To: <sip:6006665499;rfrid=28661859@example.com;user=phone?x-nt-resource-priority=YNBvf.2j00qao>\r\n'
              'Content-Length: 11\r\n'
              '\r\n'
              'Foo Content')
@@ -358,7 +402,7 @@ class TestSIPMessageFactoryForUnknownSIPRequest(TestCase):
         self.assertEqual(1, aSIPRequest.header.viaHeaderFields.__len__())
         self.assertEqual(1, aSIPRequest.header.vias.__len__())
         self.assertEqual('SIP/2.0/TLS 200.25.3.150;branch=z9hG4bK0ee8d3e272e31ca195299efc500', aSIPRequest.header.vias[0])
-        self.assertEqual(0, aSIPRequest.header.unknownHeaderFields.__len__())
+        self.assertEqual(4, aSIPRequest.header.unknownHeaderFields.__len__())
         self.assertTrue(aSIPRequest.startLine.isRequest)
         self.assertFalse(aSIPRequest.startLine.isResponse)
         self.assertFalse(aSIPRequest.startLine.isMalformed)
@@ -382,6 +426,28 @@ class TestSIPMessageFactoryForOPTIONSSIPRequest(TestCase):
              'Contact: <sip:invalid@200.25.3.150:5061;transport=tls>\r\n'
              'Route: <sip:200.30.10.12:5061;transport=tls;lr>\r\n'
              'Expires: 0\r\n'
+             'Accept: application/sdp,application/isup,application/dtmf,application/dtmf-relay,multipart/mixed\r\n'
+             'Accept-Encoding: x-nortel-short\r\n'
+             'Accept-Language: en-us,fr-fr\r\n'
+             'Allow:  ACK,BYE,CANCEL,INFO,INVITE,OPTIONS,REGISTER,SUBSCRIBE,UPDATE\r\n'
+             'Authorization: Digest username="3122221000",realm="SomeRealm",nonce="1111790769596",uri="sip:3122211004@example.com",response="9bf77d8238664fe08dafd4d2abb6f1cb",algorithm=MD5\r\n'
+             'Call-Info: <https://lsc14pa.example.com:443/pa/direct/pictureServlet?user=3126805100@example.com>;Purpose=icon\r\n'
+             'Content-Disposition: session;handling=required\r\n'
+             'Content-Type: application/sdp\r\n'
+             'Date: Sat, 01 Feb 2014 22:07:34 GMT\r\n'
+             'Record-Route: <sip:200.25.3.230:5061;transport=tls;lr>\r\n'
+             'Require: sdp-anat\r\n'
+             'Retry-After: 30\r\n'
+             'Server: Blargomatic 2.0\r\n'
+             'Session-Expires: 1200;refresher=uac\r\n'
+             'Supported: 100rel,histinfo,join,replaces,sdp-anat,timer\r\n'
+             'Timestamp: 1392061773\r\n'
+             'WWW-Authenticate: Digest algorithm=MD5,nonce="1111790769596",realm="SomeRealm"\r\n'
+             'Warning: 370 200.21.3.10 "Insufficient Bandwidth"\r\n'
+             'X-RTP-Stat:  PR=0;ER=0;PL=0;RB=0/0;DE=PCMU;EN=PCMU;JI=0;DL=0,0;IP=10.1.0.33:16384,132.52.127.200:20048\r\n'
+             'x-channel:  ds/ds1-3/12;IP=132.52.127.16\r\n'
+             'Referred-By: <sip:6006665100@example.com;user=phone> ; CorrelationID="0508817f84e7ce64745ef9753e2fbff4664321a4@200.23.3.240"\r\n'
+             'Refer-To: <sip:6006665499;rfrid=28661859@example.com;user=phone?x-nt-resource-priority=YNBvf.2j00qao>\r\n'
              'Content-Length: 11\r\n'
              '\r\n'
              'Foo Content')
@@ -419,7 +485,7 @@ class TestSIPMessageFactoryForOPTIONSSIPRequest(TestCase):
         self.assertEqual(1, aSIPRequest.header.viaHeaderFields.__len__())
         self.assertEqual(1, aSIPRequest.header.vias.__len__())
         self.assertEqual('SIP/2.0/TLS 200.25.3.150;branch=z9hG4bK0ee8d3e272e31ca195299efc500', aSIPRequest.header.vias[0])
-        self.assertEqual(0, aSIPRequest.header.unknownHeaderFields.__len__())
+        self.assertEqual(4, aSIPRequest.header.unknownHeaderFields.__len__())
         self.assertTrue(aSIPRequest.startLine.isRequest)
         self.assertFalse(aSIPRequest.startLine.isResponse)
         self.assertFalse(aSIPRequest.startLine.isMalformed)
@@ -443,6 +509,28 @@ class TestSIPMessageFactoryForACKSIPRequest(TestCase):
              'Contact: <sip:invalid@200.25.3.150:5061;transport=tls>\r\n'
              'Route: <sip:200.30.10.12:5061;transport=tls;lr>\r\n'
              'Expires: 0\r\n'
+             'Accept: application/sdp,application/isup,application/dtmf,application/dtmf-relay,multipart/mixed\r\n'
+             'Accept-Encoding: x-nortel-short\r\n'
+             'Accept-Language: en-us,fr-fr\r\n'
+             'Allow:  ACK,BYE,CANCEL,INFO,INVITE,OPTIONS,REGISTER,SUBSCRIBE,UPDATE\r\n'
+             'Authorization: Digest username="3122221000",realm="SomeRealm",nonce="1111790769596",uri="sip:3122211004@example.com",response="9bf77d8238664fe08dafd4d2abb6f1cb",algorithm=MD5\r\n'
+             'Call-Info: <https://lsc14pa.example.com:443/pa/direct/pictureServlet?user=3126805100@example.com>;Purpose=icon\r\n'
+             'Content-Disposition: session;handling=required\r\n'
+             'Content-Type: application/sdp\r\n'
+             'Date: Sat, 01 Feb 2014 22:07:34 GMT\r\n'
+             'Record-Route: <sip:200.25.3.230:5061;transport=tls;lr>\r\n'
+             'Require: sdp-anat\r\n'
+             'Retry-After: 30\r\n'
+             'Server: Blargomatic 2.0\r\n'
+             'Session-Expires: 1200;refresher=uac\r\n'
+             'Supported: 100rel,histinfo,join,replaces,sdp-anat,timer\r\n'
+             'Timestamp: 1392061773\r\n'
+             'WWW-Authenticate: Digest algorithm=MD5,nonce="1111790769596",realm="SomeRealm"\r\n'
+             'Warning: 370 200.21.3.10 "Insufficient Bandwidth"\r\n'
+             'X-RTP-Stat:  PR=0;ER=0;PL=0;RB=0/0;DE=PCMU;EN=PCMU;JI=0;DL=0,0;IP=10.1.0.33:16384,132.52.127.200:20048\r\n'
+             'x-channel:  ds/ds1-3/12;IP=132.52.127.16\r\n'
+             'Referred-By: <sip:6006665100@example.com;user=phone> ; CorrelationID="0508817f84e7ce64745ef9753e2fbff4664321a4@200.23.3.240"\r\n'
+             'Refer-To: <sip:6006665499;rfrid=28661859@example.com;user=phone?x-nt-resource-priority=YNBvf.2j00qao>\r\n'
              'Content-Length: 11\r\n'
              '\r\n'
              'Foo Content')
@@ -480,7 +568,7 @@ class TestSIPMessageFactoryForACKSIPRequest(TestCase):
         self.assertEqual(1, aSIPRequest.header.viaHeaderFields.__len__())
         self.assertEqual(1, aSIPRequest.header.vias.__len__())
         self.assertEqual('SIP/2.0/TLS 200.25.3.150;branch=z9hG4bK0ee8d3e272e31ca195299efc500', aSIPRequest.header.vias[0])
-        self.assertEqual(0, aSIPRequest.header.unknownHeaderFields.__len__())
+        self.assertEqual(4, aSIPRequest.header.unknownHeaderFields.__len__())
         self.assertTrue(aSIPRequest.startLine.isRequest)
         self.assertFalse(aSIPRequest.startLine.isResponse)
         self.assertFalse(aSIPRequest.startLine.isMalformed)
@@ -504,6 +592,28 @@ class TestSIPMessageFactoryForBYESIPRequest(TestCase):
              'Contact: <sip:invalid@200.25.3.150:5061;transport=tls>\r\n'
              'Route: <sip:200.30.10.12:5061;transport=tls;lr>\r\n'
              'Expires: 0\r\n'
+             'Accept: application/sdp,application/isup,application/dtmf,application/dtmf-relay,multipart/mixed\r\n'
+             'Accept-Encoding: x-nortel-short\r\n'
+             'Accept-Language: en-us,fr-fr\r\n'
+             'Allow:  ACK,BYE,CANCEL,INFO,INVITE,OPTIONS,REGISTER,SUBSCRIBE,UPDATE\r\n'
+             'Authorization: Digest username="3122221000",realm="SomeRealm",nonce="1111790769596",uri="sip:3122211004@example.com",response="9bf77d8238664fe08dafd4d2abb6f1cb",algorithm=MD5\r\n'
+             'Call-Info: <https://lsc14pa.example.com:443/pa/direct/pictureServlet?user=3126805100@example.com>;Purpose=icon\r\n'
+             'Content-Disposition: session;handling=required\r\n'
+             'Content-Type: application/sdp\r\n'
+             'Date: Sat, 01 Feb 2014 22:07:34 GMT\r\n'
+             'Record-Route: <sip:200.25.3.230:5061;transport=tls;lr>\r\n'
+             'Require: sdp-anat\r\n'
+             'Retry-After: 30\r\n'
+             'Server: Blargomatic 2.0\r\n'
+             'Session-Expires: 1200;refresher=uac\r\n'
+             'Supported: 100rel,histinfo,join,replaces,sdp-anat,timer\r\n'
+             'Timestamp: 1392061773\r\n'
+             'WWW-Authenticate: Digest algorithm=MD5,nonce="1111790769596",realm="SomeRealm"\r\n'
+             'Warning: 370 200.21.3.10 "Insufficient Bandwidth"\r\n'
+             'X-RTP-Stat:  PR=0;ER=0;PL=0;RB=0/0;DE=PCMU;EN=PCMU;JI=0;DL=0,0;IP=10.1.0.33:16384,132.52.127.200:20048\r\n'
+             'x-channel:  ds/ds1-3/12;IP=132.52.127.16\r\n'
+             'Referred-By: <sip:6006665100@example.com;user=phone> ; CorrelationID="0508817f84e7ce64745ef9753e2fbff4664321a4@200.23.3.240"\r\n'
+             'Refer-To: <sip:6006665499;rfrid=28661859@example.com;user=phone?x-nt-resource-priority=YNBvf.2j00qao>\r\n'
              'Content-Length: 11\r\n'
              '\r\n'
              'Foo Content')
@@ -541,7 +651,7 @@ class TestSIPMessageFactoryForBYESIPRequest(TestCase):
         self.assertEqual(1, aSIPRequest.header.viaHeaderFields.__len__())
         self.assertEqual(1, aSIPRequest.header.vias.__len__())
         self.assertEqual('SIP/2.0/TLS 200.25.3.150;branch=z9hG4bK0ee8d3e272e31ca195299efc500', aSIPRequest.header.vias[0])
-        self.assertEqual(0, aSIPRequest.header.unknownHeaderFields.__len__())
+        self.assertEqual(4, aSIPRequest.header.unknownHeaderFields.__len__())
         self.assertTrue(aSIPRequest.startLine.isRequest)
         self.assertFalse(aSIPRequest.startLine.isResponse)
         self.assertFalse(aSIPRequest.startLine.isMalformed)
@@ -565,6 +675,28 @@ class TestSIPMessageFactoryForCANCELSIPRequest(TestCase):
              'Contact: <sip:invalid@200.25.3.150:5061;transport=tls>\r\n'
              'Route: <sip:200.30.10.12:5061;transport=tls;lr>\r\n'
              'Expires: 0\r\n'
+             'Accept: application/sdp,application/isup,application/dtmf,application/dtmf-relay,multipart/mixed\r\n'
+             'Accept-Encoding: x-nortel-short\r\n'
+             'Accept-Language: en-us,fr-fr\r\n'
+             'Allow:  ACK,BYE,CANCEL,INFO,INVITE,OPTIONS,REGISTER,SUBSCRIBE,UPDATE\r\n'
+             'Authorization: Digest username="3122221000",realm="SomeRealm",nonce="1111790769596",uri="sip:3122211004@example.com",response="9bf77d8238664fe08dafd4d2abb6f1cb",algorithm=MD5\r\n'
+             'Call-Info: <https://lsc14pa.example.com:443/pa/direct/pictureServlet?user=3126805100@example.com>;Purpose=icon\r\n'
+             'Content-Disposition: session;handling=required\r\n'
+             'Content-Type: application/sdp\r\n'
+             'Date: Sat, 01 Feb 2014 22:07:34 GMT\r\n'
+             'Record-Route: <sip:200.25.3.230:5061;transport=tls;lr>\r\n'
+             'Require: sdp-anat\r\n'
+             'Retry-After: 30\r\n'
+             'Server: Blargomatic 2.0\r\n'
+             'Session-Expires: 1200;refresher=uac\r\n'
+             'Supported: 100rel,histinfo,join,replaces,sdp-anat,timer\r\n'
+             'Timestamp: 1392061773\r\n'
+             'WWW-Authenticate: Digest algorithm=MD5,nonce="1111790769596",realm="SomeRealm"\r\n'
+             'Warning: 370 200.21.3.10 "Insufficient Bandwidth"\r\n'
+             'X-RTP-Stat:  PR=0;ER=0;PL=0;RB=0/0;DE=PCMU;EN=PCMU;JI=0;DL=0,0;IP=10.1.0.33:16384,132.52.127.200:20048\r\n'
+             'x-channel:  ds/ds1-3/12;IP=132.52.127.16\r\n'
+             'Referred-By: <sip:6006665100@example.com;user=phone> ; CorrelationID="0508817f84e7ce64745ef9753e2fbff4664321a4@200.23.3.240"\r\n'
+             'Refer-To: <sip:6006665499;rfrid=28661859@example.com;user=phone?x-nt-resource-priority=YNBvf.2j00qao>\r\n'
              'Content-Length: 11\r\n'
              '\r\n'
              'Foo Content')
@@ -602,7 +734,7 @@ class TestSIPMessageFactoryForCANCELSIPRequest(TestCase):
         self.assertEqual(1, aSIPRequest.header.viaHeaderFields.__len__())
         self.assertEqual(1, aSIPRequest.header.vias.__len__())
         self.assertEqual('SIP/2.0/TLS 200.25.3.150;branch=z9hG4bK0ee8d3e272e31ca195299efc500', aSIPRequest.header.vias[0])
-        self.assertEqual(0, aSIPRequest.header.unknownHeaderFields.__len__())
+        self.assertEqual(4, aSIPRequest.header.unknownHeaderFields.__len__())
         self.assertTrue(aSIPRequest.startLine.isRequest)
         self.assertFalse(aSIPRequest.startLine.isResponse)
         self.assertFalse(aSIPRequest.startLine.isMalformed)
@@ -626,6 +758,28 @@ class TestSIPMessageFactoryForINFOSIPRequest(TestCase):
              'Contact: <sip:invalid@200.25.3.150:5061;transport=tls>\r\n'
              'Route: <sip:200.30.10.12:5061;transport=tls;lr>\r\n'
              'Expires: 0\r\n'
+             'Accept: application/sdp,application/isup,application/dtmf,application/dtmf-relay,multipart/mixed\r\n'
+             'Accept-Encoding: x-nortel-short\r\n'
+             'Accept-Language: en-us,fr-fr\r\n'
+             'Allow:  ACK,BYE,CANCEL,INFO,INVITE,OPTIONS,REGISTER,SUBSCRIBE,UPDATE\r\n'
+             'Authorization: Digest username="3122221000",realm="SomeRealm",nonce="1111790769596",uri="sip:3122211004@example.com",response="9bf77d8238664fe08dafd4d2abb6f1cb",algorithm=MD5\r\n'
+             'Call-Info: <https://lsc14pa.example.com:443/pa/direct/pictureServlet?user=3126805100@example.com>;Purpose=icon\r\n'
+             'Content-Disposition: session;handling=required\r\n'
+             'Content-Type: application/sdp\r\n'
+             'Date: Sat, 01 Feb 2014 22:07:34 GMT\r\n'
+             'Record-Route: <sip:200.25.3.230:5061;transport=tls;lr>\r\n'
+             'Require: sdp-anat\r\n'
+             'Retry-After: 30\r\n'
+             'Server: Blargomatic 2.0\r\n'
+             'Session-Expires: 1200;refresher=uac\r\n'
+             'Supported: 100rel,histinfo,join,replaces,sdp-anat,timer\r\n'
+             'Timestamp: 1392061773\r\n'
+             'WWW-Authenticate: Digest algorithm=MD5,nonce="1111790769596",realm="SomeRealm"\r\n'
+             'Warning: 370 200.21.3.10 "Insufficient Bandwidth"\r\n'
+             'X-RTP-Stat:  PR=0;ER=0;PL=0;RB=0/0;DE=PCMU;EN=PCMU;JI=0;DL=0,0;IP=10.1.0.33:16384,132.52.127.200:20048\r\n'
+             'x-channel:  ds/ds1-3/12;IP=132.52.127.16\r\n'
+             'Referred-By: <sip:6006665100@example.com;user=phone> ; CorrelationID="0508817f84e7ce64745ef9753e2fbff4664321a4@200.23.3.240"\r\n'
+             'Refer-To: <sip:6006665499;rfrid=28661859@example.com;user=phone?x-nt-resource-priority=YNBvf.2j00qao>\r\n'
              'Content-Length: 11\r\n'
              '\r\n'
              'Foo Content')
@@ -663,7 +817,7 @@ class TestSIPMessageFactoryForINFOSIPRequest(TestCase):
         self.assertEqual(1, aSIPRequest.header.viaHeaderFields.__len__())
         self.assertEqual(1, aSIPRequest.header.vias.__len__())
         self.assertEqual('SIP/2.0/TLS 200.25.3.150;branch=z9hG4bK0ee8d3e272e31ca195299efc500', aSIPRequest.header.vias[0])
-        self.assertEqual(0, aSIPRequest.header.unknownHeaderFields.__len__())
+        self.assertEqual(4, aSIPRequest.header.unknownHeaderFields.__len__())
         self.assertTrue(aSIPRequest.startLine.isRequest)
         self.assertFalse(aSIPRequest.startLine.isResponse)
         self.assertFalse(aSIPRequest.startLine.isMalformed)
@@ -687,6 +841,28 @@ class TestSIPMessageFactoryForINVITESIPRequest(TestCase):
              'Contact: <sip:invalid@200.25.3.150:5061;transport=tls>\r\n'
              'Route: <sip:200.30.10.12:5061;transport=tls;lr>\r\n'
              'Expires: 0\r\n'
+             'Accept: application/sdp,application/isup,application/dtmf,application/dtmf-relay,multipart/mixed\r\n'
+             'Accept-Encoding: x-nortel-short\r\n'
+             'Accept-Language: en-us,fr-fr\r\n'
+             'Allow:  ACK,BYE,CANCEL,INFO,INVITE,OPTIONS,REGISTER,SUBSCRIBE,UPDATE\r\n'
+             'Authorization: Digest username="3122221000",realm="SomeRealm",nonce="1111790769596",uri="sip:3122211004@example.com",response="9bf77d8238664fe08dafd4d2abb6f1cb",algorithm=MD5\r\n'
+             'Call-Info: <https://lsc14pa.example.com:443/pa/direct/pictureServlet?user=3126805100@example.com>;Purpose=icon\r\n'
+             'Content-Disposition: session;handling=required\r\n'
+             'Content-Type: application/sdp\r\n'
+             'Date: Sat, 01 Feb 2014 22:07:34 GMT\r\n'
+             'Record-Route: <sip:200.25.3.230:5061;transport=tls;lr>\r\n'
+             'Require: sdp-anat\r\n'
+             'Retry-After: 30\r\n'
+             'Server: Blargomatic 2.0\r\n'
+             'Session-Expires: 1200;refresher=uac\r\n'
+             'Supported: 100rel,histinfo,join,replaces,sdp-anat,timer\r\n'
+             'Timestamp: 1392061773\r\n'
+             'WWW-Authenticate: Digest algorithm=MD5,nonce="1111790769596",realm="SomeRealm"\r\n'
+             'Warning: 370 200.21.3.10 "Insufficient Bandwidth"\r\n'
+             'X-RTP-Stat:  PR=0;ER=0;PL=0;RB=0/0;DE=PCMU;EN=PCMU;JI=0;DL=0,0;IP=10.1.0.33:16384,132.52.127.200:20048\r\n'
+             'x-channel:  ds/ds1-3/12;IP=132.52.127.16\r\n'
+             'Referred-By: <sip:6006665100@example.com;user=phone> ; CorrelationID="0508817f84e7ce64745ef9753e2fbff4664321a4@200.23.3.240"\r\n'
+             'Refer-To: <sip:6006665499;rfrid=28661859@example.com;user=phone?x-nt-resource-priority=YNBvf.2j00qao>\r\n'
              'Content-Length: 11\r\n'
              '\r\n'
              'Foo Content')
@@ -724,7 +900,7 @@ class TestSIPMessageFactoryForINVITESIPRequest(TestCase):
         self.assertEqual(1, aSIPRequest.header.viaHeaderFields.__len__())
         self.assertEqual(1, aSIPRequest.header.vias.__len__())
         self.assertEqual('SIP/2.0/TLS 200.25.3.150;branch=z9hG4bK0ee8d3e272e31ca195299efc500', aSIPRequest.header.vias[0])
-        self.assertEqual(0, aSIPRequest.header.unknownHeaderFields.__len__())
+        self.assertEqual(4, aSIPRequest.header.unknownHeaderFields.__len__())
         self.assertTrue(aSIPRequest.startLine.isRequest)
         self.assertFalse(aSIPRequest.startLine.isResponse)
         self.assertFalse(aSIPRequest.startLine.isMalformed)
@@ -748,6 +924,28 @@ class TestSIPMessageFactoryForNOTIFYSIPRequest(TestCase):
              'Contact: <sip:invalid@200.25.3.150:5061;transport=tls>\r\n'
              'Route: <sip:200.30.10.12:5061;transport=tls;lr>\r\n'
              'Expires: 0\r\n'
+             'Accept: application/sdp,application/isup,application/dtmf,application/dtmf-relay,multipart/mixed\r\n'
+             'Accept-Encoding: x-nortel-short\r\n'
+             'Accept-Language: en-us,fr-fr\r\n'
+             'Allow:  ACK,BYE,CANCEL,INFO,INVITE,OPTIONS,REGISTER,SUBSCRIBE,UPDATE\r\n'
+             'Authorization: Digest username="3122221000",realm="SomeRealm",nonce="1111790769596",uri="sip:3122211004@example.com",response="9bf77d8238664fe08dafd4d2abb6f1cb",algorithm=MD5\r\n'
+             'Call-Info: <https://lsc14pa.example.com:443/pa/direct/pictureServlet?user=3126805100@example.com>;Purpose=icon\r\n'
+             'Content-Disposition: session;handling=required\r\n'
+             'Content-Type: application/sdp\r\n'
+             'Date: Sat, 01 Feb 2014 22:07:34 GMT\r\n'
+             'Record-Route: <sip:200.25.3.230:5061;transport=tls;lr>\r\n'
+             'Require: sdp-anat\r\n'
+             'Retry-After: 30\r\n'
+             'Server: Blargomatic 2.0\r\n'
+             'Session-Expires: 1200;refresher=uac\r\n'
+             'Supported: 100rel,histinfo,join,replaces,sdp-anat,timer\r\n'
+             'Timestamp: 1392061773\r\n'
+             'WWW-Authenticate: Digest algorithm=MD5,nonce="1111790769596",realm="SomeRealm"\r\n'
+             'Warning: 370 200.21.3.10 "Insufficient Bandwidth"\r\n'
+             'X-RTP-Stat:  PR=0;ER=0;PL=0;RB=0/0;DE=PCMU;EN=PCMU;JI=0;DL=0,0;IP=10.1.0.33:16384,132.52.127.200:20048\r\n'
+             'x-channel:  ds/ds1-3/12;IP=132.52.127.16\r\n'
+             'Referred-By: <sip:6006665100@example.com;user=phone> ; CorrelationID="0508817f84e7ce64745ef9753e2fbff4664321a4@200.23.3.240"\r\n'
+             'Refer-To: <sip:6006665499;rfrid=28661859@example.com;user=phone?x-nt-resource-priority=YNBvf.2j00qao>\r\n'
              'Content-Length: 11\r\n'
              '\r\n'
              'Foo Content')
@@ -785,7 +983,7 @@ class TestSIPMessageFactoryForNOTIFYSIPRequest(TestCase):
         self.assertEqual(1, aSIPRequest.header.viaHeaderFields.__len__())
         self.assertEqual(1, aSIPRequest.header.vias.__len__())
         self.assertEqual('SIP/2.0/TLS 200.25.3.150;branch=z9hG4bK0ee8d3e272e31ca195299efc500', aSIPRequest.header.vias[0])
-        self.assertEqual(0, aSIPRequest.header.unknownHeaderFields.__len__())
+        self.assertEqual(4, aSIPRequest.header.unknownHeaderFields.__len__())
         self.assertTrue(aSIPRequest.startLine.isRequest)
         self.assertFalse(aSIPRequest.startLine.isResponse)
         self.assertFalse(aSIPRequest.startLine.isMalformed)
@@ -809,6 +1007,28 @@ class TestSIPMessageFactoryForREFERSIPRequest(TestCase):
              'Contact: <sip:invalid@200.25.3.150:5061;transport=tls>\r\n'
              'Route: <sip:200.30.10.12:5061;transport=tls;lr>\r\n'
              'Expires: 0\r\n'
+             'Accept: application/sdp,application/isup,application/dtmf,application/dtmf-relay,multipart/mixed\r\n'
+             'Accept-Encoding: x-nortel-short\r\n'
+             'Accept-Language: en-us,fr-fr\r\n'
+             'Allow:  ACK,BYE,CANCEL,INFO,INVITE,OPTIONS,REGISTER,SUBSCRIBE,UPDATE\r\n'
+             'Authorization: Digest username="3122221000",realm="SomeRealm",nonce="1111790769596",uri="sip:3122211004@example.com",response="9bf77d8238664fe08dafd4d2abb6f1cb",algorithm=MD5\r\n'
+             'Call-Info: <https://lsc14pa.example.com:443/pa/direct/pictureServlet?user=3126805100@example.com>;Purpose=icon\r\n'
+             'Content-Disposition: session;handling=required\r\n'
+             'Content-Type: application/sdp\r\n'
+             'Date: Sat, 01 Feb 2014 22:07:34 GMT\r\n'
+             'Record-Route: <sip:200.25.3.230:5061;transport=tls;lr>\r\n'
+             'Require: sdp-anat\r\n'
+             'Retry-After: 30\r\n'
+             'Server: Blargomatic 2.0\r\n'
+             'Session-Expires: 1200;refresher=uac\r\n'
+             'Supported: 100rel,histinfo,join,replaces,sdp-anat,timer\r\n'
+             'Timestamp: 1392061773\r\n'
+             'WWW-Authenticate: Digest algorithm=MD5,nonce="1111790769596",realm="SomeRealm"\r\n'
+             'Warning: 370 200.21.3.10 "Insufficient Bandwidth"\r\n'
+             'X-RTP-Stat:  PR=0;ER=0;PL=0;RB=0/0;DE=PCMU;EN=PCMU;JI=0;DL=0,0;IP=10.1.0.33:16384,132.52.127.200:20048\r\n'
+             'x-channel:  ds/ds1-3/12;IP=132.52.127.16\r\n'
+             'Referred-By: <sip:6006665100@example.com;user=phone> ; CorrelationID="0508817f84e7ce64745ef9753e2fbff4664321a4@200.23.3.240"\r\n'
+             'Refer-To: <sip:6006665499;rfrid=28661859@example.com;user=phone?x-nt-resource-priority=YNBvf.2j00qao>\r\n'
              'Content-Length: 11\r\n'
              '\r\n'
              'Foo Content')
@@ -846,7 +1066,7 @@ class TestSIPMessageFactoryForREFERSIPRequest(TestCase):
         self.assertEqual(1, aSIPRequest.header.viaHeaderFields.__len__())
         self.assertEqual(1, aSIPRequest.header.vias.__len__())
         self.assertEqual('SIP/2.0/TLS 200.25.3.150;branch=z9hG4bK0ee8d3e272e31ca195299efc500', aSIPRequest.header.vias[0])
-        self.assertEqual(0, aSIPRequest.header.unknownHeaderFields.__len__())
+        self.assertEqual(4, aSIPRequest.header.unknownHeaderFields.__len__())
         self.assertTrue(aSIPRequest.startLine.isRequest)
         self.assertFalse(aSIPRequest.startLine.isResponse)
         self.assertFalse(aSIPRequest.startLine.isMalformed)
@@ -870,6 +1090,28 @@ class TestSIPMessageFactoryForREGISTERSIPRequest(TestCase):
              'Contact: <sip:invalid@200.25.3.150:5061;transport=tls>\r\n'
              'Route: <sip:200.30.10.12:5061;transport=tls;lr>\r\n'
              'Expires: 0\r\n'
+             'Accept: application/sdp,application/isup,application/dtmf,application/dtmf-relay,multipart/mixed\r\n'
+             'Accept-Encoding: x-nortel-short\r\n'
+             'Accept-Language: en-us,fr-fr\r\n'
+             'Allow:  ACK,BYE,CANCEL,INFO,INVITE,OPTIONS,REGISTER,SUBSCRIBE,UPDATE\r\n'
+             'Authorization: Digest username="3122221000",realm="SomeRealm",nonce="1111790769596",uri="sip:3122211004@example.com",response="9bf77d8238664fe08dafd4d2abb6f1cb",algorithm=MD5\r\n'
+             'Call-Info: <https://lsc14pa.example.com:443/pa/direct/pictureServlet?user=3126805100@example.com>;Purpose=icon\r\n'
+             'Content-Disposition: session;handling=required\r\n'
+             'Content-Type: application/sdp\r\n'
+             'Date: Sat, 01 Feb 2014 22:07:34 GMT\r\n'
+             'Record-Route: <sip:200.25.3.230:5061;transport=tls;lr>\r\n'
+             'Require: sdp-anat\r\n'
+             'Retry-After: 30\r\n'
+             'Server: Blargomatic 2.0\r\n'
+             'Session-Expires: 1200;refresher=uac\r\n'
+             'Supported: 100rel,histinfo,join,replaces,sdp-anat,timer\r\n'
+             'Timestamp: 1392061773\r\n'
+             'WWW-Authenticate: Digest algorithm=MD5,nonce="1111790769596",realm="SomeRealm"\r\n'
+             'Warning: 370 200.21.3.10 "Insufficient Bandwidth"\r\n'
+             'X-RTP-Stat:  PR=0;ER=0;PL=0;RB=0/0;DE=PCMU;EN=PCMU;JI=0;DL=0,0;IP=10.1.0.33:16384,132.52.127.200:20048\r\n'
+             'x-channel:  ds/ds1-3/12;IP=132.52.127.16\r\n'
+             'Referred-By: <sip:6006665100@example.com;user=phone> ; CorrelationID="0508817f84e7ce64745ef9753e2fbff4664321a4@200.23.3.240"\r\n'
+             'Refer-To: <sip:6006665499;rfrid=28661859@example.com;user=phone?x-nt-resource-priority=YNBvf.2j00qao>\r\n'
              'Content-Length: 11\r\n'
              '\r\n'
              'Foo Content')
@@ -907,7 +1149,7 @@ class TestSIPMessageFactoryForREGISTERSIPRequest(TestCase):
         self.assertEqual(1, aSIPRequest.header.viaHeaderFields.__len__())
         self.assertEqual(1, aSIPRequest.header.vias.__len__())
         self.assertEqual('SIP/2.0/TLS 200.25.3.150;branch=z9hG4bK0ee8d3e272e31ca195299efc500', aSIPRequest.header.vias[0])
-        self.assertEqual(0, aSIPRequest.header.unknownHeaderFields.__len__())
+        self.assertEqual(4, aSIPRequest.header.unknownHeaderFields.__len__())
         self.assertTrue(aSIPRequest.startLine.isRequest)
         self.assertFalse(aSIPRequest.startLine.isResponse)
         self.assertFalse(aSIPRequest.startLine.isMalformed)
@@ -931,6 +1173,28 @@ class TestSIPMessageFactoryForSUBSCRIBESIPRequest(TestCase):
              'Contact: <sip:invalid@200.25.3.150:5061;transport=tls>\r\n'
              'Route: <sip:200.30.10.12:5061;transport=tls;lr>\r\n'
              'Expires: 0\r\n'
+             'Accept: application/sdp,application/isup,application/dtmf,application/dtmf-relay,multipart/mixed\r\n'
+             'Accept-Encoding: x-nortel-short\r\n'
+             'Accept-Language: en-us,fr-fr\r\n'
+             'Allow:  ACK,BYE,CANCEL,INFO,INVITE,OPTIONS,REGISTER,SUBSCRIBE,UPDATE\r\n'
+             'Authorization: Digest username="3122221000",realm="SomeRealm",nonce="1111790769596",uri="sip:3122211004@example.com",response="9bf77d8238664fe08dafd4d2abb6f1cb",algorithm=MD5\r\n'
+             'Call-Info: <https://lsc14pa.example.com:443/pa/direct/pictureServlet?user=3126805100@example.com>;Purpose=icon\r\n'
+             'Content-Disposition: session;handling=required\r\n'
+             'Content-Type: application/sdp\r\n'
+             'Date: Sat, 01 Feb 2014 22:07:34 GMT\r\n'
+             'Record-Route: <sip:200.25.3.230:5061;transport=tls;lr>\r\n'
+             'Require: sdp-anat\r\n'
+             'Retry-After: 30\r\n'
+             'Server: Blargomatic 2.0\r\n'
+             'Session-Expires: 1200;refresher=uac\r\n'
+             'Supported: 100rel,histinfo,join,replaces,sdp-anat,timer\r\n'
+             'Timestamp: 1392061773\r\n'
+             'WWW-Authenticate: Digest algorithm=MD5,nonce="1111790769596",realm="SomeRealm"\r\n'
+             'Warning: 370 200.21.3.10 "Insufficient Bandwidth"\r\n'
+             'X-RTP-Stat:  PR=0;ER=0;PL=0;RB=0/0;DE=PCMU;EN=PCMU;JI=0;DL=0,0;IP=10.1.0.33:16384,132.52.127.200:20048\r\n'
+             'x-channel:  ds/ds1-3/12;IP=132.52.127.16\r\n'
+             'Referred-By: <sip:6006665100@example.com;user=phone> ; CorrelationID="0508817f84e7ce64745ef9753e2fbff4664321a4@200.23.3.240"\r\n'
+             'Refer-To: <sip:6006665499;rfrid=28661859@example.com;user=phone?x-nt-resource-priority=YNBvf.2j00qao>\r\n'
              'Content-Length: 11\r\n'
              '\r\n'
              'Foo Content')
@@ -968,7 +1232,7 @@ class TestSIPMessageFactoryForSUBSCRIBESIPRequest(TestCase):
         self.assertEqual(1, aSIPRequest.header.viaHeaderFields.__len__())
         self.assertEqual(1, aSIPRequest.header.vias.__len__())
         self.assertEqual('SIP/2.0/TLS 200.25.3.150;branch=z9hG4bK0ee8d3e272e31ca195299efc500', aSIPRequest.header.vias[0])
-        self.assertEqual(0, aSIPRequest.header.unknownHeaderFields.__len__())
+        self.assertEqual(4, aSIPRequest.header.unknownHeaderFields.__len__())
         self.assertTrue(aSIPRequest.startLine.isRequest)
         self.assertFalse(aSIPRequest.startLine.isResponse)
         self.assertFalse(aSIPRequest.startLine.isMalformed)
@@ -992,6 +1256,28 @@ class TestSIPMessageFactoryForUPDATESIPRequest(TestCase):
              'Contact: <sip:invalid@200.25.3.150:5061;transport=tls>\r\n'
              'Route: <sip:200.30.10.12:5061;transport=tls;lr>\r\n'
              'Expires: 0\r\n'
+             'Accept: application/sdp,application/isup,application/dtmf,application/dtmf-relay,multipart/mixed\r\n'
+             'Accept-Encoding: x-nortel-short\r\n'
+             'Accept-Language: en-us,fr-fr\r\n'
+             'Allow:  ACK,BYE,CANCEL,INFO,INVITE,OPTIONS,REGISTER,SUBSCRIBE,UPDATE\r\n'
+             'Authorization: Digest username="3122221000",realm="SomeRealm",nonce="1111790769596",uri="sip:3122211004@example.com",response="9bf77d8238664fe08dafd4d2abb6f1cb",algorithm=MD5\r\n'
+             'Call-Info: <https://lsc14pa.example.com:443/pa/direct/pictureServlet?user=3126805100@example.com>;Purpose=icon\r\n'
+             'Content-Disposition: session;handling=required\r\n'
+             'Content-Type: application/sdp\r\n'
+             'Date: Sat, 01 Feb 2014 22:07:34 GMT\r\n'
+             'Record-Route: <sip:200.25.3.230:5061;transport=tls;lr>\r\n'
+             'Require: sdp-anat\r\n'
+             'Retry-After: 30\r\n'
+             'Server: Blargomatic 2.0\r\n'
+             'Session-Expires: 1200;refresher=uac\r\n'
+             'Supported: 100rel,histinfo,join,replaces,sdp-anat,timer\r\n'
+             'Timestamp: 1392061773\r\n'
+             'WWW-Authenticate: Digest algorithm=MD5,nonce="1111790769596",realm="SomeRealm"\r\n'
+             'Warning: 370 200.21.3.10 "Insufficient Bandwidth"\r\n'
+             'X-RTP-Stat:  PR=0;ER=0;PL=0;RB=0/0;DE=PCMU;EN=PCMU;JI=0;DL=0,0;IP=10.1.0.33:16384,132.52.127.200:20048\r\n'
+             'x-channel:  ds/ds1-3/12;IP=132.52.127.16\r\n'
+             'Referred-By: <sip:6006665100@example.com;user=phone> ; CorrelationID="0508817f84e7ce64745ef9753e2fbff4664321a4@200.23.3.240"\r\n'
+             'Refer-To: <sip:6006665499;rfrid=28661859@example.com;user=phone?x-nt-resource-priority=YNBvf.2j00qao>\r\n'
              'Content-Length: 11\r\n'
              '\r\n'
              'Foo Content')
@@ -1029,7 +1315,7 @@ class TestSIPMessageFactoryForUPDATESIPRequest(TestCase):
         self.assertEqual(1, aSIPRequest.header.viaHeaderFields.__len__())
         self.assertEqual(1, aSIPRequest.header.vias.__len__())
         self.assertEqual('SIP/2.0/TLS 200.25.3.150;branch=z9hG4bK0ee8d3e272e31ca195299efc500', aSIPRequest.header.vias[0])
-        self.assertEqual(0, aSIPRequest.header.unknownHeaderFields.__len__())
+        self.assertEqual(4, aSIPRequest.header.unknownHeaderFields.__len__())
         self.assertTrue(aSIPRequest.startLine.isRequest)
         self.assertFalse(aSIPRequest.startLine.isResponse)
         self.assertFalse(aSIPRequest.startLine.isMalformed)
@@ -1048,6 +1334,28 @@ class TestSIPMessageFactoryForSIPResponse(TestCase):
              'Call-ID: a12d6210342b0183745ef9750992682d90d7edce@200.23.3.241\r\n'
              'CSeq: 615 INVITE\r\n'
              'Via: SIP/2.0/UDP 200.23.3.241:5064;received=200.30.10.15;branch=z9hG4bK-3f04bd-f62a8381-4ebadacb-0x692748a8\r\n'
+             'Accept: application/sdp,application/isup,application/dtmf,application/dtmf-relay,multipart/mixed\r\n'
+             'Accept-Encoding: x-nortel-short\r\n'
+             'Accept-Language: en-us,fr-fr\r\n'
+             'Allow:  ACK,BYE,CANCEL,INFO,INVITE,OPTIONS,REGISTER,SUBSCRIBE,UPDATE\r\n'
+             'Authorization: Digest username="3122221000",realm="SomeRealm",nonce="1111790769596",uri="sip:3122211004@example.com",response="9bf77d8238664fe08dafd4d2abb6f1cb",algorithm=MD5\r\n'
+             'Call-Info: <https://lsc14pa.example.com:443/pa/direct/pictureServlet?user=3126805100@example.com>;Purpose=icon\r\n'
+             'Content-Disposition: session;handling=required\r\n'
+             'Content-Type: application/sdp\r\n'
+             'Date: Sat, 01 Feb 2014 22:07:34 GMT\r\n'
+             'Record-Route: <sip:200.25.3.230:5061;transport=tls;lr>\r\n'
+             'Require: sdp-anat\r\n'
+             'Retry-After: 30\r\n'
+             'Server: Blargomatic 2.0\r\n'
+             'Session-Expires: 1200;refresher=uac\r\n'
+             'Supported: 100rel,histinfo,join,replaces,sdp-anat,timer\r\n'
+             'Timestamp: 1392061773\r\n'
+             'WWW-Authenticate: Digest algorithm=MD5,nonce="1111790769596",realm="SomeRealm"\r\n'
+             'Warning: 370 200.21.3.10 "Insufficient Bandwidth"\r\n'
+             'X-RTP-Stat:  PR=0;ER=0;PL=0;RB=0/0;DE=PCMU;EN=PCMU;JI=0;DL=0,0;IP=10.1.0.33:16384,132.52.127.200:20048\r\n'
+             'x-channel:  ds/ds1-3/12;IP=132.52.127.16\r\n'
+             'Referred-By: <sip:6006665100@example.com;user=phone> ; CorrelationID="0508817f84e7ce64745ef9753e2fbff4664321a4@200.23.3.240"\r\n'
+             'Refer-To: <sip:6006665499;rfrid=28661859@example.com;user=phone?x-nt-resource-priority=YNBvf.2j00qao>\r\n'
              'Content-Length: 11\r\n'
              '\r\n'
              'Foo Content')
@@ -1089,7 +1397,7 @@ class TestSIPMessageFactoryForSIPResponse(TestCase):
         self.assertEqual(1, aSIPResponse.header.viaHeaderFields.__len__())
         self.assertEqual(1, aSIPResponse.header.vias.__len__())
         self.assertEqual('SIP/2.0/UDP 200.23.3.241:5064;received=200.30.10.15;branch=z9hG4bK-3f04bd-f62a8381-4ebadacb-0x692748a8', aSIPResponse.header.vias[0])
-        self.assertEqual(0, aSIPResponse.header.unknownHeaderFields.__len__())
+        self.assertEqual(4, aSIPResponse.header.unknownHeaderFields.__len__())
         self.assertTrue(aSIPResponse.startLine.isResponse)
         self.assertFalse(aSIPResponse.startLine.isRequest)
         self.assertFalse(aSIPResponse.startLine.isMalformed)
