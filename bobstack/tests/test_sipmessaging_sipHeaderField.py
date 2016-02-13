@@ -3,7 +3,36 @@ import sys
 sys.path.append("..")
 from sipmessaging import UnknownSIPHeaderField
 from sipmessaging import ContentLengthSIPHeaderField
+from sipmessaging import ViaSIPHeaderField
+from sipmessaging import AcceptSIPHeaderField
+from sipmessaging import AcceptEncodingSIPHeaderField
+from sipmessaging import AcceptLanguageSIPHeaderField
+from sipmessaging import AllowSIPHeaderField
+from sipmessaging import AuthorizationSIPHeaderField
+from sipmessaging import CSeqSIPHeaderField
+from sipmessaging import CallIDSIPHeaderField
+from sipmessaging import CallInfoSIPHeaderField
+from sipmessaging import ContactSIPHeaderField
+from sipmessaging import ContentDispositionSIPHeaderField
+from sipmessaging import ContentTypeSIPHeaderField
+from sipmessaging import DateSIPHeaderField
+from sipmessaging import ExpiresSIPHeaderField
+from sipmessaging import FromSIPHeaderField
+from sipmessaging import MaxForwardsSIPHeaderField
+from sipmessaging import RecordRouteSIPHeaderField
+from sipmessaging import RequireSIPHeaderField
+from sipmessaging import RetryAfterSIPHeaderField
+from sipmessaging import RouteSIPHeaderField
+from sipmessaging import ServerSIPHeaderField
+from sipmessaging import SessionExpiresSIPHeaderField
+from sipmessaging import SupportedSIPHeaderField
+from sipmessaging import TimestampSIPHeaderField
+from sipmessaging import ToSIPHeaderField
+from sipmessaging import UserAgentSIPHeaderField
+from sipmessaging import WWWAuthenticateSIPHeaderField
+from sipmessaging import WarningSIPHeaderField
 
+# TODO:  test new header fields.
 
 class TestUnknownSipHeaderField(TestCase):
     @property

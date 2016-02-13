@@ -136,10 +136,117 @@ class SIPHeaderField(object):
         return True
 
     @property
+    def isAcceptSIPHeaderField(self):
+        return False
+
+    @property
+    def isAcceptEncodingSIPHeaderField(self):
+        return False
+
+    @property
+    def isAcceptLanguageSIPHeaderField(self):
+        return False
+
+    @property
+    def isAllowSIPHeaderField(self):
+        return False
+
+    @property
+    def isAuthorizationSIPHeaderField(self):
+        return False
+
+    @property
+    def isCSeqSIPHeaderField(self):
+        return False
+
+    @property
+    def isCallIDSIPHeaderField(self):
+        return False
+
+    @property
+    def isCallInfoSIPHeaderField(self):
+        return False
+
+    @property
+    def isContactSIPHeaderField(self):
+        return False
+
+    @property
+    def isContentDispositionSIPHeaderField(self):
+        return False
+
+    @property
+    def isContentTypeSIPHeaderField(self):
+        return False
+
+    @property
     def isContentLength(self):
+        return False
+
+    @property
+    def isDateSIPHeaderField(self):
+        return False
+
+    @property
+    def isExpiresSIPHeaderField(self):
+        return False
+
+    @property
+    def isFromSIPHeaderField(self):
+        return False
+
+    @property
+    def isMaxForwardsSIPHeaderField(self):
+        return False
+
+    @property
+    def isRecordRouteSIPHeaderField(self):
+        return False
+
+    @property
+    def isRequireSIPHeaderField(self):
+        return False
+
+    @property
+    def isRetryAfterSIPHeaderField(self):
+        return False
+
+    @property
+    def isRouteSIPHeaderField(self):
+        return False
+
+    @property
+    def isServerSIPHeaderField(self):
+        return False
+
+    @property
+    def isSessionExpiresSIPHeaderField(self):
+        return False
+
+    @property
+    def isSupportedSIPHeaderField(self):
+        return False
+
+    @property
+    def isTimestampSIPHeaderField(self):
+        return False
+
+    @property
+    def isToSIPHeaderField(self):
+        return False
+
+    @property
+    def isUserAgentSIPHeaderField(self):
         return False
 
     @property
     def isVia(self):
         return False
 
+    @property
+    def isWWWAuthenticateSIPHeaderField(self):
+        return False
+
+    @property
+    def isWarningSIPHeaderField(self):
+        return False

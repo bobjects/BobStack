@@ -5,6 +5,33 @@ from sipmessaging import SIPResponse
 from sipmessaging import SIPHeader
 from sipmessaging import ContentLengthSIPHeaderField
 from sipmessaging import ViaSIPHeaderField
+from sipmessaging import AcceptSIPHeaderField
+from sipmessaging import AcceptEncodingSIPHeaderField
+from sipmessaging import AcceptLanguageSIPHeaderField
+from sipmessaging import AllowSIPHeaderField
+from sipmessaging import AuthorizationSIPHeaderField
+from sipmessaging import CSeqSIPHeaderField
+from sipmessaging import CallIDSIPHeaderField
+from sipmessaging import CallInfoSIPHeaderField
+from sipmessaging import ContactSIPHeaderField
+from sipmessaging import ContentDispositionSIPHeaderField
+from sipmessaging import ContentTypeSIPHeaderField
+from sipmessaging import DateSIPHeaderField
+from sipmessaging import ExpiresSIPHeaderField
+from sipmessaging import FromSIPHeaderField
+from sipmessaging import MaxForwardsSIPHeaderField
+from sipmessaging import RecordRouteSIPHeaderField
+from sipmessaging import RequireSIPHeaderField
+from sipmessaging import RetryAfterSIPHeaderField
+from sipmessaging import RouteSIPHeaderField
+from sipmessaging import ServerSIPHeaderField
+from sipmessaging import SessionExpiresSIPHeaderField
+from sipmessaging import SupportedSIPHeaderField
+from sipmessaging import TimestampSIPHeaderField
+from sipmessaging import ToSIPHeaderField
+from sipmessaging import UserAgentSIPHeaderField
+from sipmessaging import WWWAuthenticateSIPHeaderField
+from sipmessaging import WarningSIPHeaderField
 from sipmessaging import UnknownSIPHeaderField
 # from sipmessaging.sipResponseStartLine import SIPResponseStartLine
 
@@ -31,10 +58,10 @@ class TestSIPResponse(TestCase):
 
     def test_rendering_from_list_of_header_fields(self):
         headerFields = [
-            UnknownSIPHeaderField.newForAttributes(fieldName='From', fieldValue='"3125551212"<sip:3125551212@example.com:5064;user=phone>;tag=e95a00000022137fe518'),
-            UnknownSIPHeaderField.newForAttributes(fieldName='To', fieldValue='"3125551313"<sip:3125551313@example.com:5064;user=phone>'),
-            UnknownSIPHeaderField.newForAttributes(fieldName='Call-ID', fieldValue='a12d6210342b0183745ef9750992682d90d7edce@200.23.3.241'),
-            UnknownSIPHeaderField.newForAttributes(fieldName='CSeq', fieldValue='615 INVITE'),
+            FromSIPHeaderField.newForAttributes(fieldName='From', fieldValue='"3125551212"<sip:3125551212@example.com:5064;user=phone>;tag=e95a00000022137fe518'),
+            ToSIPHeaderField.newForAttributes(fieldName='To', fieldValue='"3125551313"<sip:3125551313@example.com:5064;user=phone>'),
+            CallIDSIPHeaderField.newForAttributes(fieldName='Call-ID', fieldValue='a12d6210342b0183745ef9750992682d90d7edce@200.23.3.241'),
+            CSeqSIPHeaderField.newForAttributes(fieldName='CSeq', fieldValue='615 INVITE'),
             # UnknownSIPHeaderField.newForAttributes(fieldName='Max-Forwards', fieldValue='70'),
             ViaSIPHeaderField.newForAttributes(fieldName='Via', fieldValue='SIP/2.0/UDP 200.23.3.241:5064;received=200.30.10.15;branch=z9hG4bK-3f04bd-f62a8381-4ebadacb-0x692748a8'),
             ContentLengthSIPHeaderField.newForAttributes(value=11)]
@@ -112,7 +139,7 @@ class TestSIPResponse(TestCase):
         self.assertEqual(1, aSIPResponse.header.viaHeaderFields.__len__())
         self.assertEqual(1, aSIPResponse.header.vias.__len__())
         self.assertEqual('SIP/2.0/UDP 200.23.3.241:5064;received=200.30.10.15;branch=z9hG4bK-3f04bd-f62a8381-4ebadacb-0x692748a8', aSIPResponse.header.vias[0])
-        self.assertEqual(4, aSIPResponse.header.unknownHeaderFields.__len__())
+        self.assertEqual(0, aSIPResponse.header.unknownHeaderFields.__len__())
         self.assertTrue(aSIPResponse.startLine.isResponse)
         self.assertFalse(aSIPResponse.startLine.isRequest)
         self.assertFalse(aSIPResponse.startLine.isMalformed)

@@ -8,10 +8,10 @@ sys.path.append("../../..")
 from bobstack.sipmessaging import SIPHeaderField
 
 
-class ViaSIPHeaderField(SIPHeaderField):
+class AcceptLanguageSIPHeaderField(SIPHeaderField):
     # @classmethod
     # def newForAttributes(cls, value=0):
-    #     answer = cls.newForFieldAttributes(fieldName="Via", fieldValue=str(value))
+    #     answer = cls.newForFieldAttributes(fieldName="Accept-Language", fieldValue=str(value))
     #     answer.value = value
     #     return answer
 
@@ -34,11 +34,11 @@ class ViaSIPHeaderField(SIPHeaderField):
     #     self.clearRawString()
 
     # def clearAttributes(self):
-    #     super(ViaSIPHeaderField, self).clearAttributes()
+    #     super(AcceptLanguageSIPHeaderField, self).clearAttributes()
     #     self._value = None
 
     # def parseAttributesFromRawString(self):
-    #     super(ViaSIPHeaderField, self).parseAttributesFromRawString()
+    #     super(AcceptLanguageSIPHeaderField, self).parseAttributesFromRawString()
     #     self._value = None
     #     match = self.__class__.regexForParsing().match(self._rawString)
     #     if match:
@@ -46,7 +46,7 @@ class ViaSIPHeaderField(SIPHeaderField):
     #         if matchGroup:
     #             self._value = int(matchGroup)
     #         else:
-    #             # Will get here is the Via header field is present, but there is no value.
+    #             # Will get here is the Accept-Language header field is present, but there is no value.
     #             self._value = None
 
     @classmethod
@@ -54,7 +54,7 @@ class ViaSIPHeaderField(SIPHeaderField):
         try:
             return cls._regexForMatchingFieldName
         except AttributeError:
-            cls._regexForMatchingFieldName = re.compile('^Via$', re.I)
+            cls._regexForMatchingFieldName = re.compile('^Accept-Language$', re.I)
             return cls._regexForMatchingFieldName
 
     @classmethod
@@ -62,7 +62,7 @@ class ViaSIPHeaderField(SIPHeaderField):
         try:
             return cls._regexForMatching
         except AttributeError:
-            cls._regexForMatching = re.compile('^Via\s*:', re.I)
+            cls._regexForMatching = re.compile('^Accept-Language\s*:', re.I)
             return cls._regexForMatching
 
     @classmethod
@@ -70,16 +70,16 @@ class ViaSIPHeaderField(SIPHeaderField):
         try:
             return cls._regexForParsing
         except AttributeError:
-            cls._regexForParsing = re.compile('^Via\s*:\s*(.*)', re.I)
+            cls._regexForParsing = re.compile('^Accept-Language\s*:\s*(.*)', re.I)
             return cls._regexForParsing
 
     # @property
     # def isValid(self):
     #     # Answer false if the value is not present.
     #     test = self.value  # Make sure the attributes are lazily initialized.
-    #     return super(ViaSIPHeaderField, self).isValid and self._value is not None
+    #     return super(AcceptLanguageSIPHeaderField, self).isValid and self._value is not None
 
     @property
-    def isVia(self):
+    def isAcceptLanguage(self):
         return True
 
