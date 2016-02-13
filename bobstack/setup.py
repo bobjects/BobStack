@@ -3,8 +3,8 @@ from distutils.core import setup
 setup(name = 'bobstack',
       description = 'BobStack real time media platform',
       # long_description = ''
-      version = '20160210',
-      packages = ['sipmessaging', 'tests'],
+      version = '20160213',
+      packages = ['sipmessaging', 'sipmessaging.concreteheaderfields', 'sipmessaging.concretesipmessages', 'tests'],
       data_files = [('', ['prepare-centos-6-cpython.sh', 'run-all-unit-tests.sh'])],
 
       test_suite = 'tests',
