@@ -1,4 +1,5 @@
 from unittest import TestCase
+from abstractSIPRequestTestCase import AbstractSIPRequestTestCase
 import sys
 sys.path.append("..")
 from sipmessaging import UnknownSIPRequest
@@ -13,282 +14,39 @@ from sipmessaging import REFERSIPRequest
 from sipmessaging import REGISTERSIPRequest
 from sipmessaging import SUBSCRIBESIPRequest
 from sipmessaging import UPDATESIPRequest
-from sipmessaging import SIPHeader
-from sipmessaging import ContentLengthSIPHeaderField
-from sipmessaging import ViaSIPHeaderField
-from sipmessaging import AcceptSIPHeaderField
-from sipmessaging import AcceptEncodingSIPHeaderField
-from sipmessaging import AcceptLanguageSIPHeaderField
-from sipmessaging import AllowSIPHeaderField
-from sipmessaging import AuthorizationSIPHeaderField
-from sipmessaging import CSeqSIPHeaderField
-from sipmessaging import CallIDSIPHeaderField
-from sipmessaging import CallInfoSIPHeaderField
-from sipmessaging import ContactSIPHeaderField
-from sipmessaging import ContentDispositionSIPHeaderField
-from sipmessaging import ContentTypeSIPHeaderField
-from sipmessaging import DateSIPHeaderField
-from sipmessaging import ExpiresSIPHeaderField
-from sipmessaging import FromSIPHeaderField
-from sipmessaging import MaxForwardsSIPHeaderField
-from sipmessaging import RecordRouteSIPHeaderField
-from sipmessaging import RequireSIPHeaderField
-from sipmessaging import RetryAfterSIPHeaderField
-from sipmessaging import RouteSIPHeaderField
-from sipmessaging import ServerSIPHeaderField
-from sipmessaging import SessionExpiresSIPHeaderField
-from sipmessaging import SupportedSIPHeaderField
-from sipmessaging import TimestampSIPHeaderField
-from sipmessaging import ToSIPHeaderField
-from sipmessaging import UserAgentSIPHeaderField
-from sipmessaging import WWWAuthenticateSIPHeaderField
-from sipmessaging import WarningSIPHeaderField
-from sipmessaging import UnknownSIPHeaderField
-# from sipmessaging import SIPRequestStartLine
 
-# TODO:  Need to test additional header fields.  See grayed (unreferenced) ones above.  Other canonicalStrings in this file as well.  And don't forget the asserts.
-# TODO:  Once we think we're done, do a global case-insensitive grep for Via
-class TestUnknownSIPRequest(TestCase):
+
+class TestUnknownSIPRequest(AbstractSIPRequestTestCase):
     @property
-    def canonicalStrings(self):
-        return [
-            ('UNKNOWN sip:example.com SIP/2.0\r\n'
-             'From: <sip:200.25.3.150:5061>;tag=0ee8d3e272e31c9195299efc500\r\n'
-             'To: <sip:example.com:5061>\r\n'
-             'Call-ID: 0ee8d3e272e31c9195299efc500\r\n'
-             'CSeq: 6711 OPTIONS\r\n'
-             'Max-Forwards: 70\r\n'
-             'Via: SIP/2.0/TLS 200.25.3.150;branch=z9hG4bK0ee8d3e272e31ca195299efc500\r\n'
-             'User-Agent: Example User Agent\r\n'
-             'Contact: <sip:invalid@200.25.3.150:5061;transport=tls>\r\n'
-             'Route: <sip:200.30.10.12:5061;transport=tls;lr>\r\n'
-             'Expires: 0\r\n'
-             'Accept: application/sdp,application/isup,application/dtmf,application/dtmf-relay,multipart/mixed\r\n'
-             'Accept-Encoding: x-nortel-short\r\n'
-             'Accept-Language: en-us,fr-fr\r\n'
-             'Allow:  ACK,BYE,CANCEL,INFO,INVITE,OPTIONS,REGISTER,SUBSCRIBE,UPDATE\r\n'
-             'Authorization: Digest username="3122221000",realm="SomeRealm",nonce="1111790769596",uri="sip:3122211004@example.com",response="9bf77d8238664fe08dafd4d2abb6f1cb",algorithm=MD5\r\n'
-             'Call-Info: <https://lsc14pa.example.com:443/pa/direct/pictureServlet?user=3126805100@example.com>;Purpose=icon\r\n'
-             'Content-Disposition: session;handling=required\r\n'
-             'Content-Type: application/sdp\r\n'
-             'Date: Sat, 01 Feb 2014 22:07:34 GMT\r\n'
-             'Record-Route: <sip:200.25.3.230:5061;transport=tls;lr>\r\n'
-             'Require: sdp-anat\r\n'
-             'Retry-After: 30\r\n'
-             'Server: Blargomatic 2.0\r\n'
-             'Session-Expires: 1200;refresher=uac\r\n'
-             'Supported: 100rel,histinfo,join,replaces,sdp-anat,timer\r\n'
-             'Timestamp: 1392061773\r\n'
-             'WWW-Authenticate: Digest algorithm=MD5,nonce="1111790769596",realm="SomeRealm"\r\n'
-             'Warning: 370 200.21.3.10 "Insufficient Bandwidth"\r\n'
-             'X-RTP-Stat:  PR=0;ER=0;PL=0;RB=0/0;DE=PCMU;EN=PCMU;JI=0;DL=0,0;IP=10.1.0.33:16384,132.52.127.200:20048\r\n'
-             'x-channel:  ds/ds1-3/12;IP=132.52.127.16\r\n'
-             'Referred-By: <sip:6006665100@example.com;user=phone> ; CorrelationID="0508817f84e7ce64745ef9753e2fbff4664321a4@200.23.3.240"\r\n'
-             'Refer-To: <sip:6006665499;rfrid=28661859@example.com;user=phone?x-nt-resource-priority=YNBvf.2j00qao>\r\n'
-             'Content-Length: 11\r\n'
-             '\r\n'
-             'Foo Content')
-        ]
+    def sipMethodString(self):
+        return "UNKNOWN"
+
+    @property
+    def sipMessageClassUnderTest(self):
+        return UnknownSIPRequest
 
     def test_parsing(self):
-        for messageString in self.canonicalStrings:
-            request = UnknownSIPRequest.newParsedFrom(messageString)
-            self.runAssertionsForRequest(request)
+        self.run_test_parsing()
 
     def test_rendering_from_list_of_header_fields(self):
-        headerFields = [
-            FromSIPHeaderField.newForAttributes(fieldValue='<sip:200.25.3.150:5061>;tag=0ee8d3e272e31c9195299efc500'),
-            ToSIPHeaderField.newForAttributes(fieldValue='<sip:example.com:5061>'),
-            CallIDSIPHeaderField.newForAttributes(fieldValue='0ee8d3e272e31c9195299efc500'),
-            CSeqSIPHeaderField.newForAttributes(fieldValue='6711 OPTIONS'),
-            MaxForwardsSIPHeaderField.newForAttributes(fieldValue='70'),
-            ViaSIPHeaderField.newForAttributes(fieldValue='SIP/2.0/TLS 200.25.3.150;branch=z9hG4bK0ee8d3e272e31ca195299efc500'),
-            UserAgentSIPHeaderField.newForAttributes(fieldValue='Example User Agent'),
-            ContactSIPHeaderField.newForAttributes(fieldValue='<sip:invalid@200.25.3.150:5061;transport=tls>'),
-            RouteSIPHeaderField.newForAttributes(fieldValue='<sip:200.30.10.12:5061;transport=tls;lr>'),
-            ExpiresSIPHeaderField.newForAttributes(fieldValue='0'),
-            AcceptSIPHeaderField.newForAttributes(fieldValue='application/sdp,application/isup,application/dtmf,application/dtmf-relay,multipart/mixed'),
-            AcceptEncodingSIPHeaderField.newForAttributes(fieldValue='x-nortel-short'),
-            AcceptLanguageSIPHeaderField.newForAttributes(fieldValue='en-us,fr-fr'),
-            AllowSIPHeaderField.newForAttributes(fieldValue=' ACK,BYE,CANCEL,INFO,INVITE,OPTIONS,REGISTER,SUBSCRIBE,UPDATE'),
-            AuthorizationSIPHeaderField.newForAttributes(fieldValue='Digest username="3122221000",realm="SomeRealm",nonce="1111790769596",uri="sip:3122211004@example.com",response="9bf77d8238664fe08dafd4d2abb6f1cb",algorithm=MD5'),
-            CallInfoSIPHeaderField.newForAttributes(fieldValue='<https://lsc14pa.example.com:443/pa/direct/pictureServlet?user=3126805100@example.com>;Purpose=icon'),
-            ContentDispositionSIPHeaderField.newForAttributes(fieldValue='session;handling=required'),
-            ContentTypeSIPHeaderField.newForAttributes(fieldValue='application/sdp'),
-            DateSIPHeaderField.newForAttributes(fieldValue='Sat, 01 Feb 2014 22:07:34 GMT'),
-            RecordRouteSIPHeaderField.newForAttributes(fieldValue='<sip:200.25.3.230:5061;transport=tls;lr>'),
-            RequireSIPHeaderField.newForAttributes(fieldValue='sdp-anat'),
-            RetryAfterSIPHeaderField.newForAttributes(fieldValue='30'),
-            ServerSIPHeaderField.newForAttributes(fieldValue='Blargomatic 2.0'),
-            SessionExpiresSIPHeaderField.newForAttributes(fieldValue='1200;refresher=uac'),
-            SupportedSIPHeaderField.newForAttributes(fieldValue='100rel,histinfo,join,replaces,sdp-anat,timer'),
-            TimestampSIPHeaderField.newForAttributes(fieldValue='1392061773'),
-            WWWAuthenticateSIPHeaderField.newForAttributes(fieldValue='Digest algorithm=MD5,nonce="1111790769596",realm="SomeRealm"'),
-            WarningSIPHeaderField.newForAttributes(fieldValue='370 200.21.3.10 "Insufficient Bandwidth"'),
-            UnknownSIPHeaderField.newForAttributes(fieldName='X-RTP-Stat', fieldValue=' PR=0;ER=0;PL=0;RB=0/0;DE=PCMU;EN=PCMU;JI=0;DL=0,0;IP=10.1.0.33:16384,132.52.127.200:20048'),
-            UnknownSIPHeaderField.newForAttributes(fieldName='x-channel', fieldValue=' ds/ds1-3/12;IP=132.52.127.16'),
-            UnknownSIPHeaderField.newForAttributes(fieldName='Referred-By', fieldValue='<sip:6006665100@example.com;user=phone> ; CorrelationID="0508817f84e7ce64745ef9753e2fbff4664321a4@200.23.3.240"'),
-            UnknownSIPHeaderField.newForAttributes(fieldName='Refer-To', fieldValue='<sip:6006665499;rfrid=28661859@example.com;user=phone?x-nt-resource-priority=YNBvf.2j00qao>'),
-            ContentLengthSIPHeaderField.newForAttributes(value=11)]
-        request = UnknownSIPRequest.newForAttributes(sipMethod='UNKNOWN', requestURI='sip:example.com', content='Foo Content', header=SIPHeader.newForAttributes(headerFields=headerFields))
-        self.runAssertionsForRequest(request)
+        self.run_test_rendering_from_list_of_header_fields()
 
     def test_rendering_from_one_big_header_string(self):
-        headerFields = ('From: <sip:200.25.3.150:5061>;tag=0ee8d3e272e31c9195299efc500\r\n'
-                        'To: <sip:example.com:5061>\r\n'
-                        'Call-ID: 0ee8d3e272e31c9195299efc500\r\n'
-                        'CSeq: 6711 OPTIONS\r\n'
-                        'Max-Forwards: 70\r\n'
-                        'Via: SIP/2.0/TLS 200.25.3.150;branch=z9hG4bK0ee8d3e272e31ca195299efc500\r\n'
-                        'User-Agent: Example User Agent\r\n'
-                        'Contact: <sip:invalid@200.25.3.150:5061;transport=tls>\r\n'
-                        'Route: <sip:200.30.10.12:5061;transport=tls;lr>\r\n'
-                        'Expires: 0\r\n'
-                        'Accept: application/sdp,application/isup,application/dtmf,application/dtmf-relay,multipart/mixed\r\n'
-                        'Accept-Encoding: x-nortel-short\r\n'
-                        'Accept-Language: en-us,fr-fr\r\n'
-                        'Allow:  ACK,BYE,CANCEL,INFO,INVITE,OPTIONS,REGISTER,SUBSCRIBE,UPDATE\r\n'
-                        'Authorization: Digest username="3122221000",realm="SomeRealm",nonce="1111790769596",uri="sip:3122211004@example.com",response="9bf77d8238664fe08dafd4d2abb6f1cb",algorithm=MD5\r\n'
-                        'Call-Info: <https://lsc14pa.example.com:443/pa/direct/pictureServlet?user=3126805100@example.com>;Purpose=icon\r\n'
-                        'Content-Disposition: session;handling=required\r\n'
-                        'Content-Type: application/sdp\r\n'
-                        'Date: Sat, 01 Feb 2014 22:07:34 GMT\r\n'
-                        'Record-Route: <sip:200.25.3.230:5061;transport=tls;lr>\r\n'
-                        'Require: sdp-anat\r\n'
-                        'Retry-After: 30\r\n'
-                        'Server: Blargomatic 2.0\r\n'
-                        'Session-Expires: 1200;refresher=uac\r\n'
-                        'Supported: 100rel,histinfo,join,replaces,sdp-anat,timer\r\n'
-                        'Timestamp: 1392061773\r\n'
-                        'WWW-Authenticate: Digest algorithm=MD5,nonce="1111790769596",realm="SomeRealm"\r\n'
-                        'Warning: 370 200.21.3.10 "Insufficient Bandwidth"\r\n'
-                        'X-RTP-Stat:  PR=0;ER=0;PL=0;RB=0/0;DE=PCMU;EN=PCMU;JI=0;DL=0,0;IP=10.1.0.33:16384,132.52.127.200:20048\r\n'
-                        'x-channel:  ds/ds1-3/12;IP=132.52.127.16\r\n'
-                        'Referred-By: <sip:6006665100@example.com;user=phone> ; CorrelationID="0508817f84e7ce64745ef9753e2fbff4664321a4@200.23.3.240"\r\n'
-                        'Refer-To: <sip:6006665499;rfrid=28661859@example.com;user=phone?x-nt-resource-priority=YNBvf.2j00qao>\r\n'
-                        'Content-Length: 11')  # This last one actually instantiates a ContentLengthSIPHeaderField.
-        request = UnknownSIPRequest.newForAttributes(sipMethod='UNKNOWN', requestURI='sip:example.com', content='Foo Content', header=SIPHeader.newForAttributes(headerFields=headerFields))
-        self.runAssertionsForRequest(request)
+        self.run_test_rendering_from_one_big_header_string()
 
     def test_rendering_from_list_of_header_field_strings(self):
-        headerFields = ['From: <sip:200.25.3.150:5061>;tag=0ee8d3e272e31c9195299efc500',
-                        'To: <sip:example.com:5061>',
-                        'Call-ID: 0ee8d3e272e31c9195299efc500',
-                        'CSeq: 6711 OPTIONS',
-                        'Max-Forwards: 70',
-                        'Via: SIP/2.0/TLS 200.25.3.150;branch=z9hG4bK0ee8d3e272e31ca195299efc500',
-                        'User-Agent: Example User Agent',
-                        'Contact: <sip:invalid@200.25.3.150:5061;transport=tls>',
-                        'Route: <sip:200.30.10.12:5061;transport=tls;lr>',
-                        'Expires: 0',
-                        'Accept: application/sdp,application/isup,application/dtmf,application/dtmf-relay,multipart/mixed',
-                        'Accept-Encoding: x-nortel-short',
-                        'Accept-Language: en-us,fr-fr',
-                        'Allow:  ACK,BYE,CANCEL,INFO,INVITE,OPTIONS,REGISTER,SUBSCRIBE,UPDATE',
-                        'Authorization: Digest username="3122221000",realm="SomeRealm",nonce="1111790769596",uri="sip:3122211004@example.com",response="9bf77d8238664fe08dafd4d2abb6f1cb",algorithm=MD5',
-                        'Call-Info: <https://lsc14pa.example.com:443/pa/direct/pictureServlet?user=3126805100@example.com>;Purpose=icon',
-                        'Content-Disposition: session;handling=required',
-                        'Content-Type: application/sdp',
-                        'Date: Sat, 01 Feb 2014 22:07:34 GMT',
-                        'Record-Route: <sip:200.25.3.230:5061;transport=tls;lr>',
-                        'Require: sdp-anat',
-                        'Retry-After: 30',
-                        'Server: Blargomatic 2.0',
-                        'Session-Expires: 1200;refresher=uac',
-                        'Supported: 100rel,histinfo,join,replaces,sdp-anat,timer',
-                        'Timestamp: 1392061773',
-                        'WWW-Authenticate: Digest algorithm=MD5,nonce="1111790769596",realm="SomeRealm"',
-                        'Warning: 370 200.21.3.10 "Insufficient Bandwidth"',
-                        'X-RTP-Stat:  PR=0;ER=0;PL=0;RB=0/0;DE=PCMU;EN=PCMU;JI=0;DL=0,0;IP=10.1.0.33:16384,132.52.127.200:20048',
-                        'x-channel:  ds/ds1-3/12;IP=132.52.127.16',
-                        'Referred-By: <sip:6006665100@example.com;user=phone> ; CorrelationID="0508817f84e7ce64745ef9753e2fbff4664321a4@200.23.3.240"',
-                        'Refer-To: <sip:6006665499;rfrid=28661859@example.com;user=phone?x-nt-resource-priority=YNBvf.2j00qao>',
-                        'Content-Length: 11']  # This last one actually instantiates a ContentLengthSIPHeaderField.
-        request = UnknownSIPRequest.newForAttributes(sipMethod='UNKNOWN', requestURI='sip:example.com', content='Foo Content', header=SIPHeader.newForAttributes(headerFields=headerFields))
-        self.runAssertionsForRequest(request)
+        self.run_test_rendering_from_list_of_header_field_strings()
 
     def test_rendering_from_list_of_field_names_and_values(self):
-        headerFields = [('From', '<sip:200.25.3.150:5061>;tag=0ee8d3e272e31c9195299efc500'),
-                        ('To', '<sip:example.com:5061>'),
-                        ('Call-ID', '0ee8d3e272e31c9195299efc500'),
-                        ('CSeq', '6711 OPTIONS'),
-                        ('Max-Forwards', 70),  # note the integer value.
-                        ('Via', 'SIP/2.0/TLS 200.25.3.150;branch=z9hG4bK0ee8d3e272e31ca195299efc500'),
-                        ('User-Agent', 'Example User Agent'),
-                        ('Contact', '<sip:invalid@200.25.3.150:5061;transport=tls>'),
-                        ('Route', '<sip:200.30.10.12:5061;transport=tls;lr>'),
-                        ('Expires', 0),
-                        ('Accept', 'application/sdp,application/isup,application/dtmf,application/dtmf-relay,multipart/mixed'),
-                        ('Accept-Encoding', 'x-nortel-short'),
-                        ('Accept-Language', 'en-us,fr-fr'),
-                        ('Allow', ' ACK,BYE,CANCEL,INFO,INVITE,OPTIONS,REGISTER,SUBSCRIBE,UPDATE'),
-                        ('Authorization', 'Digest username="3122221000",realm="SomeRealm",nonce="1111790769596",uri="sip:3122211004@example.com",response="9bf77d8238664fe08dafd4d2abb6f1cb",algorithm=MD5'),
-                        ('Call-Info', '<https://lsc14pa.example.com:443/pa/direct/pictureServlet?user=3126805100@example.com>;Purpose=icon'),
-                        ('Content-Disposition', 'session;handling=required'),
-                        ('Content-Type', 'application/sdp'),
-                        ('Date', 'Sat, 01 Feb 2014 22:07:34 GMT'),
-                        ('Record-Route', '<sip:200.25.3.230:5061;transport=tls;lr>'),
-                        ('Require', 'sdp-anat'),
-                        ('Retry-After', '30'),
-                        ('Server', 'Blargomatic 2.0'),
-                        ('Session-Expires', '1200;refresher=uac'),
-                        ('Supported', '100rel,histinfo,join,replaces,sdp-anat,timer'),
-                        ('Timestamp', '1392061773'),
-                        ('WWW-Authenticate', 'Digest algorithm=MD5,nonce="1111790769596",realm="SomeRealm"'),
-                        ('Warning', '370 200.21.3.10 "Insufficient Bandwidth"'),
-                        ('X-RTP-Stat', ' PR=0;ER=0;PL=0;RB=0/0;DE=PCMU;EN=PCMU;JI=0;DL=0,0;IP=10.1.0.33:16384,132.52.127.200:20048'),
-                        ('x-channel', ' ds/ds1-3/12;IP=132.52.127.16'),
-                        ('Referred-By', '<sip:6006665100@example.com;user=phone> ; CorrelationID="0508817f84e7ce64745ef9753e2fbff4664321a4@200.23.3.240"'),
-                        ('Refer-To', '<sip:6006665499;rfrid=28661859@example.com;user=phone?x-nt-resource-priority=YNBvf.2j00qao>'),
-                        ('Content-Length', 11)]  # This last one actually instantiates a ContentLengthSIPHeaderField.
-        # , and could alternatively be specified as ('Content-Length', {'value': 11}) which would invoke the value setter on the ContentLengthSIPHeaderField instance
-        request = UnknownSIPRequest.newForAttributes(sipMethod='UNKNOWN', requestURI='sip:example.com', content='Foo Content', header=SIPHeader.newForAttributes(headerFields=headerFields))
-        self.runAssertionsForRequest(request)
+        self.run_test_rendering_from_list_of_field_names_and_values()
 
-    def test_rendering_from_list_of_field_names_and_values_including_property_dict(self):
-        headerFields = [('From', '<sip:200.25.3.150:5061>;tag=0ee8d3e272e31c9195299efc500'),
-                        ('To', '<sip:example.com:5061>'),
-                        ('Call-ID', '0ee8d3e272e31c9195299efc500'),
-                        ('CSeq', '6711 OPTIONS'),
-                        ('Max-Forwards', 70),  # note the integer value.
-                        ('Via', 'SIP/2.0/TLS 200.25.3.150;branch=z9hG4bK0ee8d3e272e31ca195299efc500'),
-                        ('User-Agent', 'Example User Agent'),
-                        ('Contact', '<sip:invalid@200.25.3.150:5061;transport=tls>'),
-                        ('Route', '<sip:200.30.10.12:5061;transport=tls;lr>'),
-                        ('Expires', 0),
-                        ('Accept', 'application/sdp,application/isup,application/dtmf,application/dtmf-relay,multipart/mixed'),
-                        ('Accept-Encoding', 'x-nortel-short'),
-                        ('Accept-Language', 'en-us,fr-fr'),
-                        ('Allow', ' ACK,BYE,CANCEL,INFO,INVITE,OPTIONS,REGISTER,SUBSCRIBE,UPDATE'),
-                        ('Authorization', 'Digest username="3122221000",realm="SomeRealm",nonce="1111790769596",uri="sip:3122211004@example.com",response="9bf77d8238664fe08dafd4d2abb6f1cb",algorithm=MD5'),
-                        ('Call-Info', '<https://lsc14pa.example.com:443/pa/direct/pictureServlet?user=3126805100@example.com>;Purpose=icon'),
-                        ('Content-Disposition', 'session;handling=required'),
-                        ('Content-Type', 'application/sdp'),
-                        ('Date', 'Sat, 01 Feb 2014 22:07:34 GMT'),
-                        ('Record-Route', '<sip:200.25.3.230:5061;transport=tls;lr>'),
-                        ('Require', 'sdp-anat'),
-                        ('Retry-After', '30'),
-                        ('Server', 'Blargomatic 2.0'),
-                        ('Session-Expires', '1200;refresher=uac'),
-                        ('Supported', '100rel,histinfo,join,replaces,sdp-anat,timer'),
-                        ('Timestamp', '1392061773'),
-                        ('WWW-Authenticate', 'Digest algorithm=MD5,nonce="1111790769596",realm="SomeRealm"'),
-                        ('Warning', '370 200.21.3.10 "Insufficient Bandwidth"'),
-                        ('X-RTP-Stat', ' PR=0;ER=0;PL=0;RB=0/0;DE=PCMU;EN=PCMU;JI=0;DL=0,0;IP=10.1.0.33:16384,132.52.127.200:20048'),
-                        ('x-channel', ' ds/ds1-3/12;IP=132.52.127.16'),
-                        ('Referred-By', '<sip:6006665100@example.com;user=phone> ; CorrelationID="0508817f84e7ce64745ef9753e2fbff4664321a4@200.23.3.240"'),
-                        ('Refer-To', '<sip:6006665499;rfrid=28661859@example.com;user=phone?x-nt-resource-priority=YNBvf.2j00qao>'),
-                        ('Content-Length', {"value": 11})]  # This last one actually instantiates a ContentLengthSIPHeaderField.
-        request = UnknownSIPRequest.newForAttributes(sipMethod='UNKNOWN', requestURI='sip:example.com', content='Foo Content', header=SIPHeader.newForAttributes(headerFields=headerFields))
-        self.runAssertionsForRequest(request)
+    def test_rendering_from_list_of_field_names_and_values_using_property_dict(self):
+        self.run_test_rendering_from_list_of_field_names_and_values_using_property_dict()
 
-    def runAssertionsForRequest(self, aSIPRequest):
-        self.assertEqual(aSIPRequest.rawString, self.canonicalStrings[0])
+    def runAssertionsForSIPMessage(self, aSIPRequest):
+        super(TestUnknownSIPRequest, self).runAssertionsForSIPMessage(aSIPRequest)
         self.assertFalse(aSIPRequest.isKnown)
         self.assertTrue(aSIPRequest.isUnknown)
-        self.assertTrue(aSIPRequest.isValid)
-        self.assertTrue(aSIPRequest.isRequest)
-        self.assertFalse(aSIPRequest.isResponse)
         self.assertFalse(aSIPRequest.isACKRequest)
         self.assertFalse(aSIPRequest.isBYERequest)
         self.assertFalse(aSIPRequest.isCANCELRequest)
@@ -300,264 +58,39 @@ class TestUnknownSIPRequest(TestCase):
         self.assertFalse(aSIPRequest.isREGISTERRequest)
         self.assertFalse(aSIPRequest.isSUBSCRIBERequest)
         self.assertFalse(aSIPRequest.isUPDATERequest)
-        self.assertFalse(aSIPRequest.isMalformed)
-        # self.assertEqual(1, [headerField for headerField in aSIPRequest.header.headerFields if headerField.isContentLength].__len__())
-        # self.assertEqual(11, next(headerField for headerField in aSIPRequest.header.headerFields if headerField.isContentLength).value)
-        # self.assertEqual(10, [headerField for headerField in aSIPRequest.header.headerFields if headerField.isUnknown].__len__())
-        self.assertIsNotNone(aSIPRequest.header.contentLengthHeaderField)
-        self.assertEqual(11, aSIPRequest.header.contentLength)
-        self.assertEqual(1, aSIPRequest.header.viaHeaderFields.__len__())
-        self.assertEqual(1, aSIPRequest.header.vias.__len__())
-        self.assertEqual('SIP/2.0/TLS 200.25.3.150;branch=z9hG4bK0ee8d3e272e31ca195299efc500', aSIPRequest.header.vias[0])
-        self.assertEqual(4, aSIPRequest.header.unknownHeaderFields.__len__())
-        self.assertTrue(aSIPRequest.startLine.isRequest)
-        self.assertFalse(aSIPRequest.startLine.isResponse)
-        self.assertFalse(aSIPRequest.startLine.isMalformed)
-        self.assertEqual('Foo Content', aSIPRequest.content)
-        self.assertEqual('UNKNOWN', aSIPRequest.startLine.sipMethod)
-        self.assertEqual('sip:example.com', aSIPRequest.startLine.requestURI)
 
 
-class TestOPTIONSSIPRequest(TestCase):
+class TestOPTIONSSIPRequest(AbstractSIPRequestTestCase):
     @property
-    def canonicalStrings(self):
-        return [
-            ('OPTIONS sip:example.com SIP/2.0\r\n'
-             'From: <sip:200.25.3.150:5061>;tag=0ee8d3e272e31c9195299efc500\r\n'
-             'To: <sip:example.com:5061>\r\n'
-             'Call-ID: 0ee8d3e272e31c9195299efc500\r\n'
-             'CSeq: 6711 OPTIONS\r\n'
-             'Max-Forwards: 70\r\n'
-             'Via: SIP/2.0/TLS 200.25.3.150;branch=z9hG4bK0ee8d3e272e31ca195299efc500\r\n'
-             'User-Agent: Example User Agent\r\n'
-             'Contact: <sip:invalid@200.25.3.150:5061;transport=tls>\r\n'
-             'Route: <sip:200.30.10.12:5061;transport=tls;lr>\r\n'
-             'Expires: 0\r\n'
-             'Accept: application/sdp,application/isup,application/dtmf,application/dtmf-relay,multipart/mixed\r\n'
-             'Accept-Encoding: x-nortel-short\r\n'
-             'Accept-Language: en-us,fr-fr\r\n'
-             'Allow:  ACK,BYE,CANCEL,INFO,INVITE,OPTIONS,REGISTER,SUBSCRIBE,UPDATE\r\n'
-             'Authorization: Digest username="3122221000",realm="SomeRealm",nonce="1111790769596",uri="sip:3122211004@example.com",response="9bf77d8238664fe08dafd4d2abb6f1cb",algorithm=MD5\r\n'
-             'Call-Info: <https://lsc14pa.example.com:443/pa/direct/pictureServlet?user=3126805100@example.com>;Purpose=icon\r\n'
-             'Content-Disposition: session;handling=required\r\n'
-             'Content-Type: application/sdp\r\n'
-             'Date: Sat, 01 Feb 2014 22:07:34 GMT\r\n'
-             'Record-Route: <sip:200.25.3.230:5061;transport=tls;lr>\r\n'
-             'Require: sdp-anat\r\n'
-             'Retry-After: 30\r\n'
-             'Server: Blargomatic 2.0\r\n'
-             'Session-Expires: 1200;refresher=uac\r\n'
-             'Supported: 100rel,histinfo,join,replaces,sdp-anat,timer\r\n'
-             'Timestamp: 1392061773\r\n'
-             'WWW-Authenticate: Digest algorithm=MD5,nonce="1111790769596",realm="SomeRealm"\r\n'
-             'Warning: 370 200.21.3.10 "Insufficient Bandwidth"\r\n'
-             'X-RTP-Stat:  PR=0;ER=0;PL=0;RB=0/0;DE=PCMU;EN=PCMU;JI=0;DL=0,0;IP=10.1.0.33:16384,132.52.127.200:20048\r\n'
-             'x-channel:  ds/ds1-3/12;IP=132.52.127.16\r\n'
-             'Referred-By: <sip:6006665100@example.com;user=phone> ; CorrelationID="0508817f84e7ce64745ef9753e2fbff4664321a4@200.23.3.240"\r\n'
-             'Refer-To: <sip:6006665499;rfrid=28661859@example.com;user=phone?x-nt-resource-priority=YNBvf.2j00qao>\r\n'
-             'Content-Length: 11\r\n'
-             '\r\n'
-             'Foo Content')
-        ]
+    def sipMethodString(self):
+        return "OPTIONS"
+
+    @property
+    def sipMessageClassUnderTest(self):
+        return OPTIONSSIPRequest
 
     def test_parsing(self):
-        for messageString in self.canonicalStrings:
-            request = OPTIONSSIPRequest.newParsedFrom(messageString)
-            self.runAssertionsForRequest(request)
+        self.run_test_parsing()
 
     def test_rendering_from_list_of_header_fields(self):
-        headerFields = [
-            FromSIPHeaderField.newForAttributes(fieldValue='<sip:200.25.3.150:5061>;tag=0ee8d3e272e31c9195299efc500'),
-            ToSIPHeaderField.newForAttributes(fieldValue='<sip:example.com:5061>'),
-            CallIDSIPHeaderField.newForAttributes(fieldValue='0ee8d3e272e31c9195299efc500'),
-            CSeqSIPHeaderField.newForAttributes(fieldValue='6711 OPTIONS'),
-            MaxForwardsSIPHeaderField.newForAttributes(fieldValue='70'),
-            ViaSIPHeaderField.newForAttributes(fieldValue='SIP/2.0/TLS 200.25.3.150;branch=z9hG4bK0ee8d3e272e31ca195299efc500'),
-            UserAgentSIPHeaderField.newForAttributes(fieldValue='Example User Agent'),
-            ContactSIPHeaderField.newForAttributes(fieldValue='<sip:invalid@200.25.3.150:5061;transport=tls>'),
-            RouteSIPHeaderField.newForAttributes(fieldValue='<sip:200.30.10.12:5061;transport=tls;lr>'),
-            ExpiresSIPHeaderField.newForAttributes(fieldValue='0'),
-            AcceptSIPHeaderField.newForAttributes(fieldValue='application/sdp,application/isup,application/dtmf,application/dtmf-relay,multipart/mixed'),
-            AcceptEncodingSIPHeaderField.newForAttributes(fieldValue='x-nortel-short'),
-            AcceptLanguageSIPHeaderField.newForAttributes(fieldValue='en-us,fr-fr'),
-            AllowSIPHeaderField.newForAttributes(fieldValue=' ACK,BYE,CANCEL,INFO,INVITE,OPTIONS,REGISTER,SUBSCRIBE,UPDATE'),
-            AuthorizationSIPHeaderField.newForAttributes(fieldValue='Digest username="3122221000",realm="SomeRealm",nonce="1111790769596",uri="sip:3122211004@example.com",response="9bf77d8238664fe08dafd4d2abb6f1cb",algorithm=MD5'),
-            CallInfoSIPHeaderField.newForAttributes(fieldValue='<https://lsc14pa.example.com:443/pa/direct/pictureServlet?user=3126805100@example.com>;Purpose=icon'),
-            ContentDispositionSIPHeaderField.newForAttributes(fieldValue='session;handling=required'),
-            ContentTypeSIPHeaderField.newForAttributes(fieldValue='application/sdp'),
-            DateSIPHeaderField.newForAttributes(fieldValue='Sat, 01 Feb 2014 22:07:34 GMT'),
-            RecordRouteSIPHeaderField.newForAttributes(fieldValue='<sip:200.25.3.230:5061;transport=tls;lr>'),
-            RequireSIPHeaderField.newForAttributes(fieldValue='sdp-anat'),
-            RetryAfterSIPHeaderField.newForAttributes(fieldValue='30'),
-            ServerSIPHeaderField.newForAttributes(fieldValue='Blargomatic 2.0'),
-            SessionExpiresSIPHeaderField.newForAttributes(fieldValue='1200;refresher=uac'),
-            SupportedSIPHeaderField.newForAttributes(fieldValue='100rel,histinfo,join,replaces,sdp-anat,timer'),
-            TimestampSIPHeaderField.newForAttributes(fieldValue='1392061773'),
-            WWWAuthenticateSIPHeaderField.newForAttributes(fieldValue='Digest algorithm=MD5,nonce="1111790769596",realm="SomeRealm"'),
-            WarningSIPHeaderField.newForAttributes(fieldValue='370 200.21.3.10 "Insufficient Bandwidth"'),
-            UnknownSIPHeaderField.newForAttributes(fieldName='X-RTP-Stat', fieldValue=' PR=0;ER=0;PL=0;RB=0/0;DE=PCMU;EN=PCMU;JI=0;DL=0,0;IP=10.1.0.33:16384,132.52.127.200:20048'),
-            UnknownSIPHeaderField.newForAttributes(fieldName='x-channel', fieldValue=' ds/ds1-3/12;IP=132.52.127.16'),
-            UnknownSIPHeaderField.newForAttributes(fieldName='Referred-By', fieldValue='<sip:6006665100@example.com;user=phone> ; CorrelationID="0508817f84e7ce64745ef9753e2fbff4664321a4@200.23.3.240"'),
-            UnknownSIPHeaderField.newForAttributes(fieldName='Refer-To', fieldValue='<sip:6006665499;rfrid=28661859@example.com;user=phone?x-nt-resource-priority=YNBvf.2j00qao>'),
-            ContentLengthSIPHeaderField.newForAttributes(value=11)]
-        request = OPTIONSSIPRequest.newForAttributes(sipMethod='OPTIONS', requestURI='sip:example.com', content='Foo Content', header=SIPHeader.newForAttributes(headerFields=headerFields))
-        self.runAssertionsForRequest(request)
+        self.run_test_rendering_from_list_of_header_fields()
 
     def test_rendering_from_one_big_header_string(self):
-        headerFields = ('From: <sip:200.25.3.150:5061>;tag=0ee8d3e272e31c9195299efc500\r\n'
-                        'To: <sip:example.com:5061>\r\n'
-                        'Call-ID: 0ee8d3e272e31c9195299efc500\r\n'
-                        'CSeq: 6711 OPTIONS\r\n'
-                        'Max-Forwards: 70\r\n'
-                        'Via: SIP/2.0/TLS 200.25.3.150;branch=z9hG4bK0ee8d3e272e31ca195299efc500\r\n'
-                        'User-Agent: Example User Agent\r\n'
-                        'Contact: <sip:invalid@200.25.3.150:5061;transport=tls>\r\n'
-                        'Route: <sip:200.30.10.12:5061;transport=tls;lr>\r\n'
-                        'Expires: 0\r\n'
-                        'Accept: application/sdp,application/isup,application/dtmf,application/dtmf-relay,multipart/mixed\r\n'
-                        'Accept-Encoding: x-nortel-short\r\n'
-                        'Accept-Language: en-us,fr-fr\r\n'
-                        'Allow:  ACK,BYE,CANCEL,INFO,INVITE,OPTIONS,REGISTER,SUBSCRIBE,UPDATE\r\n'
-                        'Authorization: Digest username="3122221000",realm="SomeRealm",nonce="1111790769596",uri="sip:3122211004@example.com",response="9bf77d8238664fe08dafd4d2abb6f1cb",algorithm=MD5\r\n'
-                        'Call-Info: <https://lsc14pa.example.com:443/pa/direct/pictureServlet?user=3126805100@example.com>;Purpose=icon\r\n'
-                        'Content-Disposition: session;handling=required\r\n'
-                        'Content-Type: application/sdp\r\n'
-                        'Date: Sat, 01 Feb 2014 22:07:34 GMT\r\n'
-                        'Record-Route: <sip:200.25.3.230:5061;transport=tls;lr>\r\n'
-                        'Require: sdp-anat\r\n'
-                        'Retry-After: 30\r\n'
-                        'Server: Blargomatic 2.0\r\n'
-                        'Session-Expires: 1200;refresher=uac\r\n'
-                        'Supported: 100rel,histinfo,join,replaces,sdp-anat,timer\r\n'
-                        'Timestamp: 1392061773\r\n'
-                        'WWW-Authenticate: Digest algorithm=MD5,nonce="1111790769596",realm="SomeRealm"\r\n'
-                        'Warning: 370 200.21.3.10 "Insufficient Bandwidth"\r\n'
-                        'X-RTP-Stat:  PR=0;ER=0;PL=0;RB=0/0;DE=PCMU;EN=PCMU;JI=0;DL=0,0;IP=10.1.0.33:16384,132.52.127.200:20048\r\n'
-                        'x-channel:  ds/ds1-3/12;IP=132.52.127.16\r\n'
-                        'Referred-By: <sip:6006665100@example.com;user=phone> ; CorrelationID="0508817f84e7ce64745ef9753e2fbff4664321a4@200.23.3.240"\r\n'
-                        'Refer-To: <sip:6006665499;rfrid=28661859@example.com;user=phone?x-nt-resource-priority=YNBvf.2j00qao>\r\n'
-                        'Content-Length: 11')  # This last one actually instantiates a ContentLengthSIPHeaderField.
-        request = OPTIONSSIPRequest.newForAttributes(sipMethod='OPTIONS', requestURI='sip:example.com', content='Foo Content', header=SIPHeader.newForAttributes(headerFields=headerFields))
-        self.runAssertionsForRequest(request)
+        self.run_test_rendering_from_one_big_header_string()
 
     def test_rendering_from_list_of_header_field_strings(self):
-        headerFields = ['From: <sip:200.25.3.150:5061>;tag=0ee8d3e272e31c9195299efc500',
-                        'To: <sip:example.com:5061>',
-                        'Call-ID: 0ee8d3e272e31c9195299efc500',
-                        'CSeq: 6711 OPTIONS',
-                        'Max-Forwards: 70',
-                        'Via: SIP/2.0/TLS 200.25.3.150;branch=z9hG4bK0ee8d3e272e31ca195299efc500',
-                        'User-Agent: Example User Agent',
-                        'Contact: <sip:invalid@200.25.3.150:5061;transport=tls>',
-                        'Route: <sip:200.30.10.12:5061;transport=tls;lr>',
-                        'Expires: 0',
-                        'Accept: application/sdp,application/isup,application/dtmf,application/dtmf-relay,multipart/mixed',
-                        'Accept-Encoding: x-nortel-short',
-                        'Accept-Language: en-us,fr-fr',
-                        'Allow:  ACK,BYE,CANCEL,INFO,INVITE,OPTIONS,REGISTER,SUBSCRIBE,UPDATE',
-                        'Authorization: Digest username="3122221000",realm="SomeRealm",nonce="1111790769596",uri="sip:3122211004@example.com",response="9bf77d8238664fe08dafd4d2abb6f1cb",algorithm=MD5',
-                        'Call-Info: <https://lsc14pa.example.com:443/pa/direct/pictureServlet?user=3126805100@example.com>;Purpose=icon',
-                        'Content-Disposition: session;handling=required',
-                        'Content-Type: application/sdp',
-                        'Date: Sat, 01 Feb 2014 22:07:34 GMT',
-                        'Record-Route: <sip:200.25.3.230:5061;transport=tls;lr>',
-                        'Require: sdp-anat',
-                        'Retry-After: 30',
-                        'Server: Blargomatic 2.0',
-                        'Session-Expires: 1200;refresher=uac',
-                        'Supported: 100rel,histinfo,join,replaces,sdp-anat,timer',
-                        'Timestamp: 1392061773',
-                        'WWW-Authenticate: Digest algorithm=MD5,nonce="1111790769596",realm="SomeRealm"',
-                        'Warning: 370 200.21.3.10 "Insufficient Bandwidth"',
-                        'X-RTP-Stat:  PR=0;ER=0;PL=0;RB=0/0;DE=PCMU;EN=PCMU;JI=0;DL=0,0;IP=10.1.0.33:16384,132.52.127.200:20048',
-                        'x-channel:  ds/ds1-3/12;IP=132.52.127.16',
-                        'Referred-By: <sip:6006665100@example.com;user=phone> ; CorrelationID="0508817f84e7ce64745ef9753e2fbff4664321a4@200.23.3.240"',
-                        'Refer-To: <sip:6006665499;rfrid=28661859@example.com;user=phone?x-nt-resource-priority=YNBvf.2j00qao>',
-                        'Content-Length: 11']  # This last one actually instantiates a ContentLengthSIPHeaderField.
-        request = OPTIONSSIPRequest.newForAttributes(sipMethod='OPTIONS', requestURI='sip:example.com', content='Foo Content', header=SIPHeader.newForAttributes(headerFields=headerFields))
-        self.runAssertionsForRequest(request)
+        self.run_test_rendering_from_list_of_header_field_strings()
 
     def test_rendering_from_list_of_field_names_and_values(self):
-        headerFields = [('From', '<sip:200.25.3.150:5061>;tag=0ee8d3e272e31c9195299efc500'),
-                        ('To', '<sip:example.com:5061>'),
-                        ('Call-ID', '0ee8d3e272e31c9195299efc500'),
-                        ('CSeq', '6711 OPTIONS'),
-                        ('Max-Forwards', 70),  # note the integer value.
-                        ('Via', 'SIP/2.0/TLS 200.25.3.150;branch=z9hG4bK0ee8d3e272e31ca195299efc500'),
-                        ('User-Agent', 'Example User Agent'),
-                        ('Contact', '<sip:invalid@200.25.3.150:5061;transport=tls>'),
-                        ('Route', '<sip:200.30.10.12:5061;transport=tls;lr>'),
-                        ('Expires', 0),
-                        ('Accept', 'application/sdp,application/isup,application/dtmf,application/dtmf-relay,multipart/mixed'),
-                        ('Accept-Encoding', 'x-nortel-short'),
-                        ('Accept-Language', 'en-us,fr-fr'),
-                        ('Allow', ' ACK,BYE,CANCEL,INFO,INVITE,OPTIONS,REGISTER,SUBSCRIBE,UPDATE'),
-                        ('Authorization', 'Digest username="3122221000",realm="SomeRealm",nonce="1111790769596",uri="sip:3122211004@example.com",response="9bf77d8238664fe08dafd4d2abb6f1cb",algorithm=MD5'),
-                        ('Call-Info', '<https://lsc14pa.example.com:443/pa/direct/pictureServlet?user=3126805100@example.com>;Purpose=icon'),
-                        ('Content-Disposition', 'session;handling=required'),
-                        ('Content-Type', 'application/sdp'),
-                        ('Date', 'Sat, 01 Feb 2014 22:07:34 GMT'),
-                        ('Record-Route', '<sip:200.25.3.230:5061;transport=tls;lr>'),
-                        ('Require', 'sdp-anat'),
-                        ('Retry-After', '30'),
-                        ('Server', 'Blargomatic 2.0'),
-                        ('Session-Expires', '1200;refresher=uac'),
-                        ('Supported', '100rel,histinfo,join,replaces,sdp-anat,timer'),
-                        ('Timestamp', '1392061773'),
-                        ('WWW-Authenticate', 'Digest algorithm=MD5,nonce="1111790769596",realm="SomeRealm"'),
-                        ('Warning', '370 200.21.3.10 "Insufficient Bandwidth"'),
-                        ('X-RTP-Stat', ' PR=0;ER=0;PL=0;RB=0/0;DE=PCMU;EN=PCMU;JI=0;DL=0,0;IP=10.1.0.33:16384,132.52.127.200:20048'),
-                        ('x-channel', ' ds/ds1-3/12;IP=132.52.127.16'),
-                        ('Referred-By', '<sip:6006665100@example.com;user=phone> ; CorrelationID="0508817f84e7ce64745ef9753e2fbff4664321a4@200.23.3.240"'),
-                        ('Refer-To', '<sip:6006665499;rfrid=28661859@example.com;user=phone?x-nt-resource-priority=YNBvf.2j00qao>'),
-                        ('Content-Length', {"value": 11})]  # This last one actually instantiates a ContentLengthSIPHeaderField.
-        request = OPTIONSSIPRequest.newForAttributes(sipMethod='OPTIONS', requestURI='sip:example.com', content='Foo Content', header=SIPHeader.newForAttributes(headerFields=headerFields))
-        self.runAssertionsForRequest(request)
+        self.run_test_rendering_from_list_of_field_names_and_values()
 
     def test_rendering_from_list_of_field_names_and_values_using_property_dict(self):
-        headerFields = [('From', '<sip:200.25.3.150:5061>;tag=0ee8d3e272e31c9195299efc500'),
-                        ('To', '<sip:example.com:5061>'),
-                        ('Call-ID', '0ee8d3e272e31c9195299efc500'),
-                        ('CSeq', '6711 OPTIONS'),
-                        ('Max-Forwards', 70),  # note the integer value.
-                        ('Via', 'SIP/2.0/TLS 200.25.3.150;branch=z9hG4bK0ee8d3e272e31ca195299efc500'),
-                        ('User-Agent', 'Example User Agent'),
-                        ('Contact', '<sip:invalid@200.25.3.150:5061;transport=tls>'),
-                        ('Route', '<sip:200.30.10.12:5061;transport=tls;lr>'),
-                        ('Expires', 0),
-                        ('Accept', 'application/sdp,application/isup,application/dtmf,application/dtmf-relay,multipart/mixed'),
-                        ('Accept-Encoding', 'x-nortel-short'),
-                        ('Accept-Language', 'en-us,fr-fr'),
-                        ('Allow', ' ACK,BYE,CANCEL,INFO,INVITE,OPTIONS,REGISTER,SUBSCRIBE,UPDATE'),
-                        ('Authorization', 'Digest username="3122221000",realm="SomeRealm",nonce="1111790769596",uri="sip:3122211004@example.com",response="9bf77d8238664fe08dafd4d2abb6f1cb",algorithm=MD5'),
-                        ('Call-Info', '<https://lsc14pa.example.com:443/pa/direct/pictureServlet?user=3126805100@example.com>;Purpose=icon'),
-                        ('Content-Disposition', 'session;handling=required'),
-                        ('Content-Type', 'application/sdp'),
-                        ('Date', 'Sat, 01 Feb 2014 22:07:34 GMT'),
-                        ('Record-Route', '<sip:200.25.3.230:5061;transport=tls;lr>'),
-                        ('Require', 'sdp-anat'),
-                        ('Retry-After', '30'),
-                        ('Server', 'Blargomatic 2.0'),
-                        ('Session-Expires', '1200;refresher=uac'),
-                        ('Supported', '100rel,histinfo,join,replaces,sdp-anat,timer'),
-                        ('Timestamp', '1392061773'),
-                        ('WWW-Authenticate', 'Digest algorithm=MD5,nonce="1111790769596",realm="SomeRealm"'),
-                        ('Warning', '370 200.21.3.10 "Insufficient Bandwidth"'),
-                        ('X-RTP-Stat', ' PR=0;ER=0;PL=0;RB=0/0;DE=PCMU;EN=PCMU;JI=0;DL=0,0;IP=10.1.0.33:16384,132.52.127.200:20048'),
-                        ('x-channel', ' ds/ds1-3/12;IP=132.52.127.16'),
-                        ('Referred-By', '<sip:6006665100@example.com;user=phone> ; CorrelationID="0508817f84e7ce64745ef9753e2fbff4664321a4@200.23.3.240"'),
-                        ('Refer-To', '<sip:6006665499;rfrid=28661859@example.com;user=phone?x-nt-resource-priority=YNBvf.2j00qao>'),
-                        ('Content-Length', {"value": 11})]  # This last one actually instantiates a ContentLengthSIPHeaderField.
-        request = OPTIONSSIPRequest.newForAttributes(sipMethod='OPTIONS', requestURI='sip:example.com', content='Foo Content', header=SIPHeader.newForAttributes(headerFields=headerFields))
-        self.runAssertionsForRequest(request)
+        self.run_test_rendering_from_list_of_field_names_and_values_using_property_dict()
 
-    def runAssertionsForRequest(self, aSIPRequest):
-        self.assertEqual(aSIPRequest.rawString, self.canonicalStrings[0])
+    def runAssertionsForSIPMessage(self, aSIPRequest):
+        super(TestOPTIONSSIPRequest, self).runAssertionsForSIPMessage(aSIPRequest)
         self.assertTrue(aSIPRequest.isKnown)
         self.assertFalse(aSIPRequest.isUnknown)
-        self.assertTrue(aSIPRequest.isValid)
-        self.assertTrue(aSIPRequest.isRequest)
-        self.assertFalse(aSIPRequest.isResponse)
         self.assertFalse(aSIPRequest.isACKRequest)
         self.assertFalse(aSIPRequest.isBYERequest)
         self.assertFalse(aSIPRequest.isCANCELRequest)
@@ -569,263 +102,39 @@ class TestOPTIONSSIPRequest(TestCase):
         self.assertFalse(aSIPRequest.isREGISTERRequest)
         self.assertFalse(aSIPRequest.isSUBSCRIBERequest)
         self.assertFalse(aSIPRequest.isUPDATERequest)
-        self.assertFalse(aSIPRequest.isMalformed)
-        # self.assertEqual(1, [headerField for headerField in aSIPRequest.header.headerFields if headerField.isContentLength].__len__())
-        # self.assertEqual(11, next(headerField for headerField in aSIPRequest.header.headerFields if headerField.isContentLength).value)
-        # self.assertEqual(10, [headerField for headerField in aSIPRequest.header.headerFields if headerField.isUnknown].__len__())
-        self.assertIsNotNone(aSIPRequest.header.contentLengthHeaderField)
-        self.assertEqual(11, aSIPRequest.header.contentLength)
-        self.assertEqual(1, aSIPRequest.header.viaHeaderFields.__len__())
-        self.assertEqual(1, aSIPRequest.header.vias.__len__())
-        self.assertEqual('SIP/2.0/TLS 200.25.3.150;branch=z9hG4bK0ee8d3e272e31ca195299efc500', aSIPRequest.header.vias[0])
-        self.assertEqual(4, aSIPRequest.header.unknownHeaderFields.__len__())
-        self.assertTrue(aSIPRequest.startLine.isRequest)
-        self.assertFalse(aSIPRequest.startLine.isResponse)
-        self.assertEqual('Foo Content', aSIPRequest.content)
-        self.assertEqual('OPTIONS', aSIPRequest.startLine.sipMethod)
-        self.assertEqual('sip:example.com', aSIPRequest.startLine.requestURI)
 
 
-class TestACKSIPRequest(TestCase):
+class TestACKSIPRequest(AbstractSIPRequestTestCase):
     @property
-    def canonicalStrings(self):
-        return [
-            ('ACK sip:example.com SIP/2.0\r\n'
-             'From: <sip:200.25.3.150:5061>;tag=0ee8d3e272e31c9195299efc500\r\n'
-             'To: <sip:example.com:5061>\r\n'
-             'Call-ID: 0ee8d3e272e31c9195299efc500\r\n'
-             'CSeq: 6711 ACK\r\n'
-             'Max-Forwards: 70\r\n'
-             'Via: SIP/2.0/TLS 200.25.3.150;branch=z9hG4bK0ee8d3e272e31ca195299efc500\r\n'
-             'User-Agent: Example User Agent\r\n'
-             'Contact: <sip:invalid@200.25.3.150:5061;transport=tls>\r\n'
-             'Route: <sip:200.30.10.12:5061;transport=tls;lr>\r\n'
-             'Expires: 0\r\n'
-             'Accept: application/sdp,application/isup,application/dtmf,application/dtmf-relay,multipart/mixed\r\n'
-             'Accept-Encoding: x-nortel-short\r\n'
-             'Accept-Language: en-us,fr-fr\r\n'
-             'Allow:  ACK,BYE,CANCEL,INFO,INVITE,OPTIONS,REGISTER,SUBSCRIBE,UPDATE\r\n'
-             'Authorization: Digest username="3122221000",realm="SomeRealm",nonce="1111790769596",uri="sip:3122211004@example.com",response="9bf77d8238664fe08dafd4d2abb6f1cb",algorithm=MD5\r\n'
-             'Call-Info: <https://lsc14pa.example.com:443/pa/direct/pictureServlet?user=3126805100@example.com>;Purpose=icon\r\n'
-             'Content-Disposition: session;handling=required\r\n'
-             'Content-Type: application/sdp\r\n'
-             'Date: Sat, 01 Feb 2014 22:07:34 GMT\r\n'
-             'Record-Route: <sip:200.25.3.230:5061;transport=tls;lr>\r\n'
-             'Require: sdp-anat\r\n'
-             'Retry-After: 30\r\n'
-             'Server: Blargomatic 2.0\r\n'
-             'Session-Expires: 1200;refresher=uac\r\n'
-             'Supported: 100rel,histinfo,join,replaces,sdp-anat,timer\r\n'
-             'Timestamp: 1392061773\r\n'
-             'WWW-Authenticate: Digest algorithm=MD5,nonce="1111790769596",realm="SomeRealm"\r\n'
-             'Warning: 370 200.21.3.10 "Insufficient Bandwidth"\r\n'
-             'X-RTP-Stat:  PR=0;ER=0;PL=0;RB=0/0;DE=PCMU;EN=PCMU;JI=0;DL=0,0;IP=10.1.0.33:16384,132.52.127.200:20048\r\n'
-             'x-channel:  ds/ds1-3/12;IP=132.52.127.16\r\n'
-             'Referred-By: <sip:6006665100@example.com;user=phone> ; CorrelationID="0508817f84e7ce64745ef9753e2fbff4664321a4@200.23.3.240"\r\n'
-             'Refer-To: <sip:6006665499;rfrid=28661859@example.com;user=phone?x-nt-resource-priority=YNBvf.2j00qao>\r\n'
-             'Content-Length: 11\r\n'
-             '\r\n'
-             'Foo Content')
-        ]
+    def sipMethodString(self):
+        return "ACK"
+
+    @property
+    def sipMessageClassUnderTest(self):
+        return ACKSIPRequest
 
     def test_parsing(self):
-        for messageString in self.canonicalStrings:
-            request = ACKSIPRequest.newParsedFrom(messageString)
-            self.runAssertionsForRequest(request)
+        self.run_test_parsing()
 
     def test_rendering_from_list_of_header_fields(self):
-        headerFields = [
-            FromSIPHeaderField.newForAttributes(fieldValue='<sip:200.25.3.150:5061>;tag=0ee8d3e272e31c9195299efc500'),
-            ToSIPHeaderField.newForAttributes(fieldValue='<sip:example.com:5061>'),
-            CallIDSIPHeaderField.newForAttributes(fieldValue='0ee8d3e272e31c9195299efc500'),
-            CSeqSIPHeaderField.newForAttributes(fieldValue='6711 ACK'),
-            MaxForwardsSIPHeaderField.newForAttributes(fieldValue='70'),
-            ViaSIPHeaderField.newForAttributes(fieldValue='SIP/2.0/TLS 200.25.3.150;branch=z9hG4bK0ee8d3e272e31ca195299efc500'),
-            UserAgentSIPHeaderField.newForAttributes(fieldValue='Example User Agent'),
-            ContactSIPHeaderField.newForAttributes(fieldValue='<sip:invalid@200.25.3.150:5061;transport=tls>'),
-            RouteSIPHeaderField.newForAttributes(fieldValue='<sip:200.30.10.12:5061;transport=tls;lr>'),
-            ExpiresSIPHeaderField.newForAttributes(fieldValue='0'),
-            AcceptSIPHeaderField.newForAttributes(fieldValue='application/sdp,application/isup,application/dtmf,application/dtmf-relay,multipart/mixed'),
-            AcceptEncodingSIPHeaderField.newForAttributes(fieldValue='x-nortel-short'),
-            AcceptLanguageSIPHeaderField.newForAttributes(fieldValue='en-us,fr-fr'),
-            AllowSIPHeaderField.newForAttributes(fieldValue=' ACK,BYE,CANCEL,INFO,INVITE,OPTIONS,REGISTER,SUBSCRIBE,UPDATE'),
-            AuthorizationSIPHeaderField.newForAttributes(fieldValue='Digest username="3122221000",realm="SomeRealm",nonce="1111790769596",uri="sip:3122211004@example.com",response="9bf77d8238664fe08dafd4d2abb6f1cb",algorithm=MD5'),
-            CallInfoSIPHeaderField.newForAttributes(fieldValue='<https://lsc14pa.example.com:443/pa/direct/pictureServlet?user=3126805100@example.com>;Purpose=icon'),
-            ContentDispositionSIPHeaderField.newForAttributes(fieldValue='session;handling=required'),
-            ContentTypeSIPHeaderField.newForAttributes(fieldValue='application/sdp'),
-            DateSIPHeaderField.newForAttributes(fieldValue='Sat, 01 Feb 2014 22:07:34 GMT'),
-            RecordRouteSIPHeaderField.newForAttributes(fieldValue='<sip:200.25.3.230:5061;transport=tls;lr>'),
-            RequireSIPHeaderField.newForAttributes(fieldValue='sdp-anat'),
-            RetryAfterSIPHeaderField.newForAttributes(fieldValue='30'),
-            ServerSIPHeaderField.newForAttributes(fieldValue='Blargomatic 2.0'),
-            SessionExpiresSIPHeaderField.newForAttributes(fieldValue='1200;refresher=uac'),
-            SupportedSIPHeaderField.newForAttributes(fieldValue='100rel,histinfo,join,replaces,sdp-anat,timer'),
-            TimestampSIPHeaderField.newForAttributes(fieldValue='1392061773'),
-            WWWAuthenticateSIPHeaderField.newForAttributes(fieldValue='Digest algorithm=MD5,nonce="1111790769596",realm="SomeRealm"'),
-            WarningSIPHeaderField.newForAttributes(fieldValue='370 200.21.3.10 "Insufficient Bandwidth"'),
-            UnknownSIPHeaderField.newForAttributes(fieldName='X-RTP-Stat', fieldValue=' PR=0;ER=0;PL=0;RB=0/0;DE=PCMU;EN=PCMU;JI=0;DL=0,0;IP=10.1.0.33:16384,132.52.127.200:20048'),
-            UnknownSIPHeaderField.newForAttributes(fieldName='x-channel', fieldValue=' ds/ds1-3/12;IP=132.52.127.16'),
-            UnknownSIPHeaderField.newForAttributes(fieldName='Referred-By', fieldValue='<sip:6006665100@example.com;user=phone> ; CorrelationID="0508817f84e7ce64745ef9753e2fbff4664321a4@200.23.3.240"'),
-            UnknownSIPHeaderField.newForAttributes(fieldName='Refer-To', fieldValue='<sip:6006665499;rfrid=28661859@example.com;user=phone?x-nt-resource-priority=YNBvf.2j00qao>'),
-            ContentLengthSIPHeaderField.newForAttributes(value=11)]
-        request = ACKSIPRequest.newForAttributes(sipMethod='ACK', requestURI='sip:example.com', content='Foo Content', header=SIPHeader.newForAttributes(headerFields=headerFields))
-        self.runAssertionsForRequest(request)
+        self.run_test_rendering_from_list_of_header_fields()
 
     def test_rendering_from_one_big_header_string(self):
-        headerFields = ('From: <sip:200.25.3.150:5061>;tag=0ee8d3e272e31c9195299efc500\r\n'
-                        'To: <sip:example.com:5061>\r\n'
-                        'Call-ID: 0ee8d3e272e31c9195299efc500\r\n'
-                        'CSeq: 6711 ACK\r\n'
-                        'Max-Forwards: 70\r\n'
-                        'Via: SIP/2.0/TLS 200.25.3.150;branch=z9hG4bK0ee8d3e272e31ca195299efc500\r\n'
-                        'User-Agent: Example User Agent\r\n'
-                        'Contact: <sip:invalid@200.25.3.150:5061;transport=tls>\r\n'
-                        'Route: <sip:200.30.10.12:5061;transport=tls;lr>\r\n'
-                        'Expires: 0\r\n'
-                        'Accept: application/sdp,application/isup,application/dtmf,application/dtmf-relay,multipart/mixed\r\n'
-                        'Accept-Encoding: x-nortel-short\r\n'
-                        'Accept-Language: en-us,fr-fr\r\n'
-                        'Allow:  ACK,BYE,CANCEL,INFO,INVITE,OPTIONS,REGISTER,SUBSCRIBE,UPDATE\r\n'
-                        'Authorization: Digest username="3122221000",realm="SomeRealm",nonce="1111790769596",uri="sip:3122211004@example.com",response="9bf77d8238664fe08dafd4d2abb6f1cb",algorithm=MD5\r\n'
-                        'Call-Info: <https://lsc14pa.example.com:443/pa/direct/pictureServlet?user=3126805100@example.com>;Purpose=icon\r\n'
-                        'Content-Disposition: session;handling=required\r\n'
-                        'Content-Type: application/sdp\r\n'
-                        'Date: Sat, 01 Feb 2014 22:07:34 GMT\r\n'
-                        'Record-Route: <sip:200.25.3.230:5061;transport=tls;lr>\r\n'
-                        'Require: sdp-anat\r\n'
-                        'Retry-After: 30\r\n'
-                        'Server: Blargomatic 2.0\r\n'
-                        'Session-Expires: 1200;refresher=uac\r\n'
-                        'Supported: 100rel,histinfo,join,replaces,sdp-anat,timer\r\n'
-                        'Timestamp: 1392061773\r\n'
-                        'WWW-Authenticate: Digest algorithm=MD5,nonce="1111790769596",realm="SomeRealm"\r\n'
-                        'Warning: 370 200.21.3.10 "Insufficient Bandwidth"\r\n'
-                        'X-RTP-Stat:  PR=0;ER=0;PL=0;RB=0/0;DE=PCMU;EN=PCMU;JI=0;DL=0,0;IP=10.1.0.33:16384,132.52.127.200:20048\r\n'
-                        'x-channel:  ds/ds1-3/12;IP=132.52.127.16\r\n'
-                        'Referred-By: <sip:6006665100@example.com;user=phone> ; CorrelationID="0508817f84e7ce64745ef9753e2fbff4664321a4@200.23.3.240"\r\n'
-                        'Refer-To: <sip:6006665499;rfrid=28661859@example.com;user=phone?x-nt-resource-priority=YNBvf.2j00qao>\r\n'
-                        'Content-Length: 11')  # This last one actually instantiates a ContentLengthSIPHeaderField.
-        request = ACKSIPRequest.newForAttributes(sipMethod='ACK', requestURI='sip:example.com', content='Foo Content', header=SIPHeader.newForAttributes(headerFields=headerFields))
-        self.runAssertionsForRequest(request)
+        self.run_test_rendering_from_one_big_header_string()
 
     def test_rendering_from_list_of_header_field_strings(self):
-        headerFields = ['From: <sip:200.25.3.150:5061>;tag=0ee8d3e272e31c9195299efc500',
-                        'To: <sip:example.com:5061>',
-                        'Call-ID: 0ee8d3e272e31c9195299efc500',
-                        'CSeq: 6711 ACK',
-                        'Max-Forwards: 70',
-                        'Via: SIP/2.0/TLS 200.25.3.150;branch=z9hG4bK0ee8d3e272e31ca195299efc500',
-                        'User-Agent: Example User Agent',
-                        'Contact: <sip:invalid@200.25.3.150:5061;transport=tls>',
-                        'Route: <sip:200.30.10.12:5061;transport=tls;lr>',
-                        'Expires: 0',
-                        'Accept: application/sdp,application/isup,application/dtmf,application/dtmf-relay,multipart/mixed',
-                        'Accept-Encoding: x-nortel-short',
-                        'Accept-Language: en-us,fr-fr',
-                        'Allow:  ACK,BYE,CANCEL,INFO,INVITE,OPTIONS,REGISTER,SUBSCRIBE,UPDATE',
-                        'Authorization: Digest username="3122221000",realm="SomeRealm",nonce="1111790769596",uri="sip:3122211004@example.com",response="9bf77d8238664fe08dafd4d2abb6f1cb",algorithm=MD5',
-                        'Call-Info: <https://lsc14pa.example.com:443/pa/direct/pictureServlet?user=3126805100@example.com>;Purpose=icon',
-                        'Content-Disposition: session;handling=required',
-                        'Content-Type: application/sdp',
-                        'Date: Sat, 01 Feb 2014 22:07:34 GMT',
-                        'Record-Route: <sip:200.25.3.230:5061;transport=tls;lr>',
-                        'Require: sdp-anat',
-                        'Retry-After: 30',
-                        'Server: Blargomatic 2.0',
-                        'Session-Expires: 1200;refresher=uac',
-                        'Supported: 100rel,histinfo,join,replaces,sdp-anat,timer',
-                        'Timestamp: 1392061773',
-                        'WWW-Authenticate: Digest algorithm=MD5,nonce="1111790769596",realm="SomeRealm"',
-                        'Warning: 370 200.21.3.10 "Insufficient Bandwidth"',
-                        'X-RTP-Stat:  PR=0;ER=0;PL=0;RB=0/0;DE=PCMU;EN=PCMU;JI=0;DL=0,0;IP=10.1.0.33:16384,132.52.127.200:20048',
-                        'x-channel:  ds/ds1-3/12;IP=132.52.127.16',
-                        'Referred-By: <sip:6006665100@example.com;user=phone> ; CorrelationID="0508817f84e7ce64745ef9753e2fbff4664321a4@200.23.3.240"',
-                        'Refer-To: <sip:6006665499;rfrid=28661859@example.com;user=phone?x-nt-resource-priority=YNBvf.2j00qao>',
-                        'Content-Length: 11']  # This last one actually instantiates a ContentLengthSIPHeaderField.
-        request = ACKSIPRequest.newForAttributes(sipMethod='ACK', requestURI='sip:example.com', content='Foo Content', header=SIPHeader.newForAttributes(headerFields=headerFields))
-        self.runAssertionsForRequest(request)
+        self.run_test_rendering_from_list_of_header_field_strings()
 
     def test_rendering_from_list_of_field_names_and_values(self):
-        headerFields = [('From', '<sip:200.25.3.150:5061>;tag=0ee8d3e272e31c9195299efc500'),
-                        ('To', '<sip:example.com:5061>'),
-                        ('Call-ID', '0ee8d3e272e31c9195299efc500'),
-                        ('CSeq', '6711 ACK'),
-                        ('Max-Forwards', 70),  # note the integer value.
-                        ('Via', 'SIP/2.0/TLS 200.25.3.150;branch=z9hG4bK0ee8d3e272e31ca195299efc500'),
-                        ('User-Agent', 'Example User Agent'),
-                        ('Contact', '<sip:invalid@200.25.3.150:5061;transport=tls>'),
-                        ('Route', '<sip:200.30.10.12:5061;transport=tls;lr>'),
-                        ('Expires', 0),
-                        ('Accept', 'application/sdp,application/isup,application/dtmf,application/dtmf-relay,multipart/mixed'),
-                        ('Accept-Encoding', 'x-nortel-short'),
-                        ('Accept-Language', 'en-us,fr-fr'),
-                        ('Allow', ' ACK,BYE,CANCEL,INFO,INVITE,OPTIONS,REGISTER,SUBSCRIBE,UPDATE'),
-                        ('Authorization', 'Digest username="3122221000",realm="SomeRealm",nonce="1111790769596",uri="sip:3122211004@example.com",response="9bf77d8238664fe08dafd4d2abb6f1cb",algorithm=MD5'),
-                        ('Call-Info', '<https://lsc14pa.example.com:443/pa/direct/pictureServlet?user=3126805100@example.com>;Purpose=icon'),
-                        ('Content-Disposition', 'session;handling=required'),
-                        ('Content-Type', 'application/sdp'),
-                        ('Date', 'Sat, 01 Feb 2014 22:07:34 GMT'),
-                        ('Record-Route', '<sip:200.25.3.230:5061;transport=tls;lr>'),
-                        ('Require', 'sdp-anat'),
-                        ('Retry-After', '30'),
-                        ('Server', 'Blargomatic 2.0'),
-                        ('Session-Expires', '1200;refresher=uac'),
-                        ('Supported', '100rel,histinfo,join,replaces,sdp-anat,timer'),
-                        ('Timestamp', '1392061773'),
-                        ('WWW-Authenticate', 'Digest algorithm=MD5,nonce="1111790769596",realm="SomeRealm"'),
-                        ('Warning', '370 200.21.3.10 "Insufficient Bandwidth"'),
-                        ('X-RTP-Stat', ' PR=0;ER=0;PL=0;RB=0/0;DE=PCMU;EN=PCMU;JI=0;DL=0,0;IP=10.1.0.33:16384,132.52.127.200:20048'),
-                        ('x-channel', ' ds/ds1-3/12;IP=132.52.127.16'),
-                        ('Referred-By', '<sip:6006665100@example.com;user=phone> ; CorrelationID="0508817f84e7ce64745ef9753e2fbff4664321a4@200.23.3.240"'),
-                        ('Refer-To', '<sip:6006665499;rfrid=28661859@example.com;user=phone?x-nt-resource-priority=YNBvf.2j00qao>'),
-                        ('Content-Length', {"value": 11})]  # This last one actually instantiates a ContentLengthSIPHeaderField.
-        request = ACKSIPRequest.newForAttributes(sipMethod='ACK', requestURI='sip:example.com', content='Foo Content', header=SIPHeader.newForAttributes(headerFields=headerFields))
-        self.runAssertionsForRequest(request)
+        self.run_test_rendering_from_list_of_field_names_and_values()
 
     def test_rendering_from_list_of_field_names_and_values_using_property_dict(self):
-        headerFields = [('From', '<sip:200.25.3.150:5061>;tag=0ee8d3e272e31c9195299efc500'),
-                        ('To', '<sip:example.com:5061>'),
-                        ('Call-ID', '0ee8d3e272e31c9195299efc500'),
-                        ('CSeq', '6711 ACK'),
-                        ('Max-Forwards', 70),  # note the integer value.
-                        ('Via', 'SIP/2.0/TLS 200.25.3.150;branch=z9hG4bK0ee8d3e272e31ca195299efc500'),
-                        ('User-Agent', 'Example User Agent'),
-                        ('Contact', '<sip:invalid@200.25.3.150:5061;transport=tls>'),
-                        ('Route', '<sip:200.30.10.12:5061;transport=tls;lr>'),
-                        ('Expires', 0),
-                        ('Accept', 'application/sdp,application/isup,application/dtmf,application/dtmf-relay,multipart/mixed'),
-                        ('Accept-Encoding', 'x-nortel-short'),
-                        ('Accept-Language', 'en-us,fr-fr'),
-                        ('Allow', ' ACK,BYE,CANCEL,INFO,INVITE,OPTIONS,REGISTER,SUBSCRIBE,UPDATE'),
-                        ('Authorization', 'Digest username="3122221000",realm="SomeRealm",nonce="1111790769596",uri="sip:3122211004@example.com",response="9bf77d8238664fe08dafd4d2abb6f1cb",algorithm=MD5'),
-                        ('Call-Info', '<https://lsc14pa.example.com:443/pa/direct/pictureServlet?user=3126805100@example.com>;Purpose=icon'),
-                        ('Content-Disposition', 'session;handling=required'),
-                        ('Content-Type', 'application/sdp'),
-                        ('Date', 'Sat, 01 Feb 2014 22:07:34 GMT'),
-                        ('Record-Route', '<sip:200.25.3.230:5061;transport=tls;lr>'),
-                        ('Require', 'sdp-anat'),
-                        ('Retry-After', '30'),
-                        ('Server', 'Blargomatic 2.0'),
-                        ('Session-Expires', '1200;refresher=uac'),
-                        ('Supported', '100rel,histinfo,join,replaces,sdp-anat,timer'),
-                        ('Timestamp', '1392061773'),
-                        ('WWW-Authenticate', 'Digest algorithm=MD5,nonce="1111790769596",realm="SomeRealm"'),
-                        ('Warning', '370 200.21.3.10 "Insufficient Bandwidth"'),
-                        ('X-RTP-Stat', ' PR=0;ER=0;PL=0;RB=0/0;DE=PCMU;EN=PCMU;JI=0;DL=0,0;IP=10.1.0.33:16384,132.52.127.200:20048'),
-                        ('x-channel', ' ds/ds1-3/12;IP=132.52.127.16'),
-                        ('Referred-By', '<sip:6006665100@example.com;user=phone> ; CorrelationID="0508817f84e7ce64745ef9753e2fbff4664321a4@200.23.3.240"'),
-                        ('Refer-To', '<sip:6006665499;rfrid=28661859@example.com;user=phone?x-nt-resource-priority=YNBvf.2j00qao>'),
-                        ('Content-Length', {"value": 11})]  # This last one actually instantiates a ContentLengthSIPHeaderField.
-        request = ACKSIPRequest.newForAttributes(sipMethod='ACK', requestURI='sip:example.com', content='Foo Content', header=SIPHeader.newForAttributes(headerFields=headerFields))
-        self.runAssertionsForRequest(request)
+        self.run_test_rendering_from_list_of_field_names_and_values_using_property_dict()
 
-    def runAssertionsForRequest(self, aSIPRequest):
-        self.assertEqual(aSIPRequest.rawString, self.canonicalStrings[0])
+    def runAssertionsForSIPMessage(self, aSIPRequest):
+        super(TestACKSIPRequest, self).runAssertionsForSIPMessage(aSIPRequest)
         self.assertTrue(aSIPRequest.isKnown)
         self.assertFalse(aSIPRequest.isUnknown)
-        self.assertTrue(aSIPRequest.isValid)
-        self.assertTrue(aSIPRequest.isRequest)
-        self.assertFalse(aSIPRequest.isResponse)
         self.assertTrue(aSIPRequest.isACKRequest)
         self.assertFalse(aSIPRequest.isBYERequest)
         self.assertFalse(aSIPRequest.isCANCELRequest)
@@ -837,263 +146,39 @@ class TestACKSIPRequest(TestCase):
         self.assertFalse(aSIPRequest.isREGISTERRequest)
         self.assertFalse(aSIPRequest.isSUBSCRIBERequest)
         self.assertFalse(aSIPRequest.isUPDATERequest)
-        self.assertFalse(aSIPRequest.isMalformed)
-        # self.assertEqual(1, [headerField for headerField in aSIPRequest.header.headerFields if headerField.isContentLength].__len__())
-        # self.assertEqual(11, next(headerField for headerField in aSIPRequest.header.headerFields if headerField.isContentLength).value)
-        # self.assertEqual(10, [headerField for headerField in aSIPRequest.header.headerFields if headerField.isUnknown].__len__())
-        self.assertIsNotNone(aSIPRequest.header.contentLengthHeaderField)
-        self.assertEqual(11, aSIPRequest.header.contentLength)
-        self.assertEqual(1, aSIPRequest.header.viaHeaderFields.__len__())
-        self.assertEqual(1, aSIPRequest.header.vias.__len__())
-        self.assertEqual('SIP/2.0/TLS 200.25.3.150;branch=z9hG4bK0ee8d3e272e31ca195299efc500', aSIPRequest.header.vias[0])
-        self.assertEqual(4, aSIPRequest.header.unknownHeaderFields.__len__())
-        self.assertTrue(aSIPRequest.startLine.isRequest)
-        self.assertFalse(aSIPRequest.startLine.isResponse)
-        self.assertEqual('Foo Content', aSIPRequest.content)
-        self.assertEqual('ACK', aSIPRequest.startLine.sipMethod)
-        self.assertEqual('sip:example.com', aSIPRequest.startLine.requestURI)
 
 
-class TestBYESIPRequest(TestCase):
+class TestBYESIPRequest(AbstractSIPRequestTestCase):
     @property
-    def canonicalStrings(self):
-        return [
-            ('BYE sip:example.com SIP/2.0\r\n'
-             'From: <sip:200.25.3.150:5061>;tag=0ee8d3e272e31c9195299efc500\r\n'
-             'To: <sip:example.com:5061>\r\n'
-             'Call-ID: 0ee8d3e272e31c9195299efc500\r\n'
-             'CSeq: 6711 BYE\r\n'
-             'Max-Forwards: 70\r\n'
-             'Via: SIP/2.0/TLS 200.25.3.150;branch=z9hG4bK0ee8d3e272e31ca195299efc500\r\n'
-             'User-Agent: Example User Agent\r\n'
-             'Contact: <sip:invalid@200.25.3.150:5061;transport=tls>\r\n'
-             'Route: <sip:200.30.10.12:5061;transport=tls;lr>\r\n'
-             'Expires: 0\r\n'
-             'Accept: application/sdp,application/isup,application/dtmf,application/dtmf-relay,multipart/mixed\r\n'
-             'Accept-Encoding: x-nortel-short\r\n'
-             'Accept-Language: en-us,fr-fr\r\n'
-             'Allow:  ACK,BYE,CANCEL,INFO,INVITE,OPTIONS,REGISTER,SUBSCRIBE,UPDATE\r\n'
-             'Authorization: Digest username="3122221000",realm="SomeRealm",nonce="1111790769596",uri="sip:3122211004@example.com",response="9bf77d8238664fe08dafd4d2abb6f1cb",algorithm=MD5\r\n'
-             'Call-Info: <https://lsc14pa.example.com:443/pa/direct/pictureServlet?user=3126805100@example.com>;Purpose=icon\r\n'
-             'Content-Disposition: session;handling=required\r\n'
-             'Content-Type: application/sdp\r\n'
-             'Date: Sat, 01 Feb 2014 22:07:34 GMT\r\n'
-             'Record-Route: <sip:200.25.3.230:5061;transport=tls;lr>\r\n'
-             'Require: sdp-anat\r\n'
-             'Retry-After: 30\r\n'
-             'Server: Blargomatic 2.0\r\n'
-             'Session-Expires: 1200;refresher=uac\r\n'
-             'Supported: 100rel,histinfo,join,replaces,sdp-anat,timer\r\n'
-             'Timestamp: 1392061773\r\n'
-             'WWW-Authenticate: Digest algorithm=MD5,nonce="1111790769596",realm="SomeRealm"\r\n'
-             'Warning: 370 200.21.3.10 "Insufficient Bandwidth"\r\n'
-             'X-RTP-Stat:  PR=0;ER=0;PL=0;RB=0/0;DE=PCMU;EN=PCMU;JI=0;DL=0,0;IP=10.1.0.33:16384,132.52.127.200:20048\r\n'
-             'x-channel:  ds/ds1-3/12;IP=132.52.127.16\r\n'
-             'Referred-By: <sip:6006665100@example.com;user=phone> ; CorrelationID="0508817f84e7ce64745ef9753e2fbff4664321a4@200.23.3.240"\r\n'
-             'Refer-To: <sip:6006665499;rfrid=28661859@example.com;user=phone?x-nt-resource-priority=YNBvf.2j00qao>\r\n'
-             'Content-Length: 11\r\n'
-             '\r\n'
-             'Foo Content')
-        ]
+    def sipMethodString(self):
+        return "BYE"
+
+    @property
+    def sipMessageClassUnderTest(self):
+        return BYESIPRequest
 
     def test_parsing(self):
-        for messageString in self.canonicalStrings:
-            request = BYESIPRequest.newParsedFrom(messageString)
-            self.runAssertionsForRequest(request)
+        self.run_test_parsing()
 
     def test_rendering_from_list_of_header_fields(self):
-        headerFields = [
-            FromSIPHeaderField.newForAttributes(fieldValue='<sip:200.25.3.150:5061>;tag=0ee8d3e272e31c9195299efc500'),
-            ToSIPHeaderField.newForAttributes(fieldValue='<sip:example.com:5061>'),
-            CallIDSIPHeaderField.newForAttributes(fieldValue='0ee8d3e272e31c9195299efc500'),
-            CSeqSIPHeaderField.newForAttributes(fieldValue='6711 BYE'),
-            MaxForwardsSIPHeaderField.newForAttributes(fieldValue='70'),
-            ViaSIPHeaderField.newForAttributes(fieldValue='SIP/2.0/TLS 200.25.3.150;branch=z9hG4bK0ee8d3e272e31ca195299efc500'),
-            UserAgentSIPHeaderField.newForAttributes(fieldValue='Example User Agent'),
-            ContactSIPHeaderField.newForAttributes(fieldValue='<sip:invalid@200.25.3.150:5061;transport=tls>'),
-            RouteSIPHeaderField.newForAttributes(fieldValue='<sip:200.30.10.12:5061;transport=tls;lr>'),
-            ExpiresSIPHeaderField.newForAttributes(fieldValue='0'),
-            AcceptSIPHeaderField.newForAttributes(fieldValue='application/sdp,application/isup,application/dtmf,application/dtmf-relay,multipart/mixed'),
-            AcceptEncodingSIPHeaderField.newForAttributes(fieldValue='x-nortel-short'),
-            AcceptLanguageSIPHeaderField.newForAttributes(fieldValue='en-us,fr-fr'),
-            AllowSIPHeaderField.newForAttributes(fieldValue=' ACK,BYE,CANCEL,INFO,INVITE,OPTIONS,REGISTER,SUBSCRIBE,UPDATE'),
-            AuthorizationSIPHeaderField.newForAttributes(fieldValue='Digest username="3122221000",realm="SomeRealm",nonce="1111790769596",uri="sip:3122211004@example.com",response="9bf77d8238664fe08dafd4d2abb6f1cb",algorithm=MD5'),
-            CallInfoSIPHeaderField.newForAttributes(fieldValue='<https://lsc14pa.example.com:443/pa/direct/pictureServlet?user=3126805100@example.com>;Purpose=icon'),
-            ContentDispositionSIPHeaderField.newForAttributes(fieldValue='session;handling=required'),
-            ContentTypeSIPHeaderField.newForAttributes(fieldValue='application/sdp'),
-            DateSIPHeaderField.newForAttributes(fieldValue='Sat, 01 Feb 2014 22:07:34 GMT'),
-            RecordRouteSIPHeaderField.newForAttributes(fieldValue='<sip:200.25.3.230:5061;transport=tls;lr>'),
-            RequireSIPHeaderField.newForAttributes(fieldValue='sdp-anat'),
-            RetryAfterSIPHeaderField.newForAttributes(fieldValue='30'),
-            ServerSIPHeaderField.newForAttributes(fieldValue='Blargomatic 2.0'),
-            SessionExpiresSIPHeaderField.newForAttributes(fieldValue='1200;refresher=uac'),
-            SupportedSIPHeaderField.newForAttributes(fieldValue='100rel,histinfo,join,replaces,sdp-anat,timer'),
-            TimestampSIPHeaderField.newForAttributes(fieldValue='1392061773'),
-            WWWAuthenticateSIPHeaderField.newForAttributes(fieldValue='Digest algorithm=MD5,nonce="1111790769596",realm="SomeRealm"'),
-            WarningSIPHeaderField.newForAttributes(fieldValue='370 200.21.3.10 "Insufficient Bandwidth"'),
-            UnknownSIPHeaderField.newForAttributes(fieldName='X-RTP-Stat', fieldValue=' PR=0;ER=0;PL=0;RB=0/0;DE=PCMU;EN=PCMU;JI=0;DL=0,0;IP=10.1.0.33:16384,132.52.127.200:20048'),
-            UnknownSIPHeaderField.newForAttributes(fieldName='x-channel', fieldValue=' ds/ds1-3/12;IP=132.52.127.16'),
-            UnknownSIPHeaderField.newForAttributes(fieldName='Referred-By', fieldValue='<sip:6006665100@example.com;user=phone> ; CorrelationID="0508817f84e7ce64745ef9753e2fbff4664321a4@200.23.3.240"'),
-            UnknownSIPHeaderField.newForAttributes(fieldName='Refer-To', fieldValue='<sip:6006665499;rfrid=28661859@example.com;user=phone?x-nt-resource-priority=YNBvf.2j00qao>'),
-            ContentLengthSIPHeaderField.newForAttributes(value=11)]
-        request = BYESIPRequest.newForAttributes(sipMethod='BYE', requestURI='sip:example.com', content='Foo Content', header=SIPHeader.newForAttributes(headerFields=headerFields))
-        self.runAssertionsForRequest(request)
+        self.run_test_rendering_from_list_of_header_fields()
 
     def test_rendering_from_one_big_header_string(self):
-        headerFields = ('From: <sip:200.25.3.150:5061>;tag=0ee8d3e272e31c9195299efc500\r\n'
-                        'To: <sip:example.com:5061>\r\n'
-                        'Call-ID: 0ee8d3e272e31c9195299efc500\r\n'
-                        'CSeq: 6711 BYE\r\n'
-                        'Max-Forwards: 70\r\n'
-                        'Via: SIP/2.0/TLS 200.25.3.150;branch=z9hG4bK0ee8d3e272e31ca195299efc500\r\n'
-                        'User-Agent: Example User Agent\r\n'
-                        'Contact: <sip:invalid@200.25.3.150:5061;transport=tls>\r\n'
-                        'Route: <sip:200.30.10.12:5061;transport=tls;lr>\r\n'
-                        'Expires: 0\r\n'
-                        'Accept: application/sdp,application/isup,application/dtmf,application/dtmf-relay,multipart/mixed\r\n'
-                        'Accept-Encoding: x-nortel-short\r\n'
-                        'Accept-Language: en-us,fr-fr\r\n'
-                        'Allow:  ACK,BYE,CANCEL,INFO,INVITE,OPTIONS,REGISTER,SUBSCRIBE,UPDATE\r\n'
-                        'Authorization: Digest username="3122221000",realm="SomeRealm",nonce="1111790769596",uri="sip:3122211004@example.com",response="9bf77d8238664fe08dafd4d2abb6f1cb",algorithm=MD5\r\n'
-                        'Call-Info: <https://lsc14pa.example.com:443/pa/direct/pictureServlet?user=3126805100@example.com>;Purpose=icon\r\n'
-                        'Content-Disposition: session;handling=required\r\n'
-                        'Content-Type: application/sdp\r\n'
-                        'Date: Sat, 01 Feb 2014 22:07:34 GMT\r\n'
-                        'Record-Route: <sip:200.25.3.230:5061;transport=tls;lr>\r\n'
-                        'Require: sdp-anat\r\n'
-                        'Retry-After: 30\r\n'
-                        'Server: Blargomatic 2.0\r\n'
-                        'Session-Expires: 1200;refresher=uac\r\n'
-                        'Supported: 100rel,histinfo,join,replaces,sdp-anat,timer\r\n'
-                        'Timestamp: 1392061773\r\n'
-                        'WWW-Authenticate: Digest algorithm=MD5,nonce="1111790769596",realm="SomeRealm"\r\n'
-                        'Warning: 370 200.21.3.10 "Insufficient Bandwidth"\r\n'
-                        'X-RTP-Stat:  PR=0;ER=0;PL=0;RB=0/0;DE=PCMU;EN=PCMU;JI=0;DL=0,0;IP=10.1.0.33:16384,132.52.127.200:20048\r\n'
-                        'x-channel:  ds/ds1-3/12;IP=132.52.127.16\r\n'
-                        'Referred-By: <sip:6006665100@example.com;user=phone> ; CorrelationID="0508817f84e7ce64745ef9753e2fbff4664321a4@200.23.3.240"\r\n'
-                        'Refer-To: <sip:6006665499;rfrid=28661859@example.com;user=phone?x-nt-resource-priority=YNBvf.2j00qao>\r\n'
-                        'Content-Length: 11')  # This last one actually instantiates a ContentLengthSIPHeaderField.
-        request = BYESIPRequest.newForAttributes(sipMethod='BYE', requestURI='sip:example.com', content='Foo Content', header=SIPHeader.newForAttributes(headerFields=headerFields))
-        self.runAssertionsForRequest(request)
+        self.run_test_rendering_from_one_big_header_string()
 
     def test_rendering_from_list_of_header_field_strings(self):
-        headerFields = ['From: <sip:200.25.3.150:5061>;tag=0ee8d3e272e31c9195299efc500',
-                        'To: <sip:example.com:5061>',
-                        'Call-ID: 0ee8d3e272e31c9195299efc500',
-                        'CSeq: 6711 BYE',
-                        'Max-Forwards: 70',
-                        'Via: SIP/2.0/TLS 200.25.3.150;branch=z9hG4bK0ee8d3e272e31ca195299efc500',
-                        'User-Agent: Example User Agent',
-                        'Contact: <sip:invalid@200.25.3.150:5061;transport=tls>',
-                        'Route: <sip:200.30.10.12:5061;transport=tls;lr>',
-                        'Expires: 0',
-                        'Accept: application/sdp,application/isup,application/dtmf,application/dtmf-relay,multipart/mixed',
-                        'Accept-Encoding: x-nortel-short',
-                        'Accept-Language: en-us,fr-fr',
-                        'Allow:  ACK,BYE,CANCEL,INFO,INVITE,OPTIONS,REGISTER,SUBSCRIBE,UPDATE',
-                        'Authorization: Digest username="3122221000",realm="SomeRealm",nonce="1111790769596",uri="sip:3122211004@example.com",response="9bf77d8238664fe08dafd4d2abb6f1cb",algorithm=MD5',
-                        'Call-Info: <https://lsc14pa.example.com:443/pa/direct/pictureServlet?user=3126805100@example.com>;Purpose=icon',
-                        'Content-Disposition: session;handling=required',
-                        'Content-Type: application/sdp',
-                        'Date: Sat, 01 Feb 2014 22:07:34 GMT',
-                        'Record-Route: <sip:200.25.3.230:5061;transport=tls;lr>',
-                        'Require: sdp-anat',
-                        'Retry-After: 30',
-                        'Server: Blargomatic 2.0',
-                        'Session-Expires: 1200;refresher=uac',
-                        'Supported: 100rel,histinfo,join,replaces,sdp-anat,timer',
-                        'Timestamp: 1392061773',
-                        'WWW-Authenticate: Digest algorithm=MD5,nonce="1111790769596",realm="SomeRealm"',
-                        'Warning: 370 200.21.3.10 "Insufficient Bandwidth"',
-                        'X-RTP-Stat:  PR=0;ER=0;PL=0;RB=0/0;DE=PCMU;EN=PCMU;JI=0;DL=0,0;IP=10.1.0.33:16384,132.52.127.200:20048',
-                        'x-channel:  ds/ds1-3/12;IP=132.52.127.16',
-                        'Referred-By: <sip:6006665100@example.com;user=phone> ; CorrelationID="0508817f84e7ce64745ef9753e2fbff4664321a4@200.23.3.240"',
-                        'Refer-To: <sip:6006665499;rfrid=28661859@example.com;user=phone?x-nt-resource-priority=YNBvf.2j00qao>',
-                        'Content-Length: 11']  # This last one actually instantiates a ContentLengthSIPHeaderField.
-        request = BYESIPRequest.newForAttributes(sipMethod='BYE', requestURI='sip:example.com', content='Foo Content', header=SIPHeader.newForAttributes(headerFields=headerFields))
-        self.runAssertionsForRequest(request)
+        self.run_test_rendering_from_list_of_header_field_strings()
 
     def test_rendering_from_list_of_field_names_and_values(self):
-        headerFields = [('From', '<sip:200.25.3.150:5061>;tag=0ee8d3e272e31c9195299efc500'),
-                        ('To', '<sip:example.com:5061>'),
-                        ('Call-ID', '0ee8d3e272e31c9195299efc500'),
-                        ('CSeq', '6711 BYE'),
-                        ('Max-Forwards', 70),  # note the integer value.
-                        ('Via', 'SIP/2.0/TLS 200.25.3.150;branch=z9hG4bK0ee8d3e272e31ca195299efc500'),
-                        ('User-Agent', 'Example User Agent'),
-                        ('Contact', '<sip:invalid@200.25.3.150:5061;transport=tls>'),
-                        ('Route', '<sip:200.30.10.12:5061;transport=tls;lr>'),
-                        ('Expires', 0),
-                        ('Accept', 'application/sdp,application/isup,application/dtmf,application/dtmf-relay,multipart/mixed'),
-                        ('Accept-Encoding', 'x-nortel-short'),
-                        ('Accept-Language', 'en-us,fr-fr'),
-                        ('Allow', ' ACK,BYE,CANCEL,INFO,INVITE,OPTIONS,REGISTER,SUBSCRIBE,UPDATE'),
-                        ('Authorization', 'Digest username="3122221000",realm="SomeRealm",nonce="1111790769596",uri="sip:3122211004@example.com",response="9bf77d8238664fe08dafd4d2abb6f1cb",algorithm=MD5'),
-                        ('Call-Info', '<https://lsc14pa.example.com:443/pa/direct/pictureServlet?user=3126805100@example.com>;Purpose=icon'),
-                        ('Content-Disposition', 'session;handling=required'),
-                        ('Content-Type', 'application/sdp'),
-                        ('Date', 'Sat, 01 Feb 2014 22:07:34 GMT'),
-                        ('Record-Route', '<sip:200.25.3.230:5061;transport=tls;lr>'),
-                        ('Require', 'sdp-anat'),
-                        ('Retry-After', '30'),
-                        ('Server', 'Blargomatic 2.0'),
-                        ('Session-Expires', '1200;refresher=uac'),
-                        ('Supported', '100rel,histinfo,join,replaces,sdp-anat,timer'),
-                        ('Timestamp', '1392061773'),
-                        ('WWW-Authenticate', 'Digest algorithm=MD5,nonce="1111790769596",realm="SomeRealm"'),
-                        ('Warning', '370 200.21.3.10 "Insufficient Bandwidth"'),
-                        ('X-RTP-Stat', ' PR=0;ER=0;PL=0;RB=0/0;DE=PCMU;EN=PCMU;JI=0;DL=0,0;IP=10.1.0.33:16384,132.52.127.200:20048'),
-                        ('x-channel', ' ds/ds1-3/12;IP=132.52.127.16'),
-                        ('Referred-By', '<sip:6006665100@example.com;user=phone> ; CorrelationID="0508817f84e7ce64745ef9753e2fbff4664321a4@200.23.3.240"'),
-                        ('Refer-To', '<sip:6006665499;rfrid=28661859@example.com;user=phone?x-nt-resource-priority=YNBvf.2j00qao>'),
-                        ('Content-Length', {"value": 11})]  # This last one actually instantiates a ContentLengthSIPHeaderField.
-        request = BYESIPRequest.newForAttributes(sipMethod='BYE', requestURI='sip:example.com', content='Foo Content', header=SIPHeader.newForAttributes(headerFields=headerFields))
-        self.runAssertionsForRequest(request)
+        self.run_test_rendering_from_list_of_field_names_and_values()
 
     def test_rendering_from_list_of_field_names_and_values_using_property_dict(self):
-        headerFields = [('From', '<sip:200.25.3.150:5061>;tag=0ee8d3e272e31c9195299efc500'),
-                        ('To', '<sip:example.com:5061>'),
-                        ('Call-ID', '0ee8d3e272e31c9195299efc500'),
-                        ('CSeq', '6711 BYE'),
-                        ('Max-Forwards', 70),  # note the integer value.
-                        ('Via', 'SIP/2.0/TLS 200.25.3.150;branch=z9hG4bK0ee8d3e272e31ca195299efc500'),
-                        ('User-Agent', 'Example User Agent'),
-                        ('Contact', '<sip:invalid@200.25.3.150:5061;transport=tls>'),
-                        ('Route', '<sip:200.30.10.12:5061;transport=tls;lr>'),
-                        ('Expires', 0),
-                        ('Accept', 'application/sdp,application/isup,application/dtmf,application/dtmf-relay,multipart/mixed'),
-                        ('Accept-Encoding', 'x-nortel-short'),
-                        ('Accept-Language', 'en-us,fr-fr'),
-                        ('Allow', ' ACK,BYE,CANCEL,INFO,INVITE,OPTIONS,REGISTER,SUBSCRIBE,UPDATE'),
-                        ('Authorization', 'Digest username="3122221000",realm="SomeRealm",nonce="1111790769596",uri="sip:3122211004@example.com",response="9bf77d8238664fe08dafd4d2abb6f1cb",algorithm=MD5'),
-                        ('Call-Info', '<https://lsc14pa.example.com:443/pa/direct/pictureServlet?user=3126805100@example.com>;Purpose=icon'),
-                        ('Content-Disposition', 'session;handling=required'),
-                        ('Content-Type', 'application/sdp'),
-                        ('Date', 'Sat, 01 Feb 2014 22:07:34 GMT'),
-                        ('Record-Route', '<sip:200.25.3.230:5061;transport=tls;lr>'),
-                        ('Require', 'sdp-anat'),
-                        ('Retry-After', '30'),
-                        ('Server', 'Blargomatic 2.0'),
-                        ('Session-Expires', '1200;refresher=uac'),
-                        ('Supported', '100rel,histinfo,join,replaces,sdp-anat,timer'),
-                        ('Timestamp', '1392061773'),
-                        ('WWW-Authenticate', 'Digest algorithm=MD5,nonce="1111790769596",realm="SomeRealm"'),
-                        ('Warning', '370 200.21.3.10 "Insufficient Bandwidth"'),
-                        ('X-RTP-Stat', ' PR=0;ER=0;PL=0;RB=0/0;DE=PCMU;EN=PCMU;JI=0;DL=0,0;IP=10.1.0.33:16384,132.52.127.200:20048'),
-                        ('x-channel', ' ds/ds1-3/12;IP=132.52.127.16'),
-                        ('Referred-By', '<sip:6006665100@example.com;user=phone> ; CorrelationID="0508817f84e7ce64745ef9753e2fbff4664321a4@200.23.3.240"'),
-                        ('Refer-To', '<sip:6006665499;rfrid=28661859@example.com;user=phone?x-nt-resource-priority=YNBvf.2j00qao>'),
-                        ('Content-Length', {"value": 11})]  # This last one actually instantiates a ContentLengthSIPHeaderField.
-        request = BYESIPRequest.newForAttributes(sipMethod='BYE', requestURI='sip:example.com', content='Foo Content', header=SIPHeader.newForAttributes(headerFields=headerFields))
-        self.runAssertionsForRequest(request)
+        self.run_test_rendering_from_list_of_field_names_and_values_using_property_dict()
 
-    def runAssertionsForRequest(self, aSIPRequest):
-        self.assertEqual(aSIPRequest.rawString, self.canonicalStrings[0])
+    def runAssertionsForSIPMessage(self, aSIPRequest):
+        super(TestBYESIPRequest, self).runAssertionsForSIPMessage(aSIPRequest)
         self.assertTrue(aSIPRequest.isKnown)
         self.assertFalse(aSIPRequest.isUnknown)
-        self.assertTrue(aSIPRequest.isValid)
-        self.assertTrue(aSIPRequest.isRequest)
-        self.assertFalse(aSIPRequest.isResponse)
         self.assertFalse(aSIPRequest.isACKRequest)
         self.assertTrue(aSIPRequest.isBYERequest)
         self.assertFalse(aSIPRequest.isCANCELRequest)
@@ -1105,263 +190,39 @@ class TestBYESIPRequest(TestCase):
         self.assertFalse(aSIPRequest.isREGISTERRequest)
         self.assertFalse(aSIPRequest.isSUBSCRIBERequest)
         self.assertFalse(aSIPRequest.isUPDATERequest)
-        self.assertFalse(aSIPRequest.isMalformed)
-        # self.assertEqual(1, [headerField for headerField in aSIPRequest.header.headerFields if headerField.isContentLength].__len__())
-        # self.assertEqual(11, next(headerField for headerField in aSIPRequest.header.headerFields if headerField.isContentLength).value)
-        # self.assertEqual(10, [headerField for headerField in aSIPRequest.header.headerFields if headerField.isUnknown].__len__())
-        self.assertIsNotNone(aSIPRequest.header.contentLengthHeaderField)
-        self.assertEqual(11, aSIPRequest.header.contentLength)
-        self.assertEqual(1, aSIPRequest.header.viaHeaderFields.__len__())
-        self.assertEqual(1, aSIPRequest.header.vias.__len__())
-        self.assertEqual('SIP/2.0/TLS 200.25.3.150;branch=z9hG4bK0ee8d3e272e31ca195299efc500', aSIPRequest.header.vias[0])
-        self.assertEqual(4, aSIPRequest.header.unknownHeaderFields.__len__())
-        self.assertTrue(aSIPRequest.startLine.isRequest)
-        self.assertFalse(aSIPRequest.startLine.isResponse)
-        self.assertEqual('Foo Content', aSIPRequest.content)
-        self.assertEqual('BYE', aSIPRequest.startLine.sipMethod)
-        self.assertEqual('sip:example.com', aSIPRequest.startLine.requestURI)
 
 
-class TestCANCELSIPRequest(TestCase):
+class TestCANCELSIPRequest(AbstractSIPRequestTestCase):
     @property
-    def canonicalStrings(self):
-        return [
-            ('CANCEL sip:example.com SIP/2.0\r\n'
-             'From: <sip:200.25.3.150:5061>;tag=0ee8d3e272e31c9195299efc500\r\n'
-             'To: <sip:example.com:5061>\r\n'
-             'Call-ID: 0ee8d3e272e31c9195299efc500\r\n'
-             'CSeq: 6711 CANCEL\r\n'
-             'Max-Forwards: 70\r\n'
-             'Via: SIP/2.0/TLS 200.25.3.150;branch=z9hG4bK0ee8d3e272e31ca195299efc500\r\n'
-             'User-Agent: Example User Agent\r\n'
-             'Contact: <sip:invalid@200.25.3.150:5061;transport=tls>\r\n'
-             'Route: <sip:200.30.10.12:5061;transport=tls;lr>\r\n'
-             'Expires: 0\r\n'
-             'Accept: application/sdp,application/isup,application/dtmf,application/dtmf-relay,multipart/mixed\r\n'
-             'Accept-Encoding: x-nortel-short\r\n'
-             'Accept-Language: en-us,fr-fr\r\n'
-             'Allow:  ACK,BYE,CANCEL,INFO,INVITE,OPTIONS,REGISTER,SUBSCRIBE,UPDATE\r\n'
-             'Authorization: Digest username="3122221000",realm="SomeRealm",nonce="1111790769596",uri="sip:3122211004@example.com",response="9bf77d8238664fe08dafd4d2abb6f1cb",algorithm=MD5\r\n'
-             'Call-Info: <https://lsc14pa.example.com:443/pa/direct/pictureServlet?user=3126805100@example.com>;Purpose=icon\r\n'
-             'Content-Disposition: session;handling=required\r\n'
-             'Content-Type: application/sdp\r\n'
-             'Date: Sat, 01 Feb 2014 22:07:34 GMT\r\n'
-             'Record-Route: <sip:200.25.3.230:5061;transport=tls;lr>\r\n'
-             'Require: sdp-anat\r\n'
-             'Retry-After: 30\r\n'
-             'Server: Blargomatic 2.0\r\n'
-             'Session-Expires: 1200;refresher=uac\r\n'
-             'Supported: 100rel,histinfo,join,replaces,sdp-anat,timer\r\n'
-             'Timestamp: 1392061773\r\n'
-             'WWW-Authenticate: Digest algorithm=MD5,nonce="1111790769596",realm="SomeRealm"\r\n'
-             'Warning: 370 200.21.3.10 "Insufficient Bandwidth"\r\n'
-             'X-RTP-Stat:  PR=0;ER=0;PL=0;RB=0/0;DE=PCMU;EN=PCMU;JI=0;DL=0,0;IP=10.1.0.33:16384,132.52.127.200:20048\r\n'
-             'x-channel:  ds/ds1-3/12;IP=132.52.127.16\r\n'
-             'Referred-By: <sip:6006665100@example.com;user=phone> ; CorrelationID="0508817f84e7ce64745ef9753e2fbff4664321a4@200.23.3.240"\r\n'
-             'Refer-To: <sip:6006665499;rfrid=28661859@example.com;user=phone?x-nt-resource-priority=YNBvf.2j00qao>\r\n'
-             'Content-Length: 11\r\n'
-             '\r\n'
-             'Foo Content')
-        ]
+    def sipMethodString(self):
+        return "CANCEL"
+
+    @property
+    def sipMessageClassUnderTest(self):
+        return CANCELSIPRequest
 
     def test_parsing(self):
-        for messageString in self.canonicalStrings:
-            request = CANCELSIPRequest.newParsedFrom(messageString)
-            self.runAssertionsForRequest(request)
+        self.run_test_parsing()
 
     def test_rendering_from_list_of_header_fields(self):
-        headerFields = [
-            FromSIPHeaderField.newForAttributes(fieldValue='<sip:200.25.3.150:5061>;tag=0ee8d3e272e31c9195299efc500'),
-            ToSIPHeaderField.newForAttributes(fieldValue='<sip:example.com:5061>'),
-            CallIDSIPHeaderField.newForAttributes(fieldValue='0ee8d3e272e31c9195299efc500'),
-            CSeqSIPHeaderField.newForAttributes(fieldValue='6711 CANCEL'),
-            MaxForwardsSIPHeaderField.newForAttributes(fieldValue='70'),
-            ViaSIPHeaderField.newForAttributes(fieldValue='SIP/2.0/TLS 200.25.3.150;branch=z9hG4bK0ee8d3e272e31ca195299efc500'),
-            UserAgentSIPHeaderField.newForAttributes(fieldValue='Example User Agent'),
-            ContactSIPHeaderField.newForAttributes(fieldValue='<sip:invalid@200.25.3.150:5061;transport=tls>'),
-            RouteSIPHeaderField.newForAttributes(fieldValue='<sip:200.30.10.12:5061;transport=tls;lr>'),
-            ExpiresSIPHeaderField.newForAttributes(fieldValue='0'),
-            AcceptSIPHeaderField.newForAttributes(fieldValue='application/sdp,application/isup,application/dtmf,application/dtmf-relay,multipart/mixed'),
-            AcceptEncodingSIPHeaderField.newForAttributes(fieldValue='x-nortel-short'),
-            AcceptLanguageSIPHeaderField.newForAttributes(fieldValue='en-us,fr-fr'),
-            AllowSIPHeaderField.newForAttributes(fieldValue=' ACK,BYE,CANCEL,INFO,INVITE,OPTIONS,REGISTER,SUBSCRIBE,UPDATE'),
-            AuthorizationSIPHeaderField.newForAttributes(fieldValue='Digest username="3122221000",realm="SomeRealm",nonce="1111790769596",uri="sip:3122211004@example.com",response="9bf77d8238664fe08dafd4d2abb6f1cb",algorithm=MD5'),
-            CallInfoSIPHeaderField.newForAttributes(fieldValue='<https://lsc14pa.example.com:443/pa/direct/pictureServlet?user=3126805100@example.com>;Purpose=icon'),
-            ContentDispositionSIPHeaderField.newForAttributes(fieldValue='session;handling=required'),
-            ContentTypeSIPHeaderField.newForAttributes(fieldValue='application/sdp'),
-            DateSIPHeaderField.newForAttributes(fieldValue='Sat, 01 Feb 2014 22:07:34 GMT'),
-            RecordRouteSIPHeaderField.newForAttributes(fieldValue='<sip:200.25.3.230:5061;transport=tls;lr>'),
-            RequireSIPHeaderField.newForAttributes(fieldValue='sdp-anat'),
-            RetryAfterSIPHeaderField.newForAttributes(fieldValue='30'),
-            ServerSIPHeaderField.newForAttributes(fieldValue='Blargomatic 2.0'),
-            SessionExpiresSIPHeaderField.newForAttributes(fieldValue='1200;refresher=uac'),
-            SupportedSIPHeaderField.newForAttributes(fieldValue='100rel,histinfo,join,replaces,sdp-anat,timer'),
-            TimestampSIPHeaderField.newForAttributes(fieldValue='1392061773'),
-            WWWAuthenticateSIPHeaderField.newForAttributes(fieldValue='Digest algorithm=MD5,nonce="1111790769596",realm="SomeRealm"'),
-            WarningSIPHeaderField.newForAttributes(fieldValue='370 200.21.3.10 "Insufficient Bandwidth"'),
-            UnknownSIPHeaderField.newForAttributes(fieldName='X-RTP-Stat', fieldValue=' PR=0;ER=0;PL=0;RB=0/0;DE=PCMU;EN=PCMU;JI=0;DL=0,0;IP=10.1.0.33:16384,132.52.127.200:20048'),
-            UnknownSIPHeaderField.newForAttributes(fieldName='x-channel', fieldValue=' ds/ds1-3/12;IP=132.52.127.16'),
-            UnknownSIPHeaderField.newForAttributes(fieldName='Referred-By', fieldValue='<sip:6006665100@example.com;user=phone> ; CorrelationID="0508817f84e7ce64745ef9753e2fbff4664321a4@200.23.3.240"'),
-            UnknownSIPHeaderField.newForAttributes(fieldName='Refer-To', fieldValue='<sip:6006665499;rfrid=28661859@example.com;user=phone?x-nt-resource-priority=YNBvf.2j00qao>'),
-            ContentLengthSIPHeaderField.newForAttributes(value=11)]
-        request = CANCELSIPRequest.newForAttributes(sipMethod='CANCEL', requestURI='sip:example.com', content='Foo Content', header=SIPHeader.newForAttributes(headerFields=headerFields))
-        self.runAssertionsForRequest(request)
+        self.run_test_rendering_from_list_of_header_fields()
 
     def test_rendering_from_one_big_header_string(self):
-        headerFields = ('From: <sip:200.25.3.150:5061>;tag=0ee8d3e272e31c9195299efc500\r\n'
-                        'To: <sip:example.com:5061>\r\n'
-                        'Call-ID: 0ee8d3e272e31c9195299efc500\r\n'
-                        'CSeq: 6711 CANCEL\r\n'
-                        'Max-Forwards: 70\r\n'
-                        'Via: SIP/2.0/TLS 200.25.3.150;branch=z9hG4bK0ee8d3e272e31ca195299efc500\r\n'
-                        'User-Agent: Example User Agent\r\n'
-                        'Contact: <sip:invalid@200.25.3.150:5061;transport=tls>\r\n'
-                        'Route: <sip:200.30.10.12:5061;transport=tls;lr>\r\n'
-                        'Expires: 0\r\n'
-                        'Accept: application/sdp,application/isup,application/dtmf,application/dtmf-relay,multipart/mixed\r\n'
-                        'Accept-Encoding: x-nortel-short\r\n'
-                        'Accept-Language: en-us,fr-fr\r\n'
-                        'Allow:  ACK,BYE,CANCEL,INFO,INVITE,OPTIONS,REGISTER,SUBSCRIBE,UPDATE\r\n'
-                        'Authorization: Digest username="3122221000",realm="SomeRealm",nonce="1111790769596",uri="sip:3122211004@example.com",response="9bf77d8238664fe08dafd4d2abb6f1cb",algorithm=MD5\r\n'
-                        'Call-Info: <https://lsc14pa.example.com:443/pa/direct/pictureServlet?user=3126805100@example.com>;Purpose=icon\r\n'
-                        'Content-Disposition: session;handling=required\r\n'
-                        'Content-Type: application/sdp\r\n'
-                        'Date: Sat, 01 Feb 2014 22:07:34 GMT\r\n'
-                        'Record-Route: <sip:200.25.3.230:5061;transport=tls;lr>\r\n'
-                        'Require: sdp-anat\r\n'
-                        'Retry-After: 30\r\n'
-                        'Server: Blargomatic 2.0\r\n'
-                        'Session-Expires: 1200;refresher=uac\r\n'
-                        'Supported: 100rel,histinfo,join,replaces,sdp-anat,timer\r\n'
-                        'Timestamp: 1392061773\r\n'
-                        'WWW-Authenticate: Digest algorithm=MD5,nonce="1111790769596",realm="SomeRealm"\r\n'
-                        'Warning: 370 200.21.3.10 "Insufficient Bandwidth"\r\n'
-                        'X-RTP-Stat:  PR=0;ER=0;PL=0;RB=0/0;DE=PCMU;EN=PCMU;JI=0;DL=0,0;IP=10.1.0.33:16384,132.52.127.200:20048\r\n'
-                        'x-channel:  ds/ds1-3/12;IP=132.52.127.16\r\n'
-                        'Referred-By: <sip:6006665100@example.com;user=phone> ; CorrelationID="0508817f84e7ce64745ef9753e2fbff4664321a4@200.23.3.240"\r\n'
-                        'Refer-To: <sip:6006665499;rfrid=28661859@example.com;user=phone?x-nt-resource-priority=YNBvf.2j00qao>\r\n'
-                        'Content-Length: 11')  # This last one actually instantiates a ContentLengthSIPHeaderField.
-        request = CANCELSIPRequest.newForAttributes(sipMethod='CANCEL', requestURI='sip:example.com', content='Foo Content', header=SIPHeader.newForAttributes(headerFields=headerFields))
-        self.runAssertionsForRequest(request)
+        self.run_test_rendering_from_one_big_header_string()
 
     def test_rendering_from_list_of_header_field_strings(self):
-        headerFields = ['From: <sip:200.25.3.150:5061>;tag=0ee8d3e272e31c9195299efc500',
-                        'To: <sip:example.com:5061>',
-                        'Call-ID: 0ee8d3e272e31c9195299efc500',
-                        'CSeq: 6711 CANCEL',
-                        'Max-Forwards: 70',
-                        'Via: SIP/2.0/TLS 200.25.3.150;branch=z9hG4bK0ee8d3e272e31ca195299efc500',
-                        'User-Agent: Example User Agent',
-                        'Contact: <sip:invalid@200.25.3.150:5061;transport=tls>',
-                        'Route: <sip:200.30.10.12:5061;transport=tls;lr>',
-                        'Expires: 0',
-                        'Accept: application/sdp,application/isup,application/dtmf,application/dtmf-relay,multipart/mixed',
-                        'Accept-Encoding: x-nortel-short',
-                        'Accept-Language: en-us,fr-fr',
-                        'Allow:  ACK,BYE,CANCEL,INFO,INVITE,OPTIONS,REGISTER,SUBSCRIBE,UPDATE',
-                        'Authorization: Digest username="3122221000",realm="SomeRealm",nonce="1111790769596",uri="sip:3122211004@example.com",response="9bf77d8238664fe08dafd4d2abb6f1cb",algorithm=MD5',
-                        'Call-Info: <https://lsc14pa.example.com:443/pa/direct/pictureServlet?user=3126805100@example.com>;Purpose=icon',
-                        'Content-Disposition: session;handling=required',
-                        'Content-Type: application/sdp',
-                        'Date: Sat, 01 Feb 2014 22:07:34 GMT',
-                        'Record-Route: <sip:200.25.3.230:5061;transport=tls;lr>',
-                        'Require: sdp-anat',
-                        'Retry-After: 30',
-                        'Server: Blargomatic 2.0',
-                        'Session-Expires: 1200;refresher=uac',
-                        'Supported: 100rel,histinfo,join,replaces,sdp-anat,timer',
-                        'Timestamp: 1392061773',
-                        'WWW-Authenticate: Digest algorithm=MD5,nonce="1111790769596",realm="SomeRealm"',
-                        'Warning: 370 200.21.3.10 "Insufficient Bandwidth"',
-                        'X-RTP-Stat:  PR=0;ER=0;PL=0;RB=0/0;DE=PCMU;EN=PCMU;JI=0;DL=0,0;IP=10.1.0.33:16384,132.52.127.200:20048',
-                        'x-channel:  ds/ds1-3/12;IP=132.52.127.16',
-                        'Referred-By: <sip:6006665100@example.com;user=phone> ; CorrelationID="0508817f84e7ce64745ef9753e2fbff4664321a4@200.23.3.240"',
-                        'Refer-To: <sip:6006665499;rfrid=28661859@example.com;user=phone?x-nt-resource-priority=YNBvf.2j00qao>',
-                        'Content-Length: 11']  # This last one actually instantiates a ContentLengthSIPHeaderField.
-        request = CANCELSIPRequest.newForAttributes(sipMethod='CANCEL', requestURI='sip:example.com', content='Foo Content', header=SIPHeader.newForAttributes(headerFields=headerFields))
-        self.runAssertionsForRequest(request)
+        self.run_test_rendering_from_list_of_header_field_strings()
 
     def test_rendering_from_list_of_field_names_and_values(self):
-        headerFields = [('From', '<sip:200.25.3.150:5061>;tag=0ee8d3e272e31c9195299efc500'),
-                        ('To', '<sip:example.com:5061>'),
-                        ('Call-ID', '0ee8d3e272e31c9195299efc500'),
-                        ('CSeq', '6711 CANCEL'),
-                        ('Max-Forwards', 70),  # note the integer value.
-                        ('Via', 'SIP/2.0/TLS 200.25.3.150;branch=z9hG4bK0ee8d3e272e31ca195299efc500'),
-                        ('User-Agent', 'Example User Agent'),
-                        ('Contact', '<sip:invalid@200.25.3.150:5061;transport=tls>'),
-                        ('Route', '<sip:200.30.10.12:5061;transport=tls;lr>'),
-                        ('Expires', 0),
-                        ('Accept', 'application/sdp,application/isup,application/dtmf,application/dtmf-relay,multipart/mixed'),
-                        ('Accept-Encoding', 'x-nortel-short'),
-                        ('Accept-Language', 'en-us,fr-fr'),
-                        ('Allow', ' ACK,BYE,CANCEL,INFO,INVITE,OPTIONS,REGISTER,SUBSCRIBE,UPDATE'),
-                        ('Authorization', 'Digest username="3122221000",realm="SomeRealm",nonce="1111790769596",uri="sip:3122211004@example.com",response="9bf77d8238664fe08dafd4d2abb6f1cb",algorithm=MD5'),
-                        ('Call-Info', '<https://lsc14pa.example.com:443/pa/direct/pictureServlet?user=3126805100@example.com>;Purpose=icon'),
-                        ('Content-Disposition', 'session;handling=required'),
-                        ('Content-Type', 'application/sdp'),
-                        ('Date', 'Sat, 01 Feb 2014 22:07:34 GMT'),
-                        ('Record-Route', '<sip:200.25.3.230:5061;transport=tls;lr>'),
-                        ('Require', 'sdp-anat'),
-                        ('Retry-After', '30'),
-                        ('Server', 'Blargomatic 2.0'),
-                        ('Session-Expires', '1200;refresher=uac'),
-                        ('Supported', '100rel,histinfo,join,replaces,sdp-anat,timer'),
-                        ('Timestamp', '1392061773'),
-                        ('WWW-Authenticate', 'Digest algorithm=MD5,nonce="1111790769596",realm="SomeRealm"'),
-                        ('Warning', '370 200.21.3.10 "Insufficient Bandwidth"'),
-                        ('X-RTP-Stat', ' PR=0;ER=0;PL=0;RB=0/0;DE=PCMU;EN=PCMU;JI=0;DL=0,0;IP=10.1.0.33:16384,132.52.127.200:20048'),
-                        ('x-channel', ' ds/ds1-3/12;IP=132.52.127.16'),
-                        ('Referred-By', '<sip:6006665100@example.com;user=phone> ; CorrelationID="0508817f84e7ce64745ef9753e2fbff4664321a4@200.23.3.240"'),
-                        ('Refer-To', '<sip:6006665499;rfrid=28661859@example.com;user=phone?x-nt-resource-priority=YNBvf.2j00qao>'),
-                        ('Content-Length', {"value": 11})]  # This last one actually instantiates a ContentLengthSIPHeaderField.
-        request = CANCELSIPRequest.newForAttributes(sipMethod='CANCEL', requestURI='sip:example.com', content='Foo Content', header=SIPHeader.newForAttributes(headerFields=headerFields))
-        self.runAssertionsForRequest(request)
+        self.run_test_rendering_from_list_of_field_names_and_values()
 
     def test_rendering_from_list_of_field_names_and_values_using_property_dict(self):
-        headerFields = [('From', '<sip:200.25.3.150:5061>;tag=0ee8d3e272e31c9195299efc500'),
-                        ('To', '<sip:example.com:5061>'),
-                        ('Call-ID', '0ee8d3e272e31c9195299efc500'),
-                        ('CSeq', '6711 CANCEL'),
-                        ('Max-Forwards', 70),  # note the integer value.
-                        ('Via', 'SIP/2.0/TLS 200.25.3.150;branch=z9hG4bK0ee8d3e272e31ca195299efc500'),
-                        ('User-Agent', 'Example User Agent'),
-                        ('Contact', '<sip:invalid@200.25.3.150:5061;transport=tls>'),
-                        ('Route', '<sip:200.30.10.12:5061;transport=tls;lr>'),
-                        ('Expires', 0),
-                        ('Accept', 'application/sdp,application/isup,application/dtmf,application/dtmf-relay,multipart/mixed'),
-                        ('Accept-Encoding', 'x-nortel-short'),
-                        ('Accept-Language', 'en-us,fr-fr'),
-                        ('Allow', ' ACK,BYE,CANCEL,INFO,INVITE,OPTIONS,REGISTER,SUBSCRIBE,UPDATE'),
-                        ('Authorization', 'Digest username="3122221000",realm="SomeRealm",nonce="1111790769596",uri="sip:3122211004@example.com",response="9bf77d8238664fe08dafd4d2abb6f1cb",algorithm=MD5'),
-                        ('Call-Info', '<https://lsc14pa.example.com:443/pa/direct/pictureServlet?user=3126805100@example.com>;Purpose=icon'),
-                        ('Content-Disposition', 'session;handling=required'),
-                        ('Content-Type', 'application/sdp'),
-                        ('Date', 'Sat, 01 Feb 2014 22:07:34 GMT'),
-                        ('Record-Route', '<sip:200.25.3.230:5061;transport=tls;lr>'),
-                        ('Require', 'sdp-anat'),
-                        ('Retry-After', '30'),
-                        ('Server', 'Blargomatic 2.0'),
-                        ('Session-Expires', '1200;refresher=uac'),
-                        ('Supported', '100rel,histinfo,join,replaces,sdp-anat,timer'),
-                        ('Timestamp', '1392061773'),
-                        ('WWW-Authenticate', 'Digest algorithm=MD5,nonce="1111790769596",realm="SomeRealm"'),
-                        ('Warning', '370 200.21.3.10 "Insufficient Bandwidth"'),
-                        ('X-RTP-Stat', ' PR=0;ER=0;PL=0;RB=0/0;DE=PCMU;EN=PCMU;JI=0;DL=0,0;IP=10.1.0.33:16384,132.52.127.200:20048'),
-                        ('x-channel', ' ds/ds1-3/12;IP=132.52.127.16'),
-                        ('Referred-By', '<sip:6006665100@example.com;user=phone> ; CorrelationID="0508817f84e7ce64745ef9753e2fbff4664321a4@200.23.3.240"'),
-                        ('Refer-To', '<sip:6006665499;rfrid=28661859@example.com;user=phone?x-nt-resource-priority=YNBvf.2j00qao>'),
-                        ('Content-Length', {"value": 11})]  # This last one actually instantiates a ContentLengthSIPHeaderField.
-        request = CANCELSIPRequest.newForAttributes(sipMethod='CANCEL', requestURI='sip:example.com', content='Foo Content', header=SIPHeader.newForAttributes(headerFields=headerFields))
-        self.runAssertionsForRequest(request)
+        self.run_test_rendering_from_list_of_field_names_and_values_using_property_dict()
 
-    def runAssertionsForRequest(self, aSIPRequest):
-        self.assertEqual(aSIPRequest.rawString, self.canonicalStrings[0])
+    def runAssertionsForSIPMessage(self, aSIPRequest):
+        super(TestCANCELSIPRequest, self).runAssertionsForSIPMessage(aSIPRequest)
         self.assertTrue(aSIPRequest.isKnown)
         self.assertFalse(aSIPRequest.isUnknown)
-        self.assertTrue(aSIPRequest.isValid)
-        self.assertTrue(aSIPRequest.isRequest)
-        self.assertFalse(aSIPRequest.isResponse)
         self.assertFalse(aSIPRequest.isACKRequest)
         self.assertFalse(aSIPRequest.isBYERequest)
         self.assertTrue(aSIPRequest.isCANCELRequest)
@@ -1373,263 +234,39 @@ class TestCANCELSIPRequest(TestCase):
         self.assertFalse(aSIPRequest.isREGISTERRequest)
         self.assertFalse(aSIPRequest.isSUBSCRIBERequest)
         self.assertFalse(aSIPRequest.isUPDATERequest)
-        self.assertFalse(aSIPRequest.isMalformed)
-        # self.assertEqual(1, [headerField for headerField in aSIPRequest.header.headerFields if headerField.isContentLength].__len__())
-        # self.assertEqual(11, next(headerField for headerField in aSIPRequest.header.headerFields if headerField.isContentLength).value)
-        # self.assertEqual(10, [headerField for headerField in aSIPRequest.header.headerFields if headerField.isUnknown].__len__())
-        self.assertIsNotNone(aSIPRequest.header.contentLengthHeaderField)
-        self.assertEqual(11, aSIPRequest.header.contentLength)
-        self.assertEqual(1, aSIPRequest.header.viaHeaderFields.__len__())
-        self.assertEqual(1, aSIPRequest.header.vias.__len__())
-        self.assertEqual('SIP/2.0/TLS 200.25.3.150;branch=z9hG4bK0ee8d3e272e31ca195299efc500', aSIPRequest.header.vias[0])
-        self.assertEqual(4, aSIPRequest.header.unknownHeaderFields.__len__())
-        self.assertTrue(aSIPRequest.startLine.isRequest)
-        self.assertFalse(aSIPRequest.startLine.isResponse)
-        self.assertEqual('Foo Content', aSIPRequest.content)
-        self.assertEqual('CANCEL', aSIPRequest.startLine.sipMethod)
-        self.assertEqual('sip:example.com', aSIPRequest.startLine.requestURI)
 
 
-class TestINFOSIPRequest(TestCase):
+class TestINFOSIPRequest(AbstractSIPRequestTestCase):
     @property
-    def canonicalStrings(self):
-        return [
-            ('INFO sip:example.com SIP/2.0\r\n'
-             'From: <sip:200.25.3.150:5061>;tag=0ee8d3e272e31c9195299efc500\r\n'
-             'To: <sip:example.com:5061>\r\n'
-             'Call-ID: 0ee8d3e272e31c9195299efc500\r\n'
-             'CSeq: 6711 INFO\r\n'
-             'Max-Forwards: 70\r\n'
-             'Via: SIP/2.0/TLS 200.25.3.150;branch=z9hG4bK0ee8d3e272e31ca195299efc500\r\n'
-             'User-Agent: Example User Agent\r\n'
-             'Contact: <sip:invalid@200.25.3.150:5061;transport=tls>\r\n'
-             'Route: <sip:200.30.10.12:5061;transport=tls;lr>\r\n'
-             'Expires: 0\r\n'
-             'Accept: application/sdp,application/isup,application/dtmf,application/dtmf-relay,multipart/mixed\r\n'
-             'Accept-Encoding: x-nortel-short\r\n'
-             'Accept-Language: en-us,fr-fr\r\n'
-             'Allow:  ACK,BYE,CANCEL,INFO,INVITE,OPTIONS,REGISTER,SUBSCRIBE,UPDATE\r\n'
-             'Authorization: Digest username="3122221000",realm="SomeRealm",nonce="1111790769596",uri="sip:3122211004@example.com",response="9bf77d8238664fe08dafd4d2abb6f1cb",algorithm=MD5\r\n'
-             'Call-Info: <https://lsc14pa.example.com:443/pa/direct/pictureServlet?user=3126805100@example.com>;Purpose=icon\r\n'
-             'Content-Disposition: session;handling=required\r\n'
-             'Content-Type: application/sdp\r\n'
-             'Date: Sat, 01 Feb 2014 22:07:34 GMT\r\n'
-             'Record-Route: <sip:200.25.3.230:5061;transport=tls;lr>\r\n'
-             'Require: sdp-anat\r\n'
-             'Retry-After: 30\r\n'
-             'Server: Blargomatic 2.0\r\n'
-             'Session-Expires: 1200;refresher=uac\r\n'
-             'Supported: 100rel,histinfo,join,replaces,sdp-anat,timer\r\n'
-             'Timestamp: 1392061773\r\n'
-             'WWW-Authenticate: Digest algorithm=MD5,nonce="1111790769596",realm="SomeRealm"\r\n'
-             'Warning: 370 200.21.3.10 "Insufficient Bandwidth"\r\n'
-             'X-RTP-Stat:  PR=0;ER=0;PL=0;RB=0/0;DE=PCMU;EN=PCMU;JI=0;DL=0,0;IP=10.1.0.33:16384,132.52.127.200:20048\r\n'
-             'x-channel:  ds/ds1-3/12;IP=132.52.127.16\r\n'
-             'Referred-By: <sip:6006665100@example.com;user=phone> ; CorrelationID="0508817f84e7ce64745ef9753e2fbff4664321a4@200.23.3.240"\r\n'
-             'Refer-To: <sip:6006665499;rfrid=28661859@example.com;user=phone?x-nt-resource-priority=YNBvf.2j00qao>\r\n'
-             'Content-Length: 11\r\n'
-             '\r\n'
-             'Foo Content')
-        ]
+    def sipMethodString(self):
+        return "INFO"
+
+    @property
+    def sipMessageClassUnderTest(self):
+        return INFOSIPRequest
 
     def test_parsing(self):
-        for messageString in self.canonicalStrings:
-            request = INFOSIPRequest.newParsedFrom(messageString)
-            self.runAssertionsForRequest(request)
+        self.run_test_parsing()
 
     def test_rendering_from_list_of_header_fields(self):
-        headerFields = [
-            FromSIPHeaderField.newForAttributes(fieldValue='<sip:200.25.3.150:5061>;tag=0ee8d3e272e31c9195299efc500'),
-            ToSIPHeaderField.newForAttributes(fieldValue='<sip:example.com:5061>'),
-            CallIDSIPHeaderField.newForAttributes(fieldValue='0ee8d3e272e31c9195299efc500'),
-            CSeqSIPHeaderField.newForAttributes(fieldValue='6711 INFO'),
-            MaxForwardsSIPHeaderField.newForAttributes(fieldValue='70'),
-            ViaSIPHeaderField.newForAttributes(fieldValue='SIP/2.0/TLS 200.25.3.150;branch=z9hG4bK0ee8d3e272e31ca195299efc500'),
-            UserAgentSIPHeaderField.newForAttributes(fieldValue='Example User Agent'),
-            ContactSIPHeaderField.newForAttributes(fieldValue='<sip:invalid@200.25.3.150:5061;transport=tls>'),
-            RouteSIPHeaderField.newForAttributes(fieldValue='<sip:200.30.10.12:5061;transport=tls;lr>'),
-            ExpiresSIPHeaderField.newForAttributes(fieldValue='0'),
-            AcceptSIPHeaderField.newForAttributes(fieldValue='application/sdp,application/isup,application/dtmf,application/dtmf-relay,multipart/mixed'),
-            AcceptEncodingSIPHeaderField.newForAttributes(fieldValue='x-nortel-short'),
-            AcceptLanguageSIPHeaderField.newForAttributes(fieldValue='en-us,fr-fr'),
-            AllowSIPHeaderField.newForAttributes(fieldValue=' ACK,BYE,CANCEL,INFO,INVITE,OPTIONS,REGISTER,SUBSCRIBE,UPDATE'),
-            AuthorizationSIPHeaderField.newForAttributes(fieldValue='Digest username="3122221000",realm="SomeRealm",nonce="1111790769596",uri="sip:3122211004@example.com",response="9bf77d8238664fe08dafd4d2abb6f1cb",algorithm=MD5'),
-            CallInfoSIPHeaderField.newForAttributes(fieldValue='<https://lsc14pa.example.com:443/pa/direct/pictureServlet?user=3126805100@example.com>;Purpose=icon'),
-            ContentDispositionSIPHeaderField.newForAttributes(fieldValue='session;handling=required'),
-            ContentTypeSIPHeaderField.newForAttributes(fieldValue='application/sdp'),
-            DateSIPHeaderField.newForAttributes(fieldValue='Sat, 01 Feb 2014 22:07:34 GMT'),
-            RecordRouteSIPHeaderField.newForAttributes(fieldValue='<sip:200.25.3.230:5061;transport=tls;lr>'),
-            RequireSIPHeaderField.newForAttributes(fieldValue='sdp-anat'),
-            RetryAfterSIPHeaderField.newForAttributes(fieldValue='30'),
-            ServerSIPHeaderField.newForAttributes(fieldValue='Blargomatic 2.0'),
-            SessionExpiresSIPHeaderField.newForAttributes(fieldValue='1200;refresher=uac'),
-            SupportedSIPHeaderField.newForAttributes(fieldValue='100rel,histinfo,join,replaces,sdp-anat,timer'),
-            TimestampSIPHeaderField.newForAttributes(fieldValue='1392061773'),
-            WWWAuthenticateSIPHeaderField.newForAttributes(fieldValue='Digest algorithm=MD5,nonce="1111790769596",realm="SomeRealm"'),
-            WarningSIPHeaderField.newForAttributes(fieldValue='370 200.21.3.10 "Insufficient Bandwidth"'),
-            UnknownSIPHeaderField.newForAttributes(fieldName='X-RTP-Stat', fieldValue=' PR=0;ER=0;PL=0;RB=0/0;DE=PCMU;EN=PCMU;JI=0;DL=0,0;IP=10.1.0.33:16384,132.52.127.200:20048'),
-            UnknownSIPHeaderField.newForAttributes(fieldName='x-channel', fieldValue=' ds/ds1-3/12;IP=132.52.127.16'),
-            UnknownSIPHeaderField.newForAttributes(fieldName='Referred-By', fieldValue='<sip:6006665100@example.com;user=phone> ; CorrelationID="0508817f84e7ce64745ef9753e2fbff4664321a4@200.23.3.240"'),
-            UnknownSIPHeaderField.newForAttributes(fieldName='Refer-To', fieldValue='<sip:6006665499;rfrid=28661859@example.com;user=phone?x-nt-resource-priority=YNBvf.2j00qao>'),
-            ContentLengthSIPHeaderField.newForAttributes(value=11)]
-        request = INFOSIPRequest.newForAttributes(sipMethod='INFO', requestURI='sip:example.com', content='Foo Content', header=SIPHeader.newForAttributes(headerFields=headerFields))
-        self.runAssertionsForRequest(request)
+        self.run_test_rendering_from_list_of_header_fields()
 
     def test_rendering_from_one_big_header_string(self):
-        headerFields = ('From: <sip:200.25.3.150:5061>;tag=0ee8d3e272e31c9195299efc500\r\n'
-                        'To: <sip:example.com:5061>\r\n'
-                        'Call-ID: 0ee8d3e272e31c9195299efc500\r\n'
-                        'CSeq: 6711 INFO\r\n'
-                        'Max-Forwards: 70\r\n'
-                        'Via: SIP/2.0/TLS 200.25.3.150;branch=z9hG4bK0ee8d3e272e31ca195299efc500\r\n'
-                        'User-Agent: Example User Agent\r\n'
-                        'Contact: <sip:invalid@200.25.3.150:5061;transport=tls>\r\n'
-                        'Route: <sip:200.30.10.12:5061;transport=tls;lr>\r\n'
-                        'Expires: 0\r\n'
-                        'Accept: application/sdp,application/isup,application/dtmf,application/dtmf-relay,multipart/mixed\r\n'
-                        'Accept-Encoding: x-nortel-short\r\n'
-                        'Accept-Language: en-us,fr-fr\r\n'
-                        'Allow:  ACK,BYE,CANCEL,INFO,INVITE,OPTIONS,REGISTER,SUBSCRIBE,UPDATE\r\n'
-                        'Authorization: Digest username="3122221000",realm="SomeRealm",nonce="1111790769596",uri="sip:3122211004@example.com",response="9bf77d8238664fe08dafd4d2abb6f1cb",algorithm=MD5\r\n'
-                        'Call-Info: <https://lsc14pa.example.com:443/pa/direct/pictureServlet?user=3126805100@example.com>;Purpose=icon\r\n'
-                        'Content-Disposition: session;handling=required\r\n'
-                        'Content-Type: application/sdp\r\n'
-                        'Date: Sat, 01 Feb 2014 22:07:34 GMT\r\n'
-                        'Record-Route: <sip:200.25.3.230:5061;transport=tls;lr>\r\n'
-                        'Require: sdp-anat\r\n'
-                        'Retry-After: 30\r\n'
-                        'Server: Blargomatic 2.0\r\n'
-                        'Session-Expires: 1200;refresher=uac\r\n'
-                        'Supported: 100rel,histinfo,join,replaces,sdp-anat,timer\r\n'
-                        'Timestamp: 1392061773\r\n'
-                        'WWW-Authenticate: Digest algorithm=MD5,nonce="1111790769596",realm="SomeRealm"\r\n'
-                        'Warning: 370 200.21.3.10 "Insufficient Bandwidth"\r\n'
-                        'X-RTP-Stat:  PR=0;ER=0;PL=0;RB=0/0;DE=PCMU;EN=PCMU;JI=0;DL=0,0;IP=10.1.0.33:16384,132.52.127.200:20048\r\n'
-                        'x-channel:  ds/ds1-3/12;IP=132.52.127.16\r\n'
-                        'Referred-By: <sip:6006665100@example.com;user=phone> ; CorrelationID="0508817f84e7ce64745ef9753e2fbff4664321a4@200.23.3.240"\r\n'
-                        'Refer-To: <sip:6006665499;rfrid=28661859@example.com;user=phone?x-nt-resource-priority=YNBvf.2j00qao>\r\n'
-                        'Content-Length: 11')  # This last one actually instantiates a ContentLengthSIPHeaderField.
-        request = INFOSIPRequest.newForAttributes(sipMethod='INFO', requestURI='sip:example.com', content='Foo Content', header=SIPHeader.newForAttributes(headerFields=headerFields))
-        self.runAssertionsForRequest(request)
+        self.run_test_rendering_from_one_big_header_string()
 
     def test_rendering_from_list_of_header_field_strings(self):
-        headerFields = ['From: <sip:200.25.3.150:5061>;tag=0ee8d3e272e31c9195299efc500',
-                        'To: <sip:example.com:5061>',
-                        'Call-ID: 0ee8d3e272e31c9195299efc500',
-                        'CSeq: 6711 INFO',
-                        'Max-Forwards: 70',
-                        'Via: SIP/2.0/TLS 200.25.3.150;branch=z9hG4bK0ee8d3e272e31ca195299efc500',
-                        'User-Agent: Example User Agent',
-                        'Contact: <sip:invalid@200.25.3.150:5061;transport=tls>',
-                        'Route: <sip:200.30.10.12:5061;transport=tls;lr>',
-                        'Expires: 0',
-                        'Accept: application/sdp,application/isup,application/dtmf,application/dtmf-relay,multipart/mixed',
-                        'Accept-Encoding: x-nortel-short',
-                        'Accept-Language: en-us,fr-fr',
-                        'Allow:  ACK,BYE,CANCEL,INFO,INVITE,OPTIONS,REGISTER,SUBSCRIBE,UPDATE',
-                        'Authorization: Digest username="3122221000",realm="SomeRealm",nonce="1111790769596",uri="sip:3122211004@example.com",response="9bf77d8238664fe08dafd4d2abb6f1cb",algorithm=MD5',
-                        'Call-Info: <https://lsc14pa.example.com:443/pa/direct/pictureServlet?user=3126805100@example.com>;Purpose=icon',
-                        'Content-Disposition: session;handling=required',
-                        'Content-Type: application/sdp',
-                        'Date: Sat, 01 Feb 2014 22:07:34 GMT',
-                        'Record-Route: <sip:200.25.3.230:5061;transport=tls;lr>',
-                        'Require: sdp-anat',
-                        'Retry-After: 30',
-                        'Server: Blargomatic 2.0',
-                        'Session-Expires: 1200;refresher=uac',
-                        'Supported: 100rel,histinfo,join,replaces,sdp-anat,timer',
-                        'Timestamp: 1392061773',
-                        'WWW-Authenticate: Digest algorithm=MD5,nonce="1111790769596",realm="SomeRealm"',
-                        'Warning: 370 200.21.3.10 "Insufficient Bandwidth"',
-                        'X-RTP-Stat:  PR=0;ER=0;PL=0;RB=0/0;DE=PCMU;EN=PCMU;JI=0;DL=0,0;IP=10.1.0.33:16384,132.52.127.200:20048',
-                        'x-channel:  ds/ds1-3/12;IP=132.52.127.16',
-                        'Referred-By: <sip:6006665100@example.com;user=phone> ; CorrelationID="0508817f84e7ce64745ef9753e2fbff4664321a4@200.23.3.240"',
-                        'Refer-To: <sip:6006665499;rfrid=28661859@example.com;user=phone?x-nt-resource-priority=YNBvf.2j00qao>',
-                        'Content-Length: 11']  # This last one actually instantiates a ContentLengthSIPHeaderField.
-        request = INFOSIPRequest.newForAttributes(sipMethod='INFO', requestURI='sip:example.com', content='Foo Content', header=SIPHeader.newForAttributes(headerFields=headerFields))
-        self.runAssertionsForRequest(request)
+        self.run_test_rendering_from_list_of_header_field_strings()
 
     def test_rendering_from_list_of_field_names_and_values(self):
-        headerFields = [('From', '<sip:200.25.3.150:5061>;tag=0ee8d3e272e31c9195299efc500'),
-                        ('To', '<sip:example.com:5061>'),
-                        ('Call-ID', '0ee8d3e272e31c9195299efc500'),
-                        ('CSeq', '6711 INFO'),
-                        ('Max-Forwards', 70),  # note the integer value.
-                        ('Via', 'SIP/2.0/TLS 200.25.3.150;branch=z9hG4bK0ee8d3e272e31ca195299efc500'),
-                        ('User-Agent', 'Example User Agent'),
-                        ('Contact', '<sip:invalid@200.25.3.150:5061;transport=tls>'),
-                        ('Route', '<sip:200.30.10.12:5061;transport=tls;lr>'),
-                        ('Expires', 0),
-                        ('Accept', 'application/sdp,application/isup,application/dtmf,application/dtmf-relay,multipart/mixed'),
-                        ('Accept-Encoding', 'x-nortel-short'),
-                        ('Accept-Language', 'en-us,fr-fr'),
-                        ('Allow', ' ACK,BYE,CANCEL,INFO,INVITE,OPTIONS,REGISTER,SUBSCRIBE,UPDATE'),
-                        ('Authorization', 'Digest username="3122221000",realm="SomeRealm",nonce="1111790769596",uri="sip:3122211004@example.com",response="9bf77d8238664fe08dafd4d2abb6f1cb",algorithm=MD5'),
-                        ('Call-Info', '<https://lsc14pa.example.com:443/pa/direct/pictureServlet?user=3126805100@example.com>;Purpose=icon'),
-                        ('Content-Disposition', 'session;handling=required'),
-                        ('Content-Type', 'application/sdp'),
-                        ('Date', 'Sat, 01 Feb 2014 22:07:34 GMT'),
-                        ('Record-Route', '<sip:200.25.3.230:5061;transport=tls;lr>'),
-                        ('Require', 'sdp-anat'),
-                        ('Retry-After', '30'),
-                        ('Server', 'Blargomatic 2.0'),
-                        ('Session-Expires', '1200;refresher=uac'),
-                        ('Supported', '100rel,histinfo,join,replaces,sdp-anat,timer'),
-                        ('Timestamp', '1392061773'),
-                        ('WWW-Authenticate', 'Digest algorithm=MD5,nonce="1111790769596",realm="SomeRealm"'),
-                        ('Warning', '370 200.21.3.10 "Insufficient Bandwidth"'),
-                        ('X-RTP-Stat', ' PR=0;ER=0;PL=0;RB=0/0;DE=PCMU;EN=PCMU;JI=0;DL=0,0;IP=10.1.0.33:16384,132.52.127.200:20048'),
-                        ('x-channel', ' ds/ds1-3/12;IP=132.52.127.16'),
-                        ('Referred-By', '<sip:6006665100@example.com;user=phone> ; CorrelationID="0508817f84e7ce64745ef9753e2fbff4664321a4@200.23.3.240"'),
-                        ('Refer-To', '<sip:6006665499;rfrid=28661859@example.com;user=phone?x-nt-resource-priority=YNBvf.2j00qao>'),
-                        ('Content-Length', {"value": 11})]  # This last one actually instantiates a ContentLengthSIPHeaderField.
-        request = INFOSIPRequest.newForAttributes(sipMethod='INFO', requestURI='sip:example.com', content='Foo Content', header=SIPHeader.newForAttributes(headerFields=headerFields))
-        self.runAssertionsForRequest(request)
+        self.run_test_rendering_from_list_of_field_names_and_values()
 
     def test_rendering_from_list_of_field_names_and_values_using_property_dict(self):
-        headerFields = [('From', '<sip:200.25.3.150:5061>;tag=0ee8d3e272e31c9195299efc500'),
-                        ('To', '<sip:example.com:5061>'),
-                        ('Call-ID', '0ee8d3e272e31c9195299efc500'),
-                        ('CSeq', '6711 INFO'),
-                        ('Max-Forwards', 70),  # note the integer value.
-                        ('Via', 'SIP/2.0/TLS 200.25.3.150;branch=z9hG4bK0ee8d3e272e31ca195299efc500'),
-                        ('User-Agent', 'Example User Agent'),
-                        ('Contact', '<sip:invalid@200.25.3.150:5061;transport=tls>'),
-                        ('Route', '<sip:200.30.10.12:5061;transport=tls;lr>'),
-                        ('Expires', 0),
-                        ('Accept', 'application/sdp,application/isup,application/dtmf,application/dtmf-relay,multipart/mixed'),
-                        ('Accept-Encoding', 'x-nortel-short'),
-                        ('Accept-Language', 'en-us,fr-fr'),
-                        ('Allow', ' ACK,BYE,CANCEL,INFO,INVITE,OPTIONS,REGISTER,SUBSCRIBE,UPDATE'),
-                        ('Authorization', 'Digest username="3122221000",realm="SomeRealm",nonce="1111790769596",uri="sip:3122211004@example.com",response="9bf77d8238664fe08dafd4d2abb6f1cb",algorithm=MD5'),
-                        ('Call-Info', '<https://lsc14pa.example.com:443/pa/direct/pictureServlet?user=3126805100@example.com>;Purpose=icon'),
-                        ('Content-Disposition', 'session;handling=required'),
-                        ('Content-Type', 'application/sdp'),
-                        ('Date', 'Sat, 01 Feb 2014 22:07:34 GMT'),
-                        ('Record-Route', '<sip:200.25.3.230:5061;transport=tls;lr>'),
-                        ('Require', 'sdp-anat'),
-                        ('Retry-After', '30'),
-                        ('Server', 'Blargomatic 2.0'),
-                        ('Session-Expires', '1200;refresher=uac'),
-                        ('Supported', '100rel,histinfo,join,replaces,sdp-anat,timer'),
-                        ('Timestamp', '1392061773'),
-                        ('WWW-Authenticate', 'Digest algorithm=MD5,nonce="1111790769596",realm="SomeRealm"'),
-                        ('Warning', '370 200.21.3.10 "Insufficient Bandwidth"'),
-                        ('X-RTP-Stat', ' PR=0;ER=0;PL=0;RB=0/0;DE=PCMU;EN=PCMU;JI=0;DL=0,0;IP=10.1.0.33:16384,132.52.127.200:20048'),
-                        ('x-channel', ' ds/ds1-3/12;IP=132.52.127.16'),
-                        ('Referred-By', '<sip:6006665100@example.com;user=phone> ; CorrelationID="0508817f84e7ce64745ef9753e2fbff4664321a4@200.23.3.240"'),
-                        ('Refer-To', '<sip:6006665499;rfrid=28661859@example.com;user=phone?x-nt-resource-priority=YNBvf.2j00qao>'),
-                        ('Content-Length', {"value": 11})]  # This last one actually instantiates a ContentLengthSIPHeaderField.
-        request = INFOSIPRequest.newForAttributes(sipMethod='INFO', requestURI='sip:example.com', content='Foo Content', header=SIPHeader.newForAttributes(headerFields=headerFields))
-        self.runAssertionsForRequest(request)
+        self.run_test_rendering_from_list_of_field_names_and_values_using_property_dict()
 
-    def runAssertionsForRequest(self, aSIPRequest):
-        self.assertEqual(aSIPRequest.rawString, self.canonicalStrings[0])
+    def runAssertionsForSIPMessage(self, aSIPRequest):
+        super(TestINFOSIPRequest, self).runAssertionsForSIPMessage(aSIPRequest)
         self.assertTrue(aSIPRequest.isKnown)
         self.assertFalse(aSIPRequest.isUnknown)
-        self.assertTrue(aSIPRequest.isValid)
-        self.assertTrue(aSIPRequest.isRequest)
-        self.assertFalse(aSIPRequest.isResponse)
         self.assertFalse(aSIPRequest.isACKRequest)
         self.assertFalse(aSIPRequest.isBYERequest)
         self.assertFalse(aSIPRequest.isCANCELRequest)
@@ -1641,263 +278,39 @@ class TestINFOSIPRequest(TestCase):
         self.assertFalse(aSIPRequest.isREGISTERRequest)
         self.assertFalse(aSIPRequest.isSUBSCRIBERequest)
         self.assertFalse(aSIPRequest.isUPDATERequest)
-        self.assertFalse(aSIPRequest.isMalformed)
-        # self.assertEqual(1, [headerField for headerField in aSIPRequest.header.headerFields if headerField.isContentLength].__len__())
-        # self.assertEqual(11, next(headerField for headerField in aSIPRequest.header.headerFields if headerField.isContentLength).value)
-        # self.assertEqual(10, [headerField for headerField in aSIPRequest.header.headerFields if headerField.isUnknown].__len__())
-        self.assertIsNotNone(aSIPRequest.header.contentLengthHeaderField)
-        self.assertEqual(11, aSIPRequest.header.contentLength)
-        self.assertEqual(1, aSIPRequest.header.viaHeaderFields.__len__())
-        self.assertEqual(1, aSIPRequest.header.vias.__len__())
-        self.assertEqual('SIP/2.0/TLS 200.25.3.150;branch=z9hG4bK0ee8d3e272e31ca195299efc500', aSIPRequest.header.vias[0])
-        self.assertEqual(4, aSIPRequest.header.unknownHeaderFields.__len__())
-        self.assertTrue(aSIPRequest.startLine.isRequest)
-        self.assertFalse(aSIPRequest.startLine.isResponse)
-        self.assertEqual('Foo Content', aSIPRequest.content)
-        self.assertEqual('INFO', aSIPRequest.startLine.sipMethod)
-        self.assertEqual('sip:example.com', aSIPRequest.startLine.requestURI)
 
 
-class TestINVITESIPRequest(TestCase):
+class TestINVITESIPRequest(AbstractSIPRequestTestCase):
     @property
-    def canonicalStrings(self):
-        return [
-            ('INVITE sip:example.com SIP/2.0\r\n'
-             'From: <sip:200.25.3.150:5061>;tag=0ee8d3e272e31c9195299efc500\r\n'
-             'To: <sip:example.com:5061>\r\n'
-             'Call-ID: 0ee8d3e272e31c9195299efc500\r\n'
-             'CSeq: 6711 INVITE\r\n'
-             'Max-Forwards: 70\r\n'
-             'Via: SIP/2.0/TLS 200.25.3.150;branch=z9hG4bK0ee8d3e272e31ca195299efc500\r\n'
-             'User-Agent: Example User Agent\r\n'
-             'Contact: <sip:invalid@200.25.3.150:5061;transport=tls>\r\n'
-             'Route: <sip:200.30.10.12:5061;transport=tls;lr>\r\n'
-             'Expires: 0\r\n'
-             'Accept: application/sdp,application/isup,application/dtmf,application/dtmf-relay,multipart/mixed\r\n'
-             'Accept-Encoding: x-nortel-short\r\n'
-             'Accept-Language: en-us,fr-fr\r\n'
-             'Allow:  ACK,BYE,CANCEL,INFO,INVITE,OPTIONS,REGISTER,SUBSCRIBE,UPDATE\r\n'
-             'Authorization: Digest username="3122221000",realm="SomeRealm",nonce="1111790769596",uri="sip:3122211004@example.com",response="9bf77d8238664fe08dafd4d2abb6f1cb",algorithm=MD5\r\n'
-             'Call-Info: <https://lsc14pa.example.com:443/pa/direct/pictureServlet?user=3126805100@example.com>;Purpose=icon\r\n'
-             'Content-Disposition: session;handling=required\r\n'
-             'Content-Type: application/sdp\r\n'
-             'Date: Sat, 01 Feb 2014 22:07:34 GMT\r\n'
-             'Record-Route: <sip:200.25.3.230:5061;transport=tls;lr>\r\n'
-             'Require: sdp-anat\r\n'
-             'Retry-After: 30\r\n'
-             'Server: Blargomatic 2.0\r\n'
-             'Session-Expires: 1200;refresher=uac\r\n'
-             'Supported: 100rel,histinfo,join,replaces,sdp-anat,timer\r\n'
-             'Timestamp: 1392061773\r\n'
-             'WWW-Authenticate: Digest algorithm=MD5,nonce="1111790769596",realm="SomeRealm"\r\n'
-             'Warning: 370 200.21.3.10 "Insufficient Bandwidth"\r\n'
-             'X-RTP-Stat:  PR=0;ER=0;PL=0;RB=0/0;DE=PCMU;EN=PCMU;JI=0;DL=0,0;IP=10.1.0.33:16384,132.52.127.200:20048\r\n'
-             'x-channel:  ds/ds1-3/12;IP=132.52.127.16\r\n'
-             'Referred-By: <sip:6006665100@example.com;user=phone> ; CorrelationID="0508817f84e7ce64745ef9753e2fbff4664321a4@200.23.3.240"\r\n'
-             'Refer-To: <sip:6006665499;rfrid=28661859@example.com;user=phone?x-nt-resource-priority=YNBvf.2j00qao>\r\n'
-             'Content-Length: 11\r\n'
-             '\r\n'
-             'Foo Content')
-        ]
+    def sipMethodString(self):
+        return "INVITE"
+
+    @property
+    def sipMessageClassUnderTest(self):
+        return INVITESIPRequest
 
     def test_parsing(self):
-        for messageString in self.canonicalStrings:
-            request = INVITESIPRequest.newParsedFrom(messageString)
-            self.runAssertionsForRequest(request)
+        self.run_test_parsing()
 
     def test_rendering_from_list_of_header_fields(self):
-        headerFields = [
-            FromSIPHeaderField.newForAttributes(fieldValue='<sip:200.25.3.150:5061>;tag=0ee8d3e272e31c9195299efc500'),
-            ToSIPHeaderField.newForAttributes(fieldValue='<sip:example.com:5061>'),
-            CallIDSIPHeaderField.newForAttributes(fieldValue='0ee8d3e272e31c9195299efc500'),
-            CSeqSIPHeaderField.newForAttributes(fieldValue='6711 INVITE'),
-            MaxForwardsSIPHeaderField.newForAttributes(fieldValue='70'),
-            ViaSIPHeaderField.newForAttributes(fieldValue='SIP/2.0/TLS 200.25.3.150;branch=z9hG4bK0ee8d3e272e31ca195299efc500'),
-            UserAgentSIPHeaderField.newForAttributes(fieldValue='Example User Agent'),
-            ContactSIPHeaderField.newForAttributes(fieldValue='<sip:invalid@200.25.3.150:5061;transport=tls>'),
-            RouteSIPHeaderField.newForAttributes(fieldValue='<sip:200.30.10.12:5061;transport=tls;lr>'),
-            ExpiresSIPHeaderField.newForAttributes(fieldValue='0'),
-            AcceptSIPHeaderField.newForAttributes(fieldValue='application/sdp,application/isup,application/dtmf,application/dtmf-relay,multipart/mixed'),
-            AcceptEncodingSIPHeaderField.newForAttributes(fieldValue='x-nortel-short'),
-            AcceptLanguageSIPHeaderField.newForAttributes(fieldValue='en-us,fr-fr'),
-            AllowSIPHeaderField.newForAttributes(fieldValue=' ACK,BYE,CANCEL,INFO,INVITE,OPTIONS,REGISTER,SUBSCRIBE,UPDATE'),
-            AuthorizationSIPHeaderField.newForAttributes(fieldValue='Digest username="3122221000",realm="SomeRealm",nonce="1111790769596",uri="sip:3122211004@example.com",response="9bf77d8238664fe08dafd4d2abb6f1cb",algorithm=MD5'),
-            CallInfoSIPHeaderField.newForAttributes(fieldValue='<https://lsc14pa.example.com:443/pa/direct/pictureServlet?user=3126805100@example.com>;Purpose=icon'),
-            ContentDispositionSIPHeaderField.newForAttributes(fieldValue='session;handling=required'),
-            ContentTypeSIPHeaderField.newForAttributes(fieldValue='application/sdp'),
-            DateSIPHeaderField.newForAttributes(fieldValue='Sat, 01 Feb 2014 22:07:34 GMT'),
-            RecordRouteSIPHeaderField.newForAttributes(fieldValue='<sip:200.25.3.230:5061;transport=tls;lr>'),
-            RequireSIPHeaderField.newForAttributes(fieldValue='sdp-anat'),
-            RetryAfterSIPHeaderField.newForAttributes(fieldValue='30'),
-            ServerSIPHeaderField.newForAttributes(fieldValue='Blargomatic 2.0'),
-            SessionExpiresSIPHeaderField.newForAttributes(fieldValue='1200;refresher=uac'),
-            SupportedSIPHeaderField.newForAttributes(fieldValue='100rel,histinfo,join,replaces,sdp-anat,timer'),
-            TimestampSIPHeaderField.newForAttributes(fieldValue='1392061773'),
-            WWWAuthenticateSIPHeaderField.newForAttributes(fieldValue='Digest algorithm=MD5,nonce="1111790769596",realm="SomeRealm"'),
-            WarningSIPHeaderField.newForAttributes(fieldValue='370 200.21.3.10 "Insufficient Bandwidth"'),
-            UnknownSIPHeaderField.newForAttributes(fieldName='X-RTP-Stat', fieldValue=' PR=0;ER=0;PL=0;RB=0/0;DE=PCMU;EN=PCMU;JI=0;DL=0,0;IP=10.1.0.33:16384,132.52.127.200:20048'),
-            UnknownSIPHeaderField.newForAttributes(fieldName='x-channel', fieldValue=' ds/ds1-3/12;IP=132.52.127.16'),
-            UnknownSIPHeaderField.newForAttributes(fieldName='Referred-By', fieldValue='<sip:6006665100@example.com;user=phone> ; CorrelationID="0508817f84e7ce64745ef9753e2fbff4664321a4@200.23.3.240"'),
-            UnknownSIPHeaderField.newForAttributes(fieldName='Refer-To', fieldValue='<sip:6006665499;rfrid=28661859@example.com;user=phone?x-nt-resource-priority=YNBvf.2j00qao>'),
-            ContentLengthSIPHeaderField.newForAttributes(value=11)]
-        request = INVITESIPRequest.newForAttributes(sipMethod='INVITE', requestURI='sip:example.com', content='Foo Content', header=SIPHeader.newForAttributes(headerFields=headerFields))
-        self.runAssertionsForRequest(request)
+        self.run_test_rendering_from_list_of_header_fields()
 
     def test_rendering_from_one_big_header_string(self):
-        headerFields = ('From: <sip:200.25.3.150:5061>;tag=0ee8d3e272e31c9195299efc500\r\n'
-                        'To: <sip:example.com:5061>\r\n'
-                        'Call-ID: 0ee8d3e272e31c9195299efc500\r\n'
-                        'CSeq: 6711 INVITE\r\n'
-                        'Max-Forwards: 70\r\n'
-                        'Via: SIP/2.0/TLS 200.25.3.150;branch=z9hG4bK0ee8d3e272e31ca195299efc500\r\n'
-                        'User-Agent: Example User Agent\r\n'
-                        'Contact: <sip:invalid@200.25.3.150:5061;transport=tls>\r\n'
-                        'Route: <sip:200.30.10.12:5061;transport=tls;lr>\r\n'
-                        'Expires: 0\r\n'
-                        'Accept: application/sdp,application/isup,application/dtmf,application/dtmf-relay,multipart/mixed\r\n'
-                        'Accept-Encoding: x-nortel-short\r\n'
-                        'Accept-Language: en-us,fr-fr\r\n'
-                        'Allow:  ACK,BYE,CANCEL,INFO,INVITE,OPTIONS,REGISTER,SUBSCRIBE,UPDATE\r\n'
-                        'Authorization: Digest username="3122221000",realm="SomeRealm",nonce="1111790769596",uri="sip:3122211004@example.com",response="9bf77d8238664fe08dafd4d2abb6f1cb",algorithm=MD5\r\n'
-                        'Call-Info: <https://lsc14pa.example.com:443/pa/direct/pictureServlet?user=3126805100@example.com>;Purpose=icon\r\n'
-                        'Content-Disposition: session;handling=required\r\n'
-                        'Content-Type: application/sdp\r\n'
-                        'Date: Sat, 01 Feb 2014 22:07:34 GMT\r\n'
-                        'Record-Route: <sip:200.25.3.230:5061;transport=tls;lr>\r\n'
-                        'Require: sdp-anat\r\n'
-                        'Retry-After: 30\r\n'
-                        'Server: Blargomatic 2.0\r\n'
-                        'Session-Expires: 1200;refresher=uac\r\n'
-                        'Supported: 100rel,histinfo,join,replaces,sdp-anat,timer\r\n'
-                        'Timestamp: 1392061773\r\n'
-                        'WWW-Authenticate: Digest algorithm=MD5,nonce="1111790769596",realm="SomeRealm"\r\n'
-                        'Warning: 370 200.21.3.10 "Insufficient Bandwidth"\r\n'
-                        'X-RTP-Stat:  PR=0;ER=0;PL=0;RB=0/0;DE=PCMU;EN=PCMU;JI=0;DL=0,0;IP=10.1.0.33:16384,132.52.127.200:20048\r\n'
-                        'x-channel:  ds/ds1-3/12;IP=132.52.127.16\r\n'
-                        'Referred-By: <sip:6006665100@example.com;user=phone> ; CorrelationID="0508817f84e7ce64745ef9753e2fbff4664321a4@200.23.3.240"\r\n'
-                        'Refer-To: <sip:6006665499;rfrid=28661859@example.com;user=phone?x-nt-resource-priority=YNBvf.2j00qao>\r\n'
-                        'Content-Length: 11')  # This last one actually instantiates a ContentLengthSIPHeaderField.
-        request = INVITESIPRequest.newForAttributes(sipMethod='INVITE', requestURI='sip:example.com', content='Foo Content', header=SIPHeader.newForAttributes(headerFields=headerFields))
-        self.runAssertionsForRequest(request)
+        self.run_test_rendering_from_one_big_header_string()
 
     def test_rendering_from_list_of_header_field_strings(self):
-        headerFields = ['From: <sip:200.25.3.150:5061>;tag=0ee8d3e272e31c9195299efc500',
-                        'To: <sip:example.com:5061>',
-                        'Call-ID: 0ee8d3e272e31c9195299efc500',
-                        'CSeq: 6711 INVITE',
-                        'Max-Forwards: 70',
-                        'Via: SIP/2.0/TLS 200.25.3.150;branch=z9hG4bK0ee8d3e272e31ca195299efc500',
-                        'User-Agent: Example User Agent',
-                        'Contact: <sip:invalid@200.25.3.150:5061;transport=tls>',
-                        'Route: <sip:200.30.10.12:5061;transport=tls;lr>',
-                        'Expires: 0',
-                        'Accept: application/sdp,application/isup,application/dtmf,application/dtmf-relay,multipart/mixed',
-                        'Accept-Encoding: x-nortel-short',
-                        'Accept-Language: en-us,fr-fr',
-                        'Allow:  ACK,BYE,CANCEL,INFO,INVITE,OPTIONS,REGISTER,SUBSCRIBE,UPDATE',
-                        'Authorization: Digest username="3122221000",realm="SomeRealm",nonce="1111790769596",uri="sip:3122211004@example.com",response="9bf77d8238664fe08dafd4d2abb6f1cb",algorithm=MD5',
-                        'Call-Info: <https://lsc14pa.example.com:443/pa/direct/pictureServlet?user=3126805100@example.com>;Purpose=icon',
-                        'Content-Disposition: session;handling=required',
-                        'Content-Type: application/sdp',
-                        'Date: Sat, 01 Feb 2014 22:07:34 GMT',
-                        'Record-Route: <sip:200.25.3.230:5061;transport=tls;lr>',
-                        'Require: sdp-anat',
-                        'Retry-After: 30',
-                        'Server: Blargomatic 2.0',
-                        'Session-Expires: 1200;refresher=uac',
-                        'Supported: 100rel,histinfo,join,replaces,sdp-anat,timer',
-                        'Timestamp: 1392061773',
-                        'WWW-Authenticate: Digest algorithm=MD5,nonce="1111790769596",realm="SomeRealm"',
-                        'Warning: 370 200.21.3.10 "Insufficient Bandwidth"',
-                        'X-RTP-Stat:  PR=0;ER=0;PL=0;RB=0/0;DE=PCMU;EN=PCMU;JI=0;DL=0,0;IP=10.1.0.33:16384,132.52.127.200:20048',
-                        'x-channel:  ds/ds1-3/12;IP=132.52.127.16',
-                        'Referred-By: <sip:6006665100@example.com;user=phone> ; CorrelationID="0508817f84e7ce64745ef9753e2fbff4664321a4@200.23.3.240"',
-                        'Refer-To: <sip:6006665499;rfrid=28661859@example.com;user=phone?x-nt-resource-priority=YNBvf.2j00qao>',
-                        'Content-Length: 11']  # This last one actually instantiates a ContentLengthSIPHeaderField.
-        request = INVITESIPRequest.newForAttributes(sipMethod='INVITE', requestURI='sip:example.com', content='Foo Content', header=SIPHeader.newForAttributes(headerFields=headerFields))
-        self.runAssertionsForRequest(request)
+        self.run_test_rendering_from_list_of_header_field_strings()
 
     def test_rendering_from_list_of_field_names_and_values(self):
-        headerFields = [('From', '<sip:200.25.3.150:5061>;tag=0ee8d3e272e31c9195299efc500'),
-                        ('To', '<sip:example.com:5061>'),
-                        ('Call-ID', '0ee8d3e272e31c9195299efc500'),
-                        ('CSeq', '6711 INVITE'),
-                        ('Max-Forwards', 70),  # note the integer value.
-                        ('Via', 'SIP/2.0/TLS 200.25.3.150;branch=z9hG4bK0ee8d3e272e31ca195299efc500'),
-                        ('User-Agent', 'Example User Agent'),
-                        ('Contact', '<sip:invalid@200.25.3.150:5061;transport=tls>'),
-                        ('Route', '<sip:200.30.10.12:5061;transport=tls;lr>'),
-                        ('Expires', 0),
-                        ('Accept', 'application/sdp,application/isup,application/dtmf,application/dtmf-relay,multipart/mixed'),
-                        ('Accept-Encoding', 'x-nortel-short'),
-                        ('Accept-Language', 'en-us,fr-fr'),
-                        ('Allow', ' ACK,BYE,CANCEL,INFO,INVITE,OPTIONS,REGISTER,SUBSCRIBE,UPDATE'),
-                        ('Authorization', 'Digest username="3122221000",realm="SomeRealm",nonce="1111790769596",uri="sip:3122211004@example.com",response="9bf77d8238664fe08dafd4d2abb6f1cb",algorithm=MD5'),
-                        ('Call-Info', '<https://lsc14pa.example.com:443/pa/direct/pictureServlet?user=3126805100@example.com>;Purpose=icon'),
-                        ('Content-Disposition', 'session;handling=required'),
-                        ('Content-Type', 'application/sdp'),
-                        ('Date', 'Sat, 01 Feb 2014 22:07:34 GMT'),
-                        ('Record-Route', '<sip:200.25.3.230:5061;transport=tls;lr>'),
-                        ('Require', 'sdp-anat'),
-                        ('Retry-After', '30'),
-                        ('Server', 'Blargomatic 2.0'),
-                        ('Session-Expires', '1200;refresher=uac'),
-                        ('Supported', '100rel,histinfo,join,replaces,sdp-anat,timer'),
-                        ('Timestamp', '1392061773'),
-                        ('WWW-Authenticate', 'Digest algorithm=MD5,nonce="1111790769596",realm="SomeRealm"'),
-                        ('Warning', '370 200.21.3.10 "Insufficient Bandwidth"'),
-                        ('X-RTP-Stat', ' PR=0;ER=0;PL=0;RB=0/0;DE=PCMU;EN=PCMU;JI=0;DL=0,0;IP=10.1.0.33:16384,132.52.127.200:20048'),
-                        ('x-channel', ' ds/ds1-3/12;IP=132.52.127.16'),
-                        ('Referred-By', '<sip:6006665100@example.com;user=phone> ; CorrelationID="0508817f84e7ce64745ef9753e2fbff4664321a4@200.23.3.240"'),
-                        ('Refer-To', '<sip:6006665499;rfrid=28661859@example.com;user=phone?x-nt-resource-priority=YNBvf.2j00qao>'),
-                        ('Content-Length', {"value": 11})]  # This last one actually instantiates a ContentLengthSIPHeaderField.
-        request = INVITESIPRequest.newForAttributes(sipMethod='INVITE', requestURI='sip:example.com', content='Foo Content', header=SIPHeader.newForAttributes(headerFields=headerFields))
-        self.runAssertionsForRequest(request)
+        self.run_test_rendering_from_list_of_field_names_and_values()
 
     def test_rendering_from_list_of_field_names_and_values_using_property_dict(self):
-        headerFields = [('From', '<sip:200.25.3.150:5061>;tag=0ee8d3e272e31c9195299efc500'),
-                        ('To', '<sip:example.com:5061>'),
-                        ('Call-ID', '0ee8d3e272e31c9195299efc500'),
-                        ('CSeq', '6711 INVITE'),
-                        ('Max-Forwards', 70),  # note the integer value.
-                        ('Via', 'SIP/2.0/TLS 200.25.3.150;branch=z9hG4bK0ee8d3e272e31ca195299efc500'),
-                        ('User-Agent', 'Example User Agent'),
-                        ('Contact', '<sip:invalid@200.25.3.150:5061;transport=tls>'),
-                        ('Route', '<sip:200.30.10.12:5061;transport=tls;lr>'),
-                        ('Expires', 0),
-                        ('Accept', 'application/sdp,application/isup,application/dtmf,application/dtmf-relay,multipart/mixed'),
-                        ('Accept-Encoding', 'x-nortel-short'),
-                        ('Accept-Language', 'en-us,fr-fr'),
-                        ('Allow', ' ACK,BYE,CANCEL,INFO,INVITE,OPTIONS,REGISTER,SUBSCRIBE,UPDATE'),
-                        ('Authorization', 'Digest username="3122221000",realm="SomeRealm",nonce="1111790769596",uri="sip:3122211004@example.com",response="9bf77d8238664fe08dafd4d2abb6f1cb",algorithm=MD5'),
-                        ('Call-Info', '<https://lsc14pa.example.com:443/pa/direct/pictureServlet?user=3126805100@example.com>;Purpose=icon'),
-                        ('Content-Disposition', 'session;handling=required'),
-                        ('Content-Type', 'application/sdp'),
-                        ('Date', 'Sat, 01 Feb 2014 22:07:34 GMT'),
-                        ('Record-Route', '<sip:200.25.3.230:5061;transport=tls;lr>'),
-                        ('Require', 'sdp-anat'),
-                        ('Retry-After', '30'),
-                        ('Server', 'Blargomatic 2.0'),
-                        ('Session-Expires', '1200;refresher=uac'),
-                        ('Supported', '100rel,histinfo,join,replaces,sdp-anat,timer'),
-                        ('Timestamp', '1392061773'),
-                        ('WWW-Authenticate', 'Digest algorithm=MD5,nonce="1111790769596",realm="SomeRealm"'),
-                        ('Warning', '370 200.21.3.10 "Insufficient Bandwidth"'),
-                        ('X-RTP-Stat', ' PR=0;ER=0;PL=0;RB=0/0;DE=PCMU;EN=PCMU;JI=0;DL=0,0;IP=10.1.0.33:16384,132.52.127.200:20048'),
-                        ('x-channel', ' ds/ds1-3/12;IP=132.52.127.16'),
-                        ('Referred-By', '<sip:6006665100@example.com;user=phone> ; CorrelationID="0508817f84e7ce64745ef9753e2fbff4664321a4@200.23.3.240"'),
-                        ('Refer-To', '<sip:6006665499;rfrid=28661859@example.com;user=phone?x-nt-resource-priority=YNBvf.2j00qao>'),
-                        ('Content-Length', {"value": 11})]  # This last one actually instantiates a ContentLengthSIPHeaderField.
-        request = INVITESIPRequest.newForAttributes(sipMethod='INVITE', requestURI='sip:example.com', content='Foo Content', header=SIPHeader.newForAttributes(headerFields=headerFields))
-        self.runAssertionsForRequest(request)
+        self.run_test_rendering_from_list_of_field_names_and_values_using_property_dict()
 
-    def runAssertionsForRequest(self, aSIPRequest):
-        self.assertEqual(aSIPRequest.rawString, self.canonicalStrings[0])
+    def runAssertionsForSIPMessage(self, aSIPRequest):
+        super(TestINVITESIPRequest, self).runAssertionsForSIPMessage(aSIPRequest)
         self.assertTrue(aSIPRequest.isKnown)
         self.assertFalse(aSIPRequest.isUnknown)
-        self.assertTrue(aSIPRequest.isValid)
-        self.assertTrue(aSIPRequest.isRequest)
-        self.assertFalse(aSIPRequest.isResponse)
         self.assertFalse(aSIPRequest.isACKRequest)
         self.assertFalse(aSIPRequest.isBYERequest)
         self.assertFalse(aSIPRequest.isCANCELRequest)
@@ -1909,263 +322,39 @@ class TestINVITESIPRequest(TestCase):
         self.assertFalse(aSIPRequest.isREGISTERRequest)
         self.assertFalse(aSIPRequest.isSUBSCRIBERequest)
         self.assertFalse(aSIPRequest.isUPDATERequest)
-        self.assertFalse(aSIPRequest.isMalformed)
-        # self.assertEqual(1, [headerField for headerField in aSIPRequest.header.headerFields if headerField.isContentLength].__len__())
-        # self.assertEqual(11, next(headerField for headerField in aSIPRequest.header.headerFields if headerField.isContentLength).value)
-        # self.assertEqual(10, [headerField for headerField in aSIPRequest.header.headerFields if headerField.isUnknown].__len__())
-        self.assertIsNotNone(aSIPRequest.header.contentLengthHeaderField)
-        self.assertEqual(11, aSIPRequest.header.contentLength)
-        self.assertEqual(1, aSIPRequest.header.viaHeaderFields.__len__())
-        self.assertEqual(1, aSIPRequest.header.vias.__len__())
-        self.assertEqual('SIP/2.0/TLS 200.25.3.150;branch=z9hG4bK0ee8d3e272e31ca195299efc500', aSIPRequest.header.vias[0])
-        self.assertEqual(4, aSIPRequest.header.unknownHeaderFields.__len__())
-        self.assertTrue(aSIPRequest.startLine.isRequest)
-        self.assertFalse(aSIPRequest.startLine.isResponse)
-        self.assertEqual('Foo Content', aSIPRequest.content)
-        self.assertEqual('INVITE', aSIPRequest.startLine.sipMethod)
-        self.assertEqual('sip:example.com', aSIPRequest.startLine.requestURI)
 
 
-class TestNOTIFYSIPRequest(TestCase):
+class TestNOTIFYSIPRequest(AbstractSIPRequestTestCase):
     @property
-    def canonicalStrings(self):
-        return [
-            ('NOTIFY sip:example.com SIP/2.0\r\n'
-             'From: <sip:200.25.3.150:5061>;tag=0ee8d3e272e31c9195299efc500\r\n'
-             'To: <sip:example.com:5061>\r\n'
-             'Call-ID: 0ee8d3e272e31c9195299efc500\r\n'
-             'CSeq: 6711 NOTIFY\r\n'
-             'Max-Forwards: 70\r\n'
-             'Via: SIP/2.0/TLS 200.25.3.150;branch=z9hG4bK0ee8d3e272e31ca195299efc500\r\n'
-             'User-Agent: Example User Agent\r\n'
-             'Contact: <sip:invalid@200.25.3.150:5061;transport=tls>\r\n'
-             'Route: <sip:200.30.10.12:5061;transport=tls;lr>\r\n'
-             'Expires: 0\r\n'
-             'Accept: application/sdp,application/isup,application/dtmf,application/dtmf-relay,multipart/mixed\r\n'
-             'Accept-Encoding: x-nortel-short\r\n'
-             'Accept-Language: en-us,fr-fr\r\n'
-             'Allow:  ACK,BYE,CANCEL,INFO,INVITE,OPTIONS,REGISTER,SUBSCRIBE,UPDATE\r\n'
-             'Authorization: Digest username="3122221000",realm="SomeRealm",nonce="1111790769596",uri="sip:3122211004@example.com",response="9bf77d8238664fe08dafd4d2abb6f1cb",algorithm=MD5\r\n'
-             'Call-Info: <https://lsc14pa.example.com:443/pa/direct/pictureServlet?user=3126805100@example.com>;Purpose=icon\r\n'
-             'Content-Disposition: session;handling=required\r\n'
-             'Content-Type: application/sdp\r\n'
-             'Date: Sat, 01 Feb 2014 22:07:34 GMT\r\n'
-             'Record-Route: <sip:200.25.3.230:5061;transport=tls;lr>\r\n'
-             'Require: sdp-anat\r\n'
-             'Retry-After: 30\r\n'
-             'Server: Blargomatic 2.0\r\n'
-             'Session-Expires: 1200;refresher=uac\r\n'
-             'Supported: 100rel,histinfo,join,replaces,sdp-anat,timer\r\n'
-             'Timestamp: 1392061773\r\n'
-             'WWW-Authenticate: Digest algorithm=MD5,nonce="1111790769596",realm="SomeRealm"\r\n'
-             'Warning: 370 200.21.3.10 "Insufficient Bandwidth"\r\n'
-             'X-RTP-Stat:  PR=0;ER=0;PL=0;RB=0/0;DE=PCMU;EN=PCMU;JI=0;DL=0,0;IP=10.1.0.33:16384,132.52.127.200:20048\r\n'
-             'x-channel:  ds/ds1-3/12;IP=132.52.127.16\r\n'
-             'Referred-By: <sip:6006665100@example.com;user=phone> ; CorrelationID="0508817f84e7ce64745ef9753e2fbff4664321a4@200.23.3.240"\r\n'
-             'Refer-To: <sip:6006665499;rfrid=28661859@example.com;user=phone?x-nt-resource-priority=YNBvf.2j00qao>\r\n'
-             'Content-Length: 11\r\n'
-             '\r\n'
-             'Foo Content')
-        ]
+    def sipMethodString(self):
+        return "NOTIFY"
+
+    @property
+    def sipMessageClassUnderTest(self):
+        return NOTIFYSIPRequest
 
     def test_parsing(self):
-        for messageString in self.canonicalStrings:
-            request = NOTIFYSIPRequest.newParsedFrom(messageString)
-            self.runAssertionsForRequest(request)
+        self.run_test_parsing()
 
     def test_rendering_from_list_of_header_fields(self):
-        headerFields = [
-            FromSIPHeaderField.newForAttributes(fieldValue='<sip:200.25.3.150:5061>;tag=0ee8d3e272e31c9195299efc500'),
-            ToSIPHeaderField.newForAttributes(fieldValue='<sip:example.com:5061>'),
-            CallIDSIPHeaderField.newForAttributes(fieldValue='0ee8d3e272e31c9195299efc500'),
-            CSeqSIPHeaderField.newForAttributes(fieldValue='6711 NOTIFY'),
-            MaxForwardsSIPHeaderField.newForAttributes(fieldValue='70'),
-            ViaSIPHeaderField.newForAttributes(fieldValue='SIP/2.0/TLS 200.25.3.150;branch=z9hG4bK0ee8d3e272e31ca195299efc500'),
-            UserAgentSIPHeaderField.newForAttributes(fieldValue='Example User Agent'),
-            ContactSIPHeaderField.newForAttributes(fieldValue='<sip:invalid@200.25.3.150:5061;transport=tls>'),
-            RouteSIPHeaderField.newForAttributes(fieldValue='<sip:200.30.10.12:5061;transport=tls;lr>'),
-            ExpiresSIPHeaderField.newForAttributes(fieldValue='0'),
-            AcceptSIPHeaderField.newForAttributes(fieldValue='application/sdp,application/isup,application/dtmf,application/dtmf-relay,multipart/mixed'),
-            AcceptEncodingSIPHeaderField.newForAttributes(fieldValue='x-nortel-short'),
-            AcceptLanguageSIPHeaderField.newForAttributes(fieldValue='en-us,fr-fr'),
-            AllowSIPHeaderField.newForAttributes(fieldValue=' ACK,BYE,CANCEL,INFO,INVITE,OPTIONS,REGISTER,SUBSCRIBE,UPDATE'),
-            AuthorizationSIPHeaderField.newForAttributes(fieldValue='Digest username="3122221000",realm="SomeRealm",nonce="1111790769596",uri="sip:3122211004@example.com",response="9bf77d8238664fe08dafd4d2abb6f1cb",algorithm=MD5'),
-            CallInfoSIPHeaderField.newForAttributes(fieldValue='<https://lsc14pa.example.com:443/pa/direct/pictureServlet?user=3126805100@example.com>;Purpose=icon'),
-            ContentDispositionSIPHeaderField.newForAttributes(fieldValue='session;handling=required'),
-            ContentTypeSIPHeaderField.newForAttributes(fieldValue='application/sdp'),
-            DateSIPHeaderField.newForAttributes(fieldValue='Sat, 01 Feb 2014 22:07:34 GMT'),
-            RecordRouteSIPHeaderField.newForAttributes(fieldValue='<sip:200.25.3.230:5061;transport=tls;lr>'),
-            RequireSIPHeaderField.newForAttributes(fieldValue='sdp-anat'),
-            RetryAfterSIPHeaderField.newForAttributes(fieldValue='30'),
-            ServerSIPHeaderField.newForAttributes(fieldValue='Blargomatic 2.0'),
-            SessionExpiresSIPHeaderField.newForAttributes(fieldValue='1200;refresher=uac'),
-            SupportedSIPHeaderField.newForAttributes(fieldValue='100rel,histinfo,join,replaces,sdp-anat,timer'),
-            TimestampSIPHeaderField.newForAttributes(fieldValue='1392061773'),
-            WWWAuthenticateSIPHeaderField.newForAttributes(fieldValue='Digest algorithm=MD5,nonce="1111790769596",realm="SomeRealm"'),
-            WarningSIPHeaderField.newForAttributes(fieldValue='370 200.21.3.10 "Insufficient Bandwidth"'),
-            UnknownSIPHeaderField.newForAttributes(fieldName='X-RTP-Stat', fieldValue=' PR=0;ER=0;PL=0;RB=0/0;DE=PCMU;EN=PCMU;JI=0;DL=0,0;IP=10.1.0.33:16384,132.52.127.200:20048'),
-            UnknownSIPHeaderField.newForAttributes(fieldName='x-channel', fieldValue=' ds/ds1-3/12;IP=132.52.127.16'),
-            UnknownSIPHeaderField.newForAttributes(fieldName='Referred-By', fieldValue='<sip:6006665100@example.com;user=phone> ; CorrelationID="0508817f84e7ce64745ef9753e2fbff4664321a4@200.23.3.240"'),
-            UnknownSIPHeaderField.newForAttributes(fieldName='Refer-To', fieldValue='<sip:6006665499;rfrid=28661859@example.com;user=phone?x-nt-resource-priority=YNBvf.2j00qao>'),
-            ContentLengthSIPHeaderField.newForAttributes(value=11)]
-        request = NOTIFYSIPRequest.newForAttributes(sipMethod='NOTIFY', requestURI='sip:example.com', content='Foo Content', header=SIPHeader.newForAttributes(headerFields=headerFields))
-        self.runAssertionsForRequest(request)
+        self.run_test_rendering_from_list_of_header_fields()
 
     def test_rendering_from_one_big_header_string(self):
-        headerFields = ('From: <sip:200.25.3.150:5061>;tag=0ee8d3e272e31c9195299efc500\r\n'
-                        'To: <sip:example.com:5061>\r\n'
-                        'Call-ID: 0ee8d3e272e31c9195299efc500\r\n'
-                        'CSeq: 6711 NOTIFY\r\n'
-                        'Max-Forwards: 70\r\n'
-                        'Via: SIP/2.0/TLS 200.25.3.150;branch=z9hG4bK0ee8d3e272e31ca195299efc500\r\n'
-                        'User-Agent: Example User Agent\r\n'
-                        'Contact: <sip:invalid@200.25.3.150:5061;transport=tls>\r\n'
-                        'Route: <sip:200.30.10.12:5061;transport=tls;lr>\r\n'
-                        'Expires: 0\r\n'
-                        'Accept: application/sdp,application/isup,application/dtmf,application/dtmf-relay,multipart/mixed\r\n'
-                        'Accept-Encoding: x-nortel-short\r\n'
-                        'Accept-Language: en-us,fr-fr\r\n'
-                        'Allow:  ACK,BYE,CANCEL,INFO,INVITE,OPTIONS,REGISTER,SUBSCRIBE,UPDATE\r\n'
-                        'Authorization: Digest username="3122221000",realm="SomeRealm",nonce="1111790769596",uri="sip:3122211004@example.com",response="9bf77d8238664fe08dafd4d2abb6f1cb",algorithm=MD5\r\n'
-                        'Call-Info: <https://lsc14pa.example.com:443/pa/direct/pictureServlet?user=3126805100@example.com>;Purpose=icon\r\n'
-                        'Content-Disposition: session;handling=required\r\n'
-                        'Content-Type: application/sdp\r\n'
-                        'Date: Sat, 01 Feb 2014 22:07:34 GMT\r\n'
-                        'Record-Route: <sip:200.25.3.230:5061;transport=tls;lr>\r\n'
-                        'Require: sdp-anat\r\n'
-                        'Retry-After: 30\r\n'
-                        'Server: Blargomatic 2.0\r\n'
-                        'Session-Expires: 1200;refresher=uac\r\n'
-                        'Supported: 100rel,histinfo,join,replaces,sdp-anat,timer\r\n'
-                        'Timestamp: 1392061773\r\n'
-                        'WWW-Authenticate: Digest algorithm=MD5,nonce="1111790769596",realm="SomeRealm"\r\n'
-                        'Warning: 370 200.21.3.10 "Insufficient Bandwidth"\r\n'
-                        'X-RTP-Stat:  PR=0;ER=0;PL=0;RB=0/0;DE=PCMU;EN=PCMU;JI=0;DL=0,0;IP=10.1.0.33:16384,132.52.127.200:20048\r\n'
-                        'x-channel:  ds/ds1-3/12;IP=132.52.127.16\r\n'
-                        'Referred-By: <sip:6006665100@example.com;user=phone> ; CorrelationID="0508817f84e7ce64745ef9753e2fbff4664321a4@200.23.3.240"\r\n'
-                        'Refer-To: <sip:6006665499;rfrid=28661859@example.com;user=phone?x-nt-resource-priority=YNBvf.2j00qao>\r\n'
-                        'Content-Length: 11')  # This last one actually instantiates a ContentLengthSIPHeaderField.
-        request = NOTIFYSIPRequest.newForAttributes(sipMethod='NOTIFY', requestURI='sip:example.com', content='Foo Content', header=SIPHeader.newForAttributes(headerFields=headerFields))
-        self.runAssertionsForRequest(request)
+        self.run_test_rendering_from_one_big_header_string()
 
     def test_rendering_from_list_of_header_field_strings(self):
-        headerFields = ['From: <sip:200.25.3.150:5061>;tag=0ee8d3e272e31c9195299efc500',
-                        'To: <sip:example.com:5061>',
-                        'Call-ID: 0ee8d3e272e31c9195299efc500',
-                        'CSeq: 6711 NOTIFY',
-                        'Max-Forwards: 70',
-                        'Via: SIP/2.0/TLS 200.25.3.150;branch=z9hG4bK0ee8d3e272e31ca195299efc500',
-                        'User-Agent: Example User Agent',
-                        'Contact: <sip:invalid@200.25.3.150:5061;transport=tls>',
-                        'Route: <sip:200.30.10.12:5061;transport=tls;lr>',
-                        'Expires: 0',
-                        'Accept: application/sdp,application/isup,application/dtmf,application/dtmf-relay,multipart/mixed',
-                        'Accept-Encoding: x-nortel-short',
-                        'Accept-Language: en-us,fr-fr',
-                        'Allow:  ACK,BYE,CANCEL,INFO,INVITE,OPTIONS,REGISTER,SUBSCRIBE,UPDATE',
-                        'Authorization: Digest username="3122221000",realm="SomeRealm",nonce="1111790769596",uri="sip:3122211004@example.com",response="9bf77d8238664fe08dafd4d2abb6f1cb",algorithm=MD5',
-                        'Call-Info: <https://lsc14pa.example.com:443/pa/direct/pictureServlet?user=3126805100@example.com>;Purpose=icon',
-                        'Content-Disposition: session;handling=required',
-                        'Content-Type: application/sdp',
-                        'Date: Sat, 01 Feb 2014 22:07:34 GMT',
-                        'Record-Route: <sip:200.25.3.230:5061;transport=tls;lr>',
-                        'Require: sdp-anat',
-                        'Retry-After: 30',
-                        'Server: Blargomatic 2.0',
-                        'Session-Expires: 1200;refresher=uac',
-                        'Supported: 100rel,histinfo,join,replaces,sdp-anat,timer',
-                        'Timestamp: 1392061773',
-                        'WWW-Authenticate: Digest algorithm=MD5,nonce="1111790769596",realm="SomeRealm"',
-                        'Warning: 370 200.21.3.10 "Insufficient Bandwidth"',
-                        'X-RTP-Stat:  PR=0;ER=0;PL=0;RB=0/0;DE=PCMU;EN=PCMU;JI=0;DL=0,0;IP=10.1.0.33:16384,132.52.127.200:20048',
-                        'x-channel:  ds/ds1-3/12;IP=132.52.127.16',
-                        'Referred-By: <sip:6006665100@example.com;user=phone> ; CorrelationID="0508817f84e7ce64745ef9753e2fbff4664321a4@200.23.3.240"',
-                        'Refer-To: <sip:6006665499;rfrid=28661859@example.com;user=phone?x-nt-resource-priority=YNBvf.2j00qao>',
-                        'Content-Length: 11']  # This last one actually instantiates a ContentLengthSIPHeaderField.
-        request = NOTIFYSIPRequest.newForAttributes(sipMethod='NOTIFY', requestURI='sip:example.com', content='Foo Content', header=SIPHeader.newForAttributes(headerFields=headerFields))
-        self.runAssertionsForRequest(request)
+        self.run_test_rendering_from_list_of_header_field_strings()
 
     def test_rendering_from_list_of_field_names_and_values(self):
-        headerFields = [('From', '<sip:200.25.3.150:5061>;tag=0ee8d3e272e31c9195299efc500'),
-                        ('To', '<sip:example.com:5061>'),
-                        ('Call-ID', '0ee8d3e272e31c9195299efc500'),
-                        ('CSeq', '6711 NOTIFY'),
-                        ('Max-Forwards', 70),  # note the integer value.
-                        ('Via', 'SIP/2.0/TLS 200.25.3.150;branch=z9hG4bK0ee8d3e272e31ca195299efc500'),
-                        ('User-Agent', 'Example User Agent'),
-                        ('Contact', '<sip:invalid@200.25.3.150:5061;transport=tls>'),
-                        ('Route', '<sip:200.30.10.12:5061;transport=tls;lr>'),
-                        ('Expires', 0),
-                        ('Accept', 'application/sdp,application/isup,application/dtmf,application/dtmf-relay,multipart/mixed'),
-                        ('Accept-Encoding', 'x-nortel-short'),
-                        ('Accept-Language', 'en-us,fr-fr'),
-                        ('Allow', ' ACK,BYE,CANCEL,INFO,INVITE,OPTIONS,REGISTER,SUBSCRIBE,UPDATE'),
-                        ('Authorization', 'Digest username="3122221000",realm="SomeRealm",nonce="1111790769596",uri="sip:3122211004@example.com",response="9bf77d8238664fe08dafd4d2abb6f1cb",algorithm=MD5'),
-                        ('Call-Info', '<https://lsc14pa.example.com:443/pa/direct/pictureServlet?user=3126805100@example.com>;Purpose=icon'),
-                        ('Content-Disposition', 'session;handling=required'),
-                        ('Content-Type', 'application/sdp'),
-                        ('Date', 'Sat, 01 Feb 2014 22:07:34 GMT'),
-                        ('Record-Route', '<sip:200.25.3.230:5061;transport=tls;lr>'),
-                        ('Require', 'sdp-anat'),
-                        ('Retry-After', '30'),
-                        ('Server', 'Blargomatic 2.0'),
-                        ('Session-Expires', '1200;refresher=uac'),
-                        ('Supported', '100rel,histinfo,join,replaces,sdp-anat,timer'),
-                        ('Timestamp', '1392061773'),
-                        ('WWW-Authenticate', 'Digest algorithm=MD5,nonce="1111790769596",realm="SomeRealm"'),
-                        ('Warning', '370 200.21.3.10 "Insufficient Bandwidth"'),
-                        ('X-RTP-Stat', ' PR=0;ER=0;PL=0;RB=0/0;DE=PCMU;EN=PCMU;JI=0;DL=0,0;IP=10.1.0.33:16384,132.52.127.200:20048'),
-                        ('x-channel', ' ds/ds1-3/12;IP=132.52.127.16'),
-                        ('Referred-By', '<sip:6006665100@example.com;user=phone> ; CorrelationID="0508817f84e7ce64745ef9753e2fbff4664321a4@200.23.3.240"'),
-                        ('Refer-To', '<sip:6006665499;rfrid=28661859@example.com;user=phone?x-nt-resource-priority=YNBvf.2j00qao>'),
-                        ('Content-Length', {"value": 11})]  # This last one actually instantiates a ContentLengthSIPHeaderField.
-        request = NOTIFYSIPRequest.newForAttributes(sipMethod='NOTIFY', requestURI='sip:example.com', content='Foo Content', header=SIPHeader.newForAttributes(headerFields=headerFields))
-        self.runAssertionsForRequest(request)
+        self.run_test_rendering_from_list_of_field_names_and_values()
 
     def test_rendering_from_list_of_field_names_and_values_using_property_dict(self):
-        headerFields = [('From', '<sip:200.25.3.150:5061>;tag=0ee8d3e272e31c9195299efc500'),
-                        ('To', '<sip:example.com:5061>'),
-                        ('Call-ID', '0ee8d3e272e31c9195299efc500'),
-                        ('CSeq', '6711 NOTIFY'),
-                        ('Max-Forwards', 70),  # note the integer value.
-                        ('Via', 'SIP/2.0/TLS 200.25.3.150;branch=z9hG4bK0ee8d3e272e31ca195299efc500'),
-                        ('User-Agent', 'Example User Agent'),
-                        ('Contact', '<sip:invalid@200.25.3.150:5061;transport=tls>'),
-                        ('Route', '<sip:200.30.10.12:5061;transport=tls;lr>'),
-                        ('Expires', 0),
-                        ('Accept', 'application/sdp,application/isup,application/dtmf,application/dtmf-relay,multipart/mixed'),
-                        ('Accept-Encoding', 'x-nortel-short'),
-                        ('Accept-Language', 'en-us,fr-fr'),
-                        ('Allow', ' ACK,BYE,CANCEL,INFO,INVITE,OPTIONS,REGISTER,SUBSCRIBE,UPDATE'),
-                        ('Authorization', 'Digest username="3122221000",realm="SomeRealm",nonce="1111790769596",uri="sip:3122211004@example.com",response="9bf77d8238664fe08dafd4d2abb6f1cb",algorithm=MD5'),
-                        ('Call-Info', '<https://lsc14pa.example.com:443/pa/direct/pictureServlet?user=3126805100@example.com>;Purpose=icon'),
-                        ('Content-Disposition', 'session;handling=required'),
-                        ('Content-Type', 'application/sdp'),
-                        ('Date', 'Sat, 01 Feb 2014 22:07:34 GMT'),
-                        ('Record-Route', '<sip:200.25.3.230:5061;transport=tls;lr>'),
-                        ('Require', 'sdp-anat'),
-                        ('Retry-After', '30'),
-                        ('Server', 'Blargomatic 2.0'),
-                        ('Session-Expires', '1200;refresher=uac'),
-                        ('Supported', '100rel,histinfo,join,replaces,sdp-anat,timer'),
-                        ('Timestamp', '1392061773'),
-                        ('WWW-Authenticate', 'Digest algorithm=MD5,nonce="1111790769596",realm="SomeRealm"'),
-                        ('Warning', '370 200.21.3.10 "Insufficient Bandwidth"'),
-                        ('X-RTP-Stat', ' PR=0;ER=0;PL=0;RB=0/0;DE=PCMU;EN=PCMU;JI=0;DL=0,0;IP=10.1.0.33:16384,132.52.127.200:20048'),
-                        ('x-channel', ' ds/ds1-3/12;IP=132.52.127.16'),
-                        ('Referred-By', '<sip:6006665100@example.com;user=phone> ; CorrelationID="0508817f84e7ce64745ef9753e2fbff4664321a4@200.23.3.240"'),
-                        ('Refer-To', '<sip:6006665499;rfrid=28661859@example.com;user=phone?x-nt-resource-priority=YNBvf.2j00qao>'),
-                        ('Content-Length', {"value": 11})]  # This last one actually instantiates a ContentLengthSIPHeaderField.
-        request = NOTIFYSIPRequest.newForAttributes(sipMethod='NOTIFY', requestURI='sip:example.com', content='Foo Content', header=SIPHeader.newForAttributes(headerFields=headerFields))
-        self.runAssertionsForRequest(request)
+        self.run_test_rendering_from_list_of_field_names_and_values_using_property_dict()
 
-    def runAssertionsForRequest(self, aSIPRequest):
-        self.assertEqual(aSIPRequest.rawString, self.canonicalStrings[0])
+    def runAssertionsForSIPMessage(self, aSIPRequest):
+        super(TestNOTIFYSIPRequest, self).runAssertionsForSIPMessage(aSIPRequest)
         self.assertTrue(aSIPRequest.isKnown)
         self.assertFalse(aSIPRequest.isUnknown)
-        self.assertTrue(aSIPRequest.isValid)
-        self.assertTrue(aSIPRequest.isRequest)
-        self.assertFalse(aSIPRequest.isResponse)
         self.assertFalse(aSIPRequest.isACKRequest)
         self.assertFalse(aSIPRequest.isBYERequest)
         self.assertFalse(aSIPRequest.isCANCELRequest)
@@ -2177,263 +366,39 @@ class TestNOTIFYSIPRequest(TestCase):
         self.assertFalse(aSIPRequest.isREGISTERRequest)
         self.assertFalse(aSIPRequest.isSUBSCRIBERequest)
         self.assertFalse(aSIPRequest.isUPDATERequest)
-        self.assertFalse(aSIPRequest.isMalformed)
-        # self.assertEqual(1, [headerField for headerField in aSIPRequest.header.headerFields if headerField.isContentLength].__len__())
-        # self.assertEqual(11, next(headerField for headerField in aSIPRequest.header.headerFields if headerField.isContentLength).value)
-        # self.assertEqual(10, [headerField for headerField in aSIPRequest.header.headerFields if headerField.isUnknown].__len__())
-        self.assertIsNotNone(aSIPRequest.header.contentLengthHeaderField)
-        self.assertEqual(11, aSIPRequest.header.contentLength)
-        self.assertEqual(1, aSIPRequest.header.viaHeaderFields.__len__())
-        self.assertEqual(1, aSIPRequest.header.vias.__len__())
-        self.assertEqual('SIP/2.0/TLS 200.25.3.150;branch=z9hG4bK0ee8d3e272e31ca195299efc500', aSIPRequest.header.vias[0])
-        self.assertEqual(4, aSIPRequest.header.unknownHeaderFields.__len__())
-        self.assertTrue(aSIPRequest.startLine.isRequest)
-        self.assertFalse(aSIPRequest.startLine.isResponse)
-        self.assertEqual('Foo Content', aSIPRequest.content)
-        self.assertEqual('NOTIFY', aSIPRequest.startLine.sipMethod)
-        self.assertEqual('sip:example.com', aSIPRequest.startLine.requestURI)
 
 
-class TestREFERSIPRequest(TestCase):
+class TestREFERSIPRequest(AbstractSIPRequestTestCase):
     @property
-    def canonicalStrings(self):
-        return [
-            ('REFER sip:example.com SIP/2.0\r\n'
-             'From: <sip:200.25.3.150:5061>;tag=0ee8d3e272e31c9195299efc500\r\n'
-             'To: <sip:example.com:5061>\r\n'
-             'Call-ID: 0ee8d3e272e31c9195299efc500\r\n'
-             'CSeq: 6711 REFER\r\n'
-             'Max-Forwards: 70\r\n'
-             'Via: SIP/2.0/TLS 200.25.3.150;branch=z9hG4bK0ee8d3e272e31ca195299efc500\r\n'
-             'User-Agent: Example User Agent\r\n'
-             'Contact: <sip:invalid@200.25.3.150:5061;transport=tls>\r\n'
-             'Route: <sip:200.30.10.12:5061;transport=tls;lr>\r\n'
-             'Expires: 0\r\n'
-             'Accept: application/sdp,application/isup,application/dtmf,application/dtmf-relay,multipart/mixed\r\n'
-             'Accept-Encoding: x-nortel-short\r\n'
-             'Accept-Language: en-us,fr-fr\r\n'
-             'Allow:  ACK,BYE,CANCEL,INFO,INVITE,OPTIONS,REGISTER,SUBSCRIBE,UPDATE\r\n'
-             'Authorization: Digest username="3122221000",realm="SomeRealm",nonce="1111790769596",uri="sip:3122211004@example.com",response="9bf77d8238664fe08dafd4d2abb6f1cb",algorithm=MD5\r\n'
-             'Call-Info: <https://lsc14pa.example.com:443/pa/direct/pictureServlet?user=3126805100@example.com>;Purpose=icon\r\n'
-             'Content-Disposition: session;handling=required\r\n'
-             'Content-Type: application/sdp\r\n'
-             'Date: Sat, 01 Feb 2014 22:07:34 GMT\r\n'
-             'Record-Route: <sip:200.25.3.230:5061;transport=tls;lr>\r\n'
-             'Require: sdp-anat\r\n'
-             'Retry-After: 30\r\n'
-             'Server: Blargomatic 2.0\r\n'
-             'Session-Expires: 1200;refresher=uac\r\n'
-             'Supported: 100rel,histinfo,join,replaces,sdp-anat,timer\r\n'
-             'Timestamp: 1392061773\r\n'
-             'WWW-Authenticate: Digest algorithm=MD5,nonce="1111790769596",realm="SomeRealm"\r\n'
-             'Warning: 370 200.21.3.10 "Insufficient Bandwidth"\r\n'
-             'X-RTP-Stat:  PR=0;ER=0;PL=0;RB=0/0;DE=PCMU;EN=PCMU;JI=0;DL=0,0;IP=10.1.0.33:16384,132.52.127.200:20048\r\n'
-             'x-channel:  ds/ds1-3/12;IP=132.52.127.16\r\n'
-             'Referred-By: <sip:6006665100@example.com;user=phone> ; CorrelationID="0508817f84e7ce64745ef9753e2fbff4664321a4@200.23.3.240"\r\n'
-             'Refer-To: <sip:6006665499;rfrid=28661859@example.com;user=phone?x-nt-resource-priority=YNBvf.2j00qao>\r\n'
-             'Content-Length: 11\r\n'
-             '\r\n'
-             'Foo Content')
-        ]
+    def sipMethodString(self):
+        return "REFER"
+
+    @property
+    def sipMessageClassUnderTest(self):
+        return REFERSIPRequest
 
     def test_parsing(self):
-        for messageString in self.canonicalStrings:
-            request = REFERSIPRequest.newParsedFrom(messageString)
-            self.runAssertionsForRequest(request)
+        self.run_test_parsing()
 
     def test_rendering_from_list_of_header_fields(self):
-        headerFields = [
-            FromSIPHeaderField.newForAttributes(fieldValue='<sip:200.25.3.150:5061>;tag=0ee8d3e272e31c9195299efc500'),
-            ToSIPHeaderField.newForAttributes(fieldValue='<sip:example.com:5061>'),
-            CallIDSIPHeaderField.newForAttributes(fieldValue='0ee8d3e272e31c9195299efc500'),
-            CSeqSIPHeaderField.newForAttributes(fieldValue='6711 REFER'),
-            MaxForwardsSIPHeaderField.newForAttributes(fieldValue='70'),
-            ViaSIPHeaderField.newForAttributes(fieldValue='SIP/2.0/TLS 200.25.3.150;branch=z9hG4bK0ee8d3e272e31ca195299efc500'),
-            UserAgentSIPHeaderField.newForAttributes(fieldValue='Example User Agent'),
-            ContactSIPHeaderField.newForAttributes(fieldValue='<sip:invalid@200.25.3.150:5061;transport=tls>'),
-            RouteSIPHeaderField.newForAttributes(fieldValue='<sip:200.30.10.12:5061;transport=tls;lr>'),
-            ExpiresSIPHeaderField.newForAttributes(fieldValue='0'),
-            AcceptSIPHeaderField.newForAttributes(fieldValue='application/sdp,application/isup,application/dtmf,application/dtmf-relay,multipart/mixed'),
-            AcceptEncodingSIPHeaderField.newForAttributes(fieldValue='x-nortel-short'),
-            AcceptLanguageSIPHeaderField.newForAttributes(fieldValue='en-us,fr-fr'),
-            AllowSIPHeaderField.newForAttributes(fieldValue=' ACK,BYE,CANCEL,INFO,INVITE,OPTIONS,REGISTER,SUBSCRIBE,UPDATE'),
-            AuthorizationSIPHeaderField.newForAttributes(fieldValue='Digest username="3122221000",realm="SomeRealm",nonce="1111790769596",uri="sip:3122211004@example.com",response="9bf77d8238664fe08dafd4d2abb6f1cb",algorithm=MD5'),
-            CallInfoSIPHeaderField.newForAttributes(fieldValue='<https://lsc14pa.example.com:443/pa/direct/pictureServlet?user=3126805100@example.com>;Purpose=icon'),
-            ContentDispositionSIPHeaderField.newForAttributes(fieldValue='session;handling=required'),
-            ContentTypeSIPHeaderField.newForAttributes(fieldValue='application/sdp'),
-            DateSIPHeaderField.newForAttributes(fieldValue='Sat, 01 Feb 2014 22:07:34 GMT'),
-            RecordRouteSIPHeaderField.newForAttributes(fieldValue='<sip:200.25.3.230:5061;transport=tls;lr>'),
-            RequireSIPHeaderField.newForAttributes(fieldValue='sdp-anat'),
-            RetryAfterSIPHeaderField.newForAttributes(fieldValue='30'),
-            ServerSIPHeaderField.newForAttributes(fieldValue='Blargomatic 2.0'),
-            SessionExpiresSIPHeaderField.newForAttributes(fieldValue='1200;refresher=uac'),
-            SupportedSIPHeaderField.newForAttributes(fieldValue='100rel,histinfo,join,replaces,sdp-anat,timer'),
-            TimestampSIPHeaderField.newForAttributes(fieldValue='1392061773'),
-            WWWAuthenticateSIPHeaderField.newForAttributes(fieldValue='Digest algorithm=MD5,nonce="1111790769596",realm="SomeRealm"'),
-            WarningSIPHeaderField.newForAttributes(fieldValue='370 200.21.3.10 "Insufficient Bandwidth"'),
-            UnknownSIPHeaderField.newForAttributes(fieldName='X-RTP-Stat', fieldValue=' PR=0;ER=0;PL=0;RB=0/0;DE=PCMU;EN=PCMU;JI=0;DL=0,0;IP=10.1.0.33:16384,132.52.127.200:20048'),
-            UnknownSIPHeaderField.newForAttributes(fieldName='x-channel', fieldValue=' ds/ds1-3/12;IP=132.52.127.16'),
-            UnknownSIPHeaderField.newForAttributes(fieldName='Referred-By', fieldValue='<sip:6006665100@example.com;user=phone> ; CorrelationID="0508817f84e7ce64745ef9753e2fbff4664321a4@200.23.3.240"'),
-            UnknownSIPHeaderField.newForAttributes(fieldName='Refer-To', fieldValue='<sip:6006665499;rfrid=28661859@example.com;user=phone?x-nt-resource-priority=YNBvf.2j00qao>'),
-            ContentLengthSIPHeaderField.newForAttributes(value=11)]
-        request = REFERSIPRequest.newForAttributes(sipMethod='REFER', requestURI='sip:example.com', content='Foo Content', header=SIPHeader.newForAttributes(headerFields=headerFields))
-        self.runAssertionsForRequest(request)
+        self.run_test_rendering_from_list_of_header_fields()
 
     def test_rendering_from_one_big_header_string(self):
-        headerFields = ('From: <sip:200.25.3.150:5061>;tag=0ee8d3e272e31c9195299efc500\r\n'
-                        'To: <sip:example.com:5061>\r\n'
-                        'Call-ID: 0ee8d3e272e31c9195299efc500\r\n'
-                        'CSeq: 6711 REFER\r\n'
-                        'Max-Forwards: 70\r\n'
-                        'Via: SIP/2.0/TLS 200.25.3.150;branch=z9hG4bK0ee8d3e272e31ca195299efc500\r\n'
-                        'User-Agent: Example User Agent\r\n'
-                        'Contact: <sip:invalid@200.25.3.150:5061;transport=tls>\r\n'
-                        'Route: <sip:200.30.10.12:5061;transport=tls;lr>\r\n'
-                        'Expires: 0\r\n'
-                        'Accept: application/sdp,application/isup,application/dtmf,application/dtmf-relay,multipart/mixed\r\n'
-                        'Accept-Encoding: x-nortel-short\r\n'
-                        'Accept-Language: en-us,fr-fr\r\n'
-                        'Allow:  ACK,BYE,CANCEL,INFO,INVITE,OPTIONS,REGISTER,SUBSCRIBE,UPDATE\r\n'
-                        'Authorization: Digest username="3122221000",realm="SomeRealm",nonce="1111790769596",uri="sip:3122211004@example.com",response="9bf77d8238664fe08dafd4d2abb6f1cb",algorithm=MD5\r\n'
-                        'Call-Info: <https://lsc14pa.example.com:443/pa/direct/pictureServlet?user=3126805100@example.com>;Purpose=icon\r\n'
-                        'Content-Disposition: session;handling=required\r\n'
-                        'Content-Type: application/sdp\r\n'
-                        'Date: Sat, 01 Feb 2014 22:07:34 GMT\r\n'
-                        'Record-Route: <sip:200.25.3.230:5061;transport=tls;lr>\r\n'
-                        'Require: sdp-anat\r\n'
-                        'Retry-After: 30\r\n'
-                        'Server: Blargomatic 2.0\r\n'
-                        'Session-Expires: 1200;refresher=uac\r\n'
-                        'Supported: 100rel,histinfo,join,replaces,sdp-anat,timer\r\n'
-                        'Timestamp: 1392061773\r\n'
-                        'WWW-Authenticate: Digest algorithm=MD5,nonce="1111790769596",realm="SomeRealm"\r\n'
-                        'Warning: 370 200.21.3.10 "Insufficient Bandwidth"\r\n'
-                        'X-RTP-Stat:  PR=0;ER=0;PL=0;RB=0/0;DE=PCMU;EN=PCMU;JI=0;DL=0,0;IP=10.1.0.33:16384,132.52.127.200:20048\r\n'
-                        'x-channel:  ds/ds1-3/12;IP=132.52.127.16\r\n'
-                        'Referred-By: <sip:6006665100@example.com;user=phone> ; CorrelationID="0508817f84e7ce64745ef9753e2fbff4664321a4@200.23.3.240"\r\n'
-                        'Refer-To: <sip:6006665499;rfrid=28661859@example.com;user=phone?x-nt-resource-priority=YNBvf.2j00qao>\r\n'
-                        'Content-Length: 11')  # This last one actually instantiates a ContentLengthSIPHeaderField.
-        request = REFERSIPRequest.newForAttributes(sipMethod='REFER', requestURI='sip:example.com', content='Foo Content', header=SIPHeader.newForAttributes(headerFields=headerFields))
-        self.runAssertionsForRequest(request)
+        self.run_test_rendering_from_one_big_header_string()
 
     def test_rendering_from_list_of_header_field_strings(self):
-        headerFields = ['From: <sip:200.25.3.150:5061>;tag=0ee8d3e272e31c9195299efc500',
-                        'To: <sip:example.com:5061>',
-                        'Call-ID: 0ee8d3e272e31c9195299efc500',
-                        'CSeq: 6711 REFER',
-                        'Max-Forwards: 70',
-                        'Via: SIP/2.0/TLS 200.25.3.150;branch=z9hG4bK0ee8d3e272e31ca195299efc500',
-                        'User-Agent: Example User Agent',
-                        'Contact: <sip:invalid@200.25.3.150:5061;transport=tls>',
-                        'Route: <sip:200.30.10.12:5061;transport=tls;lr>',
-                        'Expires: 0',
-                        'Accept: application/sdp,application/isup,application/dtmf,application/dtmf-relay,multipart/mixed',
-                        'Accept-Encoding: x-nortel-short',
-                        'Accept-Language: en-us,fr-fr',
-                        'Allow:  ACK,BYE,CANCEL,INFO,INVITE,OPTIONS,REGISTER,SUBSCRIBE,UPDATE',
-                        'Authorization: Digest username="3122221000",realm="SomeRealm",nonce="1111790769596",uri="sip:3122211004@example.com",response="9bf77d8238664fe08dafd4d2abb6f1cb",algorithm=MD5',
-                        'Call-Info: <https://lsc14pa.example.com:443/pa/direct/pictureServlet?user=3126805100@example.com>;Purpose=icon',
-                        'Content-Disposition: session;handling=required',
-                        'Content-Type: application/sdp',
-                        'Date: Sat, 01 Feb 2014 22:07:34 GMT',
-                        'Record-Route: <sip:200.25.3.230:5061;transport=tls;lr>',
-                        'Require: sdp-anat',
-                        'Retry-After: 30',
-                        'Server: Blargomatic 2.0',
-                        'Session-Expires: 1200;refresher=uac',
-                        'Supported: 100rel,histinfo,join,replaces,sdp-anat,timer',
-                        'Timestamp: 1392061773',
-                        'WWW-Authenticate: Digest algorithm=MD5,nonce="1111790769596",realm="SomeRealm"',
-                        'Warning: 370 200.21.3.10 "Insufficient Bandwidth"',
-                        'X-RTP-Stat:  PR=0;ER=0;PL=0;RB=0/0;DE=PCMU;EN=PCMU;JI=0;DL=0,0;IP=10.1.0.33:16384,132.52.127.200:20048',
-                        'x-channel:  ds/ds1-3/12;IP=132.52.127.16',
-                        'Referred-By: <sip:6006665100@example.com;user=phone> ; CorrelationID="0508817f84e7ce64745ef9753e2fbff4664321a4@200.23.3.240"',
-                        'Refer-To: <sip:6006665499;rfrid=28661859@example.com;user=phone?x-nt-resource-priority=YNBvf.2j00qao>',
-                        'Content-Length: 11']  # This last one actually instantiates a ContentLengthSIPHeaderField.
-        request = REFERSIPRequest.newForAttributes(sipMethod='REFER', requestURI='sip:example.com', content='Foo Content', header=SIPHeader.newForAttributes(headerFields=headerFields))
-        self.runAssertionsForRequest(request)
+        self.run_test_rendering_from_list_of_header_field_strings()
 
     def test_rendering_from_list_of_field_names_and_values(self):
-        headerFields = [('From', '<sip:200.25.3.150:5061>;tag=0ee8d3e272e31c9195299efc500'),
-                        ('To', '<sip:example.com:5061>'),
-                        ('Call-ID', '0ee8d3e272e31c9195299efc500'),
-                        ('CSeq', '6711 REFER'),
-                        ('Max-Forwards', 70),  # note the integer value.
-                        ('Via', 'SIP/2.0/TLS 200.25.3.150;branch=z9hG4bK0ee8d3e272e31ca195299efc500'),
-                        ('User-Agent', 'Example User Agent'),
-                        ('Contact', '<sip:invalid@200.25.3.150:5061;transport=tls>'),
-                        ('Route', '<sip:200.30.10.12:5061;transport=tls;lr>'),
-                        ('Expires', 0),
-                        ('Accept', 'application/sdp,application/isup,application/dtmf,application/dtmf-relay,multipart/mixed'),
-                        ('Accept-Encoding', 'x-nortel-short'),
-                        ('Accept-Language', 'en-us,fr-fr'),
-                        ('Allow', ' ACK,BYE,CANCEL,INFO,INVITE,OPTIONS,REGISTER,SUBSCRIBE,UPDATE'),
-                        ('Authorization', 'Digest username="3122221000",realm="SomeRealm",nonce="1111790769596",uri="sip:3122211004@example.com",response="9bf77d8238664fe08dafd4d2abb6f1cb",algorithm=MD5'),
-                        ('Call-Info', '<https://lsc14pa.example.com:443/pa/direct/pictureServlet?user=3126805100@example.com>;Purpose=icon'),
-                        ('Content-Disposition', 'session;handling=required'),
-                        ('Content-Type', 'application/sdp'),
-                        ('Date', 'Sat, 01 Feb 2014 22:07:34 GMT'),
-                        ('Record-Route', '<sip:200.25.3.230:5061;transport=tls;lr>'),
-                        ('Require', 'sdp-anat'),
-                        ('Retry-After', '30'),
-                        ('Server', 'Blargomatic 2.0'),
-                        ('Session-Expires', '1200;refresher=uac'),
-                        ('Supported', '100rel,histinfo,join,replaces,sdp-anat,timer'),
-                        ('Timestamp', '1392061773'),
-                        ('WWW-Authenticate', 'Digest algorithm=MD5,nonce="1111790769596",realm="SomeRealm"'),
-                        ('Warning', '370 200.21.3.10 "Insufficient Bandwidth"'),
-                        ('X-RTP-Stat', ' PR=0;ER=0;PL=0;RB=0/0;DE=PCMU;EN=PCMU;JI=0;DL=0,0;IP=10.1.0.33:16384,132.52.127.200:20048'),
-                        ('x-channel', ' ds/ds1-3/12;IP=132.52.127.16'),
-                        ('Referred-By', '<sip:6006665100@example.com;user=phone> ; CorrelationID="0508817f84e7ce64745ef9753e2fbff4664321a4@200.23.3.240"'),
-                        ('Refer-To', '<sip:6006665499;rfrid=28661859@example.com;user=phone?x-nt-resource-priority=YNBvf.2j00qao>'),
-                        ('Content-Length', {"value": 11})]  # This last one actually instantiates a ContentLengthSIPHeaderField.
-        request = REFERSIPRequest.newForAttributes(sipMethod='REFER', requestURI='sip:example.com', content='Foo Content', header=SIPHeader.newForAttributes(headerFields=headerFields))
-        self.runAssertionsForRequest(request)
+        self.run_test_rendering_from_list_of_field_names_and_values()
 
     def test_rendering_from_list_of_field_names_and_values_using_property_dict(self):
-        headerFields = [('From', '<sip:200.25.3.150:5061>;tag=0ee8d3e272e31c9195299efc500'),
-                        ('To', '<sip:example.com:5061>'),
-                        ('Call-ID', '0ee8d3e272e31c9195299efc500'),
-                        ('CSeq', '6711 REFER'),
-                        ('Max-Forwards', 70),  # note the integer value.
-                        ('Via', 'SIP/2.0/TLS 200.25.3.150;branch=z9hG4bK0ee8d3e272e31ca195299efc500'),
-                        ('User-Agent', 'Example User Agent'),
-                        ('Contact', '<sip:invalid@200.25.3.150:5061;transport=tls>'),
-                        ('Route', '<sip:200.30.10.12:5061;transport=tls;lr>'),
-                        ('Expires', 0),
-                        ('Accept', 'application/sdp,application/isup,application/dtmf,application/dtmf-relay,multipart/mixed'),
-                        ('Accept-Encoding', 'x-nortel-short'),
-                        ('Accept-Language', 'en-us,fr-fr'),
-                        ('Allow', ' ACK,BYE,CANCEL,INFO,INVITE,OPTIONS,REGISTER,SUBSCRIBE,UPDATE'),
-                        ('Authorization', 'Digest username="3122221000",realm="SomeRealm",nonce="1111790769596",uri="sip:3122211004@example.com",response="9bf77d8238664fe08dafd4d2abb6f1cb",algorithm=MD5'),
-                        ('Call-Info', '<https://lsc14pa.example.com:443/pa/direct/pictureServlet?user=3126805100@example.com>;Purpose=icon'),
-                        ('Content-Disposition', 'session;handling=required'),
-                        ('Content-Type', 'application/sdp'),
-                        ('Date', 'Sat, 01 Feb 2014 22:07:34 GMT'),
-                        ('Record-Route', '<sip:200.25.3.230:5061;transport=tls;lr>'),
-                        ('Require', 'sdp-anat'),
-                        ('Retry-After', '30'),
-                        ('Server', 'Blargomatic 2.0'),
-                        ('Session-Expires', '1200;refresher=uac'),
-                        ('Supported', '100rel,histinfo,join,replaces,sdp-anat,timer'),
-                        ('Timestamp', '1392061773'),
-                        ('WWW-Authenticate', 'Digest algorithm=MD5,nonce="1111790769596",realm="SomeRealm"'),
-                        ('Warning', '370 200.21.3.10 "Insufficient Bandwidth"'),
-                        ('X-RTP-Stat', ' PR=0;ER=0;PL=0;RB=0/0;DE=PCMU;EN=PCMU;JI=0;DL=0,0;IP=10.1.0.33:16384,132.52.127.200:20048'),
-                        ('x-channel', ' ds/ds1-3/12;IP=132.52.127.16'),
-                        ('Referred-By', '<sip:6006665100@example.com;user=phone> ; CorrelationID="0508817f84e7ce64745ef9753e2fbff4664321a4@200.23.3.240"'),
-                        ('Refer-To', '<sip:6006665499;rfrid=28661859@example.com;user=phone?x-nt-resource-priority=YNBvf.2j00qao>'),
-                        ('Content-Length', {"value": 11})]  # This last one actually instantiates a ContentLengthSIPHeaderField.
-        request = REFERSIPRequest.newForAttributes(sipMethod='REFER', requestURI='sip:example.com', content='Foo Content', header=SIPHeader.newForAttributes(headerFields=headerFields))
-        self.runAssertionsForRequest(request)
+        self.run_test_rendering_from_list_of_field_names_and_values_using_property_dict()
 
-    def runAssertionsForRequest(self, aSIPRequest):
-        self.assertEqual(aSIPRequest.rawString, self.canonicalStrings[0])
+    def runAssertionsForSIPMessage(self, aSIPRequest):
+        super(TestREFERSIPRequest, self).runAssertionsForSIPMessage(aSIPRequest)
         self.assertTrue(aSIPRequest.isKnown)
         self.assertFalse(aSIPRequest.isUnknown)
-        self.assertTrue(aSIPRequest.isValid)
-        self.assertTrue(aSIPRequest.isRequest)
-        self.assertFalse(aSIPRequest.isResponse)
         self.assertFalse(aSIPRequest.isACKRequest)
         self.assertFalse(aSIPRequest.isBYERequest)
         self.assertFalse(aSIPRequest.isCANCELRequest)
@@ -2445,263 +410,39 @@ class TestREFERSIPRequest(TestCase):
         self.assertFalse(aSIPRequest.isREGISTERRequest)
         self.assertFalse(aSIPRequest.isSUBSCRIBERequest)
         self.assertFalse(aSIPRequest.isUPDATERequest)
-        self.assertFalse(aSIPRequest.isMalformed)
-        # self.assertEqual(1, [headerField for headerField in aSIPRequest.header.headerFields if headerField.isContentLength].__len__())
-        # self.assertEqual(11, next(headerField for headerField in aSIPRequest.header.headerFields if headerField.isContentLength).value)
-        # self.assertEqual(10, [headerField for headerField in aSIPRequest.header.headerFields if headerField.isUnknown].__len__())
-        self.assertIsNotNone(aSIPRequest.header.contentLengthHeaderField)
-        self.assertEqual(11, aSIPRequest.header.contentLength)
-        self.assertEqual(1, aSIPRequest.header.viaHeaderFields.__len__())
-        self.assertEqual(1, aSIPRequest.header.vias.__len__())
-        self.assertEqual('SIP/2.0/TLS 200.25.3.150;branch=z9hG4bK0ee8d3e272e31ca195299efc500', aSIPRequest.header.vias[0])
-        self.assertEqual(4, aSIPRequest.header.unknownHeaderFields.__len__())
-        self.assertTrue(aSIPRequest.startLine.isRequest)
-        self.assertFalse(aSIPRequest.startLine.isResponse)
-        self.assertEqual('Foo Content', aSIPRequest.content)
-        self.assertEqual('REFER', aSIPRequest.startLine.sipMethod)
-        self.assertEqual('sip:example.com', aSIPRequest.startLine.requestURI)
 
 
-class TestREGISTERSIPRequest(TestCase):
+class TestREGISTERSIPRequest(AbstractSIPRequestTestCase):
     @property
-    def canonicalStrings(self):
-        return [
-            ('REGISTER sip:example.com SIP/2.0\r\n'
-             'From: <sip:200.25.3.150:5061>;tag=0ee8d3e272e31c9195299efc500\r\n'
-             'To: <sip:example.com:5061>\r\n'
-             'Call-ID: 0ee8d3e272e31c9195299efc500\r\n'
-             'CSeq: 6711 REGISTER\r\n'
-             'Max-Forwards: 70\r\n'
-             'Via: SIP/2.0/TLS 200.25.3.150;branch=z9hG4bK0ee8d3e272e31ca195299efc500\r\n'
-             'User-Agent: Example User Agent\r\n'
-             'Contact: <sip:invalid@200.25.3.150:5061;transport=tls>\r\n'
-             'Route: <sip:200.30.10.12:5061;transport=tls;lr>\r\n'
-             'Expires: 0\r\n'
-             'Accept: application/sdp,application/isup,application/dtmf,application/dtmf-relay,multipart/mixed\r\n'
-             'Accept-Encoding: x-nortel-short\r\n'
-             'Accept-Language: en-us,fr-fr\r\n'
-             'Allow:  ACK,BYE,CANCEL,INFO,INVITE,OPTIONS,REGISTER,SUBSCRIBE,UPDATE\r\n'
-             'Authorization: Digest username="3122221000",realm="SomeRealm",nonce="1111790769596",uri="sip:3122211004@example.com",response="9bf77d8238664fe08dafd4d2abb6f1cb",algorithm=MD5\r\n'
-             'Call-Info: <https://lsc14pa.example.com:443/pa/direct/pictureServlet?user=3126805100@example.com>;Purpose=icon\r\n'
-             'Content-Disposition: session;handling=required\r\n'
-             'Content-Type: application/sdp\r\n'
-             'Date: Sat, 01 Feb 2014 22:07:34 GMT\r\n'
-             'Record-Route: <sip:200.25.3.230:5061;transport=tls;lr>\r\n'
-             'Require: sdp-anat\r\n'
-             'Retry-After: 30\r\n'
-             'Server: Blargomatic 2.0\r\n'
-             'Session-Expires: 1200;refresher=uac\r\n'
-             'Supported: 100rel,histinfo,join,replaces,sdp-anat,timer\r\n'
-             'Timestamp: 1392061773\r\n'
-             'WWW-Authenticate: Digest algorithm=MD5,nonce="1111790769596",realm="SomeRealm"\r\n'
-             'Warning: 370 200.21.3.10 "Insufficient Bandwidth"\r\n'
-             'X-RTP-Stat:  PR=0;ER=0;PL=0;RB=0/0;DE=PCMU;EN=PCMU;JI=0;DL=0,0;IP=10.1.0.33:16384,132.52.127.200:20048\r\n'
-             'x-channel:  ds/ds1-3/12;IP=132.52.127.16\r\n'
-             'Referred-By: <sip:6006665100@example.com;user=phone> ; CorrelationID="0508817f84e7ce64745ef9753e2fbff4664321a4@200.23.3.240"\r\n'
-             'Refer-To: <sip:6006665499;rfrid=28661859@example.com;user=phone?x-nt-resource-priority=YNBvf.2j00qao>\r\n'
-             'Content-Length: 11\r\n'
-             '\r\n'
-             'Foo Content')
-        ]
+    def sipMethodString(self):
+        return "REGISTER"
+
+    @property
+    def sipMessageClassUnderTest(self):
+        return REGISTERSIPRequest
 
     def test_parsing(self):
-        for messageString in self.canonicalStrings:
-            request = REGISTERSIPRequest.newParsedFrom(messageString)
-            self.runAssertionsForRequest(request)
+        self.run_test_parsing()
 
     def test_rendering_from_list_of_header_fields(self):
-        headerFields = [
-            FromSIPHeaderField.newForAttributes(fieldValue='<sip:200.25.3.150:5061>;tag=0ee8d3e272e31c9195299efc500'),
-            ToSIPHeaderField.newForAttributes(fieldValue='<sip:example.com:5061>'),
-            CallIDSIPHeaderField.newForAttributes(fieldValue='0ee8d3e272e31c9195299efc500'),
-            CSeqSIPHeaderField.newForAttributes(fieldValue='6711 REGISTER'),
-            MaxForwardsSIPHeaderField.newForAttributes(fieldValue='70'),
-            ViaSIPHeaderField.newForAttributes(fieldValue='SIP/2.0/TLS 200.25.3.150;branch=z9hG4bK0ee8d3e272e31ca195299efc500'),
-            UserAgentSIPHeaderField.newForAttributes(fieldValue='Example User Agent'),
-            ContactSIPHeaderField.newForAttributes(fieldValue='<sip:invalid@200.25.3.150:5061;transport=tls>'),
-            RouteSIPHeaderField.newForAttributes(fieldValue='<sip:200.30.10.12:5061;transport=tls;lr>'),
-            ExpiresSIPHeaderField.newForAttributes(fieldValue='0'),
-            AcceptSIPHeaderField.newForAttributes(fieldValue='application/sdp,application/isup,application/dtmf,application/dtmf-relay,multipart/mixed'),
-            AcceptEncodingSIPHeaderField.newForAttributes(fieldValue='x-nortel-short'),
-            AcceptLanguageSIPHeaderField.newForAttributes(fieldValue='en-us,fr-fr'),
-            AllowSIPHeaderField.newForAttributes(fieldValue=' ACK,BYE,CANCEL,INFO,INVITE,OPTIONS,REGISTER,SUBSCRIBE,UPDATE'),
-            AuthorizationSIPHeaderField.newForAttributes(fieldValue='Digest username="3122221000",realm="SomeRealm",nonce="1111790769596",uri="sip:3122211004@example.com",response="9bf77d8238664fe08dafd4d2abb6f1cb",algorithm=MD5'),
-            CallInfoSIPHeaderField.newForAttributes(fieldValue='<https://lsc14pa.example.com:443/pa/direct/pictureServlet?user=3126805100@example.com>;Purpose=icon'),
-            ContentDispositionSIPHeaderField.newForAttributes(fieldValue='session;handling=required'),
-            ContentTypeSIPHeaderField.newForAttributes(fieldValue='application/sdp'),
-            DateSIPHeaderField.newForAttributes(fieldValue='Sat, 01 Feb 2014 22:07:34 GMT'),
-            RecordRouteSIPHeaderField.newForAttributes(fieldValue='<sip:200.25.3.230:5061;transport=tls;lr>'),
-            RequireSIPHeaderField.newForAttributes(fieldValue='sdp-anat'),
-            RetryAfterSIPHeaderField.newForAttributes(fieldValue='30'),
-            ServerSIPHeaderField.newForAttributes(fieldValue='Blargomatic 2.0'),
-            SessionExpiresSIPHeaderField.newForAttributes(fieldValue='1200;refresher=uac'),
-            SupportedSIPHeaderField.newForAttributes(fieldValue='100rel,histinfo,join,replaces,sdp-anat,timer'),
-            TimestampSIPHeaderField.newForAttributes(fieldValue='1392061773'),
-            WWWAuthenticateSIPHeaderField.newForAttributes(fieldValue='Digest algorithm=MD5,nonce="1111790769596",realm="SomeRealm"'),
-            WarningSIPHeaderField.newForAttributes(fieldValue='370 200.21.3.10 "Insufficient Bandwidth"'),
-            UnknownSIPHeaderField.newForAttributes(fieldName='X-RTP-Stat', fieldValue=' PR=0;ER=0;PL=0;RB=0/0;DE=PCMU;EN=PCMU;JI=0;DL=0,0;IP=10.1.0.33:16384,132.52.127.200:20048'),
-            UnknownSIPHeaderField.newForAttributes(fieldName='x-channel', fieldValue=' ds/ds1-3/12;IP=132.52.127.16'),
-            UnknownSIPHeaderField.newForAttributes(fieldName='Referred-By', fieldValue='<sip:6006665100@example.com;user=phone> ; CorrelationID="0508817f84e7ce64745ef9753e2fbff4664321a4@200.23.3.240"'),
-            UnknownSIPHeaderField.newForAttributes(fieldName='Refer-To', fieldValue='<sip:6006665499;rfrid=28661859@example.com;user=phone?x-nt-resource-priority=YNBvf.2j00qao>'),
-            ContentLengthSIPHeaderField.newForAttributes(value=11)]
-        request = REGISTERSIPRequest.newForAttributes(sipMethod='REGISTER', requestURI='sip:example.com', content='Foo Content', header=SIPHeader.newForAttributes(headerFields=headerFields))
-        self.runAssertionsForRequest(request)
+        self.run_test_rendering_from_list_of_header_fields()
 
     def test_rendering_from_one_big_header_string(self):
-        headerFields = ('From: <sip:200.25.3.150:5061>;tag=0ee8d3e272e31c9195299efc500\r\n'
-                        'To: <sip:example.com:5061>\r\n'
-                        'Call-ID: 0ee8d3e272e31c9195299efc500\r\n'
-                        'CSeq: 6711 REGISTER\r\n'
-                        'Max-Forwards: 70\r\n'
-                        'Via: SIP/2.0/TLS 200.25.3.150;branch=z9hG4bK0ee8d3e272e31ca195299efc500\r\n'
-                        'User-Agent: Example User Agent\r\n'
-                        'Contact: <sip:invalid@200.25.3.150:5061;transport=tls>\r\n'
-                        'Route: <sip:200.30.10.12:5061;transport=tls;lr>\r\n'
-                        'Expires: 0\r\n'
-                        'Accept: application/sdp,application/isup,application/dtmf,application/dtmf-relay,multipart/mixed\r\n'
-                        'Accept-Encoding: x-nortel-short\r\n'
-                        'Accept-Language: en-us,fr-fr\r\n'
-                        'Allow:  ACK,BYE,CANCEL,INFO,INVITE,OPTIONS,REGISTER,SUBSCRIBE,UPDATE\r\n'
-                        'Authorization: Digest username="3122221000",realm="SomeRealm",nonce="1111790769596",uri="sip:3122211004@example.com",response="9bf77d8238664fe08dafd4d2abb6f1cb",algorithm=MD5\r\n'
-                        'Call-Info: <https://lsc14pa.example.com:443/pa/direct/pictureServlet?user=3126805100@example.com>;Purpose=icon\r\n'
-                        'Content-Disposition: session;handling=required\r\n'
-                        'Content-Type: application/sdp\r\n'
-                        'Date: Sat, 01 Feb 2014 22:07:34 GMT\r\n'
-                        'Record-Route: <sip:200.25.3.230:5061;transport=tls;lr>\r\n'
-                        'Require: sdp-anat\r\n'
-                        'Retry-After: 30\r\n'
-                        'Server: Blargomatic 2.0\r\n'
-                        'Session-Expires: 1200;refresher=uac\r\n'
-                        'Supported: 100rel,histinfo,join,replaces,sdp-anat,timer\r\n'
-                        'Timestamp: 1392061773\r\n'
-                        'WWW-Authenticate: Digest algorithm=MD5,nonce="1111790769596",realm="SomeRealm"\r\n'
-                        'Warning: 370 200.21.3.10 "Insufficient Bandwidth"\r\n'
-                        'X-RTP-Stat:  PR=0;ER=0;PL=0;RB=0/0;DE=PCMU;EN=PCMU;JI=0;DL=0,0;IP=10.1.0.33:16384,132.52.127.200:20048\r\n'
-                        'x-channel:  ds/ds1-3/12;IP=132.52.127.16\r\n'
-                        'Referred-By: <sip:6006665100@example.com;user=phone> ; CorrelationID="0508817f84e7ce64745ef9753e2fbff4664321a4@200.23.3.240"\r\n'
-                        'Refer-To: <sip:6006665499;rfrid=28661859@example.com;user=phone?x-nt-resource-priority=YNBvf.2j00qao>\r\n'
-                        'Content-Length: 11')  # This last one actually instantiates a ContentLengthSIPHeaderField.
-        request = REGISTERSIPRequest.newForAttributes(sipMethod='REGISTER', requestURI='sip:example.com', content='Foo Content', header=SIPHeader.newForAttributes(headerFields=headerFields))
-        self.runAssertionsForRequest(request)
+        self.run_test_rendering_from_one_big_header_string()
 
     def test_rendering_from_list_of_header_field_strings(self):
-        headerFields = ['From: <sip:200.25.3.150:5061>;tag=0ee8d3e272e31c9195299efc500',
-                        'To: <sip:example.com:5061>',
-                        'Call-ID: 0ee8d3e272e31c9195299efc500',
-                        'CSeq: 6711 REGISTER',
-                        'Max-Forwards: 70',
-                        'Via: SIP/2.0/TLS 200.25.3.150;branch=z9hG4bK0ee8d3e272e31ca195299efc500',
-                        'User-Agent: Example User Agent',
-                        'Contact: <sip:invalid@200.25.3.150:5061;transport=tls>',
-                        'Route: <sip:200.30.10.12:5061;transport=tls;lr>',
-                        'Expires: 0',
-                        'Accept: application/sdp,application/isup,application/dtmf,application/dtmf-relay,multipart/mixed',
-                        'Accept-Encoding: x-nortel-short',
-                        'Accept-Language: en-us,fr-fr',
-                        'Allow:  ACK,BYE,CANCEL,INFO,INVITE,OPTIONS,REGISTER,SUBSCRIBE,UPDATE',
-                        'Authorization: Digest username="3122221000",realm="SomeRealm",nonce="1111790769596",uri="sip:3122211004@example.com",response="9bf77d8238664fe08dafd4d2abb6f1cb",algorithm=MD5',
-                        'Call-Info: <https://lsc14pa.example.com:443/pa/direct/pictureServlet?user=3126805100@example.com>;Purpose=icon',
-                        'Content-Disposition: session;handling=required',
-                        'Content-Type: application/sdp',
-                        'Date: Sat, 01 Feb 2014 22:07:34 GMT',
-                        'Record-Route: <sip:200.25.3.230:5061;transport=tls;lr>',
-                        'Require: sdp-anat',
-                        'Retry-After: 30',
-                        'Server: Blargomatic 2.0',
-                        'Session-Expires: 1200;refresher=uac',
-                        'Supported: 100rel,histinfo,join,replaces,sdp-anat,timer',
-                        'Timestamp: 1392061773',
-                        'WWW-Authenticate: Digest algorithm=MD5,nonce="1111790769596",realm="SomeRealm"',
-                        'Warning: 370 200.21.3.10 "Insufficient Bandwidth"',
-                        'X-RTP-Stat:  PR=0;ER=0;PL=0;RB=0/0;DE=PCMU;EN=PCMU;JI=0;DL=0,0;IP=10.1.0.33:16384,132.52.127.200:20048',
-                        'x-channel:  ds/ds1-3/12;IP=132.52.127.16',
-                        'Referred-By: <sip:6006665100@example.com;user=phone> ; CorrelationID="0508817f84e7ce64745ef9753e2fbff4664321a4@200.23.3.240"',
-                        'Refer-To: <sip:6006665499;rfrid=28661859@example.com;user=phone?x-nt-resource-priority=YNBvf.2j00qao>',
-                        'Content-Length: 11']  # This last one actually instantiates a ContentLengthSIPHeaderField.
-        request = REGISTERSIPRequest.newForAttributes(sipMethod='REGISTER', requestURI='sip:example.com', content='Foo Content', header=SIPHeader.newForAttributes(headerFields=headerFields))
-        self.runAssertionsForRequest(request)
+        self.run_test_rendering_from_list_of_header_field_strings()
 
     def test_rendering_from_list_of_field_names_and_values(self):
-        headerFields = [('From', '<sip:200.25.3.150:5061>;tag=0ee8d3e272e31c9195299efc500'),
-                        ('To', '<sip:example.com:5061>'),
-                        ('Call-ID', '0ee8d3e272e31c9195299efc500'),
-                        ('CSeq', '6711 REGISTER'),
-                        ('Max-Forwards', 70),  # note the integer value.
-                        ('Via', 'SIP/2.0/TLS 200.25.3.150;branch=z9hG4bK0ee8d3e272e31ca195299efc500'),
-                        ('User-Agent', 'Example User Agent'),
-                        ('Contact', '<sip:invalid@200.25.3.150:5061;transport=tls>'),
-                        ('Route', '<sip:200.30.10.12:5061;transport=tls;lr>'),
-                        ('Expires', 0),
-                        ('Accept', 'application/sdp,application/isup,application/dtmf,application/dtmf-relay,multipart/mixed'),
-                        ('Accept-Encoding', 'x-nortel-short'),
-                        ('Accept-Language', 'en-us,fr-fr'),
-                        ('Allow', ' ACK,BYE,CANCEL,INFO,INVITE,OPTIONS,REGISTER,SUBSCRIBE,UPDATE'),
-                        ('Authorization', 'Digest username="3122221000",realm="SomeRealm",nonce="1111790769596",uri="sip:3122211004@example.com",response="9bf77d8238664fe08dafd4d2abb6f1cb",algorithm=MD5'),
-                        ('Call-Info', '<https://lsc14pa.example.com:443/pa/direct/pictureServlet?user=3126805100@example.com>;Purpose=icon'),
-                        ('Content-Disposition', 'session;handling=required'),
-                        ('Content-Type', 'application/sdp'),
-                        ('Date', 'Sat, 01 Feb 2014 22:07:34 GMT'),
-                        ('Record-Route', '<sip:200.25.3.230:5061;transport=tls;lr>'),
-                        ('Require', 'sdp-anat'),
-                        ('Retry-After', '30'),
-                        ('Server', 'Blargomatic 2.0'),
-                        ('Session-Expires', '1200;refresher=uac'),
-                        ('Supported', '100rel,histinfo,join,replaces,sdp-anat,timer'),
-                        ('Timestamp', '1392061773'),
-                        ('WWW-Authenticate', 'Digest algorithm=MD5,nonce="1111790769596",realm="SomeRealm"'),
-                        ('Warning', '370 200.21.3.10 "Insufficient Bandwidth"'),
-                        ('X-RTP-Stat', ' PR=0;ER=0;PL=0;RB=0/0;DE=PCMU;EN=PCMU;JI=0;DL=0,0;IP=10.1.0.33:16384,132.52.127.200:20048'),
-                        ('x-channel', ' ds/ds1-3/12;IP=132.52.127.16'),
-                        ('Referred-By', '<sip:6006665100@example.com;user=phone> ; CorrelationID="0508817f84e7ce64745ef9753e2fbff4664321a4@200.23.3.240"'),
-                        ('Refer-To', '<sip:6006665499;rfrid=28661859@example.com;user=phone?x-nt-resource-priority=YNBvf.2j00qao>'),
-                        ('Content-Length', {"value": 11})]  # This last one actually instantiates a ContentLengthSIPHeaderField.
-        request = REGISTERSIPRequest.newForAttributes(sipMethod='REGISTER', requestURI='sip:example.com', content='Foo Content', header=SIPHeader.newForAttributes(headerFields=headerFields))
-        self.runAssertionsForRequest(request)
+        self.run_test_rendering_from_list_of_field_names_and_values()
 
     def test_rendering_from_list_of_field_names_and_values_using_property_dict(self):
-        headerFields = [('From', '<sip:200.25.3.150:5061>;tag=0ee8d3e272e31c9195299efc500'),
-                        ('To', '<sip:example.com:5061>'),
-                        ('Call-ID', '0ee8d3e272e31c9195299efc500'),
-                        ('CSeq', '6711 REGISTER'),
-                        ('Max-Forwards', 70),  # note the integer value.
-                        ('Via', 'SIP/2.0/TLS 200.25.3.150;branch=z9hG4bK0ee8d3e272e31ca195299efc500'),
-                        ('User-Agent', 'Example User Agent'),
-                        ('Contact', '<sip:invalid@200.25.3.150:5061;transport=tls>'),
-                        ('Route', '<sip:200.30.10.12:5061;transport=tls;lr>'),
-                        ('Expires', 0),
-                        ('Accept', 'application/sdp,application/isup,application/dtmf,application/dtmf-relay,multipart/mixed'),
-                        ('Accept-Encoding', 'x-nortel-short'),
-                        ('Accept-Language', 'en-us,fr-fr'),
-                        ('Allow', ' ACK,BYE,CANCEL,INFO,INVITE,OPTIONS,REGISTER,SUBSCRIBE,UPDATE'),
-                        ('Authorization', 'Digest username="3122221000",realm="SomeRealm",nonce="1111790769596",uri="sip:3122211004@example.com",response="9bf77d8238664fe08dafd4d2abb6f1cb",algorithm=MD5'),
-                        ('Call-Info', '<https://lsc14pa.example.com:443/pa/direct/pictureServlet?user=3126805100@example.com>;Purpose=icon'),
-                        ('Content-Disposition', 'session;handling=required'),
-                        ('Content-Type', 'application/sdp'),
-                        ('Date', 'Sat, 01 Feb 2014 22:07:34 GMT'),
-                        ('Record-Route', '<sip:200.25.3.230:5061;transport=tls;lr>'),
-                        ('Require', 'sdp-anat'),
-                        ('Retry-After', '30'),
-                        ('Server', 'Blargomatic 2.0'),
-                        ('Session-Expires', '1200;refresher=uac'),
-                        ('Supported', '100rel,histinfo,join,replaces,sdp-anat,timer'),
-                        ('Timestamp', '1392061773'),
-                        ('WWW-Authenticate', 'Digest algorithm=MD5,nonce="1111790769596",realm="SomeRealm"'),
-                        ('Warning', '370 200.21.3.10 "Insufficient Bandwidth"'),
-                        ('X-RTP-Stat', ' PR=0;ER=0;PL=0;RB=0/0;DE=PCMU;EN=PCMU;JI=0;DL=0,0;IP=10.1.0.33:16384,132.52.127.200:20048'),
-                        ('x-channel', ' ds/ds1-3/12;IP=132.52.127.16'),
-                        ('Referred-By', '<sip:6006665100@example.com;user=phone> ; CorrelationID="0508817f84e7ce64745ef9753e2fbff4664321a4@200.23.3.240"'),
-                        ('Refer-To', '<sip:6006665499;rfrid=28661859@example.com;user=phone?x-nt-resource-priority=YNBvf.2j00qao>'),
-                        ('Content-Length', {"value": 11})]  # This last one actually instantiates a ContentLengthSIPHeaderField.
-        request = REGISTERSIPRequest.newForAttributes(sipMethod='REGISTER', requestURI='sip:example.com', content='Foo Content', header=SIPHeader.newForAttributes(headerFields=headerFields))
-        self.runAssertionsForRequest(request)
+        self.run_test_rendering_from_list_of_field_names_and_values_using_property_dict()
 
-    def runAssertionsForRequest(self, aSIPRequest):
-        self.assertEqual(aSIPRequest.rawString, self.canonicalStrings[0])
+    def runAssertionsForSIPMessage(self, aSIPRequest):
+        super(TestREGISTERSIPRequest, self).runAssertionsForSIPMessage(aSIPRequest)
         self.assertTrue(aSIPRequest.isKnown)
         self.assertFalse(aSIPRequest.isUnknown)
-        self.assertTrue(aSIPRequest.isValid)
-        self.assertTrue(aSIPRequest.isRequest)
-        self.assertFalse(aSIPRequest.isResponse)
         self.assertFalse(aSIPRequest.isACKRequest)
         self.assertFalse(aSIPRequest.isBYERequest)
         self.assertFalse(aSIPRequest.isCANCELRequest)
@@ -2713,263 +454,39 @@ class TestREGISTERSIPRequest(TestCase):
         self.assertTrue(aSIPRequest.isREGISTERRequest)
         self.assertFalse(aSIPRequest.isSUBSCRIBERequest)
         self.assertFalse(aSIPRequest.isUPDATERequest)
-        self.assertFalse(aSIPRequest.isMalformed)
-        # self.assertEqual(1, [headerField for headerField in aSIPRequest.header.headerFields if headerField.isContentLength].__len__())
-        # self.assertEqual(11, next(headerField for headerField in aSIPRequest.header.headerFields if headerField.isContentLength).value)
-        # self.assertEqual(10, [headerField for headerField in aSIPRequest.header.headerFields if headerField.isUnknown].__len__())
-        self.assertIsNotNone(aSIPRequest.header.contentLengthHeaderField)
-        self.assertEqual(11, aSIPRequest.header.contentLength)
-        self.assertEqual(1, aSIPRequest.header.viaHeaderFields.__len__())
-        self.assertEqual(1, aSIPRequest.header.vias.__len__())
-        self.assertEqual('SIP/2.0/TLS 200.25.3.150;branch=z9hG4bK0ee8d3e272e31ca195299efc500', aSIPRequest.header.vias[0])
-        self.assertEqual(4, aSIPRequest.header.unknownHeaderFields.__len__())
-        self.assertTrue(aSIPRequest.startLine.isRequest)
-        self.assertFalse(aSIPRequest.startLine.isResponse)
-        self.assertEqual('Foo Content', aSIPRequest.content)
-        self.assertEqual('REGISTER', aSIPRequest.startLine.sipMethod)
-        self.assertEqual('sip:example.com', aSIPRequest.startLine.requestURI)
 
 
-class TestSUBSCRIBESIPRequest(TestCase):
+class TestSUBSCRIBESIPRequest(AbstractSIPRequestTestCase):
     @property
-    def canonicalStrings(self):
-        return [
-            ('SUBSCRIBE sip:example.com SIP/2.0\r\n'
-             'From: <sip:200.25.3.150:5061>;tag=0ee8d3e272e31c9195299efc500\r\n'
-             'To: <sip:example.com:5061>\r\n'
-             'Call-ID: 0ee8d3e272e31c9195299efc500\r\n'
-             'CSeq: 6711 SUBSCRIBE\r\n'
-             'Max-Forwards: 70\r\n'
-             'Via: SIP/2.0/TLS 200.25.3.150;branch=z9hG4bK0ee8d3e272e31ca195299efc500\r\n'
-             'User-Agent: Example User Agent\r\n'
-             'Contact: <sip:invalid@200.25.3.150:5061;transport=tls>\r\n'
-             'Route: <sip:200.30.10.12:5061;transport=tls;lr>\r\n'
-             'Expires: 0\r\n'
-             'Accept: application/sdp,application/isup,application/dtmf,application/dtmf-relay,multipart/mixed\r\n'
-             'Accept-Encoding: x-nortel-short\r\n'
-             'Accept-Language: en-us,fr-fr\r\n'
-             'Allow:  ACK,BYE,CANCEL,INFO,INVITE,OPTIONS,REGISTER,SUBSCRIBE,UPDATE\r\n'
-             'Authorization: Digest username="3122221000",realm="SomeRealm",nonce="1111790769596",uri="sip:3122211004@example.com",response="9bf77d8238664fe08dafd4d2abb6f1cb",algorithm=MD5\r\n'
-             'Call-Info: <https://lsc14pa.example.com:443/pa/direct/pictureServlet?user=3126805100@example.com>;Purpose=icon\r\n'
-             'Content-Disposition: session;handling=required\r\n'
-             'Content-Type: application/sdp\r\n'
-             'Date: Sat, 01 Feb 2014 22:07:34 GMT\r\n'
-             'Record-Route: <sip:200.25.3.230:5061;transport=tls;lr>\r\n'
-             'Require: sdp-anat\r\n'
-             'Retry-After: 30\r\n'
-             'Server: Blargomatic 2.0\r\n'
-             'Session-Expires: 1200;refresher=uac\r\n'
-             'Supported: 100rel,histinfo,join,replaces,sdp-anat,timer\r\n'
-             'Timestamp: 1392061773\r\n'
-             'WWW-Authenticate: Digest algorithm=MD5,nonce="1111790769596",realm="SomeRealm"\r\n'
-             'Warning: 370 200.21.3.10 "Insufficient Bandwidth"\r\n'
-             'X-RTP-Stat:  PR=0;ER=0;PL=0;RB=0/0;DE=PCMU;EN=PCMU;JI=0;DL=0,0;IP=10.1.0.33:16384,132.52.127.200:20048\r\n'
-             'x-channel:  ds/ds1-3/12;IP=132.52.127.16\r\n'
-             'Referred-By: <sip:6006665100@example.com;user=phone> ; CorrelationID="0508817f84e7ce64745ef9753e2fbff4664321a4@200.23.3.240"\r\n'
-             'Refer-To: <sip:6006665499;rfrid=28661859@example.com;user=phone?x-nt-resource-priority=YNBvf.2j00qao>\r\n'
-             'Content-Length: 11\r\n'
-             '\r\n'
-             'Foo Content')
-        ]
+    def sipMethodString(self):
+        return "SUBSCRIBE"
+
+    @property
+    def sipMessageClassUnderTest(self):
+        return SUBSCRIBESIPRequest
 
     def test_parsing(self):
-        for messageString in self.canonicalStrings:
-            request = SUBSCRIBESIPRequest.newParsedFrom(messageString)
-            self.runAssertionsForRequest(request)
+        self.run_test_parsing()
 
     def test_rendering_from_list_of_header_fields(self):
-        headerFields = [
-            FromSIPHeaderField.newForAttributes(fieldValue='<sip:200.25.3.150:5061>;tag=0ee8d3e272e31c9195299efc500'),
-            ToSIPHeaderField.newForAttributes(fieldValue='<sip:example.com:5061>'),
-            CallIDSIPHeaderField.newForAttributes(fieldValue='0ee8d3e272e31c9195299efc500'),
-            CSeqSIPHeaderField.newForAttributes(fieldValue='6711 SUBSCRIBE'),
-            MaxForwardsSIPHeaderField.newForAttributes(fieldValue='70'),
-            ViaSIPHeaderField.newForAttributes(fieldValue='SIP/2.0/TLS 200.25.3.150;branch=z9hG4bK0ee8d3e272e31ca195299efc500'),
-            UserAgentSIPHeaderField.newForAttributes(fieldValue='Example User Agent'),
-            ContactSIPHeaderField.newForAttributes(fieldValue='<sip:invalid@200.25.3.150:5061;transport=tls>'),
-            RouteSIPHeaderField.newForAttributes(fieldValue='<sip:200.30.10.12:5061;transport=tls;lr>'),
-            ExpiresSIPHeaderField.newForAttributes(fieldValue='0'),
-            AcceptSIPHeaderField.newForAttributes(fieldValue='application/sdp,application/isup,application/dtmf,application/dtmf-relay,multipart/mixed'),
-            AcceptEncodingSIPHeaderField.newForAttributes(fieldValue='x-nortel-short'),
-            AcceptLanguageSIPHeaderField.newForAttributes(fieldValue='en-us,fr-fr'),
-            AllowSIPHeaderField.newForAttributes(fieldValue=' ACK,BYE,CANCEL,INFO,INVITE,OPTIONS,REGISTER,SUBSCRIBE,UPDATE'),
-            AuthorizationSIPHeaderField.newForAttributes(fieldValue='Digest username="3122221000",realm="SomeRealm",nonce="1111790769596",uri="sip:3122211004@example.com",response="9bf77d8238664fe08dafd4d2abb6f1cb",algorithm=MD5'),
-            CallInfoSIPHeaderField.newForAttributes(fieldValue='<https://lsc14pa.example.com:443/pa/direct/pictureServlet?user=3126805100@example.com>;Purpose=icon'),
-            ContentDispositionSIPHeaderField.newForAttributes(fieldValue='session;handling=required'),
-            ContentTypeSIPHeaderField.newForAttributes(fieldValue='application/sdp'),
-            DateSIPHeaderField.newForAttributes(fieldValue='Sat, 01 Feb 2014 22:07:34 GMT'),
-            RecordRouteSIPHeaderField.newForAttributes(fieldValue='<sip:200.25.3.230:5061;transport=tls;lr>'),
-            RequireSIPHeaderField.newForAttributes(fieldValue='sdp-anat'),
-            RetryAfterSIPHeaderField.newForAttributes(fieldValue='30'),
-            ServerSIPHeaderField.newForAttributes(fieldValue='Blargomatic 2.0'),
-            SessionExpiresSIPHeaderField.newForAttributes(fieldValue='1200;refresher=uac'),
-            SupportedSIPHeaderField.newForAttributes(fieldValue='100rel,histinfo,join,replaces,sdp-anat,timer'),
-            TimestampSIPHeaderField.newForAttributes(fieldValue='1392061773'),
-            WWWAuthenticateSIPHeaderField.newForAttributes(fieldValue='Digest algorithm=MD5,nonce="1111790769596",realm="SomeRealm"'),
-            WarningSIPHeaderField.newForAttributes(fieldValue='370 200.21.3.10 "Insufficient Bandwidth"'),
-            UnknownSIPHeaderField.newForAttributes(fieldName='X-RTP-Stat', fieldValue=' PR=0;ER=0;PL=0;RB=0/0;DE=PCMU;EN=PCMU;JI=0;DL=0,0;IP=10.1.0.33:16384,132.52.127.200:20048'),
-            UnknownSIPHeaderField.newForAttributes(fieldName='x-channel', fieldValue=' ds/ds1-3/12;IP=132.52.127.16'),
-            UnknownSIPHeaderField.newForAttributes(fieldName='Referred-By', fieldValue='<sip:6006665100@example.com;user=phone> ; CorrelationID="0508817f84e7ce64745ef9753e2fbff4664321a4@200.23.3.240"'),
-            UnknownSIPHeaderField.newForAttributes(fieldName='Refer-To', fieldValue='<sip:6006665499;rfrid=28661859@example.com;user=phone?x-nt-resource-priority=YNBvf.2j00qao>'),
-            ContentLengthSIPHeaderField.newForAttributes(value=11)]
-        request = SUBSCRIBESIPRequest.newForAttributes(sipMethod='SUBSCRIBE', requestURI='sip:example.com', content='Foo Content', header=SIPHeader.newForAttributes(headerFields=headerFields))
-        self.runAssertionsForRequest(request)
+        self.run_test_rendering_from_list_of_header_fields()
 
     def test_rendering_from_one_big_header_string(self):
-        headerFields = ('From: <sip:200.25.3.150:5061>;tag=0ee8d3e272e31c9195299efc500\r\n'
-                        'To: <sip:example.com:5061>\r\n'
-                        'Call-ID: 0ee8d3e272e31c9195299efc500\r\n'
-                        'CSeq: 6711 SUBSCRIBE\r\n'
-                        'Max-Forwards: 70\r\n'
-                        'Via: SIP/2.0/TLS 200.25.3.150;branch=z9hG4bK0ee8d3e272e31ca195299efc500\r\n'
-                        'User-Agent: Example User Agent\r\n'
-                        'Contact: <sip:invalid@200.25.3.150:5061;transport=tls>\r\n'
-                        'Route: <sip:200.30.10.12:5061;transport=tls;lr>\r\n'
-                        'Expires: 0\r\n'
-                        'Accept: application/sdp,application/isup,application/dtmf,application/dtmf-relay,multipart/mixed\r\n'
-                        'Accept-Encoding: x-nortel-short\r\n'
-                        'Accept-Language: en-us,fr-fr\r\n'
-                        'Allow:  ACK,BYE,CANCEL,INFO,INVITE,OPTIONS,REGISTER,SUBSCRIBE,UPDATE\r\n'
-                        'Authorization: Digest username="3122221000",realm="SomeRealm",nonce="1111790769596",uri="sip:3122211004@example.com",response="9bf77d8238664fe08dafd4d2abb6f1cb",algorithm=MD5\r\n'
-                        'Call-Info: <https://lsc14pa.example.com:443/pa/direct/pictureServlet?user=3126805100@example.com>;Purpose=icon\r\n'
-                        'Content-Disposition: session;handling=required\r\n'
-                        'Content-Type: application/sdp\r\n'
-                        'Date: Sat, 01 Feb 2014 22:07:34 GMT\r\n'
-                        'Record-Route: <sip:200.25.3.230:5061;transport=tls;lr>\r\n'
-                        'Require: sdp-anat\r\n'
-                        'Retry-After: 30\r\n'
-                        'Server: Blargomatic 2.0\r\n'
-                        'Session-Expires: 1200;refresher=uac\r\n'
-                        'Supported: 100rel,histinfo,join,replaces,sdp-anat,timer\r\n'
-                        'Timestamp: 1392061773\r\n'
-                        'WWW-Authenticate: Digest algorithm=MD5,nonce="1111790769596",realm="SomeRealm"\r\n'
-                        'Warning: 370 200.21.3.10 "Insufficient Bandwidth"\r\n'
-                        'X-RTP-Stat:  PR=0;ER=0;PL=0;RB=0/0;DE=PCMU;EN=PCMU;JI=0;DL=0,0;IP=10.1.0.33:16384,132.52.127.200:20048\r\n'
-                        'x-channel:  ds/ds1-3/12;IP=132.52.127.16\r\n'
-                        'Referred-By: <sip:6006665100@example.com;user=phone> ; CorrelationID="0508817f84e7ce64745ef9753e2fbff4664321a4@200.23.3.240"\r\n'
-                        'Refer-To: <sip:6006665499;rfrid=28661859@example.com;user=phone?x-nt-resource-priority=YNBvf.2j00qao>\r\n'
-                        'Content-Length: 11')  # This last one actually instantiates a ContentLengthSIPHeaderField.
-        request = SUBSCRIBESIPRequest.newForAttributes(sipMethod='SUBSCRIBE', requestURI='sip:example.com', content='Foo Content', header=SIPHeader.newForAttributes(headerFields=headerFields))
-        self.runAssertionsForRequest(request)
+        self.run_test_rendering_from_one_big_header_string()
 
     def test_rendering_from_list_of_header_field_strings(self):
-        headerFields = ['From: <sip:200.25.3.150:5061>;tag=0ee8d3e272e31c9195299efc500',
-                        'To: <sip:example.com:5061>',
-                        'Call-ID: 0ee8d3e272e31c9195299efc500',
-                        'CSeq: 6711 SUBSCRIBE',
-                        'Max-Forwards: 70',
-                        'Via: SIP/2.0/TLS 200.25.3.150;branch=z9hG4bK0ee8d3e272e31ca195299efc500',
-                        'User-Agent: Example User Agent',
-                        'Contact: <sip:invalid@200.25.3.150:5061;transport=tls>',
-                        'Route: <sip:200.30.10.12:5061;transport=tls;lr>',
-                        'Expires: 0',
-                        'Accept: application/sdp,application/isup,application/dtmf,application/dtmf-relay,multipart/mixed',
-                        'Accept-Encoding: x-nortel-short',
-                        'Accept-Language: en-us,fr-fr',
-                        'Allow:  ACK,BYE,CANCEL,INFO,INVITE,OPTIONS,REGISTER,SUBSCRIBE,UPDATE',
-                        'Authorization: Digest username="3122221000",realm="SomeRealm",nonce="1111790769596",uri="sip:3122211004@example.com",response="9bf77d8238664fe08dafd4d2abb6f1cb",algorithm=MD5',
-                        'Call-Info: <https://lsc14pa.example.com:443/pa/direct/pictureServlet?user=3126805100@example.com>;Purpose=icon',
-                        'Content-Disposition: session;handling=required',
-                        'Content-Type: application/sdp',
-                        'Date: Sat, 01 Feb 2014 22:07:34 GMT',
-                        'Record-Route: <sip:200.25.3.230:5061;transport=tls;lr>',
-                        'Require: sdp-anat',
-                        'Retry-After: 30',
-                        'Server: Blargomatic 2.0',
-                        'Session-Expires: 1200;refresher=uac',
-                        'Supported: 100rel,histinfo,join,replaces,sdp-anat,timer',
-                        'Timestamp: 1392061773',
-                        'WWW-Authenticate: Digest algorithm=MD5,nonce="1111790769596",realm="SomeRealm"',
-                        'Warning: 370 200.21.3.10 "Insufficient Bandwidth"',
-                        'X-RTP-Stat:  PR=0;ER=0;PL=0;RB=0/0;DE=PCMU;EN=PCMU;JI=0;DL=0,0;IP=10.1.0.33:16384,132.52.127.200:20048',
-                        'x-channel:  ds/ds1-3/12;IP=132.52.127.16',
-                        'Referred-By: <sip:6006665100@example.com;user=phone> ; CorrelationID="0508817f84e7ce64745ef9753e2fbff4664321a4@200.23.3.240"',
-                        'Refer-To: <sip:6006665499;rfrid=28661859@example.com;user=phone?x-nt-resource-priority=YNBvf.2j00qao>',
-                        'Content-Length: 11']  # This last one actually instantiates a ContentLengthSIPHeaderField.
-        request = SUBSCRIBESIPRequest.newForAttributes(sipMethod='SUBSCRIBE', requestURI='sip:example.com', content='Foo Content', header=SIPHeader.newForAttributes(headerFields=headerFields))
-        self.runAssertionsForRequest(request)
+        self.run_test_rendering_from_list_of_header_field_strings()
 
     def test_rendering_from_list_of_field_names_and_values(self):
-        headerFields = [('From', '<sip:200.25.3.150:5061>;tag=0ee8d3e272e31c9195299efc500'),
-                        ('To', '<sip:example.com:5061>'),
-                        ('Call-ID', '0ee8d3e272e31c9195299efc500'),
-                        ('CSeq', '6711 SUBSCRIBE'),
-                        ('Max-Forwards', 70),  # note the integer value.
-                        ('Via', 'SIP/2.0/TLS 200.25.3.150;branch=z9hG4bK0ee8d3e272e31ca195299efc500'),
-                        ('User-Agent', 'Example User Agent'),
-                        ('Contact', '<sip:invalid@200.25.3.150:5061;transport=tls>'),
-                        ('Route', '<sip:200.30.10.12:5061;transport=tls;lr>'),
-                        ('Expires', 0),
-                        ('Accept', 'application/sdp,application/isup,application/dtmf,application/dtmf-relay,multipart/mixed'),
-                        ('Accept-Encoding', 'x-nortel-short'),
-                        ('Accept-Language', 'en-us,fr-fr'),
-                        ('Allow', ' ACK,BYE,CANCEL,INFO,INVITE,OPTIONS,REGISTER,SUBSCRIBE,UPDATE'),
-                        ('Authorization', 'Digest username="3122221000",realm="SomeRealm",nonce="1111790769596",uri="sip:3122211004@example.com",response="9bf77d8238664fe08dafd4d2abb6f1cb",algorithm=MD5'),
-                        ('Call-Info', '<https://lsc14pa.example.com:443/pa/direct/pictureServlet?user=3126805100@example.com>;Purpose=icon'),
-                        ('Content-Disposition', 'session;handling=required'),
-                        ('Content-Type', 'application/sdp'),
-                        ('Date', 'Sat, 01 Feb 2014 22:07:34 GMT'),
-                        ('Record-Route', '<sip:200.25.3.230:5061;transport=tls;lr>'),
-                        ('Require', 'sdp-anat'),
-                        ('Retry-After', '30'),
-                        ('Server', 'Blargomatic 2.0'),
-                        ('Session-Expires', '1200;refresher=uac'),
-                        ('Supported', '100rel,histinfo,join,replaces,sdp-anat,timer'),
-                        ('Timestamp', '1392061773'),
-                        ('WWW-Authenticate', 'Digest algorithm=MD5,nonce="1111790769596",realm="SomeRealm"'),
-                        ('Warning', '370 200.21.3.10 "Insufficient Bandwidth"'),
-                        ('X-RTP-Stat', ' PR=0;ER=0;PL=0;RB=0/0;DE=PCMU;EN=PCMU;JI=0;DL=0,0;IP=10.1.0.33:16384,132.52.127.200:20048'),
-                        ('x-channel', ' ds/ds1-3/12;IP=132.52.127.16'),
-                        ('Referred-By', '<sip:6006665100@example.com;user=phone> ; CorrelationID="0508817f84e7ce64745ef9753e2fbff4664321a4@200.23.3.240"'),
-                        ('Refer-To', '<sip:6006665499;rfrid=28661859@example.com;user=phone?x-nt-resource-priority=YNBvf.2j00qao>'),
-                        ('Content-Length', {"value": 11})]  # This last one actually instantiates a ContentLengthSIPHeaderField.
-        request = SUBSCRIBESIPRequest.newForAttributes(sipMethod='SUBSCRIBE', requestURI='sip:example.com', content='Foo Content', header=SIPHeader.newForAttributes(headerFields=headerFields))
-        self.runAssertionsForRequest(request)
+        self.run_test_rendering_from_list_of_field_names_and_values()
 
     def test_rendering_from_list_of_field_names_and_values_using_property_dict(self):
-        headerFields = [('From', '<sip:200.25.3.150:5061>;tag=0ee8d3e272e31c9195299efc500'),
-                        ('To', '<sip:example.com:5061>'),
-                        ('Call-ID', '0ee8d3e272e31c9195299efc500'),
-                        ('CSeq', '6711 SUBSCRIBE'),
-                        ('Max-Forwards', 70),  # note the integer value.
-                        ('Via', 'SIP/2.0/TLS 200.25.3.150;branch=z9hG4bK0ee8d3e272e31ca195299efc500'),
-                        ('User-Agent', 'Example User Agent'),
-                        ('Contact', '<sip:invalid@200.25.3.150:5061;transport=tls>'),
-                        ('Route', '<sip:200.30.10.12:5061;transport=tls;lr>'),
-                        ('Expires', 0),
-                        ('Accept', 'application/sdp,application/isup,application/dtmf,application/dtmf-relay,multipart/mixed'),
-                        ('Accept-Encoding', 'x-nortel-short'),
-                        ('Accept-Language', 'en-us,fr-fr'),
-                        ('Allow', ' ACK,BYE,CANCEL,INFO,INVITE,OPTIONS,REGISTER,SUBSCRIBE,UPDATE'),
-                        ('Authorization', 'Digest username="3122221000",realm="SomeRealm",nonce="1111790769596",uri="sip:3122211004@example.com",response="9bf77d8238664fe08dafd4d2abb6f1cb",algorithm=MD5'),
-                        ('Call-Info', '<https://lsc14pa.example.com:443/pa/direct/pictureServlet?user=3126805100@example.com>;Purpose=icon'),
-                        ('Content-Disposition', 'session;handling=required'),
-                        ('Content-Type', 'application/sdp'),
-                        ('Date', 'Sat, 01 Feb 2014 22:07:34 GMT'),
-                        ('Record-Route', '<sip:200.25.3.230:5061;transport=tls;lr>'),
-                        ('Require', 'sdp-anat'),
-                        ('Retry-After', '30'),
-                        ('Server', 'Blargomatic 2.0'),
-                        ('Session-Expires', '1200;refresher=uac'),
-                        ('Supported', '100rel,histinfo,join,replaces,sdp-anat,timer'),
-                        ('Timestamp', '1392061773'),
-                        ('WWW-Authenticate', 'Digest algorithm=MD5,nonce="1111790769596",realm="SomeRealm"'),
-                        ('Warning', '370 200.21.3.10 "Insufficient Bandwidth"'),
-                        ('X-RTP-Stat', ' PR=0;ER=0;PL=0;RB=0/0;DE=PCMU;EN=PCMU;JI=0;DL=0,0;IP=10.1.0.33:16384,132.52.127.200:20048'),
-                        ('x-channel', ' ds/ds1-3/12;IP=132.52.127.16'),
-                        ('Referred-By', '<sip:6006665100@example.com;user=phone> ; CorrelationID="0508817f84e7ce64745ef9753e2fbff4664321a4@200.23.3.240"'),
-                        ('Refer-To', '<sip:6006665499;rfrid=28661859@example.com;user=phone?x-nt-resource-priority=YNBvf.2j00qao>'),
-                        ('Content-Length', {"value": 11})]  # This last one actually instantiates a ContentLengthSIPHeaderField.
-        request = SUBSCRIBESIPRequest.newForAttributes(sipMethod='SUBSCRIBE', requestURI='sip:example.com', content='Foo Content', header=SIPHeader.newForAttributes(headerFields=headerFields))
-        self.runAssertionsForRequest(request)
+        self.run_test_rendering_from_list_of_field_names_and_values_using_property_dict()
 
-    def runAssertionsForRequest(self, aSIPRequest):
-        self.assertEqual(aSIPRequest.rawString, self.canonicalStrings[0])
+    def runAssertionsForSIPMessage(self, aSIPRequest):
+        super(TestSUBSCRIBESIPRequest, self).runAssertionsForSIPMessage(aSIPRequest)
         self.assertTrue(aSIPRequest.isKnown)
         self.assertFalse(aSIPRequest.isUnknown)
-        self.assertTrue(aSIPRequest.isValid)
-        self.assertTrue(aSIPRequest.isRequest)
-        self.assertFalse(aSIPRequest.isResponse)
         self.assertFalse(aSIPRequest.isACKRequest)
         self.assertFalse(aSIPRequest.isBYERequest)
         self.assertFalse(aSIPRequest.isCANCELRequest)
@@ -2981,263 +498,39 @@ class TestSUBSCRIBESIPRequest(TestCase):
         self.assertFalse(aSIPRequest.isREGISTERRequest)
         self.assertTrue(aSIPRequest.isSUBSCRIBERequest)
         self.assertFalse(aSIPRequest.isUPDATERequest)
-        self.assertFalse(aSIPRequest.isMalformed)
-        # self.assertEqual(1, [headerField for headerField in aSIPRequest.header.headerFields if headerField.isContentLength].__len__())
-        # self.assertEqual(11, next(headerField for headerField in aSIPRequest.header.headerFields if headerField.isContentLength).value)
-        # self.assertEqual(10, [headerField for headerField in aSIPRequest.header.headerFields if headerField.isUnknown].__len__())
-        self.assertIsNotNone(aSIPRequest.header.contentLengthHeaderField)
-        self.assertEqual(11, aSIPRequest.header.contentLength)
-        self.assertEqual(1, aSIPRequest.header.viaHeaderFields.__len__())
-        self.assertEqual(1, aSIPRequest.header.vias.__len__())
-        self.assertEqual('SIP/2.0/TLS 200.25.3.150;branch=z9hG4bK0ee8d3e272e31ca195299efc500', aSIPRequest.header.vias[0])
-        self.assertEqual(4, aSIPRequest.header.unknownHeaderFields.__len__())
-        self.assertTrue(aSIPRequest.startLine.isRequest)
-        self.assertFalse(aSIPRequest.startLine.isResponse)
-        self.assertEqual('Foo Content', aSIPRequest.content)
-        self.assertEqual('SUBSCRIBE', aSIPRequest.startLine.sipMethod)
-        self.assertEqual('sip:example.com', aSIPRequest.startLine.requestURI)
 
 
-class TestUPDATESIPRequest(TestCase):
+class TestUPDATESIPRequest(AbstractSIPRequestTestCase):
     @property
-    def canonicalStrings(self):
-        return [
-            ('UPDATE sip:example.com SIP/2.0\r\n'
-             'From: <sip:200.25.3.150:5061>;tag=0ee8d3e272e31c9195299efc500\r\n'
-             'To: <sip:example.com:5061>\r\n'
-             'Call-ID: 0ee8d3e272e31c9195299efc500\r\n'
-             'CSeq: 6711 UPDATE\r\n'
-             'Max-Forwards: 70\r\n'
-             'Via: SIP/2.0/TLS 200.25.3.150;branch=z9hG4bK0ee8d3e272e31ca195299efc500\r\n'
-             'User-Agent: Example User Agent\r\n'
-             'Contact: <sip:invalid@200.25.3.150:5061;transport=tls>\r\n'
-             'Route: <sip:200.30.10.12:5061;transport=tls;lr>\r\n'
-             'Expires: 0\r\n'
-             'Accept: application/sdp,application/isup,application/dtmf,application/dtmf-relay,multipart/mixed\r\n'
-             'Accept-Encoding: x-nortel-short\r\n'
-             'Accept-Language: en-us,fr-fr\r\n'
-             'Allow:  ACK,BYE,CANCEL,INFO,INVITE,OPTIONS,REGISTER,SUBSCRIBE,UPDATE\r\n'
-             'Authorization: Digest username="3122221000",realm="SomeRealm",nonce="1111790769596",uri="sip:3122211004@example.com",response="9bf77d8238664fe08dafd4d2abb6f1cb",algorithm=MD5\r\n'
-             'Call-Info: <https://lsc14pa.example.com:443/pa/direct/pictureServlet?user=3126805100@example.com>;Purpose=icon\r\n'
-             'Content-Disposition: session;handling=required\r\n'
-             'Content-Type: application/sdp\r\n'
-             'Date: Sat, 01 Feb 2014 22:07:34 GMT\r\n'
-             'Record-Route: <sip:200.25.3.230:5061;transport=tls;lr>\r\n'
-             'Require: sdp-anat\r\n'
-             'Retry-After: 30\r\n'
-             'Server: Blargomatic 2.0\r\n'
-             'Session-Expires: 1200;refresher=uac\r\n'
-             'Supported: 100rel,histinfo,join,replaces,sdp-anat,timer\r\n'
-             'Timestamp: 1392061773\r\n'
-             'WWW-Authenticate: Digest algorithm=MD5,nonce="1111790769596",realm="SomeRealm"\r\n'
-             'Warning: 370 200.21.3.10 "Insufficient Bandwidth"\r\n'
-             'X-RTP-Stat:  PR=0;ER=0;PL=0;RB=0/0;DE=PCMU;EN=PCMU;JI=0;DL=0,0;IP=10.1.0.33:16384,132.52.127.200:20048\r\n'
-             'x-channel:  ds/ds1-3/12;IP=132.52.127.16\r\n'
-             'Referred-By: <sip:6006665100@example.com;user=phone> ; CorrelationID="0508817f84e7ce64745ef9753e2fbff4664321a4@200.23.3.240"\r\n'
-             'Refer-To: <sip:6006665499;rfrid=28661859@example.com;user=phone?x-nt-resource-priority=YNBvf.2j00qao>\r\n'
-             'Content-Length: 11\r\n'
-             '\r\n'
-             'Foo Content')
-        ]
+    def sipMethodString(self):
+        return "UPDATE"
+
+    @property
+    def sipMessageClassUnderTest(self):
+        return UPDATESIPRequest
 
     def test_parsing(self):
-        for messageString in self.canonicalStrings:
-            request = UPDATESIPRequest.newParsedFrom(messageString)
-            self.runAssertionsForRequest(request)
+        self.run_test_parsing()
 
     def test_rendering_from_list_of_header_fields(self):
-        headerFields = [
-            FromSIPHeaderField.newForAttributes(fieldValue='<sip:200.25.3.150:5061>;tag=0ee8d3e272e31c9195299efc500'),
-            ToSIPHeaderField.newForAttributes(fieldValue='<sip:example.com:5061>'),
-            CallIDSIPHeaderField.newForAttributes(fieldValue='0ee8d3e272e31c9195299efc500'),
-            CSeqSIPHeaderField.newForAttributes(fieldValue='6711 UPDATE'),
-            MaxForwardsSIPHeaderField.newForAttributes(fieldValue='70'),
-            ViaSIPHeaderField.newForAttributes(fieldValue='SIP/2.0/TLS 200.25.3.150;branch=z9hG4bK0ee8d3e272e31ca195299efc500'),
-            UserAgentSIPHeaderField.newForAttributes(fieldValue='Example User Agent'),
-            ContactSIPHeaderField.newForAttributes(fieldValue='<sip:invalid@200.25.3.150:5061;transport=tls>'),
-            RouteSIPHeaderField.newForAttributes(fieldValue='<sip:200.30.10.12:5061;transport=tls;lr>'),
-            ExpiresSIPHeaderField.newForAttributes(fieldValue='0'),
-            AcceptSIPHeaderField.newForAttributes(fieldValue='application/sdp,application/isup,application/dtmf,application/dtmf-relay,multipart/mixed'),
-            AcceptEncodingSIPHeaderField.newForAttributes(fieldValue='x-nortel-short'),
-            AcceptLanguageSIPHeaderField.newForAttributes(fieldValue='en-us,fr-fr'),
-            AllowSIPHeaderField.newForAttributes(fieldValue=' ACK,BYE,CANCEL,INFO,INVITE,OPTIONS,REGISTER,SUBSCRIBE,UPDATE'),
-            AuthorizationSIPHeaderField.newForAttributes(fieldValue='Digest username="3122221000",realm="SomeRealm",nonce="1111790769596",uri="sip:3122211004@example.com",response="9bf77d8238664fe08dafd4d2abb6f1cb",algorithm=MD5'),
-            CallInfoSIPHeaderField.newForAttributes(fieldValue='<https://lsc14pa.example.com:443/pa/direct/pictureServlet?user=3126805100@example.com>;Purpose=icon'),
-            ContentDispositionSIPHeaderField.newForAttributes(fieldValue='session;handling=required'),
-            ContentTypeSIPHeaderField.newForAttributes(fieldValue='application/sdp'),
-            DateSIPHeaderField.newForAttributes(fieldValue='Sat, 01 Feb 2014 22:07:34 GMT'),
-            RecordRouteSIPHeaderField.newForAttributes(fieldValue='<sip:200.25.3.230:5061;transport=tls;lr>'),
-            RequireSIPHeaderField.newForAttributes(fieldValue='sdp-anat'),
-            RetryAfterSIPHeaderField.newForAttributes(fieldValue='30'),
-            ServerSIPHeaderField.newForAttributes(fieldValue='Blargomatic 2.0'),
-            SessionExpiresSIPHeaderField.newForAttributes(fieldValue='1200;refresher=uac'),
-            SupportedSIPHeaderField.newForAttributes(fieldValue='100rel,histinfo,join,replaces,sdp-anat,timer'),
-            TimestampSIPHeaderField.newForAttributes(fieldValue='1392061773'),
-            WWWAuthenticateSIPHeaderField.newForAttributes(fieldValue='Digest algorithm=MD5,nonce="1111790769596",realm="SomeRealm"'),
-            WarningSIPHeaderField.newForAttributes(fieldValue='370 200.21.3.10 "Insufficient Bandwidth"'),
-            UnknownSIPHeaderField.newForAttributes(fieldName='X-RTP-Stat', fieldValue=' PR=0;ER=0;PL=0;RB=0/0;DE=PCMU;EN=PCMU;JI=0;DL=0,0;IP=10.1.0.33:16384,132.52.127.200:20048'),
-            UnknownSIPHeaderField.newForAttributes(fieldName='x-channel', fieldValue=' ds/ds1-3/12;IP=132.52.127.16'),
-            UnknownSIPHeaderField.newForAttributes(fieldName='Referred-By', fieldValue='<sip:6006665100@example.com;user=phone> ; CorrelationID="0508817f84e7ce64745ef9753e2fbff4664321a4@200.23.3.240"'),
-            UnknownSIPHeaderField.newForAttributes(fieldName='Refer-To', fieldValue='<sip:6006665499;rfrid=28661859@example.com;user=phone?x-nt-resource-priority=YNBvf.2j00qao>'),
-            ContentLengthSIPHeaderField.newForAttributes(value=11)]
-        request = UPDATESIPRequest.newForAttributes(sipMethod='UPDATE', requestURI='sip:example.com', content='Foo Content', header=SIPHeader.newForAttributes(headerFields=headerFields))
-        self.runAssertionsForRequest(request)
+        self.run_test_rendering_from_list_of_header_fields()
 
     def test_rendering_from_one_big_header_string(self):
-        headerFields = ('From: <sip:200.25.3.150:5061>;tag=0ee8d3e272e31c9195299efc500\r\n'
-                        'To: <sip:example.com:5061>\r\n'
-                        'Call-ID: 0ee8d3e272e31c9195299efc500\r\n'
-                        'CSeq: 6711 UPDATE\r\n'
-                        'Max-Forwards: 70\r\n'
-                        'Via: SIP/2.0/TLS 200.25.3.150;branch=z9hG4bK0ee8d3e272e31ca195299efc500\r\n'
-                        'User-Agent: Example User Agent\r\n'
-                        'Contact: <sip:invalid@200.25.3.150:5061;transport=tls>\r\n'
-                        'Route: <sip:200.30.10.12:5061;transport=tls;lr>\r\n'
-                        'Expires: 0\r\n'
-                        'Accept: application/sdp,application/isup,application/dtmf,application/dtmf-relay,multipart/mixed\r\n'
-                        'Accept-Encoding: x-nortel-short\r\n'
-                        'Accept-Language: en-us,fr-fr\r\n'
-                        'Allow:  ACK,BYE,CANCEL,INFO,INVITE,OPTIONS,REGISTER,SUBSCRIBE,UPDATE\r\n'
-                        'Authorization: Digest username="3122221000",realm="SomeRealm",nonce="1111790769596",uri="sip:3122211004@example.com",response="9bf77d8238664fe08dafd4d2abb6f1cb",algorithm=MD5\r\n'
-                        'Call-Info: <https://lsc14pa.example.com:443/pa/direct/pictureServlet?user=3126805100@example.com>;Purpose=icon\r\n'
-                        'Content-Disposition: session;handling=required\r\n'
-                        'Content-Type: application/sdp\r\n'
-                        'Date: Sat, 01 Feb 2014 22:07:34 GMT\r\n'
-                        'Record-Route: <sip:200.25.3.230:5061;transport=tls;lr>\r\n'
-                        'Require: sdp-anat\r\n'
-                        'Retry-After: 30\r\n'
-                        'Server: Blargomatic 2.0\r\n'
-                        'Session-Expires: 1200;refresher=uac\r\n'
-                        'Supported: 100rel,histinfo,join,replaces,sdp-anat,timer\r\n'
-                        'Timestamp: 1392061773\r\n'
-                        'WWW-Authenticate: Digest algorithm=MD5,nonce="1111790769596",realm="SomeRealm"\r\n'
-                        'Warning: 370 200.21.3.10 "Insufficient Bandwidth"\r\n'
-                        'X-RTP-Stat:  PR=0;ER=0;PL=0;RB=0/0;DE=PCMU;EN=PCMU;JI=0;DL=0,0;IP=10.1.0.33:16384,132.52.127.200:20048\r\n'
-                        'x-channel:  ds/ds1-3/12;IP=132.52.127.16\r\n'
-                        'Referred-By: <sip:6006665100@example.com;user=phone> ; CorrelationID="0508817f84e7ce64745ef9753e2fbff4664321a4@200.23.3.240"\r\n'
-                        'Refer-To: <sip:6006665499;rfrid=28661859@example.com;user=phone?x-nt-resource-priority=YNBvf.2j00qao>\r\n'
-                        'Content-Length: 11')  # This last one actually instantiates a ContentLengthSIPHeaderField.
-        request = UPDATESIPRequest.newForAttributes(sipMethod='UPDATE', requestURI='sip:example.com', content='Foo Content', header=SIPHeader.newForAttributes(headerFields=headerFields))
-        self.runAssertionsForRequest(request)
+        self.run_test_rendering_from_one_big_header_string()
 
     def test_rendering_from_list_of_header_field_strings(self):
-        headerFields = ['From: <sip:200.25.3.150:5061>;tag=0ee8d3e272e31c9195299efc500',
-                        'To: <sip:example.com:5061>',
-                        'Call-ID: 0ee8d3e272e31c9195299efc500',
-                        'CSeq: 6711 UPDATE',
-                        'Max-Forwards: 70',
-                        'Via: SIP/2.0/TLS 200.25.3.150;branch=z9hG4bK0ee8d3e272e31ca195299efc500',
-                        'User-Agent: Example User Agent',
-                        'Contact: <sip:invalid@200.25.3.150:5061;transport=tls>',
-                        'Route: <sip:200.30.10.12:5061;transport=tls;lr>',
-                        'Expires: 0',
-                        'Accept: application/sdp,application/isup,application/dtmf,application/dtmf-relay,multipart/mixed',
-                        'Accept-Encoding: x-nortel-short',
-                        'Accept-Language: en-us,fr-fr',
-                        'Allow:  ACK,BYE,CANCEL,INFO,INVITE,OPTIONS,REGISTER,SUBSCRIBE,UPDATE',
-                        'Authorization: Digest username="3122221000",realm="SomeRealm",nonce="1111790769596",uri="sip:3122211004@example.com",response="9bf77d8238664fe08dafd4d2abb6f1cb",algorithm=MD5',
-                        'Call-Info: <https://lsc14pa.example.com:443/pa/direct/pictureServlet?user=3126805100@example.com>;Purpose=icon',
-                        'Content-Disposition: session;handling=required',
-                        'Content-Type: application/sdp',
-                        'Date: Sat, 01 Feb 2014 22:07:34 GMT',
-                        'Record-Route: <sip:200.25.3.230:5061;transport=tls;lr>',
-                        'Require: sdp-anat',
-                        'Retry-After: 30',
-                        'Server: Blargomatic 2.0',
-                        'Session-Expires: 1200;refresher=uac',
-                        'Supported: 100rel,histinfo,join,replaces,sdp-anat,timer',
-                        'Timestamp: 1392061773',
-                        'WWW-Authenticate: Digest algorithm=MD5,nonce="1111790769596",realm="SomeRealm"',
-                        'Warning: 370 200.21.3.10 "Insufficient Bandwidth"',
-                        'X-RTP-Stat:  PR=0;ER=0;PL=0;RB=0/0;DE=PCMU;EN=PCMU;JI=0;DL=0,0;IP=10.1.0.33:16384,132.52.127.200:20048',
-                        'x-channel:  ds/ds1-3/12;IP=132.52.127.16',
-                        'Referred-By: <sip:6006665100@example.com;user=phone> ; CorrelationID="0508817f84e7ce64745ef9753e2fbff4664321a4@200.23.3.240"',
-                        'Refer-To: <sip:6006665499;rfrid=28661859@example.com;user=phone?x-nt-resource-priority=YNBvf.2j00qao>',
-                        'Content-Length: 11']  # This last one actually instantiates a ContentLengthSIPHeaderField.
-        request = UPDATESIPRequest.newForAttributes(sipMethod='UPDATE', requestURI='sip:example.com', content='Foo Content', header=SIPHeader.newForAttributes(headerFields=headerFields))
-        self.runAssertionsForRequest(request)
+        self.run_test_rendering_from_list_of_header_field_strings()
 
     def test_rendering_from_list_of_field_names_and_values(self):
-        headerFields = [('From', '<sip:200.25.3.150:5061>;tag=0ee8d3e272e31c9195299efc500'),
-                        ('To', '<sip:example.com:5061>'),
-                        ('Call-ID', '0ee8d3e272e31c9195299efc500'),
-                        ('CSeq', '6711 UPDATE'),
-                        ('Max-Forwards', 70),  # note the integer value.
-                        ('Via', 'SIP/2.0/TLS 200.25.3.150;branch=z9hG4bK0ee8d3e272e31ca195299efc500'),
-                        ('User-Agent', 'Example User Agent'),
-                        ('Contact', '<sip:invalid@200.25.3.150:5061;transport=tls>'),
-                        ('Route', '<sip:200.30.10.12:5061;transport=tls;lr>'),
-                        ('Expires', 0),
-                        ('Accept', 'application/sdp,application/isup,application/dtmf,application/dtmf-relay,multipart/mixed'),
-                        ('Accept-Encoding', 'x-nortel-short'),
-                        ('Accept-Language', 'en-us,fr-fr'),
-                        ('Allow', ' ACK,BYE,CANCEL,INFO,INVITE,OPTIONS,REGISTER,SUBSCRIBE,UPDATE'),
-                        ('Authorization', 'Digest username="3122221000",realm="SomeRealm",nonce="1111790769596",uri="sip:3122211004@example.com",response="9bf77d8238664fe08dafd4d2abb6f1cb",algorithm=MD5'),
-                        ('Call-Info', '<https://lsc14pa.example.com:443/pa/direct/pictureServlet?user=3126805100@example.com>;Purpose=icon'),
-                        ('Content-Disposition', 'session;handling=required'),
-                        ('Content-Type', 'application/sdp'),
-                        ('Date', 'Sat, 01 Feb 2014 22:07:34 GMT'),
-                        ('Record-Route', '<sip:200.25.3.230:5061;transport=tls;lr>'),
-                        ('Require', 'sdp-anat'),
-                        ('Retry-After', '30'),
-                        ('Server', 'Blargomatic 2.0'),
-                        ('Session-Expires', '1200;refresher=uac'),
-                        ('Supported', '100rel,histinfo,join,replaces,sdp-anat,timer'),
-                        ('Timestamp', '1392061773'),
-                        ('WWW-Authenticate', 'Digest algorithm=MD5,nonce="1111790769596",realm="SomeRealm"'),
-                        ('Warning', '370 200.21.3.10 "Insufficient Bandwidth"'),
-                        ('X-RTP-Stat', ' PR=0;ER=0;PL=0;RB=0/0;DE=PCMU;EN=PCMU;JI=0;DL=0,0;IP=10.1.0.33:16384,132.52.127.200:20048'),
-                        ('x-channel', ' ds/ds1-3/12;IP=132.52.127.16'),
-                        ('Referred-By', '<sip:6006665100@example.com;user=phone> ; CorrelationID="0508817f84e7ce64745ef9753e2fbff4664321a4@200.23.3.240"'),
-                        ('Refer-To', '<sip:6006665499;rfrid=28661859@example.com;user=phone?x-nt-resource-priority=YNBvf.2j00qao>'),
-                        ('Content-Length', {"value": 11})]  # This last one actually instantiates a ContentLengthSIPHeaderField.
-        request = UPDATESIPRequest.newForAttributes(sipMethod='UPDATE', requestURI='sip:example.com', content='Foo Content', header=SIPHeader.newForAttributes(headerFields=headerFields))
-        self.runAssertionsForRequest(request)
+        self.run_test_rendering_from_list_of_field_names_and_values()
 
     def test_rendering_from_list_of_field_names_and_values_using_property_dict(self):
-        headerFields = [('From', '<sip:200.25.3.150:5061>;tag=0ee8d3e272e31c9195299efc500'),
-                        ('To', '<sip:example.com:5061>'),
-                        ('Call-ID', '0ee8d3e272e31c9195299efc500'),
-                        ('CSeq', '6711 UPDATE'),
-                        ('Max-Forwards', 70),  # note the integer value.
-                        ('Via', 'SIP/2.0/TLS 200.25.3.150;branch=z9hG4bK0ee8d3e272e31ca195299efc500'),
-                        ('User-Agent', 'Example User Agent'),
-                        ('Contact', '<sip:invalid@200.25.3.150:5061;transport=tls>'),
-                        ('Route', '<sip:200.30.10.12:5061;transport=tls;lr>'),
-                        ('Expires', 0),
-                        ('Accept', 'application/sdp,application/isup,application/dtmf,application/dtmf-relay,multipart/mixed'),
-                        ('Accept-Encoding', 'x-nortel-short'),
-                        ('Accept-Language', 'en-us,fr-fr'),
-                        ('Allow', ' ACK,BYE,CANCEL,INFO,INVITE,OPTIONS,REGISTER,SUBSCRIBE,UPDATE'),
-                        ('Authorization', 'Digest username="3122221000",realm="SomeRealm",nonce="1111790769596",uri="sip:3122211004@example.com",response="9bf77d8238664fe08dafd4d2abb6f1cb",algorithm=MD5'),
-                        ('Call-Info', '<https://lsc14pa.example.com:443/pa/direct/pictureServlet?user=3126805100@example.com>;Purpose=icon'),
-                        ('Content-Disposition', 'session;handling=required'),
-                        ('Content-Type', 'application/sdp'),
-                        ('Date', 'Sat, 01 Feb 2014 22:07:34 GMT'),
-                        ('Record-Route', '<sip:200.25.3.230:5061;transport=tls;lr>'),
-                        ('Require', 'sdp-anat'),
-                        ('Retry-After', '30'),
-                        ('Server', 'Blargomatic 2.0'),
-                        ('Session-Expires', '1200;refresher=uac'),
-                        ('Supported', '100rel,histinfo,join,replaces,sdp-anat,timer'),
-                        ('Timestamp', '1392061773'),
-                        ('WWW-Authenticate', 'Digest algorithm=MD5,nonce="1111790769596",realm="SomeRealm"'),
-                        ('Warning', '370 200.21.3.10 "Insufficient Bandwidth"'),
-                        ('X-RTP-Stat', ' PR=0;ER=0;PL=0;RB=0/0;DE=PCMU;EN=PCMU;JI=0;DL=0,0;IP=10.1.0.33:16384,132.52.127.200:20048'),
-                        ('x-channel', ' ds/ds1-3/12;IP=132.52.127.16'),
-                        ('Referred-By', '<sip:6006665100@example.com;user=phone> ; CorrelationID="0508817f84e7ce64745ef9753e2fbff4664321a4@200.23.3.240"'),
-                        ('Refer-To', '<sip:6006665499;rfrid=28661859@example.com;user=phone?x-nt-resource-priority=YNBvf.2j00qao>'),
-                        ('Content-Length', {"value": 11})]  # This last one actually instantiates a ContentLengthSIPHeaderField.
-        request = UPDATESIPRequest.newForAttributes(sipMethod='UPDATE', requestURI='sip:example.com', content='Foo Content', header=SIPHeader.newForAttributes(headerFields=headerFields))
-        self.runAssertionsForRequest(request)
+        self.run_test_rendering_from_list_of_field_names_and_values_using_property_dict()
 
-    def runAssertionsForRequest(self, aSIPRequest):
-        self.assertEqual(aSIPRequest.rawString, self.canonicalStrings[0])
+    def runAssertionsForSIPMessage(self, aSIPRequest):
+        super(TestUPDATESIPRequest, self).runAssertionsForSIPMessage(aSIPRequest)
         self.assertTrue(aSIPRequest.isKnown)
         self.assertFalse(aSIPRequest.isUnknown)
-        self.assertTrue(aSIPRequest.isValid)
-        self.assertTrue(aSIPRequest.isRequest)
-        self.assertFalse(aSIPRequest.isResponse)
         self.assertFalse(aSIPRequest.isACKRequest)
         self.assertFalse(aSIPRequest.isBYERequest)
         self.assertFalse(aSIPRequest.isCANCELRequest)
@@ -3249,18 +542,3 @@ class TestUPDATESIPRequest(TestCase):
         self.assertFalse(aSIPRequest.isREGISTERRequest)
         self.assertFalse(aSIPRequest.isSUBSCRIBERequest)
         self.assertTrue(aSIPRequest.isUPDATERequest)
-        self.assertFalse(aSIPRequest.isMalformed)
-        # self.assertEqual(1, [headerField for headerField in aSIPRequest.header.headerFields if headerField.isContentLength].__len__())
-        # self.assertEqual(11, next(headerField for headerField in aSIPRequest.header.headerFields if headerField.isContentLength).value)
-        # self.assertEqual(10, [headerField for headerField in aSIPRequest.header.headerFields if headerField.isUnknown].__len__())
-        self.assertIsNotNone(aSIPRequest.header.contentLengthHeaderField)
-        self.assertEqual(11, aSIPRequest.header.contentLength)
-        self.assertEqual(1, aSIPRequest.header.viaHeaderFields.__len__())
-        self.assertEqual(1, aSIPRequest.header.vias.__len__())
-        self.assertEqual('SIP/2.0/TLS 200.25.3.150;branch=z9hG4bK0ee8d3e272e31ca195299efc500', aSIPRequest.header.vias[0])
-        self.assertEqual(4, aSIPRequest.header.unknownHeaderFields.__len__())
-        self.assertTrue(aSIPRequest.startLine.isRequest)
-        self.assertFalse(aSIPRequest.startLine.isResponse)
-        self.assertEqual('Foo Content', aSIPRequest.content)
-        self.assertEqual('UPDATE', aSIPRequest.startLine.sipMethod)
-        self.assertEqual('sip:example.com', aSIPRequest.startLine.requestURI)

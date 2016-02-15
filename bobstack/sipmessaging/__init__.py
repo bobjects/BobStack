@@ -1,4 +1,5 @@
 from sipHeaderField import SIPHeaderField
+from integerSIPHeaderField import IntegerSIPHeaderField
 from concreteheaderfields import ContentLengthSIPHeaderField
 from concreteheaderfields import ViaSIPHeaderField
 from concreteheaderfields import AcceptSIPHeaderField

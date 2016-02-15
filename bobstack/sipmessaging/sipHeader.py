@@ -5,7 +5,6 @@ except ImportError:
 from collections import OrderedDict
 from sipHeaderFieldFactory import SIPHeaderFieldFactory
 
-
 class SIPHeader(object):
     @classmethod
     def newParsedFrom(cls, stringioToParse):
@@ -28,6 +27,7 @@ class SIPHeader(object):
         self._unknownHeaderFields = None
         self._contentLengthHeaderField = None
         self._viaHeaderFields = None
+        # TODO: need to add other header field attributes besides just content-length and via.
 
     def parseAttributesFromStringIO(self, stringioToParse):
         self._headerFields = SIPHeaderFieldFactory().allForStringIO(stringioToParse)
@@ -97,7 +97,7 @@ class SIPHeader(object):
                         if isinstance(fieldValue, dict):  # fieldValue is dict of property names and values.
                             headerField = factory.nextForFieldName(fieldName)
                             for propertyName, propertyValue in fieldValue.iteritems():
-                                prop = headerField.__class__.__dict__.get(propertyName, None)
+                                prop = next(c.__dict__.get(propertyName, None) for c in headerField.__class__.__mro__ if propertyName in c.__dict__)
                                 if type(prop) is property:
                                     setter = prop.fset
                                     if setter:

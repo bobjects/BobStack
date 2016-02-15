@@ -1,4 +1,7 @@
-#!/usr/bin/python
+#!/usr/bin/env python2
+import glob
+import dpkt
+
 import sys
 sys.path.append("..")
 # from sipmessaging.sipMessageFactory import SIPMessageFactory
@@ -13,6 +16,7 @@ interimFile1PathName = '../proprietary-test-data/sanitized/interim1.txt'
 interimFile2PathName = '../proprietary-test-data/sanitized/interim2.txt'
 sanitizedFilePathName = '../proprietary-test-data/sanitized/sanitized.txt'
 rawLogFileDirectoryPathNames = [ '../proprietary-test-data/big-lab-test-logs-raw', '../proprietary-test-data/cust-1-logs-raw' ]
+pcapDirectoryPathNames = [ '../proprietary-test-data/cloud-resaved' ]
 messageSeparator = "__MESSAGESEPARATOR__"
 rawFileMessageSeparatorRegexes = [ "^>>>>>>>>>>  [^>]*>>>>>>>>>>>",
                                    "^>>>>>>>>>>  [^>]*>>>>>>>>>>", # for some reason, this is not catching 8 lines.
@@ -28,9 +32,10 @@ def createInterim1File():
     print "creating interim file 1"
     with open(interimFile1PathName, "w") as interimFile1:
         for rawLogFileDirectoryPathName in rawLogFileDirectoryPathNames:
-            for rawLogFilePathName in os.listdir(rawLogFileDirectoryPathName):
+            # for rawLogFilePathName in os.listdir(rawLogFileDirectoryPathName):
+            for rawLogFilePathName in sorted(glob.iglob(rawLogFileDirectoryPathName + '/tlslog*.txt')):
                 print rawLogFilePathName
-                with open(rawLogFileDirectoryPathName + "/" + rawLogFilePathName, "r") as rawLogFile:
+                with open(rawLogFilePathName, "r") as rawLogFile:
                     for line in rawLogFile:
                         line = line.replace("\r\r\n", "\r\n")
                         if any(regex.match(line) for regex in rawFileMessageSeparatorRegexes):
@@ -92,8 +97,37 @@ def processInterimFile():
                         sanitizedFile.write(line)
             print str(totalSIPMessages) + " total SIP messages"
 
+def processPCAPFiles():
+    print "processing pcap files"
+    with open(sanitizedFilePathName, "w") as sanitizedFile:
+        for pcapDirectoryPathName in pcapDirectoryPathNames:
+            for pcapFilePathName in sorted(glob.iglob(pcapDirectoryPathName + '/*.pcap')):
+                print pcapFilePathName
+                with open(pcapFilePathName, "r") as pcapFile:
+                    # for line in rawLogFile:
+                    #     line = line.replace("\r\r\n", "\r\n")
+                    #     if any(regex.match(line) for regex in rawFileMessageSeparatorRegexes):
+                    #         line = messageSeparator + "\r\n"
+                    #     interimFile1.write(line)
+                    # interimFile1.write("\r\n")
+                    for ts, pkt in dpkt.pcap.Reader(pcapFile):
+                        eth=dpkt.ethernet.Ethernet(pkt)
+                        if eth.type!=dpkt.ethernet.ETH_TYPE_IP:
+                            continue
+                        ip=eth.data
+                        if ip.data.dport == 5060:
+                            # TODO: Weirdness happening here.  Fix.
+                            data = ip.data.data
+                            if data.strip().__len__ > 20:
+                                sanitizedFile.write(data.strip())
+                                sanitizedFile.write(messageSeparator + "\r\n")
+                            else:
+                                print "GOT HERE."
+
+
 
 if __name__ == '__main__':
     print timeit.timeit(createInterim1File, number=1)
     print timeit.timeit(createInterim2File, number=1)
     print timeit.timeit(processInterimFile, number=1)
+    #print timeit.timeit(processPCAPFiles, number=1)

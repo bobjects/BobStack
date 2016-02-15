@@ -5,9 +5,13 @@ except ImportError:
 from unittest import TestCase
 import unittest
 import sys
+import settings
 #sys.path.append("..")
 #from sipmessaging import SIPMessageFactory
 sys.path.append("../..")
+from abstractSIPRequestFromFactoryTestCase import AbstractSIPRequestFromFactoryTestCase
+from abstractSIPResponseFromFactoryTestCase import AbstractSIPResponseFromFactoryTestCase
+from abstractMalformedSIPMessageFromFactoryTestCase import AbstractMalformedSIPMessageFromFactoryTestCase
 from bobstack.sipmessaging import SIPMessageFactory
 
 
@@ -45,7 +49,7 @@ class TestSIPMessageFactoryForSanitizedLogFile(TestCase):
         with open(self.unknownHeaderFieldNamesPathName, "w"):
             pass
 
-    # @unittest.skip("skipping test")
+    @unittest.skipIf(settings.skipLongTests, "Skipping long tests for now.")
     def test_parsing_sanitized_log_file(self):
         factory = SIPMessageFactory()
         factory.whenEventDo("malformedSIPMessage", self.handleMalformedSIPMessage)
@@ -180,6 +184,8 @@ class TestSIPMessageFactoryForSanitizedLogFile(TestCase):
         # self.assertIsNotNone(aSIPMessage.header.contentLengthHeaderField)
         self.assertIsInstance(aSIPMessage.header.contentLength, (int, long))
         self.assertIsInstance(aSIPMessage.header.unknownHeaderFields, list)
+        # print aSIPMessage.startLine.rawString
+        # print aSIPMessage.rawString
         self.assertFalse(aSIPMessage.isMalformed)
         self.assertFalse(aSIPMessage.startLine.isMalformed)
         self.assertIsInstance(aSIPMessage.startLine.isRequest, bool)
@@ -248,61 +254,15 @@ class TestSIPMessageFactoryForSanitizedLogFile(TestCase):
     def unknownHeaderFieldNamesPathName(self):
         return '../../proprietary-test-data/sanitized/unknownHeaderFieldNames.txt'
 
-#TODO:  Need to do new header fields.  Other canonicalStrings in this file as well.  And don't forget the asserts.
-class TestSIPMessageFactoryForMalformedSIPRequest(TestCase):
-    @property
-    def canonicalStrings(self):
-        return [
-            ('Malformed start line\r\n'
-             'From: <sip:200.25.3.150:5061>;tag=0ee8d3e272e31c9195299efc500\r\n'
-             'To: <sip:example.com:5061>\r\n'
-             'Call-ID: 0ee8d3e272e31c9195299efc500\r\n'
-             'CSeq: 6711 OPTIONS\r\n'
-             'Max-Forwards: 70\r\n'
-             'Via: SIP/2.0/TLS 200.25.3.150;branch=z9hG4bK0ee8d3e272e31ca195299efc500\r\n'
-             'User-Agent: Example User Agent\r\n'
-             'Contact: <sip:invalid@200.25.3.150:5061;transport=tls>\r\n'
-             'Route: <sip:200.30.10.12:5061;transport=tls;lr>\r\n'
-             'Expires: 0\r\n'
-             'Accept: application/sdp,application/isup,application/dtmf,application/dtmf-relay,multipart/mixed\r\n'
-             'Accept-Encoding: x-nortel-short\r\n'
-             'Accept-Language: en-us,fr-fr\r\n'
-             'Allow:  ACK,BYE,CANCEL,INFO,INVITE,OPTIONS,REGISTER,SUBSCRIBE,UPDATE\r\n'
-             'Authorization: Digest username="3122221000",realm="SomeRealm",nonce="1111790769596",uri="sip:3122211004@example.com",response="9bf77d8238664fe08dafd4d2abb6f1cb",algorithm=MD5\r\n'
-             'Call-Info: <https://lsc14pa.example.com:443/pa/direct/pictureServlet?user=3126805100@example.com>;Purpose=icon\r\n'
-             'Content-Disposition: session;handling=required\r\n'
-             'Content-Type: application/sdp\r\n'
-             'Date: Sat, 01 Feb 2014 22:07:34 GMT\r\n'
-             'Record-Route: <sip:200.25.3.230:5061;transport=tls;lr>\r\n'
-             'Require: sdp-anat\r\n'
-             'Retry-After: 30\r\n'
-             'Server: Blargomatic 2.0\r\n'
-             'Session-Expires: 1200;refresher=uac\r\n'
-             'Supported: 100rel,histinfo,join,replaces,sdp-anat,timer\r\n'
-             'Timestamp: 1392061773\r\n'
-             'WWW-Authenticate: Digest algorithm=MD5,nonce="1111790769596",realm="SomeRealm"\r\n'
-             'Warning: 370 200.21.3.10 "Insufficient Bandwidth"\r\n'
-             'X-RTP-Stat:  PR=0;ER=0;PL=0;RB=0/0;DE=PCMU;EN=PCMU;JI=0;DL=0,0;IP=10.1.0.33:16384,132.52.127.200:20048\r\n'
-             'x-channel:  ds/ds1-3/12;IP=132.52.127.16\r\n'
-             'Referred-By: <sip:6006665100@example.com;user=phone> ; CorrelationID="0508817f84e7ce64745ef9753e2fbff4664321a4@200.23.3.240"\r\n'
-             'Refer-To: <sip:6006665499;rfrid=28661859@example.com;user=phone?x-nt-resource-priority=YNBvf.2j00qao>\r\n'
-             'Content-Length: 11\r\n'
-             '\r\n'
-             'Foo Content')
-        ]
 
+class TestSIPMessageFactoryForMalformedSIPRequest(AbstractMalformedSIPMessageFromFactoryTestCase):
     def test_parsing(self):
-        for messageString in self.canonicalStrings:
-            request = SIPMessageFactory().nextForString(messageString)
-            self.runAssertionsForRequest(request)
+        self.run_test_parsing()
 
-    def runAssertionsForRequest(self, aSIPRequest):
-        self.assertEqual(aSIPRequest.rawString, self.canonicalStrings[0])
+    def runAssertionsForSIPMessage(self, aSIPRequest):
+        super(TestSIPMessageFactoryForMalformedSIPRequest, self).runAssertionsForSIPMessage(aSIPRequest)
         self.assertFalse(aSIPRequest.isKnown)
         self.assertTrue(aSIPRequest.isUnknown)
-        self.assertFalse(aSIPRequest.isValid)
-        self.assertFalse(aSIPRequest.isRequest)
-        self.assertFalse(aSIPRequest.isResponse)
         self.assertFalse(aSIPRequest.isACKRequest)
         self.assertFalse(aSIPRequest.isBYERequest)
         self.assertFalse(aSIPRequest.isCANCELRequest)
@@ -314,74 +274,20 @@ class TestSIPMessageFactoryForMalformedSIPRequest(TestCase):
         self.assertFalse(aSIPRequest.isREGISTERRequest)
         self.assertFalse(aSIPRequest.isSUBSCRIBERequest)
         self.assertFalse(aSIPRequest.isUPDATERequest)
-        self.assertTrue(aSIPRequest.isMalformed)
-        self.assertIsNotNone(aSIPRequest.header.contentLengthHeaderField)
-        self.assertEqual(11, aSIPRequest.header.contentLength)
-        self.assertEqual(1, aSIPRequest.header.viaHeaderFields.__len__())
-        self.assertEqual(1, aSIPRequest.header.vias.__len__())
-        self.assertEqual('SIP/2.0/TLS 200.25.3.150;branch=z9hG4bK0ee8d3e272e31ca195299efc500', aSIPRequest.header.vias[0])
-        self.assertEqual(4, aSIPRequest.header.unknownHeaderFields.__len__())
-        self.assertFalse(aSIPRequest.startLine.isRequest)
-        self.assertFalse(aSIPRequest.startLine.isResponse)
-        self.assertTrue(aSIPRequest.startLine.isMalformed)
-        self.assertEqual('Foo Content', aSIPRequest.content)
-        self.assertEqual('Malformed start line', aSIPRequest.startLine.rawString)
 
 
-class TestSIPMessageFactoryForUnknownSIPRequest(TestCase):
+class TestSIPMessageFactoryForUnknownSIPRequest(AbstractSIPRequestFromFactoryTestCase):
     @property
-    def canonicalStrings(self):
-        return [
-            ('UNKNOWN sip:example.com SIP/2.0\r\n'
-             'From: <sip:200.25.3.150:5061>;tag=0ee8d3e272e31c9195299efc500\r\n'
-             'To: <sip:example.com:5061>\r\n'
-             'Call-ID: 0ee8d3e272e31c9195299efc500\r\n'
-             'CSeq: 6711 OPTIONS\r\n'
-             'Max-Forwards: 70\r\n'
-             'Via: SIP/2.0/TLS 200.25.3.150;branch=z9hG4bK0ee8d3e272e31ca195299efc500\r\n'
-             'User-Agent: Example User Agent\r\n'
-             'Contact: <sip:invalid@200.25.3.150:5061;transport=tls>\r\n'
-             'Route: <sip:200.30.10.12:5061;transport=tls;lr>\r\n'
-             'Expires: 0\r\n'
-             'Accept: application/sdp,application/isup,application/dtmf,application/dtmf-relay,multipart/mixed\r\n'
-             'Accept-Encoding: x-nortel-short\r\n'
-             'Accept-Language: en-us,fr-fr\r\n'
-             'Allow:  ACK,BYE,CANCEL,INFO,INVITE,OPTIONS,REGISTER,SUBSCRIBE,UPDATE\r\n'
-             'Authorization: Digest username="3122221000",realm="SomeRealm",nonce="1111790769596",uri="sip:3122211004@example.com",response="9bf77d8238664fe08dafd4d2abb6f1cb",algorithm=MD5\r\n'
-             'Call-Info: <https://lsc14pa.example.com:443/pa/direct/pictureServlet?user=3126805100@example.com>;Purpose=icon\r\n'
-             'Content-Disposition: session;handling=required\r\n'
-             'Content-Type: application/sdp\r\n'
-             'Date: Sat, 01 Feb 2014 22:07:34 GMT\r\n'
-             'Record-Route: <sip:200.25.3.230:5061;transport=tls;lr>\r\n'
-             'Require: sdp-anat\r\n'
-             'Retry-After: 30\r\n'
-             'Server: Blargomatic 2.0\r\n'
-             'Session-Expires: 1200;refresher=uac\r\n'
-             'Supported: 100rel,histinfo,join,replaces,sdp-anat,timer\r\n'
-             'Timestamp: 1392061773\r\n'
-             'WWW-Authenticate: Digest algorithm=MD5,nonce="1111790769596",realm="SomeRealm"\r\n'
-             'Warning: 370 200.21.3.10 "Insufficient Bandwidth"\r\n'
-             'X-RTP-Stat:  PR=0;ER=0;PL=0;RB=0/0;DE=PCMU;EN=PCMU;JI=0;DL=0,0;IP=10.1.0.33:16384,132.52.127.200:20048\r\n'
-             'x-channel:  ds/ds1-3/12;IP=132.52.127.16\r\n'
-             'Referred-By: <sip:6006665100@example.com;user=phone> ; CorrelationID="0508817f84e7ce64745ef9753e2fbff4664321a4@200.23.3.240"\r\n'
-             'Refer-To: <sip:6006665499;rfrid=28661859@example.com;user=phone?x-nt-resource-priority=YNBvf.2j00qao>\r\n'
-             'Content-Length: 11\r\n'
-             '\r\n'
-             'Foo Content')
-        ]
+    def sipMethodString(self):
+        return "UNKNOWN"
 
     def test_parsing(self):
-        for messageString in self.canonicalStrings:
-            request = SIPMessageFactory().nextForString(messageString)
-            self.runAssertionsForRequest(request)
+        self.run_test_parsing()
 
-    def runAssertionsForRequest(self, aSIPRequest):
-        self.assertEqual(aSIPRequest.rawString, self.canonicalStrings[0])
+    def runAssertionsForSIPMessage(self, aSIPRequest):
+        super(TestSIPMessageFactoryForUnknownSIPRequest, self).runAssertionsForSIPMessage(aSIPRequest)
         self.assertFalse(aSIPRequest.isKnown)
         self.assertTrue(aSIPRequest.isUnknown)
-        self.assertTrue(aSIPRequest.isValid)
-        self.assertTrue(aSIPRequest.isRequest)
-        self.assertFalse(aSIPRequest.isResponse)
         self.assertFalse(aSIPRequest.isACKRequest)
         self.assertFalse(aSIPRequest.isBYERequest)
         self.assertFalse(aSIPRequest.isCANCELRequest)
@@ -393,660 +299,220 @@ class TestSIPMessageFactoryForUnknownSIPRequest(TestCase):
         self.assertFalse(aSIPRequest.isREGISTERRequest)
         self.assertFalse(aSIPRequest.isSUBSCRIBERequest)
         self.assertFalse(aSIPRequest.isUPDATERequest)
-        self.assertFalse(aSIPRequest.isMalformed)
-        # self.assertEqual(1, [headerField for headerField in aSIPRequest.header.headerFields if headerField.isContentLength].__len__())
-        # self.assertEqual(11, next(headerField for headerField in aSIPRequest.header.headerFields if headerField.isContentLength).value)
-        # self.assertEqual(10, [headerField for headerField in aSIPRequest.header.headerFields if headerField.isUnknown].__len__())
-        self.assertIsNotNone(aSIPRequest.header.contentLengthHeaderField)
-        self.assertEqual(11, aSIPRequest.header.contentLength)
-        self.assertEqual(1, aSIPRequest.header.viaHeaderFields.__len__())
-        self.assertEqual(1, aSIPRequest.header.vias.__len__())
-        self.assertEqual('SIP/2.0/TLS 200.25.3.150;branch=z9hG4bK0ee8d3e272e31ca195299efc500', aSIPRequest.header.vias[0])
-        self.assertEqual(4, aSIPRequest.header.unknownHeaderFields.__len__())
-        self.assertTrue(aSIPRequest.startLine.isRequest)
-        self.assertFalse(aSIPRequest.startLine.isResponse)
-        self.assertFalse(aSIPRequest.startLine.isMalformed)
-        self.assertEqual('Foo Content', aSIPRequest.content)
-        self.assertEqual('UNKNOWN', aSIPRequest.startLine.sipMethod)
-        self.assertEqual('sip:example.com', aSIPRequest.startLine.requestURI)
 
 
-class TestSIPMessageFactoryForOPTIONSSIPRequest(TestCase):
+class TestSIPMessageFactoryForOPTIONSSIPRequest(AbstractSIPRequestFromFactoryTestCase):
     @property
-    def canonicalStrings(self):
-        return [
-            ('OPTIONS sip:example.com SIP/2.0\r\n'
-             'From: <sip:200.25.3.150:5061>;tag=0ee8d3e272e31c9195299efc500\r\n'
-             'To: <sip:example.com:5061>\r\n'
-             'Call-ID: 0ee8d3e272e31c9195299efc500\r\n'
-             'CSeq: 6711 OPTIONS\r\n'
-             'Max-Forwards: 70\r\n'
-             'Via: SIP/2.0/TLS 200.25.3.150;branch=z9hG4bK0ee8d3e272e31ca195299efc500\r\n'
-             'User-Agent: Example User Agent\r\n'
-             'Contact: <sip:invalid@200.25.3.150:5061;transport=tls>\r\n'
-             'Route: <sip:200.30.10.12:5061;transport=tls;lr>\r\n'
-             'Expires: 0\r\n'
-             'Accept: application/sdp,application/isup,application/dtmf,application/dtmf-relay,multipart/mixed\r\n'
-             'Accept-Encoding: x-nortel-short\r\n'
-             'Accept-Language: en-us,fr-fr\r\n'
-             'Allow:  ACK,BYE,CANCEL,INFO,INVITE,OPTIONS,REGISTER,SUBSCRIBE,UPDATE\r\n'
-             'Authorization: Digest username="3122221000",realm="SomeRealm",nonce="1111790769596",uri="sip:3122211004@example.com",response="9bf77d8238664fe08dafd4d2abb6f1cb",algorithm=MD5\r\n'
-             'Call-Info: <https://lsc14pa.example.com:443/pa/direct/pictureServlet?user=3126805100@example.com>;Purpose=icon\r\n'
-             'Content-Disposition: session;handling=required\r\n'
-             'Content-Type: application/sdp\r\n'
-             'Date: Sat, 01 Feb 2014 22:07:34 GMT\r\n'
-             'Record-Route: <sip:200.25.3.230:5061;transport=tls;lr>\r\n'
-             'Require: sdp-anat\r\n'
-             'Retry-After: 30\r\n'
-             'Server: Blargomatic 2.0\r\n'
-             'Session-Expires: 1200;refresher=uac\r\n'
-             'Supported: 100rel,histinfo,join,replaces,sdp-anat,timer\r\n'
-             'Timestamp: 1392061773\r\n'
-             'WWW-Authenticate: Digest algorithm=MD5,nonce="1111790769596",realm="SomeRealm"\r\n'
-             'Warning: 370 200.21.3.10 "Insufficient Bandwidth"\r\n'
-             'X-RTP-Stat:  PR=0;ER=0;PL=0;RB=0/0;DE=PCMU;EN=PCMU;JI=0;DL=0,0;IP=10.1.0.33:16384,132.52.127.200:20048\r\n'
-             'x-channel:  ds/ds1-3/12;IP=132.52.127.16\r\n'
-             'Referred-By: <sip:6006665100@example.com;user=phone> ; CorrelationID="0508817f84e7ce64745ef9753e2fbff4664321a4@200.23.3.240"\r\n'
-             'Refer-To: <sip:6006665499;rfrid=28661859@example.com;user=phone?x-nt-resource-priority=YNBvf.2j00qao>\r\n'
-             'Content-Length: 11\r\n'
-             '\r\n'
-             'Foo Content')
-        ]
+    def sipMethodString(self):
+        return "OPTIONS"
 
     def test_parsing(self):
-        for messageString in self.canonicalStrings:
-            request = SIPMessageFactory().nextForString(messageString)
-            self.runAssertionsForRequest(request)
+        self.run_test_parsing()
 
-    def runAssertionsForRequest(self, aSIPRequest):
-        self.assertEqual(aSIPRequest.rawString, self.canonicalStrings[0])
+    def runAssertionsForSIPMessage(self, aSIPRequest):
+        super(TestSIPMessageFactoryForOPTIONSSIPRequest, self).runAssertionsForSIPMessage(aSIPRequest)
         self.assertTrue(aSIPRequest.isKnown)
         self.assertFalse(aSIPRequest.isUnknown)
-        self.assertTrue(aSIPRequest.isValid)
-        self.assertTrue(aSIPRequest.isRequest)
-        self.assertFalse(aSIPRequest.isResponse)
+        self.assertFalse(aSIPRequest.isACKRequest)
+        self.assertFalse(aSIPRequest.isBYERequest)
+        self.assertFalse(aSIPRequest.isCANCELRequest)
+        self.assertFalse(aSIPRequest.isINFORequest)
+        self.assertFalse(aSIPRequest.isINVITERequest)
+        self.assertFalse(aSIPRequest.isNOTIFYRequest)
         self.assertTrue(aSIPRequest.isOPTIONSRequest)
-        self.assertFalse(aSIPRequest.isACKRequest)
-        self.assertFalse(aSIPRequest.isBYERequest)
-        self.assertFalse(aSIPRequest.isCANCELRequest)
-        self.assertFalse(aSIPRequest.isINFORequest)
-        self.assertFalse(aSIPRequest.isINVITERequest)
-        self.assertFalse(aSIPRequest.isNOTIFYRequest)
         self.assertFalse(aSIPRequest.isREFERRequest)
         self.assertFalse(aSIPRequest.isREGISTERRequest)
         self.assertFalse(aSIPRequest.isSUBSCRIBERequest)
         self.assertFalse(aSIPRequest.isUPDATERequest)
-        self.assertFalse(aSIPRequest.isMalformed)
-        # self.assertEqual(1, [headerField for headerField in aSIPRequest.header.headerFields if headerField.isContentLength].__len__())
-        # self.assertEqual(11, next(headerField for headerField in aSIPRequest.header.headerFields if headerField.isContentLength).value)
-        # self.assertEqual(10, [headerField for headerField in aSIPRequest.header.headerFields if headerField.isUnknown].__len__())
-        self.assertIsNotNone(aSIPRequest.header.contentLengthHeaderField)
-        self.assertEqual(11, aSIPRequest.header.contentLength)
-        self.assertEqual(1, aSIPRequest.header.viaHeaderFields.__len__())
-        self.assertEqual(1, aSIPRequest.header.vias.__len__())
-        self.assertEqual('SIP/2.0/TLS 200.25.3.150;branch=z9hG4bK0ee8d3e272e31ca195299efc500', aSIPRequest.header.vias[0])
-        self.assertEqual(4, aSIPRequest.header.unknownHeaderFields.__len__())
-        self.assertTrue(aSIPRequest.startLine.isRequest)
-        self.assertFalse(aSIPRequest.startLine.isResponse)
-        self.assertFalse(aSIPRequest.startLine.isMalformed)
-        self.assertEqual('Foo Content', aSIPRequest.content)
-        self.assertEqual('OPTIONS', aSIPRequest.startLine.sipMethod)
-        self.assertEqual('sip:example.com', aSIPRequest.startLine.requestURI)
 
 
-class TestSIPMessageFactoryForACKSIPRequest(TestCase):
+class TestSIPMessageFactoryForACKSIPRequest(AbstractSIPRequestFromFactoryTestCase):
     @property
-    def canonicalStrings(self):
-        return [
-            ('ACK sip:example.com SIP/2.0\r\n'
-             'From: <sip:200.25.3.150:5061>;tag=0ee8d3e272e31c9195299efc500\r\n'
-             'To: <sip:example.com:5061>\r\n'
-             'Call-ID: 0ee8d3e272e31c9195299efc500\r\n'
-             'CSeq: 6711 ACK\r\n'
-             'Max-Forwards: 70\r\n'
-             'Via: SIP/2.0/TLS 200.25.3.150;branch=z9hG4bK0ee8d3e272e31ca195299efc500\r\n'
-             'User-Agent: Example User Agent\r\n'
-             'Contact: <sip:invalid@200.25.3.150:5061;transport=tls>\r\n'
-             'Route: <sip:200.30.10.12:5061;transport=tls;lr>\r\n'
-             'Expires: 0\r\n'
-             'Accept: application/sdp,application/isup,application/dtmf,application/dtmf-relay,multipart/mixed\r\n'
-             'Accept-Encoding: x-nortel-short\r\n'
-             'Accept-Language: en-us,fr-fr\r\n'
-             'Allow:  ACK,BYE,CANCEL,INFO,INVITE,OPTIONS,REGISTER,SUBSCRIBE,UPDATE\r\n'
-             'Authorization: Digest username="3122221000",realm="SomeRealm",nonce="1111790769596",uri="sip:3122211004@example.com",response="9bf77d8238664fe08dafd4d2abb6f1cb",algorithm=MD5\r\n'
-             'Call-Info: <https://lsc14pa.example.com:443/pa/direct/pictureServlet?user=3126805100@example.com>;Purpose=icon\r\n'
-             'Content-Disposition: session;handling=required\r\n'
-             'Content-Type: application/sdp\r\n'
-             'Date: Sat, 01 Feb 2014 22:07:34 GMT\r\n'
-             'Record-Route: <sip:200.25.3.230:5061;transport=tls;lr>\r\n'
-             'Require: sdp-anat\r\n'
-             'Retry-After: 30\r\n'
-             'Server: Blargomatic 2.0\r\n'
-             'Session-Expires: 1200;refresher=uac\r\n'
-             'Supported: 100rel,histinfo,join,replaces,sdp-anat,timer\r\n'
-             'Timestamp: 1392061773\r\n'
-             'WWW-Authenticate: Digest algorithm=MD5,nonce="1111790769596",realm="SomeRealm"\r\n'
-             'Warning: 370 200.21.3.10 "Insufficient Bandwidth"\r\n'
-             'X-RTP-Stat:  PR=0;ER=0;PL=0;RB=0/0;DE=PCMU;EN=PCMU;JI=0;DL=0,0;IP=10.1.0.33:16384,132.52.127.200:20048\r\n'
-             'x-channel:  ds/ds1-3/12;IP=132.52.127.16\r\n'
-             'Referred-By: <sip:6006665100@example.com;user=phone> ; CorrelationID="0508817f84e7ce64745ef9753e2fbff4664321a4@200.23.3.240"\r\n'
-             'Refer-To: <sip:6006665499;rfrid=28661859@example.com;user=phone?x-nt-resource-priority=YNBvf.2j00qao>\r\n'
-             'Content-Length: 11\r\n'
-             '\r\n'
-             'Foo Content')
-        ]
+    def sipMethodString(self):
+        return "ACK"
 
     def test_parsing(self):
-        for messageString in self.canonicalStrings:
-            request = SIPMessageFactory().nextForString(messageString)
-            self.runAssertionsForRequest(request)
+        self.run_test_parsing()
 
-    def runAssertionsForRequest(self, aSIPRequest):
-        self.assertEqual(aSIPRequest.rawString, self.canonicalStrings[0])
+    def runAssertionsForSIPMessage(self, aSIPRequest):
+        super(TestSIPMessageFactoryForACKSIPRequest, self).runAssertionsForSIPMessage(aSIPRequest)
         self.assertTrue(aSIPRequest.isKnown)
         self.assertFalse(aSIPRequest.isUnknown)
-        self.assertTrue(aSIPRequest.isValid)
-        self.assertTrue(aSIPRequest.isRequest)
-        self.assertFalse(aSIPRequest.isResponse)
         self.assertTrue(aSIPRequest.isACKRequest)
-        self.assertFalse(aSIPRequest.isOPTIONSRequest)
         self.assertFalse(aSIPRequest.isBYERequest)
         self.assertFalse(aSIPRequest.isCANCELRequest)
         self.assertFalse(aSIPRequest.isINFORequest)
         self.assertFalse(aSIPRequest.isINVITERequest)
         self.assertFalse(aSIPRequest.isNOTIFYRequest)
+        self.assertFalse(aSIPRequest.isOPTIONSRequest)
         self.assertFalse(aSIPRequest.isREFERRequest)
         self.assertFalse(aSIPRequest.isREGISTERRequest)
         self.assertFalse(aSIPRequest.isSUBSCRIBERequest)
         self.assertFalse(aSIPRequest.isUPDATERequest)
-        self.assertFalse(aSIPRequest.isMalformed)
-        # self.assertEqual(1, [headerField for headerField in aSIPRequest.header.headerFields if headerField.isContentLength].__len__())
-        # self.assertEqual(11, next(headerField for headerField in aSIPRequest.header.headerFields if headerField.isContentLength).value)
-        # self.assertEqual(10, [headerField for headerField in aSIPRequest.header.headerFields if headerField.isUnknown].__len__())
-        self.assertIsNotNone(aSIPRequest.header.contentLengthHeaderField)
-        self.assertEqual(11, aSIPRequest.header.contentLength)
-        self.assertEqual(1, aSIPRequest.header.viaHeaderFields.__len__())
-        self.assertEqual(1, aSIPRequest.header.vias.__len__())
-        self.assertEqual('SIP/2.0/TLS 200.25.3.150;branch=z9hG4bK0ee8d3e272e31ca195299efc500', aSIPRequest.header.vias[0])
-        self.assertEqual(4, aSIPRequest.header.unknownHeaderFields.__len__())
-        self.assertTrue(aSIPRequest.startLine.isRequest)
-        self.assertFalse(aSIPRequest.startLine.isResponse)
-        self.assertFalse(aSIPRequest.startLine.isMalformed)
-        self.assertEqual('Foo Content', aSIPRequest.content)
-        self.assertEqual('ACK', aSIPRequest.startLine.sipMethod)
-        self.assertEqual('sip:example.com', aSIPRequest.startLine.requestURI)
 
 
-class TestSIPMessageFactoryForBYESIPRequest(TestCase):
+class TestSIPMessageFactoryForBYESIPRequest(AbstractSIPRequestFromFactoryTestCase):
     @property
-    def canonicalStrings(self):
-        return [
-            ('BYE sip:example.com SIP/2.0\r\n'
-             'From: <sip:200.25.3.150:5061>;tag=0ee8d3e272e31c9195299efc500\r\n'
-             'To: <sip:example.com:5061>\r\n'
-             'Call-ID: 0ee8d3e272e31c9195299efc500\r\n'
-             'CSeq: 6711 BYE\r\n'
-             'Max-Forwards: 70\r\n'
-             'Via: SIP/2.0/TLS 200.25.3.150;branch=z9hG4bK0ee8d3e272e31ca195299efc500\r\n'
-             'User-Agent: Example User Agent\r\n'
-             'Contact: <sip:invalid@200.25.3.150:5061;transport=tls>\r\n'
-             'Route: <sip:200.30.10.12:5061;transport=tls;lr>\r\n'
-             'Expires: 0\r\n'
-             'Accept: application/sdp,application/isup,application/dtmf,application/dtmf-relay,multipart/mixed\r\n'
-             'Accept-Encoding: x-nortel-short\r\n'
-             'Accept-Language: en-us,fr-fr\r\n'
-             'Allow:  ACK,BYE,CANCEL,INFO,INVITE,OPTIONS,REGISTER,SUBSCRIBE,UPDATE\r\n'
-             'Authorization: Digest username="3122221000",realm="SomeRealm",nonce="1111790769596",uri="sip:3122211004@example.com",response="9bf77d8238664fe08dafd4d2abb6f1cb",algorithm=MD5\r\n'
-             'Call-Info: <https://lsc14pa.example.com:443/pa/direct/pictureServlet?user=3126805100@example.com>;Purpose=icon\r\n'
-             'Content-Disposition: session;handling=required\r\n'
-             'Content-Type: application/sdp\r\n'
-             'Date: Sat, 01 Feb 2014 22:07:34 GMT\r\n'
-             'Record-Route: <sip:200.25.3.230:5061;transport=tls;lr>\r\n'
-             'Require: sdp-anat\r\n'
-             'Retry-After: 30\r\n'
-             'Server: Blargomatic 2.0\r\n'
-             'Session-Expires: 1200;refresher=uac\r\n'
-             'Supported: 100rel,histinfo,join,replaces,sdp-anat,timer\r\n'
-             'Timestamp: 1392061773\r\n'
-             'WWW-Authenticate: Digest algorithm=MD5,nonce="1111790769596",realm="SomeRealm"\r\n'
-             'Warning: 370 200.21.3.10 "Insufficient Bandwidth"\r\n'
-             'X-RTP-Stat:  PR=0;ER=0;PL=0;RB=0/0;DE=PCMU;EN=PCMU;JI=0;DL=0,0;IP=10.1.0.33:16384,132.52.127.200:20048\r\n'
-             'x-channel:  ds/ds1-3/12;IP=132.52.127.16\r\n'
-             'Referred-By: <sip:6006665100@example.com;user=phone> ; CorrelationID="0508817f84e7ce64745ef9753e2fbff4664321a4@200.23.3.240"\r\n'
-             'Refer-To: <sip:6006665499;rfrid=28661859@example.com;user=phone?x-nt-resource-priority=YNBvf.2j00qao>\r\n'
-             'Content-Length: 11\r\n'
-             '\r\n'
-             'Foo Content')
-        ]
+    def sipMethodString(self):
+        return "BYE"
 
     def test_parsing(self):
-        for messageString in self.canonicalStrings:
-            request = SIPMessageFactory().nextForString(messageString)
-            self.runAssertionsForRequest(request)
+        self.run_test_parsing()
 
-    def runAssertionsForRequest(self, aSIPRequest):
-        self.assertEqual(aSIPRequest.rawString, self.canonicalStrings[0])
+    def runAssertionsForSIPMessage(self, aSIPRequest):
+        super(TestSIPMessageFactoryForBYESIPRequest, self).runAssertionsForSIPMessage(aSIPRequest)
         self.assertTrue(aSIPRequest.isKnown)
         self.assertFalse(aSIPRequest.isUnknown)
-        self.assertTrue(aSIPRequest.isValid)
-        self.assertTrue(aSIPRequest.isRequest)
-        self.assertFalse(aSIPRequest.isResponse)
+        self.assertFalse(aSIPRequest.isACKRequest)
         self.assertTrue(aSIPRequest.isBYERequest)
-        self.assertFalse(aSIPRequest.isACKRequest)
-        self.assertFalse(aSIPRequest.isOPTIONSRequest)
         self.assertFalse(aSIPRequest.isCANCELRequest)
         self.assertFalse(aSIPRequest.isINFORequest)
         self.assertFalse(aSIPRequest.isINVITERequest)
         self.assertFalse(aSIPRequest.isNOTIFYRequest)
+        self.assertFalse(aSIPRequest.isOPTIONSRequest)
         self.assertFalse(aSIPRequest.isREFERRequest)
         self.assertFalse(aSIPRequest.isREGISTERRequest)
         self.assertFalse(aSIPRequest.isSUBSCRIBERequest)
         self.assertFalse(aSIPRequest.isUPDATERequest)
-        self.assertFalse(aSIPRequest.isMalformed)
-        # self.assertEqual(1, [headerField for headerField in aSIPRequest.header.headerFields if headerField.isContentLength].__len__())
-        # self.assertEqual(11, next(headerField for headerField in aSIPRequest.header.headerFields if headerField.isContentLength).value)
-        # self.assertEqual(10, [headerField for headerField in aSIPRequest.header.headerFields if headerField.isUnknown].__len__())
-        self.assertIsNotNone(aSIPRequest.header.contentLengthHeaderField)
-        self.assertEqual(11, aSIPRequest.header.contentLength)
-        self.assertEqual(1, aSIPRequest.header.viaHeaderFields.__len__())
-        self.assertEqual(1, aSIPRequest.header.vias.__len__())
-        self.assertEqual('SIP/2.0/TLS 200.25.3.150;branch=z9hG4bK0ee8d3e272e31ca195299efc500', aSIPRequest.header.vias[0])
-        self.assertEqual(4, aSIPRequest.header.unknownHeaderFields.__len__())
-        self.assertTrue(aSIPRequest.startLine.isRequest)
-        self.assertFalse(aSIPRequest.startLine.isResponse)
-        self.assertFalse(aSIPRequest.startLine.isMalformed)
-        self.assertEqual('Foo Content', aSIPRequest.content)
-        self.assertEqual('BYE', aSIPRequest.startLine.sipMethod)
-        self.assertEqual('sip:example.com', aSIPRequest.startLine.requestURI)
 
 
-class TestSIPMessageFactoryForCANCELSIPRequest(TestCase):
+class TestSIPMessageFactoryForCANCELSIPRequest(AbstractSIPRequestFromFactoryTestCase):
     @property
-    def canonicalStrings(self):
-        return [
-            ('CANCEL sip:example.com SIP/2.0\r\n'
-             'From: <sip:200.25.3.150:5061>;tag=0ee8d3e272e31c9195299efc500\r\n'
-             'To: <sip:example.com:5061>\r\n'
-             'Call-ID: 0ee8d3e272e31c9195299efc500\r\n'
-             'CSeq: 6711 CANCEL\r\n'
-             'Max-Forwards: 70\r\n'
-             'Via: SIP/2.0/TLS 200.25.3.150;branch=z9hG4bK0ee8d3e272e31ca195299efc500\r\n'
-             'User-Agent: Example User Agent\r\n'
-             'Contact: <sip:invalid@200.25.3.150:5061;transport=tls>\r\n'
-             'Route: <sip:200.30.10.12:5061;transport=tls;lr>\r\n'
-             'Expires: 0\r\n'
-             'Accept: application/sdp,application/isup,application/dtmf,application/dtmf-relay,multipart/mixed\r\n'
-             'Accept-Encoding: x-nortel-short\r\n'
-             'Accept-Language: en-us,fr-fr\r\n'
-             'Allow:  ACK,BYE,CANCEL,INFO,INVITE,OPTIONS,REGISTER,SUBSCRIBE,UPDATE\r\n'
-             'Authorization: Digest username="3122221000",realm="SomeRealm",nonce="1111790769596",uri="sip:3122211004@example.com",response="9bf77d8238664fe08dafd4d2abb6f1cb",algorithm=MD5\r\n'
-             'Call-Info: <https://lsc14pa.example.com:443/pa/direct/pictureServlet?user=3126805100@example.com>;Purpose=icon\r\n'
-             'Content-Disposition: session;handling=required\r\n'
-             'Content-Type: application/sdp\r\n'
-             'Date: Sat, 01 Feb 2014 22:07:34 GMT\r\n'
-             'Record-Route: <sip:200.25.3.230:5061;transport=tls;lr>\r\n'
-             'Require: sdp-anat\r\n'
-             'Retry-After: 30\r\n'
-             'Server: Blargomatic 2.0\r\n'
-             'Session-Expires: 1200;refresher=uac\r\n'
-             'Supported: 100rel,histinfo,join,replaces,sdp-anat,timer\r\n'
-             'Timestamp: 1392061773\r\n'
-             'WWW-Authenticate: Digest algorithm=MD5,nonce="1111790769596",realm="SomeRealm"\r\n'
-             'Warning: 370 200.21.3.10 "Insufficient Bandwidth"\r\n'
-             'X-RTP-Stat:  PR=0;ER=0;PL=0;RB=0/0;DE=PCMU;EN=PCMU;JI=0;DL=0,0;IP=10.1.0.33:16384,132.52.127.200:20048\r\n'
-             'x-channel:  ds/ds1-3/12;IP=132.52.127.16\r\n'
-             'Referred-By: <sip:6006665100@example.com;user=phone> ; CorrelationID="0508817f84e7ce64745ef9753e2fbff4664321a4@200.23.3.240"\r\n'
-             'Refer-To: <sip:6006665499;rfrid=28661859@example.com;user=phone?x-nt-resource-priority=YNBvf.2j00qao>\r\n'
-             'Content-Length: 11\r\n'
-             '\r\n'
-             'Foo Content')
-        ]
+    def sipMethodString(self):
+        return "CANCEL"
 
     def test_parsing(self):
-        for messageString in self.canonicalStrings:
-            request = SIPMessageFactory().nextForString(messageString)
-            self.runAssertionsForRequest(request)
+        self.run_test_parsing()
 
-    def runAssertionsForRequest(self, aSIPRequest):
-        self.assertEqual(aSIPRequest.rawString, self.canonicalStrings[0])
+    def runAssertionsForSIPMessage(self, aSIPRequest):
+        super(TestSIPMessageFactoryForCANCELSIPRequest, self).runAssertionsForSIPMessage(aSIPRequest)
         self.assertTrue(aSIPRequest.isKnown)
         self.assertFalse(aSIPRequest.isUnknown)
-        self.assertTrue(aSIPRequest.isValid)
-        self.assertTrue(aSIPRequest.isRequest)
-        self.assertFalse(aSIPRequest.isResponse)
+        self.assertFalse(aSIPRequest.isACKRequest)
+        self.assertFalse(aSIPRequest.isBYERequest)
         self.assertTrue(aSIPRequest.isCANCELRequest)
-        self.assertFalse(aSIPRequest.isACKRequest)
-        self.assertFalse(aSIPRequest.isBYERequest)
-        self.assertFalse(aSIPRequest.isOPTIONSRequest)
         self.assertFalse(aSIPRequest.isINFORequest)
         self.assertFalse(aSIPRequest.isINVITERequest)
         self.assertFalse(aSIPRequest.isNOTIFYRequest)
+        self.assertFalse(aSIPRequest.isOPTIONSRequest)
         self.assertFalse(aSIPRequest.isREFERRequest)
         self.assertFalse(aSIPRequest.isREGISTERRequest)
         self.assertFalse(aSIPRequest.isSUBSCRIBERequest)
         self.assertFalse(aSIPRequest.isUPDATERequest)
-        self.assertFalse(aSIPRequest.isMalformed)
-        # self.assertEqual(1, [headerField for headerField in aSIPRequest.header.headerFields if headerField.isContentLength].__len__())
-        # self.assertEqual(11, next(headerField for headerField in aSIPRequest.header.headerFields if headerField.isContentLength).value)
-        # self.assertEqual(10, [headerField for headerField in aSIPRequest.header.headerFields if headerField.isUnknown].__len__())
-        self.assertIsNotNone(aSIPRequest.header.contentLengthHeaderField)
-        self.assertEqual(11, aSIPRequest.header.contentLength)
-        self.assertEqual(1, aSIPRequest.header.viaHeaderFields.__len__())
-        self.assertEqual(1, aSIPRequest.header.vias.__len__())
-        self.assertEqual('SIP/2.0/TLS 200.25.3.150;branch=z9hG4bK0ee8d3e272e31ca195299efc500', aSIPRequest.header.vias[0])
-        self.assertEqual(4, aSIPRequest.header.unknownHeaderFields.__len__())
-        self.assertTrue(aSIPRequest.startLine.isRequest)
-        self.assertFalse(aSIPRequest.startLine.isResponse)
-        self.assertFalse(aSIPRequest.startLine.isMalformed)
-        self.assertEqual('Foo Content', aSIPRequest.content)
-        self.assertEqual('CANCEL', aSIPRequest.startLine.sipMethod)
-        self.assertEqual('sip:example.com', aSIPRequest.startLine.requestURI)
 
 
-class TestSIPMessageFactoryForINFOSIPRequest(TestCase):
+class TestSIPMessageFactoryForINFOSIPRequest(AbstractSIPRequestFromFactoryTestCase):
     @property
-    def canonicalStrings(self):
-        return [
-            ('INFO sip:example.com SIP/2.0\r\n'
-             'From: <sip:200.25.3.150:5061>;tag=0ee8d3e272e31c9195299efc500\r\n'
-             'To: <sip:example.com:5061>\r\n'
-             'Call-ID: 0ee8d3e272e31c9195299efc500\r\n'
-             'CSeq: 6711 INFO\r\n'
-             'Max-Forwards: 70\r\n'
-             'Via: SIP/2.0/TLS 200.25.3.150;branch=z9hG4bK0ee8d3e272e31ca195299efc500\r\n'
-             'User-Agent: Example User Agent\r\n'
-             'Contact: <sip:invalid@200.25.3.150:5061;transport=tls>\r\n'
-             'Route: <sip:200.30.10.12:5061;transport=tls;lr>\r\n'
-             'Expires: 0\r\n'
-             'Accept: application/sdp,application/isup,application/dtmf,application/dtmf-relay,multipart/mixed\r\n'
-             'Accept-Encoding: x-nortel-short\r\n'
-             'Accept-Language: en-us,fr-fr\r\n'
-             'Allow:  ACK,BYE,CANCEL,INFO,INVITE,OPTIONS,REGISTER,SUBSCRIBE,UPDATE\r\n'
-             'Authorization: Digest username="3122221000",realm="SomeRealm",nonce="1111790769596",uri="sip:3122211004@example.com",response="9bf77d8238664fe08dafd4d2abb6f1cb",algorithm=MD5\r\n'
-             'Call-Info: <https://lsc14pa.example.com:443/pa/direct/pictureServlet?user=3126805100@example.com>;Purpose=icon\r\n'
-             'Content-Disposition: session;handling=required\r\n'
-             'Content-Type: application/sdp\r\n'
-             'Date: Sat, 01 Feb 2014 22:07:34 GMT\r\n'
-             'Record-Route: <sip:200.25.3.230:5061;transport=tls;lr>\r\n'
-             'Require: sdp-anat\r\n'
-             'Retry-After: 30\r\n'
-             'Server: Blargomatic 2.0\r\n'
-             'Session-Expires: 1200;refresher=uac\r\n'
-             'Supported: 100rel,histinfo,join,replaces,sdp-anat,timer\r\n'
-             'Timestamp: 1392061773\r\n'
-             'WWW-Authenticate: Digest algorithm=MD5,nonce="1111790769596",realm="SomeRealm"\r\n'
-             'Warning: 370 200.21.3.10 "Insufficient Bandwidth"\r\n'
-             'X-RTP-Stat:  PR=0;ER=0;PL=0;RB=0/0;DE=PCMU;EN=PCMU;JI=0;DL=0,0;IP=10.1.0.33:16384,132.52.127.200:20048\r\n'
-             'x-channel:  ds/ds1-3/12;IP=132.52.127.16\r\n'
-             'Referred-By: <sip:6006665100@example.com;user=phone> ; CorrelationID="0508817f84e7ce64745ef9753e2fbff4664321a4@200.23.3.240"\r\n'
-             'Refer-To: <sip:6006665499;rfrid=28661859@example.com;user=phone?x-nt-resource-priority=YNBvf.2j00qao>\r\n'
-             'Content-Length: 11\r\n'
-             '\r\n'
-             'Foo Content')
-        ]
+    def sipMethodString(self):
+        return "INFO"
 
     def test_parsing(self):
-        for messageString in self.canonicalStrings:
-            request = SIPMessageFactory().nextForString(messageString)
-            self.runAssertionsForRequest(request)
+        self.run_test_parsing()
 
-    def runAssertionsForRequest(self, aSIPRequest):
-        self.assertEqual(aSIPRequest.rawString, self.canonicalStrings[0])
+    def runAssertionsForSIPMessage(self, aSIPRequest):
+        super(TestSIPMessageFactoryForINFOSIPRequest, self).runAssertionsForSIPMessage(aSIPRequest)
         self.assertTrue(aSIPRequest.isKnown)
         self.assertFalse(aSIPRequest.isUnknown)
-        self.assertTrue(aSIPRequest.isValid)
-        self.assertTrue(aSIPRequest.isRequest)
-        self.assertFalse(aSIPRequest.isResponse)
+        self.assertFalse(aSIPRequest.isACKRequest)
+        self.assertFalse(aSIPRequest.isBYERequest)
+        self.assertFalse(aSIPRequest.isCANCELRequest)
         self.assertTrue(aSIPRequest.isINFORequest)
-        self.assertFalse(aSIPRequest.isACKRequest)
-        self.assertFalse(aSIPRequest.isBYERequest)
-        self.assertFalse(aSIPRequest.isCANCELRequest)
-        self.assertFalse(aSIPRequest.isOPTIONSRequest)
         self.assertFalse(aSIPRequest.isINVITERequest)
         self.assertFalse(aSIPRequest.isNOTIFYRequest)
+        self.assertFalse(aSIPRequest.isOPTIONSRequest)
         self.assertFalse(aSIPRequest.isREFERRequest)
         self.assertFalse(aSIPRequest.isREGISTERRequest)
         self.assertFalse(aSIPRequest.isSUBSCRIBERequest)
         self.assertFalse(aSIPRequest.isUPDATERequest)
-        self.assertFalse(aSIPRequest.isMalformed)
-        # self.assertEqual(1, [headerField for headerField in aSIPRequest.header.headerFields if headerField.isContentLength].__len__())
-        # self.assertEqual(11, next(headerField for headerField in aSIPRequest.header.headerFields if headerField.isContentLength).value)
-        # self.assertEqual(10, [headerField for headerField in aSIPRequest.header.headerFields if headerField.isUnknown].__len__())
-        self.assertIsNotNone(aSIPRequest.header.contentLengthHeaderField)
-        self.assertEqual(11, aSIPRequest.header.contentLength)
-        self.assertEqual(1, aSIPRequest.header.viaHeaderFields.__len__())
-        self.assertEqual(1, aSIPRequest.header.vias.__len__())
-        self.assertEqual('SIP/2.0/TLS 200.25.3.150;branch=z9hG4bK0ee8d3e272e31ca195299efc500', aSIPRequest.header.vias[0])
-        self.assertEqual(4, aSIPRequest.header.unknownHeaderFields.__len__())
-        self.assertTrue(aSIPRequest.startLine.isRequest)
-        self.assertFalse(aSIPRequest.startLine.isResponse)
-        self.assertFalse(aSIPRequest.startLine.isMalformed)
-        self.assertEqual('Foo Content', aSIPRequest.content)
-        self.assertEqual('INFO', aSIPRequest.startLine.sipMethod)
-        self.assertEqual('sip:example.com', aSIPRequest.startLine.requestURI)
 
 
-class TestSIPMessageFactoryForINVITESIPRequest(TestCase):
+class TestSIPMessageFactoryForINVITESIPRequest(AbstractSIPRequestFromFactoryTestCase):
     @property
-    def canonicalStrings(self):
-        return [
-            ('INVITE sip:example.com SIP/2.0\r\n'
-             'From: <sip:200.25.3.150:5061>;tag=0ee8d3e272e31c9195299efc500\r\n'
-             'To: <sip:example.com:5061>\r\n'
-             'Call-ID: 0ee8d3e272e31c9195299efc500\r\n'
-             'CSeq: 6711 INVITE\r\n'
-             'Max-Forwards: 70\r\n'
-             'Via: SIP/2.0/TLS 200.25.3.150;branch=z9hG4bK0ee8d3e272e31ca195299efc500\r\n'
-             'User-Agent: Example User Agent\r\n'
-             'Contact: <sip:invalid@200.25.3.150:5061;transport=tls>\r\n'
-             'Route: <sip:200.30.10.12:5061;transport=tls;lr>\r\n'
-             'Expires: 0\r\n'
-             'Accept: application/sdp,application/isup,application/dtmf,application/dtmf-relay,multipart/mixed\r\n'
-             'Accept-Encoding: x-nortel-short\r\n'
-             'Accept-Language: en-us,fr-fr\r\n'
-             'Allow:  ACK,BYE,CANCEL,INFO,INVITE,OPTIONS,REGISTER,SUBSCRIBE,UPDATE\r\n'
-             'Authorization: Digest username="3122221000",realm="SomeRealm",nonce="1111790769596",uri="sip:3122211004@example.com",response="9bf77d8238664fe08dafd4d2abb6f1cb",algorithm=MD5\r\n'
-             'Call-Info: <https://lsc14pa.example.com:443/pa/direct/pictureServlet?user=3126805100@example.com>;Purpose=icon\r\n'
-             'Content-Disposition: session;handling=required\r\n'
-             'Content-Type: application/sdp\r\n'
-             'Date: Sat, 01 Feb 2014 22:07:34 GMT\r\n'
-             'Record-Route: <sip:200.25.3.230:5061;transport=tls;lr>\r\n'
-             'Require: sdp-anat\r\n'
-             'Retry-After: 30\r\n'
-             'Server: Blargomatic 2.0\r\n'
-             'Session-Expires: 1200;refresher=uac\r\n'
-             'Supported: 100rel,histinfo,join,replaces,sdp-anat,timer\r\n'
-             'Timestamp: 1392061773\r\n'
-             'WWW-Authenticate: Digest algorithm=MD5,nonce="1111790769596",realm="SomeRealm"\r\n'
-             'Warning: 370 200.21.3.10 "Insufficient Bandwidth"\r\n'
-             'X-RTP-Stat:  PR=0;ER=0;PL=0;RB=0/0;DE=PCMU;EN=PCMU;JI=0;DL=0,0;IP=10.1.0.33:16384,132.52.127.200:20048\r\n'
-             'x-channel:  ds/ds1-3/12;IP=132.52.127.16\r\n'
-             'Referred-By: <sip:6006665100@example.com;user=phone> ; CorrelationID="0508817f84e7ce64745ef9753e2fbff4664321a4@200.23.3.240"\r\n'
-             'Refer-To: <sip:6006665499;rfrid=28661859@example.com;user=phone?x-nt-resource-priority=YNBvf.2j00qao>\r\n'
-             'Content-Length: 11\r\n'
-             '\r\n'
-             'Foo Content')
-        ]
+    def sipMethodString(self):
+        return "INVITE"
 
     def test_parsing(self):
-        for messageString in self.canonicalStrings:
-            request = SIPMessageFactory().nextForString(messageString)
-            self.runAssertionsForRequest(request)
+        self.run_test_parsing()
 
-    def runAssertionsForRequest(self, aSIPRequest):
-        self.assertEqual(aSIPRequest.rawString, self.canonicalStrings[0])
+    def runAssertionsForSIPMessage(self, aSIPRequest):
+        super(TestSIPMessageFactoryForINVITESIPRequest, self).runAssertionsForSIPMessage(aSIPRequest)
         self.assertTrue(aSIPRequest.isKnown)
         self.assertFalse(aSIPRequest.isUnknown)
-        self.assertTrue(aSIPRequest.isValid)
-        self.assertTrue(aSIPRequest.isRequest)
-        self.assertFalse(aSIPRequest.isResponse)
+        self.assertFalse(aSIPRequest.isACKRequest)
+        self.assertFalse(aSIPRequest.isBYERequest)
+        self.assertFalse(aSIPRequest.isCANCELRequest)
+        self.assertFalse(aSIPRequest.isINFORequest)
         self.assertTrue(aSIPRequest.isINVITERequest)
-        self.assertFalse(aSIPRequest.isACKRequest)
-        self.assertFalse(aSIPRequest.isBYERequest)
-        self.assertFalse(aSIPRequest.isCANCELRequest)
-        self.assertFalse(aSIPRequest.isINFORequest)
-        self.assertFalse(aSIPRequest.isOPTIONSRequest)
         self.assertFalse(aSIPRequest.isNOTIFYRequest)
+        self.assertFalse(aSIPRequest.isOPTIONSRequest)
         self.assertFalse(aSIPRequest.isREFERRequest)
         self.assertFalse(aSIPRequest.isREGISTERRequest)
         self.assertFalse(aSIPRequest.isSUBSCRIBERequest)
         self.assertFalse(aSIPRequest.isUPDATERequest)
-        self.assertFalse(aSIPRequest.isMalformed)
-        # self.assertEqual(1, [headerField for headerField in aSIPRequest.header.headerFields if headerField.isContentLength].__len__())
-        # self.assertEqual(11, next(headerField for headerField in aSIPRequest.header.headerFields if headerField.isContentLength).value)
-        # self.assertEqual(10, [headerField for headerField in aSIPRequest.header.headerFields if headerField.isUnknown].__len__())
-        self.assertIsNotNone(aSIPRequest.header.contentLengthHeaderField)
-        self.assertEqual(11, aSIPRequest.header.contentLength)
-        self.assertEqual(1, aSIPRequest.header.viaHeaderFields.__len__())
-        self.assertEqual(1, aSIPRequest.header.vias.__len__())
-        self.assertEqual('SIP/2.0/TLS 200.25.3.150;branch=z9hG4bK0ee8d3e272e31ca195299efc500', aSIPRequest.header.vias[0])
-        self.assertEqual(4, aSIPRequest.header.unknownHeaderFields.__len__())
-        self.assertTrue(aSIPRequest.startLine.isRequest)
-        self.assertFalse(aSIPRequest.startLine.isResponse)
-        self.assertFalse(aSIPRequest.startLine.isMalformed)
-        self.assertEqual('Foo Content', aSIPRequest.content)
-        self.assertEqual('INVITE', aSIPRequest.startLine.sipMethod)
-        self.assertEqual('sip:example.com', aSIPRequest.startLine.requestURI)
 
 
-class TestSIPMessageFactoryForNOTIFYSIPRequest(TestCase):
+class TestSIPMessageFactoryForNOTIFYSIPRequest(AbstractSIPRequestFromFactoryTestCase):
     @property
-    def canonicalStrings(self):
-        return [
-            ('NOTIFY sip:example.com SIP/2.0\r\n'
-             'From: <sip:200.25.3.150:5061>;tag=0ee8d3e272e31c9195299efc500\r\n'
-             'To: <sip:example.com:5061>\r\n'
-             'Call-ID: 0ee8d3e272e31c9195299efc500\r\n'
-             'CSeq: 6711 NOTIFY\r\n'
-             'Max-Forwards: 70\r\n'
-             'Via: SIP/2.0/TLS 200.25.3.150;branch=z9hG4bK0ee8d3e272e31ca195299efc500\r\n'
-             'User-Agent: Example User Agent\r\n'
-             'Contact: <sip:invalid@200.25.3.150:5061;transport=tls>\r\n'
-             'Route: <sip:200.30.10.12:5061;transport=tls;lr>\r\n'
-             'Expires: 0\r\n'
-             'Accept: application/sdp,application/isup,application/dtmf,application/dtmf-relay,multipart/mixed\r\n'
-             'Accept-Encoding: x-nortel-short\r\n'
-             'Accept-Language: en-us,fr-fr\r\n'
-             'Allow:  ACK,BYE,CANCEL,INFO,INVITE,OPTIONS,REGISTER,SUBSCRIBE,UPDATE\r\n'
-             'Authorization: Digest username="3122221000",realm="SomeRealm",nonce="1111790769596",uri="sip:3122211004@example.com",response="9bf77d8238664fe08dafd4d2abb6f1cb",algorithm=MD5\r\n'
-             'Call-Info: <https://lsc14pa.example.com:443/pa/direct/pictureServlet?user=3126805100@example.com>;Purpose=icon\r\n'
-             'Content-Disposition: session;handling=required\r\n'
-             'Content-Type: application/sdp\r\n'
-             'Date: Sat, 01 Feb 2014 22:07:34 GMT\r\n'
-             'Record-Route: <sip:200.25.3.230:5061;transport=tls;lr>\r\n'
-             'Require: sdp-anat\r\n'
-             'Retry-After: 30\r\n'
-             'Server: Blargomatic 2.0\r\n'
-             'Session-Expires: 1200;refresher=uac\r\n'
-             'Supported: 100rel,histinfo,join,replaces,sdp-anat,timer\r\n'
-             'Timestamp: 1392061773\r\n'
-             'WWW-Authenticate: Digest algorithm=MD5,nonce="1111790769596",realm="SomeRealm"\r\n'
-             'Warning: 370 200.21.3.10 "Insufficient Bandwidth"\r\n'
-             'X-RTP-Stat:  PR=0;ER=0;PL=0;RB=0/0;DE=PCMU;EN=PCMU;JI=0;DL=0,0;IP=10.1.0.33:16384,132.52.127.200:20048\r\n'
-             'x-channel:  ds/ds1-3/12;IP=132.52.127.16\r\n'
-             'Referred-By: <sip:6006665100@example.com;user=phone> ; CorrelationID="0508817f84e7ce64745ef9753e2fbff4664321a4@200.23.3.240"\r\n'
-             'Refer-To: <sip:6006665499;rfrid=28661859@example.com;user=phone?x-nt-resource-priority=YNBvf.2j00qao>\r\n'
-             'Content-Length: 11\r\n'
-             '\r\n'
-             'Foo Content')
-        ]
+    def sipMethodString(self):
+        return "NOTIFY"
 
     def test_parsing(self):
-        for messageString in self.canonicalStrings:
-            request = SIPMessageFactory().nextForString(messageString)
-            self.runAssertionsForRequest(request)
+        self.run_test_parsing()
 
-    def runAssertionsForRequest(self, aSIPRequest):
-        self.assertEqual(aSIPRequest.rawString, self.canonicalStrings[0])
+    def runAssertionsForSIPMessage(self, aSIPRequest):
+        super(TestSIPMessageFactoryForNOTIFYSIPRequest, self).runAssertionsForSIPMessage(aSIPRequest)
         self.assertTrue(aSIPRequest.isKnown)
         self.assertFalse(aSIPRequest.isUnknown)
-        self.assertTrue(aSIPRequest.isValid)
-        self.assertTrue(aSIPRequest.isRequest)
-        self.assertFalse(aSIPRequest.isResponse)
+        self.assertFalse(aSIPRequest.isACKRequest)
+        self.assertFalse(aSIPRequest.isBYERequest)
+        self.assertFalse(aSIPRequest.isCANCELRequest)
+        self.assertFalse(aSIPRequest.isINFORequest)
+        self.assertFalse(aSIPRequest.isINVITERequest)
         self.assertTrue(aSIPRequest.isNOTIFYRequest)
-        self.assertFalse(aSIPRequest.isACKRequest)
-        self.assertFalse(aSIPRequest.isBYERequest)
-        self.assertFalse(aSIPRequest.isCANCELRequest)
-        self.assertFalse(aSIPRequest.isINFORequest)
-        self.assertFalse(aSIPRequest.isINVITERequest)
         self.assertFalse(aSIPRequest.isOPTIONSRequest)
         self.assertFalse(aSIPRequest.isREFERRequest)
         self.assertFalse(aSIPRequest.isREGISTERRequest)
         self.assertFalse(aSIPRequest.isSUBSCRIBERequest)
         self.assertFalse(aSIPRequest.isUPDATERequest)
-        self.assertFalse(aSIPRequest.isMalformed)
-        # self.assertEqual(1, [headerField for headerField in aSIPRequest.header.headerFields if headerField.isContentLength].__len__())
-        # self.assertEqual(11, next(headerField for headerField in aSIPRequest.header.headerFields if headerField.isContentLength).value)
-        # self.assertEqual(10, [headerField for headerField in aSIPRequest.header.headerFields if headerField.isUnknown].__len__())
-        self.assertIsNotNone(aSIPRequest.header.contentLengthHeaderField)
-        self.assertEqual(11, aSIPRequest.header.contentLength)
-        self.assertEqual(1, aSIPRequest.header.viaHeaderFields.__len__())
-        self.assertEqual(1, aSIPRequest.header.vias.__len__())
-        self.assertEqual('SIP/2.0/TLS 200.25.3.150;branch=z9hG4bK0ee8d3e272e31ca195299efc500', aSIPRequest.header.vias[0])
-        self.assertEqual(4, aSIPRequest.header.unknownHeaderFields.__len__())
-        self.assertTrue(aSIPRequest.startLine.isRequest)
-        self.assertFalse(aSIPRequest.startLine.isResponse)
-        self.assertFalse(aSIPRequest.startLine.isMalformed)
-        self.assertEqual('Foo Content', aSIPRequest.content)
-        self.assertEqual('NOTIFY', aSIPRequest.startLine.sipMethod)
-        self.assertEqual('sip:example.com', aSIPRequest.startLine.requestURI)
 
 
-class TestSIPMessageFactoryForREFERSIPRequest(TestCase):
+class TestSIPMessageFactoryForREFERSIPRequest(AbstractSIPRequestFromFactoryTestCase):
     @property
-    def canonicalStrings(self):
-        return [
-            ('REFER sip:example.com SIP/2.0\r\n'
-             'From: <sip:200.25.3.150:5061>;tag=0ee8d3e272e31c9195299efc500\r\n'
-             'To: <sip:example.com:5061>\r\n'
-             'Call-ID: 0ee8d3e272e31c9195299efc500\r\n'
-             'CSeq: 6711 REFER\r\n'
-             'Max-Forwards: 70\r\n'
-             'Via: SIP/2.0/TLS 200.25.3.150;branch=z9hG4bK0ee8d3e272e31ca195299efc500\r\n'
-             'User-Agent: Example User Agent\r\n'
-             'Contact: <sip:invalid@200.25.3.150:5061;transport=tls>\r\n'
-             'Route: <sip:200.30.10.12:5061;transport=tls;lr>\r\n'
-             'Expires: 0\r\n'
-             'Accept: application/sdp,application/isup,application/dtmf,application/dtmf-relay,multipart/mixed\r\n'
-             'Accept-Encoding: x-nortel-short\r\n'
-             'Accept-Language: en-us,fr-fr\r\n'
-             'Allow:  ACK,BYE,CANCEL,INFO,INVITE,OPTIONS,REGISTER,SUBSCRIBE,UPDATE\r\n'
-             'Authorization: Digest username="3122221000",realm="SomeRealm",nonce="1111790769596",uri="sip:3122211004@example.com",response="9bf77d8238664fe08dafd4d2abb6f1cb",algorithm=MD5\r\n'
-             'Call-Info: <https://lsc14pa.example.com:443/pa/direct/pictureServlet?user=3126805100@example.com>;Purpose=icon\r\n'
-             'Content-Disposition: session;handling=required\r\n'
-             'Content-Type: application/sdp\r\n'
-             'Date: Sat, 01 Feb 2014 22:07:34 GMT\r\n'
-             'Record-Route: <sip:200.25.3.230:5061;transport=tls;lr>\r\n'
-             'Require: sdp-anat\r\n'
-             'Retry-After: 30\r\n'
-             'Server: Blargomatic 2.0\r\n'
-             'Session-Expires: 1200;refresher=uac\r\n'
-             'Supported: 100rel,histinfo,join,replaces,sdp-anat,timer\r\n'
-             'Timestamp: 1392061773\r\n'
-             'WWW-Authenticate: Digest algorithm=MD5,nonce="1111790769596",realm="SomeRealm"\r\n'
-             'Warning: 370 200.21.3.10 "Insufficient Bandwidth"\r\n'
-             'X-RTP-Stat:  PR=0;ER=0;PL=0;RB=0/0;DE=PCMU;EN=PCMU;JI=0;DL=0,0;IP=10.1.0.33:16384,132.52.127.200:20048\r\n'
-             'x-channel:  ds/ds1-3/12;IP=132.52.127.16\r\n'
-             'Referred-By: <sip:6006665100@example.com;user=phone> ; CorrelationID="0508817f84e7ce64745ef9753e2fbff4664321a4@200.23.3.240"\r\n'
-             'Refer-To: <sip:6006665499;rfrid=28661859@example.com;user=phone?x-nt-resource-priority=YNBvf.2j00qao>\r\n'
-             'Content-Length: 11\r\n'
-             '\r\n'
-             'Foo Content')
-        ]
+    def sipMethodString(self):
+        return "REFER"
 
     def test_parsing(self):
-        for messageString in self.canonicalStrings:
-            request = SIPMessageFactory().nextForString(messageString)
-            self.runAssertionsForRequest(request)
+        self.run_test_parsing()
 
-    def runAssertionsForRequest(self, aSIPRequest):
-        self.assertEqual(aSIPRequest.rawString, self.canonicalStrings[0])
+    def runAssertionsForSIPMessage(self, aSIPRequest):
+        super(TestSIPMessageFactoryForREFERSIPRequest, self).runAssertionsForSIPMessage(aSIPRequest)
         self.assertTrue(aSIPRequest.isKnown)
         self.assertFalse(aSIPRequest.isUnknown)
-        self.assertTrue(aSIPRequest.isValid)
-        self.assertTrue(aSIPRequest.isRequest)
-        self.assertFalse(aSIPRequest.isResponse)
+        self.assertFalse(aSIPRequest.isACKRequest)
+        self.assertFalse(aSIPRequest.isBYERequest)
+        self.assertFalse(aSIPRequest.isCANCELRequest)
+        self.assertFalse(aSIPRequest.isINFORequest)
+        self.assertFalse(aSIPRequest.isINVITERequest)
+        self.assertFalse(aSIPRequest.isNOTIFYRequest)
+        self.assertFalse(aSIPRequest.isOPTIONSRequest)
         self.assertTrue(aSIPRequest.isREFERRequest)
+        self.assertFalse(aSIPRequest.isREGISTERRequest)
+        self.assertFalse(aSIPRequest.isSUBSCRIBERequest)
+        self.assertFalse(aSIPRequest.isUPDATERequest)
+
+
+class TestSIPMessageFactoryForREGISTERSIPRequest(AbstractSIPRequestFromFactoryTestCase):
+    @property
+    def sipMethodString(self):
+        return "REGISTER"
+
+    def test_parsing(self):
+        self.run_test_parsing()
+
+    def runAssertionsForSIPMessage(self, aSIPRequest):
+        super(TestSIPMessageFactoryForREGISTERSIPRequest, self).runAssertionsForSIPMessage(aSIPRequest)
+        self.assertTrue(aSIPRequest.isKnown)
+        self.assertFalse(aSIPRequest.isUnknown)
         self.assertFalse(aSIPRequest.isACKRequest)
         self.assertFalse(aSIPRequest.isBYERequest)
         self.assertFalse(aSIPRequest.isCANCELRequest)
@@ -1054,329 +520,78 @@ class TestSIPMessageFactoryForREFERSIPRequest(TestCase):
         self.assertFalse(aSIPRequest.isINVITERequest)
         self.assertFalse(aSIPRequest.isNOTIFYRequest)
         self.assertFalse(aSIPRequest.isOPTIONSRequest)
-        self.assertFalse(aSIPRequest.isREGISTERRequest)
-        self.assertFalse(aSIPRequest.isSUBSCRIBERequest)
-        self.assertFalse(aSIPRequest.isUPDATERequest)
-        self.assertFalse(aSIPRequest.isMalformed)
-        # self.assertEqual(1, [headerField for headerField in aSIPRequest.header.headerFields if headerField.isContentLength].__len__())
-        # self.assertEqual(11, next(headerField for headerField in aSIPRequest.header.headerFields if headerField.isContentLength).value)
-        # self.assertEqual(10, [headerField for headerField in aSIPRequest.header.headerFields if headerField.isUnknown].__len__())
-        self.assertIsNotNone(aSIPRequest.header.contentLengthHeaderField)
-        self.assertEqual(11, aSIPRequest.header.contentLength)
-        self.assertEqual(1, aSIPRequest.header.viaHeaderFields.__len__())
-        self.assertEqual(1, aSIPRequest.header.vias.__len__())
-        self.assertEqual('SIP/2.0/TLS 200.25.3.150;branch=z9hG4bK0ee8d3e272e31ca195299efc500', aSIPRequest.header.vias[0])
-        self.assertEqual(4, aSIPRequest.header.unknownHeaderFields.__len__())
-        self.assertTrue(aSIPRequest.startLine.isRequest)
-        self.assertFalse(aSIPRequest.startLine.isResponse)
-        self.assertFalse(aSIPRequest.startLine.isMalformed)
-        self.assertEqual('Foo Content', aSIPRequest.content)
-        self.assertEqual('REFER', aSIPRequest.startLine.sipMethod)
-        self.assertEqual('sip:example.com', aSIPRequest.startLine.requestURI)
-
-
-class TestSIPMessageFactoryForREGISTERSIPRequest(TestCase):
-    @property
-    def canonicalStrings(self):
-        return [
-            ('REGISTER sip:example.com SIP/2.0\r\n'
-             'From: <sip:200.25.3.150:5061>;tag=0ee8d3e272e31c9195299efc500\r\n'
-             'To: <sip:example.com:5061>\r\n'
-             'Call-ID: 0ee8d3e272e31c9195299efc500\r\n'
-             'CSeq: 6711 REGISTER\r\n'
-             'Max-Forwards: 70\r\n'
-             'Via: SIP/2.0/TLS 200.25.3.150;branch=z9hG4bK0ee8d3e272e31ca195299efc500\r\n'
-             'User-Agent: Example User Agent\r\n'
-             'Contact: <sip:invalid@200.25.3.150:5061;transport=tls>\r\n'
-             'Route: <sip:200.30.10.12:5061;transport=tls;lr>\r\n'
-             'Expires: 0\r\n'
-             'Accept: application/sdp,application/isup,application/dtmf,application/dtmf-relay,multipart/mixed\r\n'
-             'Accept-Encoding: x-nortel-short\r\n'
-             'Accept-Language: en-us,fr-fr\r\n'
-             'Allow:  ACK,BYE,CANCEL,INFO,INVITE,OPTIONS,REGISTER,SUBSCRIBE,UPDATE\r\n'
-             'Authorization: Digest username="3122221000",realm="SomeRealm",nonce="1111790769596",uri="sip:3122211004@example.com",response="9bf77d8238664fe08dafd4d2abb6f1cb",algorithm=MD5\r\n'
-             'Call-Info: <https://lsc14pa.example.com:443/pa/direct/pictureServlet?user=3126805100@example.com>;Purpose=icon\r\n'
-             'Content-Disposition: session;handling=required\r\n'
-             'Content-Type: application/sdp\r\n'
-             'Date: Sat, 01 Feb 2014 22:07:34 GMT\r\n'
-             'Record-Route: <sip:200.25.3.230:5061;transport=tls;lr>\r\n'
-             'Require: sdp-anat\r\n'
-             'Retry-After: 30\r\n'
-             'Server: Blargomatic 2.0\r\n'
-             'Session-Expires: 1200;refresher=uac\r\n'
-             'Supported: 100rel,histinfo,join,replaces,sdp-anat,timer\r\n'
-             'Timestamp: 1392061773\r\n'
-             'WWW-Authenticate: Digest algorithm=MD5,nonce="1111790769596",realm="SomeRealm"\r\n'
-             'Warning: 370 200.21.3.10 "Insufficient Bandwidth"\r\n'
-             'X-RTP-Stat:  PR=0;ER=0;PL=0;RB=0/0;DE=PCMU;EN=PCMU;JI=0;DL=0,0;IP=10.1.0.33:16384,132.52.127.200:20048\r\n'
-             'x-channel:  ds/ds1-3/12;IP=132.52.127.16\r\n'
-             'Referred-By: <sip:6006665100@example.com;user=phone> ; CorrelationID="0508817f84e7ce64745ef9753e2fbff4664321a4@200.23.3.240"\r\n'
-             'Refer-To: <sip:6006665499;rfrid=28661859@example.com;user=phone?x-nt-resource-priority=YNBvf.2j00qao>\r\n'
-             'Content-Length: 11\r\n'
-             '\r\n'
-             'Foo Content')
-        ]
-
-    def test_parsing(self):
-        for messageString in self.canonicalStrings:
-            request = SIPMessageFactory().nextForString(messageString)
-            self.runAssertionsForRequest(request)
-
-    def runAssertionsForRequest(self, aSIPRequest):
-        self.assertEqual(aSIPRequest.rawString, self.canonicalStrings[0])
-        self.assertTrue(aSIPRequest.isKnown)
-        self.assertFalse(aSIPRequest.isUnknown)
-        self.assertTrue(aSIPRequest.isValid)
-        self.assertTrue(aSIPRequest.isRequest)
-        self.assertFalse(aSIPRequest.isResponse)
+        self.assertFalse(aSIPRequest.isREFERRequest)
         self.assertTrue(aSIPRequest.isREGISTERRequest)
+        self.assertFalse(aSIPRequest.isSUBSCRIBERequest)
+        self.assertFalse(aSIPRequest.isUPDATERequest)
+
+
+class TestSIPMessageFactoryForSUBSCRIBESIPRequest(AbstractSIPRequestFromFactoryTestCase):
+    @property
+    def sipMethodString(self):
+        return "SUBSCRIBE"
+
+    def test_parsing(self):
+        self.run_test_parsing()
+
+    def runAssertionsForSIPMessage(self, aSIPRequest):
+        super(TestSIPMessageFactoryForSUBSCRIBESIPRequest, self).runAssertionsForSIPMessage(aSIPRequest)
+        self.assertTrue(aSIPRequest.isKnown)
+        self.assertFalse(aSIPRequest.isUnknown)
         self.assertFalse(aSIPRequest.isACKRequest)
         self.assertFalse(aSIPRequest.isBYERequest)
         self.assertFalse(aSIPRequest.isCANCELRequest)
         self.assertFalse(aSIPRequest.isINFORequest)
         self.assertFalse(aSIPRequest.isINVITERequest)
         self.assertFalse(aSIPRequest.isNOTIFYRequest)
-        self.assertFalse(aSIPRequest.isREFERRequest)
         self.assertFalse(aSIPRequest.isOPTIONSRequest)
-        self.assertFalse(aSIPRequest.isSUBSCRIBERequest)
-        self.assertFalse(aSIPRequest.isUPDATERequest)
-        self.assertFalse(aSIPRequest.isMalformed)
-        # self.assertEqual(1, [headerField for headerField in aSIPRequest.header.headerFields if headerField.isContentLength].__len__())
-        # self.assertEqual(11, next(headerField for headerField in aSIPRequest.header.headerFields if headerField.isContentLength).value)
-        # self.assertEqual(10, [headerField for headerField in aSIPRequest.header.headerFields if headerField.isUnknown].__len__())
-        self.assertIsNotNone(aSIPRequest.header.contentLengthHeaderField)
-        self.assertEqual(11, aSIPRequest.header.contentLength)
-        self.assertEqual(1, aSIPRequest.header.viaHeaderFields.__len__())
-        self.assertEqual(1, aSIPRequest.header.vias.__len__())
-        self.assertEqual('SIP/2.0/TLS 200.25.3.150;branch=z9hG4bK0ee8d3e272e31ca195299efc500', aSIPRequest.header.vias[0])
-        self.assertEqual(4, aSIPRequest.header.unknownHeaderFields.__len__())
-        self.assertTrue(aSIPRequest.startLine.isRequest)
-        self.assertFalse(aSIPRequest.startLine.isResponse)
-        self.assertFalse(aSIPRequest.startLine.isMalformed)
-        self.assertEqual('Foo Content', aSIPRequest.content)
-        self.assertEqual('REGISTER', aSIPRequest.startLine.sipMethod)
-        self.assertEqual('sip:example.com', aSIPRequest.startLine.requestURI)
-
-
-class TestSIPMessageFactoryForSUBSCRIBESIPRequest(TestCase):
-    @property
-    def canonicalStrings(self):
-        return [
-            ('SUBSCRIBE sip:example.com SIP/2.0\r\n'
-             'From: <sip:200.25.3.150:5061>;tag=0ee8d3e272e31c9195299efc500\r\n'
-             'To: <sip:example.com:5061>\r\n'
-             'Call-ID: 0ee8d3e272e31c9195299efc500\r\n'
-             'CSeq: 6711 SUBSCRIBE\r\n'
-             'Max-Forwards: 70\r\n'
-             'Via: SIP/2.0/TLS 200.25.3.150;branch=z9hG4bK0ee8d3e272e31ca195299efc500\r\n'
-             'User-Agent: Example User Agent\r\n'
-             'Contact: <sip:invalid@200.25.3.150:5061;transport=tls>\r\n'
-             'Route: <sip:200.30.10.12:5061;transport=tls;lr>\r\n'
-             'Expires: 0\r\n'
-             'Accept: application/sdp,application/isup,application/dtmf,application/dtmf-relay,multipart/mixed\r\n'
-             'Accept-Encoding: x-nortel-short\r\n'
-             'Accept-Language: en-us,fr-fr\r\n'
-             'Allow:  ACK,BYE,CANCEL,INFO,INVITE,OPTIONS,REGISTER,SUBSCRIBE,UPDATE\r\n'
-             'Authorization: Digest username="3122221000",realm="SomeRealm",nonce="1111790769596",uri="sip:3122211004@example.com",response="9bf77d8238664fe08dafd4d2abb6f1cb",algorithm=MD5\r\n'
-             'Call-Info: <https://lsc14pa.example.com:443/pa/direct/pictureServlet?user=3126805100@example.com>;Purpose=icon\r\n'
-             'Content-Disposition: session;handling=required\r\n'
-             'Content-Type: application/sdp\r\n'
-             'Date: Sat, 01 Feb 2014 22:07:34 GMT\r\n'
-             'Record-Route: <sip:200.25.3.230:5061;transport=tls;lr>\r\n'
-             'Require: sdp-anat\r\n'
-             'Retry-After: 30\r\n'
-             'Server: Blargomatic 2.0\r\n'
-             'Session-Expires: 1200;refresher=uac\r\n'
-             'Supported: 100rel,histinfo,join,replaces,sdp-anat,timer\r\n'
-             'Timestamp: 1392061773\r\n'
-             'WWW-Authenticate: Digest algorithm=MD5,nonce="1111790769596",realm="SomeRealm"\r\n'
-             'Warning: 370 200.21.3.10 "Insufficient Bandwidth"\r\n'
-             'X-RTP-Stat:  PR=0;ER=0;PL=0;RB=0/0;DE=PCMU;EN=PCMU;JI=0;DL=0,0;IP=10.1.0.33:16384,132.52.127.200:20048\r\n'
-             'x-channel:  ds/ds1-3/12;IP=132.52.127.16\r\n'
-             'Referred-By: <sip:6006665100@example.com;user=phone> ; CorrelationID="0508817f84e7ce64745ef9753e2fbff4664321a4@200.23.3.240"\r\n'
-             'Refer-To: <sip:6006665499;rfrid=28661859@example.com;user=phone?x-nt-resource-priority=YNBvf.2j00qao>\r\n'
-             'Content-Length: 11\r\n'
-             '\r\n'
-             'Foo Content')
-        ]
-
-    def test_parsing(self):
-        for messageString in self.canonicalStrings:
-            request = SIPMessageFactory().nextForString(messageString)
-            self.runAssertionsForRequest(request)
-
-    def runAssertionsForRequest(self, aSIPRequest):
-        self.assertEqual(aSIPRequest.rawString, self.canonicalStrings[0])
-        self.assertTrue(aSIPRequest.isKnown)
-        self.assertFalse(aSIPRequest.isUnknown)
-        self.assertTrue(aSIPRequest.isValid)
-        self.assertTrue(aSIPRequest.isRequest)
-        self.assertFalse(aSIPRequest.isResponse)
+        self.assertFalse(aSIPRequest.isREFERRequest)
+        self.assertFalse(aSIPRequest.isREGISTERRequest)
         self.assertTrue(aSIPRequest.isSUBSCRIBERequest)
-        self.assertFalse(aSIPRequest.isACKRequest)
-        self.assertFalse(aSIPRequest.isBYERequest)
-        self.assertFalse(aSIPRequest.isCANCELRequest)
-        self.assertFalse(aSIPRequest.isINFORequest)
-        self.assertFalse(aSIPRequest.isINVITERequest)
-        self.assertFalse(aSIPRequest.isNOTIFYRequest)
-        self.assertFalse(aSIPRequest.isREFERRequest)
-        self.assertFalse(aSIPRequest.isREGISTERRequest)
-        self.assertFalse(aSIPRequest.isOPTIONSRequest)
         self.assertFalse(aSIPRequest.isUPDATERequest)
-        self.assertFalse(aSIPRequest.isMalformed)
-        # self.assertEqual(1, [headerField for headerField in aSIPRequest.header.headerFields if headerField.isContentLength].__len__())
-        # self.assertEqual(11, next(headerField for headerField in aSIPRequest.header.headerFields if headerField.isContentLength).value)
-        # self.assertEqual(10, [headerField for headerField in aSIPRequest.header.headerFields if headerField.isUnknown].__len__())
-        self.assertIsNotNone(aSIPRequest.header.contentLengthHeaderField)
-        self.assertEqual(11, aSIPRequest.header.contentLength)
-        self.assertEqual(1, aSIPRequest.header.viaHeaderFields.__len__())
-        self.assertEqual(1, aSIPRequest.header.vias.__len__())
-        self.assertEqual('SIP/2.0/TLS 200.25.3.150;branch=z9hG4bK0ee8d3e272e31ca195299efc500', aSIPRequest.header.vias[0])
-        self.assertEqual(4, aSIPRequest.header.unknownHeaderFields.__len__())
-        self.assertTrue(aSIPRequest.startLine.isRequest)
-        self.assertFalse(aSIPRequest.startLine.isResponse)
-        self.assertFalse(aSIPRequest.startLine.isMalformed)
-        self.assertEqual('Foo Content', aSIPRequest.content)
-        self.assertEqual('SUBSCRIBE', aSIPRequest.startLine.sipMethod)
-        self.assertEqual('sip:example.com', aSIPRequest.startLine.requestURI)
 
 
-class TestSIPMessageFactoryForUPDATESIPRequest(TestCase):
+class TestSIPMessageFactoryForUPDATESIPRequest(AbstractSIPRequestFromFactoryTestCase):
     @property
-    def canonicalStrings(self):
-        return [
-            ('UPDATE sip:example.com SIP/2.0\r\n'
-             'From: <sip:200.25.3.150:5061>;tag=0ee8d3e272e31c9195299efc500\r\n'
-             'To: <sip:example.com:5061>\r\n'
-             'Call-ID: 0ee8d3e272e31c9195299efc500\r\n'
-             'CSeq: 6711 UPDATE\r\n'
-             'Max-Forwards: 70\r\n'
-             'Via: SIP/2.0/TLS 200.25.3.150;branch=z9hG4bK0ee8d3e272e31ca195299efc500\r\n'
-             'User-Agent: Example User Agent\r\n'
-             'Contact: <sip:invalid@200.25.3.150:5061;transport=tls>\r\n'
-             'Route: <sip:200.30.10.12:5061;transport=tls;lr>\r\n'
-             'Expires: 0\r\n'
-             'Accept: application/sdp,application/isup,application/dtmf,application/dtmf-relay,multipart/mixed\r\n'
-             'Accept-Encoding: x-nortel-short\r\n'
-             'Accept-Language: en-us,fr-fr\r\n'
-             'Allow:  ACK,BYE,CANCEL,INFO,INVITE,OPTIONS,REGISTER,SUBSCRIBE,UPDATE\r\n'
-             'Authorization: Digest username="3122221000",realm="SomeRealm",nonce="1111790769596",uri="sip:3122211004@example.com",response="9bf77d8238664fe08dafd4d2abb6f1cb",algorithm=MD5\r\n'
-             'Call-Info: <https://lsc14pa.example.com:443/pa/direct/pictureServlet?user=3126805100@example.com>;Purpose=icon\r\n'
-             'Content-Disposition: session;handling=required\r\n'
-             'Content-Type: application/sdp\r\n'
-             'Date: Sat, 01 Feb 2014 22:07:34 GMT\r\n'
-             'Record-Route: <sip:200.25.3.230:5061;transport=tls;lr>\r\n'
-             'Require: sdp-anat\r\n'
-             'Retry-After: 30\r\n'
-             'Server: Blargomatic 2.0\r\n'
-             'Session-Expires: 1200;refresher=uac\r\n'
-             'Supported: 100rel,histinfo,join,replaces,sdp-anat,timer\r\n'
-             'Timestamp: 1392061773\r\n'
-             'WWW-Authenticate: Digest algorithm=MD5,nonce="1111790769596",realm="SomeRealm"\r\n'
-             'Warning: 370 200.21.3.10 "Insufficient Bandwidth"\r\n'
-             'X-RTP-Stat:  PR=0;ER=0;PL=0;RB=0/0;DE=PCMU;EN=PCMU;JI=0;DL=0,0;IP=10.1.0.33:16384,132.52.127.200:20048\r\n'
-             'x-channel:  ds/ds1-3/12;IP=132.52.127.16\r\n'
-             'Referred-By: <sip:6006665100@example.com;user=phone> ; CorrelationID="0508817f84e7ce64745ef9753e2fbff4664321a4@200.23.3.240"\r\n'
-             'Refer-To: <sip:6006665499;rfrid=28661859@example.com;user=phone?x-nt-resource-priority=YNBvf.2j00qao>\r\n'
-             'Content-Length: 11\r\n'
-             '\r\n'
-             'Foo Content')
-        ]
+    def sipMethodString(self):
+        return "UPDATE"
 
     def test_parsing(self):
-        for messageString in self.canonicalStrings:
-            request = SIPMessageFactory().nextForString(messageString)
-            self.runAssertionsForRequest(request)
+        self.run_test_parsing()
 
-    def runAssertionsForRequest(self, aSIPRequest):
-        self.assertEqual(aSIPRequest.rawString, self.canonicalStrings[0])
+    def runAssertionsForSIPMessage(self, aSIPRequest):
+        super(TestSIPMessageFactoryForUPDATESIPRequest, self).runAssertionsForSIPMessage(aSIPRequest)
         self.assertTrue(aSIPRequest.isKnown)
         self.assertFalse(aSIPRequest.isUnknown)
-        self.assertTrue(aSIPRequest.isValid)
-        self.assertTrue(aSIPRequest.isRequest)
-        self.assertFalse(aSIPRequest.isResponse)
-        self.assertTrue(aSIPRequest.isUPDATERequest)
         self.assertFalse(aSIPRequest.isACKRequest)
         self.assertFalse(aSIPRequest.isBYERequest)
         self.assertFalse(aSIPRequest.isCANCELRequest)
         self.assertFalse(aSIPRequest.isINFORequest)
         self.assertFalse(aSIPRequest.isINVITERequest)
         self.assertFalse(aSIPRequest.isNOTIFYRequest)
+        self.assertFalse(aSIPRequest.isOPTIONSRequest)
         self.assertFalse(aSIPRequest.isREFERRequest)
         self.assertFalse(aSIPRequest.isREGISTERRequest)
         self.assertFalse(aSIPRequest.isSUBSCRIBERequest)
-        self.assertFalse(aSIPRequest.isOPTIONSRequest)
-        self.assertFalse(aSIPRequest.isMalformed)
-        # self.assertEqual(1, [headerField for headerField in aSIPRequest.header.headerFields if headerField.isContentLength].__len__())
-        # self.assertEqual(11, next(headerField for headerField in aSIPRequest.header.headerFields if headerField.isContentLength).value)
-        # self.assertEqual(10, [headerField for headerField in aSIPRequest.header.headerFields if headerField.isUnknown].__len__())
-        self.assertIsNotNone(aSIPRequest.header.contentLengthHeaderField)
-        self.assertEqual(11, aSIPRequest.header.contentLength)
-        self.assertEqual(1, aSIPRequest.header.viaHeaderFields.__len__())
-        self.assertEqual(1, aSIPRequest.header.vias.__len__())
-        self.assertEqual('SIP/2.0/TLS 200.25.3.150;branch=z9hG4bK0ee8d3e272e31ca195299efc500', aSIPRequest.header.vias[0])
-        self.assertEqual(4, aSIPRequest.header.unknownHeaderFields.__len__())
-        self.assertTrue(aSIPRequest.startLine.isRequest)
-        self.assertFalse(aSIPRequest.startLine.isResponse)
-        self.assertFalse(aSIPRequest.startLine.isMalformed)
-        self.assertEqual('Foo Content', aSIPRequest.content)
-        self.assertEqual('UPDATE', aSIPRequest.startLine.sipMethod)
-        self.assertEqual('sip:example.com', aSIPRequest.startLine.requestURI)
+        self.assertTrue(aSIPRequest.isUPDATERequest)
 
 
-class TestSIPMessageFactoryForSIPResponse(TestCase):
+class TestSIPMessageFactoryForSIPResponse(AbstractSIPResponseFromFactoryTestCase):
     @property
-    def canonicalStrings(self):
-        return [
-            ('SIP/2.0 100 Trying\r\n'
-             'From: "3125551212"<sip:3125551212@example.com:5064;user=phone>;tag=e95a00000022137fe518\r\n'
-             'To: "3125551313"<sip:3125551313@example.com:5064;user=phone>\r\n'
-             'Call-ID: a12d6210342b0183745ef9750992682d90d7edce@200.23.3.241\r\n'
-             'CSeq: 615 INVITE\r\n'
-             'Via: SIP/2.0/UDP 200.23.3.241:5064;received=200.30.10.15;branch=z9hG4bK-3f04bd-f62a8381-4ebadacb-0x692748a8\r\n'
-             'Accept: application/sdp,application/isup,application/dtmf,application/dtmf-relay,multipart/mixed\r\n'
-             'Accept-Encoding: x-nortel-short\r\n'
-             'Accept-Language: en-us,fr-fr\r\n'
-             'Allow:  ACK,BYE,CANCEL,INFO,INVITE,OPTIONS,REGISTER,SUBSCRIBE,UPDATE\r\n'
-             'Authorization: Digest username="3122221000",realm="SomeRealm",nonce="1111790769596",uri="sip:3122211004@example.com",response="9bf77d8238664fe08dafd4d2abb6f1cb",algorithm=MD5\r\n'
-             'Call-Info: <https://lsc14pa.example.com:443/pa/direct/pictureServlet?user=3126805100@example.com>;Purpose=icon\r\n'
-             'Content-Disposition: session;handling=required\r\n'
-             'Content-Type: application/sdp\r\n'
-             'Date: Sat, 01 Feb 2014 22:07:34 GMT\r\n'
-             'Record-Route: <sip:200.25.3.230:5061;transport=tls;lr>\r\n'
-             'Require: sdp-anat\r\n'
-             'Retry-After: 30\r\n'
-             'Server: Blargomatic 2.0\r\n'
-             'Session-Expires: 1200;refresher=uac\r\n'
-             'Supported: 100rel,histinfo,join,replaces,sdp-anat,timer\r\n'
-             'Timestamp: 1392061773\r\n'
-             'WWW-Authenticate: Digest algorithm=MD5,nonce="1111790769596",realm="SomeRealm"\r\n'
-             'Warning: 370 200.21.3.10 "Insufficient Bandwidth"\r\n'
-             'X-RTP-Stat:  PR=0;ER=0;PL=0;RB=0/0;DE=PCMU;EN=PCMU;JI=0;DL=0,0;IP=10.1.0.33:16384,132.52.127.200:20048\r\n'
-             'x-channel:  ds/ds1-3/12;IP=132.52.127.16\r\n'
-             'Referred-By: <sip:6006665100@example.com;user=phone> ; CorrelationID="0508817f84e7ce64745ef9753e2fbff4664321a4@200.23.3.240"\r\n'
-             'Refer-To: <sip:6006665499;rfrid=28661859@example.com;user=phone?x-nt-resource-priority=YNBvf.2j00qao>\r\n'
-             'Content-Length: 11\r\n'
-             '\r\n'
-             'Foo Content')
-        ]
+    def statusCode(self):
+        return 100
+
+    @property
+    def reasonPhrase(self):
+        return "Trying"
 
     def test_parsing(self):
-        for messageString in self.canonicalStrings:
-            response = SIPMessageFactory().nextForString(messageString)
-            self.runAssertionsForResponse(response)
+        self.run_test_parsing()
 
-    def test_eventTriggering(self):
-        # This is thoroughly exercised in the TestSIPMessageFactoryForSanitizedLogFile class
-        pass
-
-    def runAssertionsForResponse(self, aSIPResponse):
-        self.assertEqual(aSIPResponse.rawString, self.canonicalStrings[0])
+    def runAssertionsForSIPMessage(self, aSIPResponse):
+        super(TestSIPMessageFactoryForSIPResponse, self).runAssertionsForSIPMessage(aSIPResponse)
         self.assertTrue(aSIPResponse.isKnown)
         self.assertFalse(aSIPResponse.isUnknown)
-        self.assertTrue(aSIPResponse.isValid)
-        self.assertFalse(aSIPResponse.isRequest)
-        self.assertTrue(aSIPResponse.isResponse)
         self.assertFalse(aSIPResponse.isACKRequest)
         self.assertFalse(aSIPResponse.isBYERequest)
         self.assertFalse(aSIPResponse.isCANCELRequest)
@@ -1388,23 +603,3 @@ class TestSIPMessageFactoryForSIPResponse(TestCase):
         self.assertFalse(aSIPResponse.isREGISTERRequest)
         self.assertFalse(aSIPResponse.isSUBSCRIBERequest)
         self.assertFalse(aSIPResponse.isUPDATERequest)
-        self.assertFalse(aSIPResponse.isMalformed)
-        # self.assertEqual(1, [headerField for headerField in aSIPResponse.header.headerFields if headerField.isContentLength].__len__())
-        # self.assertEqual(11, next(headerField for headerField in aSIPResponse.header.headerFields if headerField.isContentLength).value)
-        # self.assertEqual(5, [headerField for headerField in aSIPResponse.header.headerFields if headerField.isUnknown].__len__())
-        self.assertIsNotNone(aSIPResponse.header.contentLengthHeaderField)
-        self.assertEqual(11, aSIPResponse.header.contentLength)
-        self.assertEqual(1, aSIPResponse.header.viaHeaderFields.__len__())
-        self.assertEqual(1, aSIPResponse.header.vias.__len__())
-        self.assertEqual('SIP/2.0/UDP 200.23.3.241:5064;received=200.30.10.15;branch=z9hG4bK-3f04bd-f62a8381-4ebadacb-0x692748a8', aSIPResponse.header.vias[0])
-        self.assertEqual(4, aSIPResponse.header.unknownHeaderFields.__len__())
-        self.assertTrue(aSIPResponse.startLine.isResponse)
-        self.assertFalse(aSIPResponse.startLine.isRequest)
-        self.assertFalse(aSIPResponse.startLine.isMalformed)
-        self.assertEqual('Foo Content', aSIPResponse.content)
-        self.assertEqual(100, aSIPResponse.startLine.statusCode)
-        self.assertEqual('Trying', aSIPResponse.startLine.reasonPhrase)
-
-
-
-

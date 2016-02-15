@@ -23,6 +23,10 @@ class SIPHeaderField(object):
         answer.fieldValue = fieldValue
         return answer
 
+    @classmethod
+    def canonicalFieldName(cls):
+        raise NotImplementedError('call to abstract method ' + inspect.stack()[0][3])
+
     def __init__(self):
         self._rawString = None
         self._fieldName = None
