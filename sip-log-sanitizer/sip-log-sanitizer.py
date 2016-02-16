@@ -104,30 +104,21 @@ def processPCAPFiles():
             for pcapFilePathName in sorted(glob.iglob(pcapDirectoryPathName + '/*.pcap')):
                 print pcapFilePathName
                 with open(pcapFilePathName, "r") as pcapFile:
-                    # for line in rawLogFile:
-                    #     line = line.replace("\r\r\n", "\r\n")
-                    #     if any(regex.match(line) for regex in rawFileMessageSeparatorRegexes):
-                    #         line = messageSeparator + "\r\n"
-                    #     interimFile1.write(line)
-                    # interimFile1.write("\r\n")
                     for ts, pkt in dpkt.pcap.Reader(pcapFile):
                         eth=dpkt.ethernet.Ethernet(pkt)
                         if eth.type!=dpkt.ethernet.ETH_TYPE_IP:
                             continue
                         ip=eth.data
                         if ip.data.dport == 5060:
-                            # TODO: Weirdness happening here.  Fix.
                             data = ip.data.data
-                            if data.strip().__len__ > 20:
-                                sanitizedFile.write(data.strip())
+                            if data.__len__() > 2:
+                                sanitizedFile.write(data)
                                 sanitizedFile.write(messageSeparator + "\r\n")
-                            else:
-                                print "GOT HERE."
 
 
 
 if __name__ == '__main__':
-    print timeit.timeit(createInterim1File, number=1)
-    print timeit.timeit(createInterim2File, number=1)
-    print timeit.timeit(processInterimFile, number=1)
-    #print timeit.timeit(processPCAPFiles, number=1)
+#    print timeit.timeit(createInterim1File, number=1)
+#    print timeit.timeit(createInterim2File, number=1)
+#    print timeit.timeit(processInterimFile, number=1)
+    print timeit.timeit(processPCAPFiles, number=1)

@@ -6,6 +6,7 @@ from unittest import TestCase
 import unittest
 import sys
 import settings
+import subprocess
 #sys.path.append("..")
 #from sipmessaging import SIPMessageFactory
 sys.path.append("../..")
@@ -22,62 +23,65 @@ class TestSIPMessageFactoryForSanitizedLogFile(TestCase):
         self.invalidSIPMessageCount = 0
         self.validKnownSIPMessageCount = 0
         self.validUnknownSIPMessageCount = 0
-        with open(self.malformedSIPMessagesPathName, "w"):
-            pass
-        with open(self.validSIPMessagesPathName, "w"):
-            pass
-        with open(self.invalidSIPMessagesPathName, "w"):
-            pass
-        with open(self.validKnownSIPMessagesPathName, "w"):
-            pass
-        with open(self.validUnknownSIPMessagesPathName, "w"):
-            pass
-        with open(self.knownSIPStartLinesPathName, "w"):
-            pass
-        with open(self.unknownSIPStartLinesPathName, "w"):
-            pass
-        with open(self.knownSIPMethodsPathName, "w"):
-            pass
-        with open(self.unknownSIPMethodsPathName, "w"):
-            pass
-        with open(self.knownHeaderFieldsPathName, "w"):
-            pass
-        with open(self.knownHeaderFieldNamesPathName, "w"):
-            pass
-        with open(self.unknownHeaderFieldsPathName, "w"):
-            pass
-        with open(self.unknownHeaderFieldNamesPathName, "w"):
-            pass
 
     @unittest.skipIf(settings.skipLongTests, "Skipping long tests for now.")
     def test_parsing_sanitized_log_file(self):
-        factory = SIPMessageFactory()
-        factory.whenEventDo("malformedSIPMessage", self.handleMalformedSIPMessage)
-        factory.whenEventDo("validSIPMessage", self.handleValidSIPMessage)
-        factory.whenEventDo("invalidSIPMessage", self.handleInvalidSIPMessage)
-        factory.whenEventDo("validKnownSIPMessage", self.handleValidKnownSIPMessage)
-        factory.whenEventDo("validUnknownSIPMessage", self.handleValidUnknownSIPMessage)
-        with open(self.sanitizedFilePathName, "r") as sanitizedFile:
-            stringio = StringIO()
-            count = 0
-            for line in sanitizedFile:
-                if line.startswith("__MESSAGESEPARATOR__"):
-                    count += 1
-                    messageString = stringio.getvalue()
-                    self.assertTrue(messageString)
+        self._fileNamesAndFiles = {}
+        self.createFileNamed(self.malformedSIPMessagesPathName)
+        self.createFileNamed(self.validSIPMessagesPathName)
+        self.createFileNamed(self.invalidSIPMessagesPathName)
+        self.createFileNamed(self.validKnownSIPMessagesPathName)
+        self.createFileNamed(self.validUnknownSIPMessagesPathName)
+        self.createFileNamed(self.knownSIPStartLinesPathName)
+        self.createFileNamed(self.unknownSIPStartLinesPathName)
+        self.createFileNamed(self.knownSIPMethodsPathName)
+        self.createFileNamed(self.unknownSIPMethodsPathName)
+        self.createFileNamed(self.knownHeaderFieldsPathName)
+        self.createFileNamed(self.knownHeaderFieldNamesPathName)
+        self.createFileNamed(self.unknownHeaderFieldsPathName)
+        self.createFileNamed(self.unknownHeaderFieldNamesPathName)
 
-                    # with open("latesttestedmessage.txt", "w") as f:
-                    #    f.write(messageString)
-                    # pyperclip.copy(str(count) + "\n\n" + messageString)
-                    if count % 5000 == 0:
-                        print str(count)
-                    sipMessage = factory.nextForString(messageString)
-                    self.runAssertionsForSIPMessage(sipMessage)
-                    stringio.close()
-                    stringio = StringIO()
-                else:
-                    stringio.write(line)
-        self.printSIPMessageCounts()
+        try:
+            factory = SIPMessageFactory()
+            factory.whenEventDo("malformedSIPMessage", self.handleMalformedSIPMessage)
+            factory.whenEventDo("validSIPMessage", self.handleValidSIPMessage)
+            factory.whenEventDo("invalidSIPMessage", self.handleInvalidSIPMessage)
+            factory.whenEventDo("validKnownSIPMessage", self.handleValidKnownSIPMessage)
+            factory.whenEventDo("validUnknownSIPMessage", self.handleValidUnknownSIPMessage)
+            with open(self.sanitizedFilePathName, "r") as sanitizedFile:
+                stringio = StringIO()
+                count = 0
+                for line in sanitizedFile:
+                    if line.startswith("__MESSAGESEPARATOR__"):
+                        count += 1
+                        messageString = stringio.getvalue()
+                        self.assertTrue(messageString)
+                        if count % 5000 == 0:
+                            print str(count)
+                        sipMessage = factory.nextForString(messageString)
+                        self.runAssertionsForSIPMessage(sipMessage)
+                        stringio.close()
+                        stringio = StringIO()
+                    else:
+                        stringio.write(line)
+            self.printSIPMessageCounts()
+        finally:
+            self.closeFileNamed(self.malformedSIPMessagesPathName)
+            self.closeFileNamed(self.validSIPMessagesPathName)
+            self.closeFileNamed(self.invalidSIPMessagesPathName)
+            self.closeFileNamed(self.validKnownSIPMessagesPathName)
+            self.closeFileNamed(self.validUnknownSIPMessagesPathName)
+            self.closeFileNamed(self.knownSIPStartLinesPathName)
+            self.closeFileNamed(self.unknownSIPStartLinesPathName)
+            self.closeFileNamed(self.knownSIPMethodsPathName)
+            self.closeFileNamed(self.unknownSIPMethodsPathName)
+            self.closeFileNamed(self.knownHeaderFieldsPathName)
+            self.closeFileNamed(self.knownHeaderFieldNamesPathName)
+            self.closeFileNamed(self.unknownHeaderFieldsPathName)
+            self.closeFileNamed(self.unknownHeaderFieldNamesPathName)
+            print "de-duping..."
+            subprocess.call(['../../proprietary-test-data/sanitized/dedupelinefiles.sh'])
+            print "finished de-duping."
 
     def printSIPMessageCounts(self):
         print "malformed: " + str(self.malformedSIPMessageCount)
@@ -88,79 +92,50 @@ class TestSIPMessageFactoryForSanitizedLogFile(TestCase):
 
     def handleMalformedSIPMessage(self, aSIPMessage):
         self.malformedSIPMessageCount += 1
-        with open(self.malformedSIPMessagesPathName, "a") as f:
-            f.write(aSIPMessage.rawString)
-            f.write(self.messageSeparator)
+        self.appendStringToFileNamed(aSIPMessage.rawString, self.malformedSIPMessagesPathName)
+        self.appendStringToFileNamed(self.messageSeparator, self.malformedSIPMessagesPathName)
 
     def handleValidSIPMessage(self, aSIPMessage):
         self.validSIPMessageCount += 1
-        with open(self.validSIPMessagesPathName, "a") as f:
-            f.write(aSIPMessage.rawString)
-            f.write(self.messageSeparator)
-        with open(self.knownHeaderFieldsPathName, "a") as f:
-            for headerField in aSIPMessage.header.knownHeaderFields:
-                f.write(headerField.rawString)
-                f.write("\r\n")
-        with open(self.knownHeaderFieldNamesPathName, "a") as f:
-            for headerField in aSIPMessage.header.knownHeaderFields:
-                f.write(headerField.fieldName)
-                f.write("\r\n")
-        with open(self.unknownHeaderFieldsPathName, "a") as f:
-            for headerField in aSIPMessage.header.unknownHeaderFields:
-                f.write(headerField.rawString)
-                f.write("\r\n")
-        with open(self.unknownHeaderFieldNamesPathName, "a") as f:
-            for headerField in aSIPMessage.header.unknownHeaderFields:
-                f.write(headerField.fieldName)
-                f.write("\r\n")
+        self.appendStringToFileNamed(aSIPMessage.rawString, self.validSIPMessagesPathName)
+        self.appendStringToFileNamed(self.messageSeparator, self.validSIPMessagesPathName)
+        for headerField in aSIPMessage.header.knownHeaderFields:
+            self.appendStringToFileNamed(headerField.rawString, self.knownHeaderFieldsPathName)
+            self.appendStringToFileNamed("\r\n", self.knownHeaderFieldsPathName)
+        for headerField in aSIPMessage.header.knownHeaderFields:
+            self.appendStringToFileNamed(headerField.fieldName, self.knownHeaderFieldNamesPathName)
+            self.appendStringToFileNamed("\r\n", self.knownHeaderFieldNamesPathName)
+        for headerField in aSIPMessage.header.unknownHeaderFields:
+            self.appendStringToFileNamed(headerField.rawString, self.unknownHeaderFieldsPathName)
+            self.appendStringToFileNamed("\r\n", self.unknownHeaderFieldsPathName)
+        for headerField in aSIPMessage.header.unknownHeaderFields:
+            self.appendStringToFileNamed(headerField.fieldName, self.unknownHeaderFieldNamesPathName)
+            self.appendStringToFileNamed("\r\n", self.unknownHeaderFieldNamesPathName)
 
     def handleInvalidSIPMessage(self, aSIPMessage):
         self.invalidSIPMessageCount += 1
-        with open(self.invalidSIPMessagesPathName, "a") as f:
-            f.write(aSIPMessage.rawString)
-            f.write(self.messageSeparator)
+        self.appendStringToFileNamed(aSIPMessage.rawString, self.invalidSIPMessagesPathName)
+        self.appendStringToFileNamed(self.messageSeparator, self.invalidSIPMessagesPathName)
 
     def handleValidKnownSIPMessage(self, aSIPMessage):
         self.validKnownSIPMessageCount += 1
-        with open(self.validKnownSIPMessagesPathName, "a") as f:
-            f.write(aSIPMessage.rawString)
-            f.write(self.messageSeparator)
+        self.appendStringToFileNamed(aSIPMessage.rawString, self.validKnownSIPMessagesPathName)
+        self.appendStringToFileNamed(self.messageSeparator, self.validKnownSIPMessagesPathName)
         if aSIPMessage.isRequest:
-            with open(self.knownSIPStartLinesPathName, "a") as f:
-                f.write(aSIPMessage.startLine.rawString)
-                f.write("\r\n")
-            with open(self.knownSIPMethodsPathName, "a") as f:
-                f.write(aSIPMessage.startLine.sipMethod)
-                f.write("\r\n")
-        # with open(self.knownHeaderFieldsPathName, "a") as f:
-        #     for headerField in aSIPMessage.header.headerFields:
-        #         f.write(headerField.rawString)
-        #         f.write("\r\n")
-        # with open(self.knownHeaderFieldNamesPathName, "a") as f:
-        #     for headerField in aSIPMessage.header.headerFields:
-        #         f.write(headerField.fieldName)
-        #         f.write("\r\n")
+            self.appendStringToFileNamed(aSIPMessage.startLine.rawString, self.knownSIPStartLinesPathName)
+            self.appendStringToFileNamed("\r\n", self.knownSIPStartLinesPathName)
+            self.appendStringToFileNamed(aSIPMessage.startLine.sipMethod, self.knownSIPMethodsPathName)
+            self.appendStringToFileNamed("\r\n", self.knownSIPMethodsPathName)
 
     def handleValidUnknownSIPMessage(self, aSIPMessage):
         self.validUnknownSIPMessageCount += 1
-        with open(self.validUnknownSIPMessagesPathName, "a") as f:
-            f.write(aSIPMessage.rawString)
-            f.write(self.messageSeparator)
+        self.appendStringToFileNamed(aSIPMessage.rawString, self.validUnknownSIPMessagesPathName)
+        self.appendStringToFileNamed(self.messageSeparator, self.validUnknownSIPMessagesPathName)
         if aSIPMessage.isRequest:
-            with open(self.unknownSIPStartLinesPathName, "a") as f:
-                f.write(aSIPMessage.startLine.rawString)
-                f.write("\r\n")
-            with open(self.unknownSIPMethodsPathName, "a") as f:
-                f.write(aSIPMessage.startLine.sipMethod)
-                f.write("\r\n")
-        # with open(self.unknownHeaderFieldsPathName, "a") as f:
-        #     for headerField in aSIPMessage.header.headerFields:
-        #         f.write(headerField.rawString)
-        #         f.write("\r\n")
-        # with open(self.unknownHeaderFieldNamesPathName, "a") as f:
-        #     for headerField in aSIPMessage.header.headerFields:
-        #         f.write(headerField.fieldName)
-        #         f.write("\r\n")
+            self.appendStringToFileNamed(aSIPMessage.startLine.rawString, self.unknownSIPStartLinesPathName)
+            self.appendStringToFileNamed("\r\n", self.unknownSIPStartLinesPathName)
+            self.appendStringToFileNamed(aSIPMessage.startLine.sipMethod, self.unknownSIPMethodsPathName)
+            self.appendStringToFileNamed("\r\n", self.unknownSIPMethodsPathName)
 
     def runAssertionsForSIPMessage(self, aSIPMessage):
         self.assertTrue(aSIPMessage.rawString)
@@ -253,6 +228,20 @@ class TestSIPMessageFactoryForSanitizedLogFile(TestCase):
     @property
     def unknownHeaderFieldNamesPathName(self):
         return '../../proprietary-test-data/sanitized/unknownHeaderFieldNames.txt'
+
+    def createFileNamed(self, fileName):
+        self._fileNamesAndFiles[fileName] = open(fileName, "w")
+        # with open(fileName, "w"):
+        #     pass
+
+    def appendStringToFileNamed(self, aString, fileName):
+        self._fileNamesAndFiles[fileName].write(aString)
+        # with open(fileName, "a") as f:
+        #     f.write(aString)
+
+    def closeFileNamed(self, fileName):
+        self._fileNamesAndFiles[fileName].close()
+
 
 
 class TestSIPMessageFactoryForMalformedSIPRequest(AbstractMalformedSIPMessageFromFactoryTestCase):

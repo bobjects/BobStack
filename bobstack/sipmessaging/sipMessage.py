@@ -96,15 +96,15 @@ class SIPMessage(object):
         self._content = aString
         self.clearRawString()
 
+    # TODO:  need to test
     @property
     def transactionHash(self):
-        # TODO
-        return 0
+        return self.header.transactionHash
 
+    # TODO:  need to test
     @property
     def dialogHash(self):
-        # TODO
-        return 0
+        return self.header.dialogHash
 
     @property
     def isValid(self):

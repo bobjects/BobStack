@@ -81,3 +81,14 @@ class SIPResponseStartLine(SIPStartLine):
     @property
     def isResponse(self):
         return True
+
+    # TODO:  True if 1xx
+    # TODO:  need to test.
+    @property
+    def isProvisional(self):
+        pass
+
+    # TODO:  need to test.
+    @property
+    def isFinal(self):
+        return not self.isProvisional

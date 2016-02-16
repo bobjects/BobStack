@@ -16,3 +16,13 @@ class SIPResponse(SIPMessage):
     @property
     def isKnown(self):
         return True
+
+    # TODO:  need to test.
+    @property
+    def isProvisional(self):
+        return self.startLine.isProvisional
+
+    # TODO:  need to test.
+    @property
+    def isFinal(self):
+        return self.startLine.isFinal

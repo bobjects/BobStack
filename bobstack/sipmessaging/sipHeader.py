@@ -2,7 +2,7 @@ try:
     from cStringIO import StringIO
 except ImportError:
     from StringIO import StringIO
-from collections import OrderedDict
+from hashlib import sha1
 from sipHeaderFieldFactory import SIPHeaderFieldFactory
 
 class SIPHeader(object):
@@ -112,3 +112,35 @@ class SIPHeader(object):
                 stringio = StringIO(aListOrString)
                 self._headerFields = factory.allForStringIO(stringio)
                 stringio.close()
+
+    # TODO: cache this.
+    # TODO: implement properties used here.
+    # TODO:  need to test.
+    @property
+    def transactionHash(self):
+        # cseq + branch id on Via header (the last one, which is the via of the original request)
+        answer = None
+        vias = self.vias
+        cseq = self.cseq
+        if vias and cseq:
+            answer = sha1()
+            answer.update(vias[-1].branch)
+            answer.update(cseq)
+        return answer
+
+    # TODO: cache this.
+    # TODO: implement properties used here.
+    # TODO:  need to test.
+    @property
+    def dialogHash(self):
+        answer = None
+        toTag = self.toTag
+        fromTag = self.fromTag
+        callID = self.callID
+        if toTag and fromTag and callID:
+            answer = sha1()
+            answer.update(toTag)
+            answer.update(fromTag)
+            answer.update(callID)
+            answer = answer.hexdigest()
+        return answer

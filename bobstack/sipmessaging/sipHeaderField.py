@@ -254,3 +254,4 @@ class SIPHeaderField(object):
     @property
     def isWarningSIPHeaderField(self):
         return False
+
