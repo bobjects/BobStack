@@ -65,6 +65,19 @@ class SIPHeaderField(object):
         self._fieldValue = aString
         self.clearRawString()
 
+    # TODO: Answer a dict of parameter names and values encoded into the field value.
+    # TODO: need to test
+    # TODO: need to cache
+    # TODO: possibly refactor this into a mixin.
+    @property
+    def parameterNamesAndValues(self):
+        # RFC3261  7.3.1 Header Field Format
+        # return dict(re.findall(';([^=]+)=([^;]+)', self.fieldValue))
+        return dict(re.findall(';([^=;]+)=?([^;]+)?', self.fieldValue))
+
+    def parameterNamed(self, aString):
+        return self.parameterNamesAndValues.get(aString, None)
+
     def clearRawString(self):
         self._rawString = None
 
@@ -140,47 +153,47 @@ class SIPHeaderField(object):
         return True
 
     @property
-    def isAcceptSIPHeaderField(self):
+    def isAccept(self):
         return False
 
     @property
-    def isAcceptEncodingSIPHeaderField(self):
+    def isAcceptEncoding(self):
         return False
 
     @property
-    def isAcceptLanguageSIPHeaderField(self):
+    def isAcceptLanguage(self):
         return False
 
     @property
-    def isAllowSIPHeaderField(self):
+    def isAllow(self):
         return False
 
     @property
-    def isAuthorizationSIPHeaderField(self):
+    def isAuthorization(self):
         return False
 
     @property
-    def isCSeqSIPHeaderField(self):
+    def isCSeq(self):
         return False
 
     @property
-    def isCallIDSIPHeaderField(self):
+    def isCallID(self):
         return False
 
     @property
-    def isCallInfoSIPHeaderField(self):
+    def isCallInfo(self):
         return False
 
     @property
-    def isContactSIPHeaderField(self):
+    def isContact(self):
         return False
 
     @property
-    def isContentDispositionSIPHeaderField(self):
+    def isContentDisposition(self):
         return False
 
     @property
-    def isContentTypeSIPHeaderField(self):
+    def isContentType(self):
         return False
 
     @property
@@ -188,59 +201,59 @@ class SIPHeaderField(object):
         return False
 
     @property
-    def isDateSIPHeaderField(self):
+    def isDate(self):
         return False
 
     @property
-    def isExpiresSIPHeaderField(self):
+    def isExpires(self):
         return False
 
     @property
-    def isFromSIPHeaderField(self):
+    def isFrom(self):
         return False
 
     @property
-    def isMaxForwardsSIPHeaderField(self):
+    def isMaxForwards(self):
         return False
 
     @property
-    def isRecordRouteSIPHeaderField(self):
+    def isRecordRoute(self):
         return False
 
     @property
-    def isRequireSIPHeaderField(self):
+    def isRequire(self):
         return False
 
     @property
-    def isRetryAfterSIPHeaderField(self):
+    def isRetryAfter(self):
         return False
 
     @property
-    def isRouteSIPHeaderField(self):
+    def isRoute(self):
         return False
 
     @property
-    def isServerSIPHeaderField(self):
+    def isServer(self):
         return False
 
     @property
-    def isSessionExpiresSIPHeaderField(self):
+    def isSessionExpires(self):
         return False
 
     @property
-    def isSupportedSIPHeaderField(self):
+    def isSupported(self):
         return False
 
     @property
-    def isTimestampSIPHeaderField(self):
+    def isTimestamp(self):
         return False
 
     @property
-    def isToSIPHeaderField(self):
+    def isTo(self):
         return False
 
     @property
-    def isUserAgentSIPHeaderField(self):
+    def isUserAgent(self):
         return False
 
     @property
@@ -248,10 +261,10 @@ class SIPHeaderField(object):
         return False
 
     @property
-    def isWWWAuthenticateSIPHeaderField(self):
+    def isWWWAuthenticate(self):
         return False
 
     @property
-    def isWarningSIPHeaderField(self):
+    def isWarning(self):
         return False
 

@@ -23,23 +23,26 @@ class TestSIPMessageFactoryForSanitizedLogFile(TestCase):
         self.invalidSIPMessageCount = 0
         self.validKnownSIPMessageCount = 0
         self.validUnknownSIPMessageCount = 0
+        self.transactionHashesAndSIPMessages = {}
+        self.dialogHashesAndSIPMessages = {}
 
     @unittest.skipIf(settings.skipLongTests, "Skipping long tests for now.")
     def test_parsing_sanitized_log_file(self):
         self._fileNamesAndFiles = {}
-        self.createFileNamed(self.malformedSIPMessagesPathName)
-        self.createFileNamed(self.validSIPMessagesPathName)
-        self.createFileNamed(self.invalidSIPMessagesPathName)
-        self.createFileNamed(self.validKnownSIPMessagesPathName)
-        self.createFileNamed(self.validUnknownSIPMessagesPathName)
-        self.createFileNamed(self.knownSIPStartLinesPathName)
-        self.createFileNamed(self.unknownSIPStartLinesPathName)
-        self.createFileNamed(self.knownSIPMethodsPathName)
-        self.createFileNamed(self.unknownSIPMethodsPathName)
-        self.createFileNamed(self.knownHeaderFieldsPathName)
-        self.createFileNamed(self.knownHeaderFieldNamesPathName)
-        self.createFileNamed(self.unknownHeaderFieldsPathName)
-        self.createFileNamed(self.unknownHeaderFieldNamesPathName)
+        # self.createFileNamed(self.malformedSIPMessagesPathName)
+        # self.createFileNamed(self.validSIPMessagesPathName)
+        # self.createFileNamed(self.invalidSIPMessagesPathName)
+        # self.createFileNamed(self.validKnownSIPMessagesPathName)
+        # self.createFileNamed(self.validUnknownSIPMessagesPathName)
+        # self.createFileNamed(self.knownSIPStartLinesPathName)
+        # self.createFileNamed(self.unknownSIPStartLinesPathName)
+        # self.createFileNamed(self.knownSIPMethodsPathName)
+        # self.createFileNamed(self.unknownSIPMethodsPathName)
+        # self.createFileNamed(self.knownHeaderFieldsPathName)
+        # self.createFileNamed(self.knownHeaderFieldNamesPathName)
+        # self.createFileNamed(self.unknownHeaderFieldsPathName)
+        # self.createFileNamed(self.unknownHeaderFieldNamesPathName)
+        # self.createFileNamed(self.headerFieldParametersPathName)
 
         try:
             factory = SIPMessageFactory()
@@ -66,19 +69,29 @@ class TestSIPMessageFactoryForSanitizedLogFile(TestCase):
                         stringio.write(line)
             self.printSIPMessageCounts()
         finally:
-            self.closeFileNamed(self.malformedSIPMessagesPathName)
-            self.closeFileNamed(self.validSIPMessagesPathName)
-            self.closeFileNamed(self.invalidSIPMessagesPathName)
-            self.closeFileNamed(self.validKnownSIPMessagesPathName)
-            self.closeFileNamed(self.validUnknownSIPMessagesPathName)
-            self.closeFileNamed(self.knownSIPStartLinesPathName)
-            self.closeFileNamed(self.unknownSIPStartLinesPathName)
-            self.closeFileNamed(self.knownSIPMethodsPathName)
-            self.closeFileNamed(self.unknownSIPMethodsPathName)
-            self.closeFileNamed(self.knownHeaderFieldsPathName)
-            self.closeFileNamed(self.knownHeaderFieldNamesPathName)
-            self.closeFileNamed(self.unknownHeaderFieldsPathName)
-            self.closeFileNamed(self.unknownHeaderFieldNamesPathName)
+            for h, l in self.transactionHashesAndSIPMessages.iteritems():
+                self.appendStringToFileNamed(h + "\r\n", self.transactionsPathName)
+                for startLine in l:
+                    self.appendStringToFileNamed('    ' + startLine + "\r\n", self.transactionsPathName)
+            for h, l in self.dialogHashesAndSIPMessages.iteritems():
+                self.appendStringToFileNamed(h + "\r\n", self.dialogsPathName)
+                for startLine in l:
+                    self.appendStringToFileNamed('    ' + startLine + "\r\n", self.dialogsPathName)
+            self.closeFiles()
+            # self.closeFileNamed(self.malformedSIPMessagesPathName)
+            # self.closeFileNamed(self.validSIPMessagesPathName)
+            # self.closeFileNamed(self.invalidSIPMessagesPathName)
+            # self.closeFileNamed(self.validKnownSIPMessagesPathName)
+            # self.closeFileNamed(self.validUnknownSIPMessagesPathName)
+            # self.closeFileNamed(self.knownSIPStartLinesPathName)
+            # self.closeFileNamed(self.unknownSIPStartLinesPathName)
+            # self.closeFileNamed(self.knownSIPMethodsPathName)
+            # self.closeFileNamed(self.unknownSIPMethodsPathName)
+            # self.closeFileNamed(self.knownHeaderFieldsPathName)
+            # self.closeFileNamed(self.knownHeaderFieldNamesPathName)
+            # self.closeFileNamed(self.unknownHeaderFieldsPathName)
+            # self.closeFileNamed(self.unknownHeaderFieldNamesPathName)
+            # self.closeFileNamed(self.headerFieldParametersPathName)
             print "de-duping..."
             subprocess.call(['../../proprietary-test-data/sanitized/dedupelinefiles.sh'])
             print "finished de-duping."
@@ -99,6 +112,28 @@ class TestSIPMessageFactoryForSanitizedLogFile(TestCase):
         self.validSIPMessageCount += 1
         self.appendStringToFileNamed(aSIPMessage.rawString, self.validSIPMessagesPathName)
         self.appendStringToFileNamed(self.messageSeparator, self.validSIPMessagesPathName)
+        # print aSIPMessage.transactionHash
+        # print aSIPMessage.dialogHash
+        if aSIPMessage.transactionHash:
+            if not aSIPMessage.transactionHash in self.transactionHashesAndSIPMessages:
+                self.transactionHashesAndSIPMessages[aSIPMessage.transactionHash] = []
+            self.transactionHashesAndSIPMessages[aSIPMessage.transactionHash].append(aSIPMessage.startLine.rawString)
+        if aSIPMessage.dialogHash:
+            if not aSIPMessage.dialogHash in self.dialogHashesAndSIPMessages:
+                self.dialogHashesAndSIPMessages[aSIPMessage.dialogHash] = []
+            self.dialogHashesAndSIPMessages[aSIPMessage.dialogHash].append(aSIPMessage.startLine.rawString)
+        for headerField in aSIPMessage.header.headerFields:
+            if headerField.isTo or headerField.isFrom:
+                if headerField.tag:
+                    self.appendStringToFileNamed(headerField.rawString, self.toAndFromTagsPathName)
+                    self.appendStringToFileNamed('\r\n    ', self.toAndFromTagsPathName)
+                    self.appendStringToFileNamed(headerField.tag, self.toAndFromTagsPathName)
+                    self.appendStringToFileNamed('\r\n', self.toAndFromTagsPathName)
+            if headerField.parameterNamesAndValues:
+                self.appendStringToFileNamed(headerField.rawString, self.headerFieldParametersPathName)
+                self.appendStringToFileNamed('\r\n', self.headerFieldParametersPathName)
+                for name, value in headerField.parameterNamesAndValues.iteritems():
+                    self.appendStringToFileNamed("    " + name + " : " + value + '\r\n', self.headerFieldParametersPathName)
         for headerField in aSIPMessage.header.knownHeaderFields:
             self.appendStringToFileNamed(headerField.rawString, self.knownHeaderFieldsPathName)
             self.appendStringToFileNamed("\r\n", self.knownHeaderFieldsPathName)
@@ -229,18 +264,37 @@ class TestSIPMessageFactoryForSanitizedLogFile(TestCase):
     def unknownHeaderFieldNamesPathName(self):
         return '../../proprietary-test-data/sanitized/unknownHeaderFieldNames.txt'
 
+    @property
+    def headerFieldParametersPathName(self):
+        return '../../proprietary-test-data/sanitized/headerFieldParameters.txt'
+
+    @property
+    def toAndFromTagsPathName(self):
+        return '../../proprietary-test-data/sanitized/toAndFromTags.txt'
+
+    @property
+    def dialogsPathName(self):
+        return '../../proprietary-test-data/sanitized/dialogs.txt'
+
+    @property
+    def transactionsPathName(self):
+        return '../../proprietary-test-data/sanitized/transactions.txt'
+
     def createFileNamed(self, fileName):
         self._fileNamesAndFiles[fileName] = open(fileName, "w")
         # with open(fileName, "w"):
         #     pass
 
     def appendStringToFileNamed(self, aString, fileName):
+        if fileName not in self._fileNamesAndFiles:
+            self.createFileNamed(fileName)
         self._fileNamesAndFiles[fileName].write(aString)
         # with open(fileName, "a") as f:
         #     f.write(aString)
 
-    def closeFileNamed(self, fileName):
-        self._fileNamesAndFiles[fileName].close()
+    def closeFiles(self):
+        for fileName in self._fileNamesAndFiles.keys():
+            self._fileNamesAndFiles[fileName].close()
 
 
 

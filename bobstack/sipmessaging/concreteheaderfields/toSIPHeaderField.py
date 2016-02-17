@@ -87,3 +87,8 @@ class ToSIPHeaderField(SIPHeaderField):
     def isTo(self):
         return True
 
+    # TODO: need to test
+    # TODO: need to cache
+    @property
+    def tag(self):
+        return self.parameterNamed("tag")

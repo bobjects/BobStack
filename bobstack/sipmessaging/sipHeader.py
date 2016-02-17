@@ -50,6 +50,54 @@ class SIPHeader(object):
             self._contentLengthHeaderField = next((headerField for headerField in self.headerFields if headerField.isContentLength), None)
         return self._contentLengthHeaderField
 
+    # TODO - cache and test
+    @property
+    def callID(self):
+        if self.callIDHeaderField is not None:
+            return self.callIDHeaderField.fieldValue
+        return None
+
+    # TODO - cache and test
+    @property
+    def callIDHeaderField(self):
+        return next((headerField for headerField in self.headerFields if headerField.isCallID), None)
+
+    # TODO - cache and test
+    @property
+    def cSeq(self):
+        if self.cSeqHeaderField is not None:
+            return self.cSeqHeaderField.fieldValue
+        return None
+
+    # TODO - cache and test
+    @property
+    def cSeqHeaderField(self):
+        return next((headerField for headerField in self.headerFields if headerField.isCSeq), None)
+
+    # TODO - cache and test
+    # @property
+    # def to(self):
+    #     if self.toHeaderField is not None:
+    #         return self.toHeaderField.fieldValue
+    #     return None
+
+    # TODO - cache and test
+    @property
+    def toHeaderField(self):
+        return next((headerField for headerField in self.headerFields if headerField.isTo), None)
+
+    # TODO - cache and test
+    # @property
+    # def from(self):
+    #     if self.fromHeaderField is not None:
+    #         return self.fromHeaderField.fieldValue
+    #     return None
+
+    # TODO - cache and test
+    @property
+    def fromHeaderField(self):
+        return next((headerField for headerField in self.headerFields if headerField.isFrom), None)
+
     @property
     def vias(self):
         if self._viaHeaderFields is not None:
@@ -120,12 +168,17 @@ class SIPHeader(object):
     def transactionHash(self):
         # cseq + branch id on Via header (the last one, which is the via of the original request)
         answer = None
-        vias = self.vias
-        cseq = self.cseq
-        if vias and cseq:
-            answer = sha1()
-            answer.update(vias[-1].branch)
-            answer.update(cseq)
+        viaFields = self.viaHeaderFields
+        cseq = self.cSeq
+        if cseq:
+            pass
+        if viaFields:
+            originalViaField = viaFields[-1]
+            if originalViaField.branch and cseq:
+                answer = sha1()
+                answer.update(originalViaField.branch)
+                answer.update(cseq)
+                answer = answer.hexdigest()
         return answer
 
     # TODO: cache this.
@@ -144,3 +197,18 @@ class SIPHeader(object):
             answer.update(callID)
             answer = answer.hexdigest()
         return answer
+
+    # TODO
+    @property
+    def toTag(self):
+        toHeaderField = self.toHeaderField
+        if toHeaderField:
+            return toHeaderField.tag
+
+    # TODO
+    @property
+    def fromTag(self):
+        fromHeaderField = self.fromHeaderField
+        if fromHeaderField:
+            return fromHeaderField.tag
+

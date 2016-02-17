@@ -83,6 +83,12 @@ class ViaSIPHeaderField(SIPHeaderField):
     #     test = self.value  # Make sure the attributes are lazily initialized.
     #     return super(ViaSIPHeaderField, self).isValid and self._value is not None
 
+    # TODO: need to test
+    # TODO: need to cache
+    @property
+    def branch(self):
+        return self.parameterNamed("branch")
+
     @property
     def isVia(self):
         return True
