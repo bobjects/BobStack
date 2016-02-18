@@ -156,7 +156,7 @@ class AbstractSIPMessageTestCase(TestCase):
             ToSIPHeaderField.newForAttributes(fieldValue='<sip:example.com:5061>'),
             CallIDSIPHeaderField.newForAttributes(fieldValue='0ee8d3e272e31c9195299efc500'),
             CSeqSIPHeaderField.newForAttributes(fieldValue='6711 ' + self.sipMethodString),
-            MaxForwardsSIPHeaderField.newForAttributes(fieldValue='70'),
+            MaxForwardsSIPHeaderField.newForAttributes(value=70),
             ViaSIPHeaderField.newForAttributes(fieldValue='SIP/2.0/TLS 200.25.3.150;branch=z9hG4bK0ee8d3e272e31ca195299efc500'),
             ViaSIPHeaderField.newForAttributes(fieldValue='SIP/2.0/TLS 200.25.3.250;branch=fdkajhdiruyalkghjladksjf'),
             ViaSIPHeaderField.newForAttributes(fieldValue='SIP/2.0/TLS 200.25.3.255;branch=duyroiuryaludhgviukfhlasf'),

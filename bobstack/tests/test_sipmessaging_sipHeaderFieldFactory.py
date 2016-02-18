@@ -885,18 +885,18 @@ class TestSIPHeaderFieldFactoryForMaxForwards(TestCase):
     @property
     def canonicalStrings(self):
         return [
-            'Max-Forwards: baz blarg blonk',
-            'max-forwards: baz blarg blonk',
-            'MAX-FORWARDS: baz blarg blonk',
-            'Max-Forwards:      baz blarg blonk',
-            'max-forwards:      baz blarg blonk',
-            'MAX-FORWARDS:      baz blarg blonk',
-            'Max-Forwards     : baz blarg blonk',
-            'max-forwards     : baz blarg blonk',
-            'MAX-FORWARDS     : baz blarg blonk',
-            'Max-Forwards     :      baz blarg blonk',
-            'max-forwards     :      baz blarg blonk',
-            'MAX-FORWARDS     :      baz blarg blonk',
+            'Max-Forwards: 70',
+            'max-forwards: 70',
+            'MAX-FORWARDS: 70',
+            'Max-Forwards:      70',
+            'max-forwards:      70',
+            'MAX-FORWARDS:      70',
+            'Max-Forwards     : 70',
+            'max-forwards     : 70',
+            'MAX-FORWARDS     : 70',
+            'Max-Forwards     :      70',
+            'max-forwards     :      70',
+            'MAX-FORWARDS     :      70',
         ]
 
     def test_parsing(self):
@@ -907,7 +907,7 @@ class TestSIPHeaderFieldFactoryForMaxForwards(TestCase):
             self.assertTrue(headerField.isKnown, line)
             self.assertEqual(headerField.rawString, line, line)
             self.assertIsInstance(headerField.fieldValue, basestring, line)
-            self.assertEqual(headerField.fieldValue, "baz blarg blonk", line)
+            self.assertEqual(headerField.value, 70, line)
             stringio = StringIO(line + '\r\n')
             headerField = SIPHeaderFieldFactory().allForStringIO(stringio)[0]
             self.assertTrue(headerField.isValid, line)
@@ -915,29 +915,31 @@ class TestSIPHeaderFieldFactoryForMaxForwards(TestCase):
             self.assertTrue(headerField.isKnown, line)
             self.assertEqual(headerField.rawString, line, line)
             self.assertIsInstance(headerField.fieldValue, basestring, line)
-            self.assertEqual(headerField.fieldValue, "baz blarg blonk", line)
+            self.assertIsInstance(headerField.value, (int, long), line)
+            self.assertEqual(headerField.value, 70)
+            self.assertEqual(headerField.fieldValue, "70", line)
             stringio.close()
             headerField = SIPHeaderFieldFactory().nextForFieldName("Max-Forwards")
-            self.assertEqual(headerField.fieldValue, "", line)
+            self.assertEqual(headerField.fieldValue, "0", line)
             # Hmm, really?  An empty but non-None fieldValue is valid?
             # self.assertFalse(headerField.isValid, line)
             self.assertTrue(headerField.isValid, line)
-            headerField.fieldValue = "baz blarg blonk"
+            headerField.fieldValue = "70"
             self.assertTrue(headerField.isValid, line)
             self.assertTrue(headerField.isMaxForwards, line)
             self.assertTrue(headerField.isKnown, line)
-            self.assertEqual(headerField.rawString, "Max-Forwards: baz blarg blonk")
+            self.assertEqual(headerField.rawString, "Max-Forwards: 70")
             self.assertIsInstance(headerField.fieldValue, basestring)
-            self.assertEqual(headerField.fieldValue, "baz blarg blonk", line)
-            headerField = SIPHeaderFieldFactory().nextForFieldNameAndFieldValue("Max-Forwards", "foo bar baz blarg")
+            self.assertEqual(headerField.fieldValue, "70", line)
+            headerField = SIPHeaderFieldFactory().nextForFieldNameAndFieldValue("Max-Forwards", "0")
             self.assertTrue(headerField.isValid, line)
-            headerField.fieldValue = "baz blarg blonk"
+            headerField.fieldValue = "70"
             self.assertTrue(headerField.isValid, line)
             self.assertTrue(headerField.isMaxForwards, line)
             self.assertTrue(headerField.isKnown, line)
-            self.assertEqual(headerField.rawString, "Max-Forwards: baz blarg blonk")
+            self.assertEqual(headerField.rawString, "Max-Forwards: 70")
             self.assertIsInstance(headerField.fieldValue, basestring)
-            self.assertEqual(headerField.fieldValue, "baz blarg blonk", line)
+            self.assertEqual(headerField.fieldValue, "70", line)
 class TestSIPHeaderFieldFactoryForRecordRoute(TestCase):
     @property
     def canonicalStrings(self):

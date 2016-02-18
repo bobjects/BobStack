@@ -831,18 +831,18 @@ class TestMaxForwardsSipHeaderField(TestCase):
     @property
     def canonicalStrings(self):
         return [
-            'Max-Forwards: baz blarg blonk',
-            'max-forwards: baz blarg blonk',
-            'MAX-FORWARDS: baz blarg blonk',
-            'Max-Forwards:      baz blarg blonk',
-            'max-forwards:      baz blarg blonk',
-            'MAX-FORWARDS:      baz blarg blonk',
-            'Max-Forwards     : baz blarg blonk',
-            'max-forwards     : baz blarg blonk',
-            'MAX-FORWARDS     : baz blarg blonk',
-            'Max-Forwards     :      baz blarg blonk',
-            'max-forwards     :      baz blarg blonk',
-            'MAX-FORWARDS     :      baz blarg blonk',
+            'Max-Forwards: 70',
+            'max-forwards: 70',
+            'MAX-FORWARDS: 70',
+            'Max-Forwards:      70',
+            'max-forwards:      70',
+            'MAX-FORWARDS:      70',
+            'Max-Forwards     : 70',
+            'max-forwards     : 70',
+            'MAX-FORWARDS     : 70',
+            'Max-Forwards     :      70',
+            'max-forwards     :      70',
+            'MAX-FORWARDS     :      70',
         ]
 
     def test_parsing(self):
@@ -857,7 +857,9 @@ class TestMaxForwardsSipHeaderField(TestCase):
             # self.assertIsInstance(headerField.value, (int, long), line)
             # self.assertEqual(headerField.value, 489, "Info: line is " + line)
             self.assertEqual(headerField.fieldName.lower(), "Max-Forwards".lower())
-            self.assertEqual(headerField.fieldValue, "baz blarg blonk")
+            self.assertIsInstance(headerField.value, (int, long), line)
+            self.assertEqual(headerField.value, 70)
+            self.assertEqual(headerField.fieldValue, "70")
             headerField.rawString = 'Max-Forwards: blooey'
             self.assertEqual("blooey", headerField.fieldValue)
             self.assertEqual(headerField.fieldName.lower(), "Max-Forwards".lower())
@@ -867,11 +869,11 @@ class TestMaxForwardsSipHeaderField(TestCase):
         #     self.assertEqual(MaxForwardsSIPHeaderField.newParsedFrom(line).value, 489, "Info: line is " + line)
 
     def test_rendering(self):
-        headerField = MaxForwardsSIPHeaderField.newForAttributes(fieldValue='baz blarg blonk')
+        headerField = MaxForwardsSIPHeaderField.newForAttributes(value=70)
         self.assertTrue(headerField.isValid)
         self.assertTrue(headerField.isMaxForwards)
         self.assertTrue(headerField.isKnown)
-        self.assertEqual(headerField.rawString, 'Max-Forwards: baz blarg blonk')
+        self.assertEqual(headerField.rawString, 'Max-Forwards: 70')
         # self.assertIsInstance(headerField.value, (int, long))
         # self.assertEqual(headerField.value, 300)
         headerField.fieldValue = "blooey"

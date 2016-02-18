@@ -18,6 +18,15 @@ class IntegerSIPHeaderField(SIPHeaderField):
         answer.value = value
         return answer
 
+    # TODO:  testing.
+    @classmethod
+    def newForFieldAttributes(cls, fieldName="", fieldValue="0"):
+        answer = cls()
+        answer.fieldName = fieldName
+        answer.fieldValue = fieldValue
+        answer.value = int(fieldValue)
+        return answer
+
     def __init__(self):
         SIPHeaderField.__init__(self)
         self._value = None

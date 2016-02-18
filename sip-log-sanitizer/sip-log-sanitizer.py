@@ -15,8 +15,6 @@ import timeit
 interimFile1PathName = '../proprietary-test-data/sanitized/interim1.txt'
 interimFile2PathName = '../proprietary-test-data/sanitized/interim2.txt'
 sanitizedFilePathName = '../proprietary-test-data/sanitized/sanitized.txt'
-rawLogFileDirectoryPathNames = [ '../proprietary-test-data/big-lab-test-logs-raw', '../proprietary-test-data/cust-1-logs-raw' ]
-pcapDirectoryPathNames = [ '../proprietary-test-data/cloud-resaved' ]
 messageSeparator = "__MESSAGESEPARATOR__"
 rawFileMessageSeparatorRegexes = [ "^>>>>>>>>>>  [^>]*>>>>>>>>>>>",
                                    "^>>>>>>>>>>  [^>]*>>>>>>>>>>", # for some reason, this is not catching 8 lines.
@@ -27,6 +25,11 @@ rawFileMessageSeparatorRegexes = [re.compile(s) for s in rawFileMessageSeparator
 sanitizedMessageSeparatorRegex = re.compile("^__MESSAGESEPARATOR__")
 startLineRegexes = ["^SIP/2.0\s+([\d]+)+\s+(.+)\s*$", "^([^\s]+)\s+([^\s]+)\s+SIP/2.0\s*$"]
 startLineRegexes = [re.compile(s) for s in startLineRegexes]
+
+rawLogFileDirectoryPathNames = [ '../proprietary-test-data/big-lab-test-logs-raw', '../proprietary-test-data/cust-1-logs-raw' ]
+# pcapDirectoryPathNames = [ '../proprietary-test-data/cloud-resaved', '../proprietary-test-data/cust-2-logs-pcap' ]
+# pcapDirectoryPathNames = [ '../proprietary-test-data/cloud-resaved' ]
+pcapDirectoryPathNames = [ '../proprietary-test-data/cust-2-logs-pcap' ]
 
 def createInterim1File():
     print "creating interim file 1"
@@ -109,7 +112,7 @@ def processPCAPFiles():
                         if eth.type!=dpkt.ethernet.ETH_TYPE_IP:
                             continue
                         ip=eth.data
-                        if ip.data.dport == 5060:
+                        if ( ip.p==dpkt.ip.IP_PROTO_UDP or ip.p==dpkt.ip.IP_PROTO_TCP ) and ip.data.dport in [5060, 5062, 5080]:
                             data = ip.data.data
                             if data.__len__() > 2:
                                 sanitizedFile.write(data)
