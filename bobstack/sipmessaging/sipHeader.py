@@ -27,6 +27,8 @@ class SIPHeader(object):
         self._unknownHeaderFields = None
         self._contentLengthHeaderField = None
         self._viaHeaderFields = None
+        self._transactionHash = None
+        self._dialogHash = None
         # TODO: need to add other header field attributes besides just content-length and via.
 
     def parseAttributesFromStringIO(self, stringioToParse):
@@ -161,42 +163,40 @@ class SIPHeader(object):
                 self._headerFields = factory.allForStringIO(stringio)
                 stringio.close()
 
-    # TODO: cache this.
     # TODO: implement properties used here.
     # TODO:  need to test.
     @property
     def transactionHash(self):
         # cseq + branch id on Via header (the last one, which is the via of the original request)
-        answer = None
-        viaFields = self.viaHeaderFields
-        cseq = self.cSeq
-        if cseq:
-            pass
-        if viaFields:
-            originalViaField = viaFields[-1]
-            if originalViaField.branch and cseq:
-                answer = sha1()
-                answer.update(originalViaField.branch)
-                answer.update(cseq)
-                answer = answer.hexdigest()
-        return answer
+        if not self._transactionHash:
+            answer = None
+            viaFields = self.viaHeaderFields
+            cseq = self.cSeq
+            if viaFields:
+                originalViaField = viaFields[-1]
+                if originalViaField.branch and cseq:
+                    answer = sha1()
+                    answer.update(originalViaField.branch)
+                    answer.update(cseq)
+                    self._transactionHash = answer.hexdigest()
+        return self._transactionHash
 
-    # TODO: cache this.
     # TODO: implement properties used here.
     # TODO:  need to test.
     @property
     def dialogHash(self):
-        answer = None
-        toTag = self.toTag
-        fromTag = self.fromTag
-        callID = self.callID
-        if toTag and fromTag and callID:
-            answer = sha1()
-            answer.update(toTag)
-            answer.update(fromTag)
-            answer.update(callID)
-            answer = answer.hexdigest()
-        return answer
+        if not self._dialogHash:
+            answer = None
+            toTag = self.toTag
+            fromTag = self.fromTag
+            callID = self.callID
+            if toTag and fromTag and callID:
+                answer = sha1()
+                answer.update(toTag)
+                answer.update(fromTag)
+                answer.update(callID)
+                self._dialogHash = answer.hexdigest()
+        return self._dialogHash
 
     # TODO
     @property

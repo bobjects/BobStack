@@ -100,6 +100,7 @@ def processInterimFile():
                         sanitizedFile.write(line)
             print str(totalSIPMessages) + " total SIP messages"
 
+@profile
 def processPCAPFiles():
     print "processing pcap files"
     with open(sanitizedFilePathName, "w") as sanitizedFile:
