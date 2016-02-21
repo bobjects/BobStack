@@ -771,18 +771,18 @@ class TestSIPHeaderFieldFactoryForExpires(TestCase):
     @property
     def canonicalStrings(self):
         return [
-            'Expires: baz blarg blonk',
-            'expires: baz blarg blonk',
-            'EXPIRES: baz blarg blonk',
-            'Expires:      baz blarg blonk',
-            'expires:      baz blarg blonk',
-            'EXPIRES:      baz blarg blonk',
-            'Expires     : baz blarg blonk',
-            'expires     : baz blarg blonk',
-            'EXPIRES     : baz blarg blonk',
-            'Expires     :      baz blarg blonk',
-            'expires     :      baz blarg blonk',
-            'EXPIRES     :      baz blarg blonk',
+            'Expires: 489',
+            'expires: 489',
+            'EXPIRES: 489',
+            'Expires:      489',
+            'expires:      489',
+            'EXPIRES:      489',
+            'Expires     : 489',
+            'expires     : 489',
+            'EXPIRES     : 489',
+            'Expires     :      489',
+            'expires     :      489',
+            'EXPIRES     :      489',
         ]
 
     def test_parsing(self):
@@ -793,7 +793,7 @@ class TestSIPHeaderFieldFactoryForExpires(TestCase):
             self.assertTrue(headerField.isKnown, line)
             self.assertEqual(headerField.rawString, line, line)
             self.assertIsInstance(headerField.fieldValue, basestring, line)
-            self.assertEqual(headerField.fieldValue, "baz blarg blonk", line)
+            self.assertEqual(headerField.fieldValue, "489", line)
             stringio = StringIO(line + '\r\n')
             headerField = SIPHeaderFieldFactory().allForStringIO(stringio)[0]
             self.assertTrue(headerField.isValid, line)
@@ -801,29 +801,31 @@ class TestSIPHeaderFieldFactoryForExpires(TestCase):
             self.assertTrue(headerField.isKnown, line)
             self.assertEqual(headerField.rawString, line, line)
             self.assertIsInstance(headerField.fieldValue, basestring, line)
-            self.assertEqual(headerField.fieldValue, "baz blarg blonk", line)
+            self.assertEqual(headerField.fieldValue, "489", line)
             stringio.close()
             headerField = SIPHeaderFieldFactory().nextForFieldName("Expires")
-            self.assertEqual(headerField.fieldValue, "", line)
+            self.assertEqual(headerField.fieldValue, "")
             # Hmm, really?  An empty but non-None fieldValue is valid?
             # self.assertFalse(headerField.isValid, line)
             self.assertTrue(headerField.isValid, line)
-            headerField.fieldValue = "baz blarg blonk"
+            headerField.fieldValue = "489"
             self.assertTrue(headerField.isValid, line)
             self.assertTrue(headerField.isExpires, line)
             self.assertTrue(headerField.isKnown, line)
-            self.assertEqual(headerField.rawString, "Expires: baz blarg blonk")
+            self.assertEqual(headerField.rawString, "Expires: 489")
             self.assertIsInstance(headerField.fieldValue, basestring)
-            self.assertEqual(headerField.fieldValue, "baz blarg blonk", line)
+            self.assertEqual(headerField.fieldValue, "489", line)
             headerField = SIPHeaderFieldFactory().nextForFieldNameAndFieldValue("Expires", "foo bar baz blarg")
             self.assertTrue(headerField.isValid, line)
-            headerField.fieldValue = "baz blarg blonk"
+            headerField.fieldValue = "489"
             self.assertTrue(headerField.isValid, line)
             self.assertTrue(headerField.isExpires, line)
             self.assertTrue(headerField.isKnown, line)
-            self.assertEqual(headerField.rawString, "Expires: baz blarg blonk")
+            self.assertEqual(headerField.rawString, "Expires: 489")
             self.assertIsInstance(headerField.fieldValue, basestring)
-            self.assertEqual(headerField.fieldValue, "baz blarg blonk", line)
+            self.assertEqual(headerField.fieldValue, "489", line)
+
+
 class TestSIPHeaderFieldFactoryForFrom(TestCase):
     @property
     def canonicalStrings(self):
@@ -940,6 +942,7 @@ class TestSIPHeaderFieldFactoryForMaxForwards(TestCase):
             self.assertEqual(headerField.rawString, "Max-Forwards: 70")
             self.assertIsInstance(headerField.fieldValue, basestring)
             self.assertEqual(headerField.fieldValue, "70", line)
+
 class TestSIPHeaderFieldFactoryForRecordRoute(TestCase):
     @property
     def canonicalStrings(self):
@@ -1058,18 +1061,18 @@ class TestSIPHeaderFieldFactoryForRetryAfter(TestCase):
     @property
     def canonicalStrings(self):
         return [
-            'Retry-After: baz blarg blonk',
-            'retry-after: baz blarg blonk',
-            'RETRY-AFTER: baz blarg blonk',
-            'Retry-After:      baz blarg blonk',
-            'retry-after:      baz blarg blonk',
-            'RETRY-AFTER:      baz blarg blonk',
-            'Retry-After     : baz blarg blonk',
-            'retry-after     : baz blarg blonk',
-            'RETRY-AFTER     : baz blarg blonk',
-            'Retry-After     :      baz blarg blonk',
-            'retry-after     :      baz blarg blonk',
-            'RETRY-AFTER     :      baz blarg blonk',
+            'Retry-After: 489',
+            'retry-after: 489',
+            'RETRY-AFTER: 489',
+            'Retry-After:      489',
+            'retry-after:      489',
+            'RETRY-AFTER:      489',
+            'Retry-After     : 489',
+            'retry-after     : 489',
+            'RETRY-AFTER     : 489',
+            'Retry-After     :      489',
+            'retry-after     :      489',
+            'RETRY-AFTER     :      489',
         ]
 
     def test_parsing(self):
@@ -1080,7 +1083,7 @@ class TestSIPHeaderFieldFactoryForRetryAfter(TestCase):
             self.assertTrue(headerField.isKnown, line)
             self.assertEqual(headerField.rawString, line, line)
             self.assertIsInstance(headerField.fieldValue, basestring, line)
-            self.assertEqual(headerField.fieldValue, "baz blarg blonk", line)
+            self.assertEqual(headerField.fieldValue, "489", line)
             stringio = StringIO(line + '\r\n')
             headerField = SIPHeaderFieldFactory().allForStringIO(stringio)[0]
             self.assertTrue(headerField.isValid, line)
@@ -1088,29 +1091,29 @@ class TestSIPHeaderFieldFactoryForRetryAfter(TestCase):
             self.assertTrue(headerField.isKnown, line)
             self.assertEqual(headerField.rawString, line, line)
             self.assertIsInstance(headerField.fieldValue, basestring, line)
-            self.assertEqual(headerField.fieldValue, "baz blarg blonk", line)
+            self.assertEqual(headerField.fieldValue, "489", line)
             stringio.close()
             headerField = SIPHeaderFieldFactory().nextForFieldName("Retry-After")
-            self.assertEqual(headerField.fieldValue, "", line)
+            self.assertEqual(headerField.fieldValue, "")
             # Hmm, really?  An empty but non-None fieldValue is valid?
             # self.assertFalse(headerField.isValid, line)
             self.assertTrue(headerField.isValid, line)
-            headerField.fieldValue = "baz blarg blonk"
+            headerField.fieldValue = "489"
             self.assertTrue(headerField.isValid, line)
             self.assertTrue(headerField.isRetryAfter, line)
             self.assertTrue(headerField.isKnown, line)
-            self.assertEqual(headerField.rawString, "Retry-After: baz blarg blonk")
+            self.assertEqual(headerField.rawString, "Retry-After: 489")
             self.assertIsInstance(headerField.fieldValue, basestring)
-            self.assertEqual(headerField.fieldValue, "baz blarg blonk", line)
+            self.assertEqual(headerField.fieldValue, "489", line)
             headerField = SIPHeaderFieldFactory().nextForFieldNameAndFieldValue("Retry-After", "foo bar baz blarg")
             self.assertTrue(headerField.isValid, line)
-            headerField.fieldValue = "baz blarg blonk"
+            headerField.fieldValue = "489"
             self.assertTrue(headerField.isValid, line)
             self.assertTrue(headerField.isRetryAfter, line)
             self.assertTrue(headerField.isKnown, line)
-            self.assertEqual(headerField.rawString, "Retry-After: baz blarg blonk")
+            self.assertEqual(headerField.rawString, "Retry-After: 489")
             self.assertIsInstance(headerField.fieldValue, basestring)
-            self.assertEqual(headerField.fieldValue, "baz blarg blonk", line)
+            self.assertEqual(headerField.fieldValue, "489", line)
 class TestSIPHeaderFieldFactoryForRoute(TestCase):
     @property
     def canonicalStrings(self):
@@ -1229,18 +1232,18 @@ class TestSIPHeaderFieldFactoryForSessionExpires(TestCase):
     @property
     def canonicalStrings(self):
         return [
-            'Session-Expires: baz blarg blonk',
-            'session-expires: baz blarg blonk',
-            'SESSION-EXPIRES: baz blarg blonk',
-            'Session-Expires:      baz blarg blonk',
-            'session-expires:      baz blarg blonk',
-            'SESSION-EXPIRES:      baz blarg blonk',
-            'Session-Expires     : baz blarg blonk',
-            'session-expires     : baz blarg blonk',
-            'SESSION-EXPIRES     : baz blarg blonk',
-            'Session-Expires     :      baz blarg blonk',
-            'session-expires     :      baz blarg blonk',
-            'SESSION-EXPIRES     :      baz blarg blonk',
+            'Session-Expires: 489',
+            'session-expires: 489',
+            'SESSION-EXPIRES: 489',
+            'Session-Expires:      489',
+            'session-expires:      489',
+            'SESSION-EXPIRES:      489',
+            'Session-Expires     : 489',
+            'session-expires     : 489',
+            'SESSION-EXPIRES     : 489',
+            'Session-Expires     :      489',
+            'session-expires     :      489',
+            'SESSION-EXPIRES     :      489',
         ]
 
     def test_parsing(self):
@@ -1251,7 +1254,7 @@ class TestSIPHeaderFieldFactoryForSessionExpires(TestCase):
             self.assertTrue(headerField.isKnown, line)
             self.assertEqual(headerField.rawString, line, line)
             self.assertIsInstance(headerField.fieldValue, basestring, line)
-            self.assertEqual(headerField.fieldValue, "baz blarg blonk", line)
+            self.assertEqual(headerField.fieldValue, "489", line)
             stringio = StringIO(line + '\r\n')
             headerField = SIPHeaderFieldFactory().allForStringIO(stringio)[0]
             self.assertTrue(headerField.isValid, line)
@@ -1259,29 +1262,29 @@ class TestSIPHeaderFieldFactoryForSessionExpires(TestCase):
             self.assertTrue(headerField.isKnown, line)
             self.assertEqual(headerField.rawString, line, line)
             self.assertIsInstance(headerField.fieldValue, basestring, line)
-            self.assertEqual(headerField.fieldValue, "baz blarg blonk", line)
+            self.assertEqual(headerField.fieldValue, "489", line)
             stringio.close()
             headerField = SIPHeaderFieldFactory().nextForFieldName("Session-Expires")
-            self.assertEqual(headerField.fieldValue, "", line)
+            self.assertEqual(headerField.fieldValue, "")
             # Hmm, really?  An empty but non-None fieldValue is valid?
             # self.assertFalse(headerField.isValid, line)
             self.assertTrue(headerField.isValid, line)
-            headerField.fieldValue = "baz blarg blonk"
+            headerField.fieldValue = "489"
             self.assertTrue(headerField.isValid, line)
             self.assertTrue(headerField.isSessionExpires, line)
             self.assertTrue(headerField.isKnown, line)
-            self.assertEqual(headerField.rawString, "Session-Expires: baz blarg blonk")
+            self.assertEqual(headerField.rawString, "Session-Expires: 489")
             self.assertIsInstance(headerField.fieldValue, basestring)
-            self.assertEqual(headerField.fieldValue, "baz blarg blonk", line)
+            self.assertEqual(headerField.fieldValue, "489", line)
             headerField = SIPHeaderFieldFactory().nextForFieldNameAndFieldValue("Session-Expires", "foo bar baz blarg")
             self.assertTrue(headerField.isValid, line)
-            headerField.fieldValue = "baz blarg blonk"
+            headerField.fieldValue = "489"
             self.assertTrue(headerField.isValid, line)
             self.assertTrue(headerField.isSessionExpires, line)
             self.assertTrue(headerField.isKnown, line)
-            self.assertEqual(headerField.rawString, "Session-Expires: baz blarg blonk")
+            self.assertEqual(headerField.rawString, "Session-Expires: 489")
             self.assertIsInstance(headerField.fieldValue, basestring)
-            self.assertEqual(headerField.fieldValue, "baz blarg blonk", line)
+            self.assertEqual(headerField.fieldValue, "489", line)
 class TestSIPHeaderFieldFactoryForSupported(TestCase):
     @property
     def canonicalStrings(self):
@@ -1343,18 +1346,18 @@ class TestSIPHeaderFieldFactoryForTimestamp(TestCase):
     @property
     def canonicalStrings(self):
         return [
-            'Timestamp: baz blarg blonk',
-            'timestamp: baz blarg blonk',
-            'TIMESTAMP: baz blarg blonk',
-            'Timestamp:      baz blarg blonk',
-            'timestamp:      baz blarg blonk',
-            'TIMESTAMP:      baz blarg blonk',
-            'Timestamp     : baz blarg blonk',
-            'timestamp     : baz blarg blonk',
-            'TIMESTAMP     : baz blarg blonk',
-            'Timestamp     :      baz blarg blonk',
-            'timestamp     :      baz blarg blonk',
-            'TIMESTAMP     :      baz blarg blonk',
+            'Timestamp: 489',
+            'timestamp: 489',
+            'TIMESTAMP: 489',
+            'Timestamp:      489',
+            'timestamp:      489',
+            'TIMESTAMP:      489',
+            'Timestamp     : 489',
+            'timestamp     : 489',
+            'TIMESTAMP     : 489',
+            'Timestamp     :      489',
+            'timestamp     :      489',
+            'TIMESTAMP     :      489',
         ]
 
     def test_parsing(self):
@@ -1365,7 +1368,7 @@ class TestSIPHeaderFieldFactoryForTimestamp(TestCase):
             self.assertTrue(headerField.isKnown, line)
             self.assertEqual(headerField.rawString, line, line)
             self.assertIsInstance(headerField.fieldValue, basestring, line)
-            self.assertEqual(headerField.fieldValue, "baz blarg blonk", line)
+            self.assertEqual(headerField.fieldValue, "489", line)
             stringio = StringIO(line + '\r\n')
             headerField = SIPHeaderFieldFactory().allForStringIO(stringio)[0]
             self.assertTrue(headerField.isValid, line)
@@ -1373,29 +1376,29 @@ class TestSIPHeaderFieldFactoryForTimestamp(TestCase):
             self.assertTrue(headerField.isKnown, line)
             self.assertEqual(headerField.rawString, line, line)
             self.assertIsInstance(headerField.fieldValue, basestring, line)
-            self.assertEqual(headerField.fieldValue, "baz blarg blonk", line)
+            self.assertEqual(headerField.fieldValue, "489", line)
             stringio.close()
             headerField = SIPHeaderFieldFactory().nextForFieldName("Timestamp")
-            self.assertEqual(headerField.fieldValue, "", line)
+            self.assertEqual(headerField.fieldValue, "")
             # Hmm, really?  An empty but non-None fieldValue is valid?
             # self.assertFalse(headerField.isValid, line)
             self.assertTrue(headerField.isValid, line)
-            headerField.fieldValue = "baz blarg blonk"
+            headerField.fieldValue = "489"
             self.assertTrue(headerField.isValid, line)
             self.assertTrue(headerField.isTimestamp, line)
             self.assertTrue(headerField.isKnown, line)
-            self.assertEqual(headerField.rawString, "Timestamp: baz blarg blonk")
+            self.assertEqual(headerField.rawString, "Timestamp: 489")
             self.assertIsInstance(headerField.fieldValue, basestring)
-            self.assertEqual(headerField.fieldValue, "baz blarg blonk", line)
+            self.assertEqual(headerField.fieldValue, "489", line)
             headerField = SIPHeaderFieldFactory().nextForFieldNameAndFieldValue("Timestamp", "foo bar baz blarg")
             self.assertTrue(headerField.isValid, line)
-            headerField.fieldValue = "baz blarg blonk"
+            headerField.fieldValue = "489"
             self.assertTrue(headerField.isValid, line)
             self.assertTrue(headerField.isTimestamp, line)
             self.assertTrue(headerField.isKnown, line)
-            self.assertEqual(headerField.rawString, "Timestamp: baz blarg blonk")
+            self.assertEqual(headerField.rawString, "Timestamp: 489")
             self.assertIsInstance(headerField.fieldValue, basestring)
-            self.assertEqual(headerField.fieldValue, "baz blarg blonk", line)
+            self.assertEqual(headerField.fieldValue, "489", line)
 class TestSIPHeaderFieldFactoryForTo(TestCase):
     @property
     def canonicalStrings(self):

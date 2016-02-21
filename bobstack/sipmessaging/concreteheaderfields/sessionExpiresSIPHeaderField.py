@@ -5,83 +5,13 @@ except ImportError:
 import re
 import sys
 sys.path.append("../../..")
-from bobstack.sipmessaging import SIPHeaderField
+from bobstack.sipmessaging import IntegerSIPHeaderField
 
 
-class SessionExpiresSIPHeaderField(SIPHeaderField):
+class SessionExpiresSIPHeaderField(IntegerSIPHeaderField):
     @classmethod
-    def newForAttributes(cls, fieldName="Session-Expires", fieldValue=""):
-        return cls.newForFieldAttributes(fieldName=fieldName, fieldValue=fieldValue)
-
-    # @classmethod
-    # def newForAttributes(cls, value=0):
-    #     answer = cls.newForFieldAttributes(fieldName="Session-Expires", fieldValue=str(value))
-    #     answer.value = value
-    #     return answer
-
-    # def __init__(self):
-    #     SIPHeaderField.__init__(self)
-    #     self._value = None
-
-    # @property
-    # def value(self):
-    #     if self._value is None:
-    #         self.parseAttributesFromRawString()
-    #     if self._value is None:
-    #         return 0
-    #     return self._value
-
-    # @value.setter
-    # def value(self, anInteger):
-    #     self._value = anInteger
-    #     self.fieldValue = str(anInteger)
-    #     self.clearRawString()
-
-    # def clearAttributes(self):
-    #     super(SessionExpiresSIPHeaderField, self).clearAttributes()
-    #     self._value = None
-
-    # def parseAttributesFromRawString(self):
-    #     super(SessionExpiresSIPHeaderField, self).parseAttributesFromRawString()
-    #     self._value = None
-    #     match = self.__class__.regexForParsing().match(self._rawString)
-    #     if match:
-    #         matchGroup = match.group(1)
-    #         if matchGroup:
-    #             self._value = int(matchGroup)
-    #         else:
-    #             # Will get here is the Session-Expires header field is present, but there is no value.
-    #             self._value = None
-
-    @classmethod
-    def regexForMatchingFieldName(cls):
-        try:
-            return cls._regexForMatchingFieldName
-        except AttributeError:
-            cls._regexForMatchingFieldName = re.compile('^Session-Expires$', re.I)
-            return cls._regexForMatchingFieldName
-
-    @classmethod
-    def regexForMatching(cls):
-        try:
-            return cls._regexForMatching
-        except AttributeError:
-            cls._regexForMatching = re.compile('^Session-Expires\s*:', re.I)
-            return cls._regexForMatching
-
-    @classmethod
-    def regexForParsing(cls):
-        try:
-            return cls._regexForParsing
-        except AttributeError:
-            cls._regexForParsing = re.compile('^Session-Expires\s*:\s*(.*)', re.I)
-            return cls._regexForParsing
-
-    # @property
-    # def isValid(self):
-    #     # Answer false if the value is not present.
-    #     test = self.value  # Make sure the attributes are lazily initialized.
-    #     return super(SessionExpiresSIPHeaderField, self).isValid and self._value is not None
+    def canonicalFieldName(cls):
+        return 'Session-Expires'
 
     @property
     def isSessionExpires(self):

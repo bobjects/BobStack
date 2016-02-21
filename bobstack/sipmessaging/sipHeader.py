@@ -181,7 +181,6 @@ class SIPHeader(object):
                     self._transactionHash = answer.hexdigest()
         return self._transactionHash
 
-    # TODO: implement properties used here.
     # TODO:  need to test.
     @property
     def dialogHash(self):
@@ -198,7 +197,7 @@ class SIPHeader(object):
                 self._dialogHash = answer.hexdigest()
         return self._dialogHash
 
-    # TODO
+    # TODO:  need to test.
     @property
     def toTag(self):
         toHeaderField = self.toHeaderField
