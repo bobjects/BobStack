@@ -24,7 +24,13 @@ class IntegerSIPHeaderField(SIPHeaderField):
         answer = cls()
         answer.fieldName = fieldName
         answer.fieldValue = fieldValue
-        answer.value = int(fieldValue)
+        # TODO:  May need to parse out parameters as well here.
+        match = re.match("^(\d+)", fieldValue)
+        if match:
+            digits = match.group(0)
+        else:
+            digits = "0"
+        answer.value = int(digits)
         return answer
 
     def __init__(self):

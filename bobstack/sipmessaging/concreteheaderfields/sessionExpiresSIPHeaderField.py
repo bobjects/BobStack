@@ -7,6 +7,10 @@ import sys
 sys.path.append("../../..")
 from bobstack.sipmessaging import IntegerSIPHeaderField
 
+# TODO:  We must be able to parse out refresher parameter, e.g.:  "1200;refresher=uac"
+# See https://tools.ietf.org/html/rfc4028
+# Do we want to allow for Integer headers to parse out params generally?  For right now, just
+# do it here, but I would bet that other integer headers will need that as well.
 
 class SessionExpiresSIPHeaderField(IntegerSIPHeaderField):
     @classmethod

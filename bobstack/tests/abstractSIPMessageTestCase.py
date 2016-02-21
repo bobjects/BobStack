@@ -93,7 +93,11 @@ class AbstractSIPMessageTestCase(TestCase):
                 'Require: sdp-anat',
                 'Retry-After: 30',
                 'Server: Blargomatic 2.0',
-                'Session-Expires: 1200;refresher=uac',
+                # TODO:  We will need to deal with the refresher parameter, i.e. we will need to
+                # be able to specify parameter dictionaries to the newForAttributes method for
+                # Integer header fields.  Maybe even more generically; for all SIP header fields.
+                # 'Session-Expires: 1200;refresher=uac',
+                'Session-Expires: 1200',
                 'Supported: 100rel,histinfo,join,replaces,sdp-anat,timer',
                 'Timestamp: 1392061773',
                 'WWW-Authenticate: Digest algorithm=MD5,nonce="1111790769596",realm="SomeRealm"',
@@ -136,7 +140,11 @@ class AbstractSIPMessageTestCase(TestCase):
                     'Require: sdp-anat\r\n'
                     'Retry-After: 30\r\n'
                     'Server: Blargomatic 2.0\r\n'
-                    'Session-Expires: 1200;refresher=uac\r\n'
+                    # TODO:  We will need to deal with the refresher parameter, i.e. we will need to
+                    # be able to specify parameter dictionaries to the newForAttributes method for
+                    # Integer header fields.  Maybe even more generically; for all SIP header fields.
+                    # 'Session-Expires: 1200;refresher=uac\r\n'
+                    'Session-Expires: 1200\r\n'
                     'Supported: 100rel,histinfo,join,replaces,sdp-anat,timer\r\n'
                     'Timestamp: 1392061773\r\n'
                     'WWW-Authenticate: Digest algorithm=MD5,nonce="1111790769596",realm="SomeRealm"\r\n'
@@ -163,7 +171,7 @@ class AbstractSIPMessageTestCase(TestCase):
             UserAgentSIPHeaderField.newForAttributes(fieldValue='Example User Agent'),
             ContactSIPHeaderField.newForAttributes(fieldValue='<sip:invalid@200.25.3.150:5061;transport=tls>'),
             RouteSIPHeaderField.newForAttributes(fieldValue='<sip:200.30.10.12:5061;transport=tls;lr>'),
-            ExpiresSIPHeaderField.newForAttributes(fieldValue='0'),
+            ExpiresSIPHeaderField.newForAttributes(value=0),
             AcceptSIPHeaderField.newForAttributes(fieldValue='application/sdp,application/isup,application/dtmf,application/dtmf-relay,multipart/mixed'),
             AcceptEncodingSIPHeaderField.newForAttributes(fieldValue='x-nortel-short'),
             AcceptLanguageSIPHeaderField.newForAttributes(fieldValue='en-us,fr-fr'),
@@ -175,11 +183,15 @@ class AbstractSIPMessageTestCase(TestCase):
             DateSIPHeaderField.newForAttributes(fieldValue='Sat, 01 Feb 2014 22:07:34 GMT'),
             RecordRouteSIPHeaderField.newForAttributes(fieldValue='<sip:200.25.3.230:5061;transport=tls;lr>'),
             RequireSIPHeaderField.newForAttributes(fieldValue='sdp-anat'),
-            RetryAfterSIPHeaderField.newForAttributes(fieldValue='30'),
+            RetryAfterSIPHeaderField.newForAttributes(value=30),
             ServerSIPHeaderField.newForAttributes(fieldValue='Blargomatic 2.0'),
-            SessionExpiresSIPHeaderField.newForAttributes(fieldValue='1200;refresher=uac'),
+            # TODO:  We will need to deal with the refresher parameter, i.e. we will need to
+            # be able to specify parameter dictionaries to the newForAttributes method for
+            # Integer header fields.  Maybe even more generically; for all SIP header fields.
+            # SessionExpiresSIPHeaderField.newForAttributes(fieldValue='1200;refresher=uac'),
+            SessionExpiresSIPHeaderField.newForAttributes(value=1200),
             SupportedSIPHeaderField.newForAttributes(fieldValue='100rel,histinfo,join,replaces,sdp-anat,timer'),
-            TimestampSIPHeaderField.newForAttributes(fieldValue='1392061773'),
+            TimestampSIPHeaderField.newForAttributes(value=1392061773),
             WWWAuthenticateSIPHeaderField.newForAttributes(fieldValue='Digest algorithm=MD5,nonce="1111790769596",realm="SomeRealm"'),
             WarningSIPHeaderField.newForAttributes(fieldValue='370 200.21.3.10 "Insufficient Bandwidth"'),
             UnknownSIPHeaderField.newForAttributes(fieldName='X-RTP-Stat', fieldValue=' PR=0;ER=0;PL=0;RB=0/0;DE=PCMU;EN=PCMU;JI=0;DL=0,0;IP=10.1.0.33:16384,132.52.127.200:20048'),
@@ -215,7 +227,11 @@ class AbstractSIPMessageTestCase(TestCase):
                         'Require: sdp-anat',
                         'Retry-After: 30',
                         'Server: Blargomatic 2.0',
-                        'Session-Expires: 1200;refresher=uac',
+                        # TODO:  We will need to deal with the refresher parameter, i.e. we will need to
+                        # be able to specify parameter dictionaries to the newForAttributes method for
+                        # Integer header fields.  Maybe even more generically; for all SIP header fields.
+                        # 'Session-Expires: 1200;refresher=uac',
+                        'Session-Expires: 1200',
                         'Supported: 100rel,histinfo,join,replaces,sdp-anat,timer',
                         'Timestamp: 1392061773',
                         'WWW-Authenticate: Digest algorithm=MD5,nonce="1111790769596",realm="SomeRealm"',
@@ -253,7 +269,11 @@ class AbstractSIPMessageTestCase(TestCase):
                         ('Require', 'sdp-anat'),
                         ('Retry-After', '30'),
                         ('Server', 'Blargomatic 2.0'),
-                        ('Session-Expires', '1200;refresher=uac'),
+                        # TODO:  We will need to deal with the refresher parameter, i.e. we will need to
+                        # be able to specify parameter dictionaries to the newForAttributes method for
+                        # Integer header fields.  Maybe even more generically; for all SIP header fields.
+                        # ('Session-Expires', '1200;refresher=uac'),
+                        ('Session-Expires', 1200),
                         ('Supported', '100rel,histinfo,join,replaces,sdp-anat,timer'),
                         ('Timestamp', '1392061773'),
                         ('WWW-Authenticate', 'Digest algorithm=MD5,nonce="1111790769596",realm="SomeRealm"'),
@@ -291,7 +311,11 @@ class AbstractSIPMessageTestCase(TestCase):
                         ('Require', 'sdp-anat'),
                         ('Retry-After', '30'),
                         ('Server', 'Blargomatic 2.0'),
-                        ('Session-Expires', '1200;refresher=uac'),
+                        # TODO:  We will need to deal with the refresher parameter, i.e. we will need to
+                        # be able to specify parameter dictionaries to the newForAttributes method for
+                        # Integer header fields.  Maybe even more generically; for all SIP header fields.
+                        # ('Session-Expires', '1200;refresher=uac'),
+                        ('Session-Expires', {"value": 1200}),
                         ('Supported', '100rel,histinfo,join,replaces,sdp-anat,timer'),
                         ('Timestamp', '1392061773'),
                         ('WWW-Authenticate', 'Digest algorithm=MD5,nonce="1111790769596",realm="SomeRealm"'),
