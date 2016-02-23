@@ -5,7 +5,39 @@ except ImportError:
 from unittest import TestCase
 import sys
 sys.path.append("..")
+from sipmessaging import UnknownSIPHeaderField
+from sipmessaging import ContentLengthSIPHeaderField
+from sipmessaging import AcceptSIPHeaderField
+from sipmessaging import AcceptEncodingSIPHeaderField
+from sipmessaging import AcceptLanguageSIPHeaderField
+from sipmessaging import AllowSIPHeaderField
+from sipmessaging import AuthorizationSIPHeaderField
+from sipmessaging import CSeqSIPHeaderField
+from sipmessaging import CallIDSIPHeaderField
+from sipmessaging import CallInfoSIPHeaderField
+from sipmessaging import ContactSIPHeaderField
+from sipmessaging import ContentDispositionSIPHeaderField
+from sipmessaging import ContentTypeSIPHeaderField
+from sipmessaging import DateSIPHeaderField
+from sipmessaging import ExpiresSIPHeaderField
+from sipmessaging import FromSIPHeaderField
+from sipmessaging import MaxForwardsSIPHeaderField
+from sipmessaging import RecordRouteSIPHeaderField
+from sipmessaging import RequireSIPHeaderField
+from sipmessaging import RetryAfterSIPHeaderField
+from sipmessaging import RouteSIPHeaderField
+from sipmessaging import ServerSIPHeaderField
+from sipmessaging import SessionExpiresSIPHeaderField
+from sipmessaging import SupportedSIPHeaderField
+from sipmessaging import TimestampSIPHeaderField
+from sipmessaging import ToSIPHeaderField
+from sipmessaging import UserAgentSIPHeaderField
+from sipmessaging import ViaSIPHeaderField
+from sipmessaging import WWWAuthenticateSIPHeaderField
+from sipmessaging import WarningSIPHeaderField
 from sipmessaging import SIPHeaderFieldFactory
+from abstractSIPHeaderFieldFromFactoryTestCase import AbstractSIPHeaderFieldFromFactoryTestCase
+from abstractIntegerSIPHeaderFieldFromFactoryTestCase import AbstractIntegerSIPHeaderFieldFromFactoryTestCase
 
 class TestSIPHeaderFieldFactoryForUnknown(TestCase):
     @property
@@ -46,1584 +78,687 @@ class TestSIPHeaderFieldFactoryForUnknown(TestCase):
                     stringio.close()
 
 
-class TestSIPHeaderFieldFactoryForContentLength(TestCase):
+class TestSIPHeaderFieldFactoryForContentLength(AbstractIntegerSIPHeaderFieldFromFactoryTestCase):
     @property
-    def canonicalStrings(self):
-        return [
-            'Content-Length: 489',
-            'content-length: 489',
-            'CONTENT-LENGTH: 489',
-            'Content-Length:      489',
-            'content-length:      489',
-            'CONTENT-LENGTH:      489',
-            'Content-Length     : 489',
-            'content-length     : 489',
-            'CONTENT-LENGTH     : 489',
-            'Content-Length     :      489',
-            'content-length     :      489',
-            'CONTENT-LENGTH     :      489',
-        ]
+    def canonicalFieldNames(self):
+        return['Content-Length', 'CONTENT-Length', 'content-length', 'Content-length', 'content-Length']
+
+    @property
+    def sipHeaderFieldClassUnderTest(self):
+        return ContentLengthSIPHeaderField
 
     def test_parsing(self):
+        self.basic_test_parsing()
         for line in self.canonicalStrings:
             headerField = SIPHeaderFieldFactory().nextForString(line)
-            self.assertTrue(headerField.isValid, line)
+            self.assertTrue(headerField.isContentLength)
+            stringio = StringIO(line + '\r\n')
+            headerField = SIPHeaderFieldFactory().allForStringIO(stringio)[0]
             self.assertTrue(headerField.isContentLength, line)
-            self.assertTrue(headerField.isKnown, line)
-            self.assertEqual(headerField.rawString, line, line)
-            self.assertIsInstance(headerField.value, (int, long), line)
-            self.assertEqual(headerField.value, 489, line)
-            stringio = StringIO(line + '\r\n')
-            headerField = SIPHeaderFieldFactory().allForStringIO(stringio)[0]
-            self.assertTrue(headerField.isValid, line)
+            stringio.close()
+            headerField = SIPHeaderFieldFactory().nextForFieldName(self.canonicalFieldNames[0])
             self.assertTrue(headerField.isContentLength, line)
-            self.assertTrue(headerField.isKnown, line)
-            self.assertEqual(headerField.rawString, line, line)
-            self.assertIsInstance(headerField.value, (int, long), line)
-            self.assertEqual(headerField.value, 489, line)
-            stringio.close()
+            headerField = SIPHeaderFieldFactory().nextForFieldNameAndFieldValue(self.canonicalFieldNames[0], "foo bar baz blarg")
+            self.assertTrue(headerField.isContentLength, line)
 
-class TestSIPHeaderFieldFactoryForAccept(TestCase):
+class TestSIPHeaderFieldFactoryForAccept(AbstractSIPHeaderFieldFromFactoryTestCase):
     @property
-    def canonicalStrings(self):
-        return [
-            'Accept: baz blarg blonk',
-            'accept: baz blarg blonk',
-            'ACCEPT: baz blarg blonk',
-            'Accept:      baz blarg blonk',
-            'accept:      baz blarg blonk',
-            'ACCEPT:      baz blarg blonk',
-            'Accept     : baz blarg blonk',
-            'accept     : baz blarg blonk',
-            'ACCEPT     : baz blarg blonk',
-            'Accept     :      baz blarg blonk',
-            'accept     :      baz blarg blonk',
-            'ACCEPT     :      baz blarg blonk',
-        ]
+    def canonicalFieldNames(self):
+        return['Accept', 'ACCEPT', 'accept']
+
+    @property
+    def sipHeaderFieldClassUnderTest(self):
+        return AcceptSIPHeaderField
 
     def test_parsing(self):
+        self.basic_test_parsing()
         for line in self.canonicalStrings:
             headerField = SIPHeaderFieldFactory().nextForString(line)
-            self.assertTrue(headerField.isValid, line)
             self.assertTrue(headerField.isAccept, line)
-            self.assertTrue(headerField.isKnown, line)
-            self.assertEqual(headerField.rawString, line, line)
-            self.assertIsInstance(headerField.fieldValue, basestring, line)
-            self.assertEqual(headerField.fieldValue, "baz blarg blonk", line)
             stringio = StringIO(line + '\r\n')
             headerField = SIPHeaderFieldFactory().allForStringIO(stringio)[0]
-            self.assertTrue(headerField.isValid, line)
             self.assertTrue(headerField.isAccept, line)
-            self.assertTrue(headerField.isKnown, line)
-            self.assertEqual(headerField.rawString, line, line)
-            self.assertIsInstance(headerField.fieldValue, basestring, line)
-            self.assertEqual(headerField.fieldValue, "baz blarg blonk", line)
             stringio.close()
-            headerField = SIPHeaderFieldFactory().nextForFieldName("Accept")
-            self.assertEqual(headerField.fieldValue, "", line)
-            # Hmm, really?  An empty but non-None fieldValue is valid?
-            # self.assertFalse(headerField.isValid, line)
-            self.assertTrue(headerField.isValid, line)
-            headerField.fieldValue = "baz blarg blonk"
-            self.assertTrue(headerField.isValid, line)
+            headerField = SIPHeaderFieldFactory().nextForFieldName(self.canonicalFieldNames[0])
             self.assertTrue(headerField.isAccept, line)
-            self.assertTrue(headerField.isKnown, line)
-            self.assertEqual(headerField.rawString, "Accept: baz blarg blonk")
-            self.assertIsInstance(headerField.fieldValue, basestring)
-            self.assertEqual(headerField.fieldValue, "baz blarg blonk", line)
-            headerField = SIPHeaderFieldFactory().nextForFieldNameAndFieldValue("Accept", "foo bar baz blarg")
-            self.assertTrue(headerField.isValid, line)
-            headerField.fieldValue = "baz blarg blonk"
-            self.assertTrue(headerField.isValid, line)
+            headerField = SIPHeaderFieldFactory().nextForFieldNameAndFieldValue(self.canonicalFieldNames[0], "foo bar baz blarg")
             self.assertTrue(headerField.isAccept, line)
-            self.assertTrue(headerField.isKnown, line)
-            self.assertEqual(headerField.rawString, "Accept: baz blarg blonk")
-            self.assertIsInstance(headerField.fieldValue, basestring)
-            self.assertEqual(headerField.fieldValue, "baz blarg blonk", line)
-class TestSIPHeaderFieldFactoryForAcceptEncoding(TestCase):
+
+class TestSIPHeaderFieldFactoryForAcceptEncoding(AbstractSIPHeaderFieldFromFactoryTestCase):
     @property
-    def canonicalStrings(self):
-        return [
-            'Accept-Encoding: baz blarg blonk',
-            'accept-encoding: baz blarg blonk',
-            'ACCEPT-ENCODING: baz blarg blonk',
-            'Accept-Encoding:      baz blarg blonk',
-            'accept-encoding:      baz blarg blonk',
-            'ACCEPT-ENCODING:      baz blarg blonk',
-            'Accept-Encoding     : baz blarg blonk',
-            'accept-encoding     : baz blarg blonk',
-            'ACCEPT-ENCODING     : baz blarg blonk',
-            'Accept-Encoding     :      baz blarg blonk',
-            'accept-encoding     :      baz blarg blonk',
-            'ACCEPT-ENCODING     :      baz blarg blonk',
-        ]
+    def canonicalFieldNames(self):
+        return['Accept-Encoding', 'ACCEPT-Encoding', 'accept-encoding', 'Accept-encoding', 'accept-Encoding']
+
+    @property
+    def sipHeaderFieldClassUnderTest(self):
+        return AcceptEncodingSIPHeaderField
 
     def test_parsing(self):
+        self.basic_test_parsing()
         for line in self.canonicalStrings:
             headerField = SIPHeaderFieldFactory().nextForString(line)
-            self.assertTrue(headerField.isValid, line)
             self.assertTrue(headerField.isAcceptEncoding, line)
-            self.assertTrue(headerField.isKnown, line)
-            self.assertEqual(headerField.rawString, line, line)
-            self.assertIsInstance(headerField.fieldValue, basestring, line)
-            self.assertEqual(headerField.fieldValue, "baz blarg blonk", line)
             stringio = StringIO(line + '\r\n')
             headerField = SIPHeaderFieldFactory().allForStringIO(stringio)[0]
-            self.assertTrue(headerField.isValid, line)
             self.assertTrue(headerField.isAcceptEncoding, line)
-            self.assertTrue(headerField.isKnown, line)
-            self.assertEqual(headerField.rawString, line, line)
-            self.assertIsInstance(headerField.fieldValue, basestring, line)
-            self.assertEqual(headerField.fieldValue, "baz blarg blonk", line)
             stringio.close()
-            headerField = SIPHeaderFieldFactory().nextForFieldName("Accept-Encoding")
-            self.assertEqual(headerField.fieldValue, "", line)
-            # Hmm, really?  An empty but non-None fieldValue is valid?
-            # self.assertFalse(headerField.isValid, line)
-            self.assertTrue(headerField.isValid, line)
-            headerField.fieldValue = "baz blarg blonk"
-            self.assertTrue(headerField.isValid, line)
+            headerField = SIPHeaderFieldFactory().nextForFieldName(self.canonicalFieldNames[0])
             self.assertTrue(headerField.isAcceptEncoding, line)
-            self.assertTrue(headerField.isKnown, line)
-            self.assertEqual(headerField.rawString, "Accept-Encoding: baz blarg blonk")
-            self.assertIsInstance(headerField.fieldValue, basestring)
-            self.assertEqual(headerField.fieldValue, "baz blarg blonk", line)
-            headerField = SIPHeaderFieldFactory().nextForFieldNameAndFieldValue("Accept-Encoding", "foo bar baz blarg")
-            self.assertTrue(headerField.isValid, line)
-            headerField.fieldValue = "baz blarg blonk"
-            self.assertTrue(headerField.isValid, line)
+            headerField = SIPHeaderFieldFactory().nextForFieldNameAndFieldValue(self.canonicalFieldNames[0], "foo bar baz blarg")
             self.assertTrue(headerField.isAcceptEncoding, line)
-            self.assertTrue(headerField.isKnown, line)
-            self.assertEqual(headerField.rawString, "Accept-Encoding: baz blarg blonk")
-            self.assertIsInstance(headerField.fieldValue, basestring)
-            self.assertEqual(headerField.fieldValue, "baz blarg blonk", line)
-class TestSIPHeaderFieldFactoryForAcceptLanguage(TestCase):
+
+
+class TestSIPHeaderFieldFactoryForAcceptLanguage(AbstractSIPHeaderFieldFromFactoryTestCase):
     @property
-    def canonicalStrings(self):
-        return [
-            'Accept-Language: baz blarg blonk',
-            'accept-language: baz blarg blonk',
-            'ACCEPT-LANGUAGE: baz blarg blonk',
-            'Accept-Language:      baz blarg blonk',
-            'accept-language:      baz blarg blonk',
-            'ACCEPT-LANGUAGE:      baz blarg blonk',
-            'Accept-Language     : baz blarg blonk',
-            'accept-language     : baz blarg blonk',
-            'ACCEPT-LANGUAGE     : baz blarg blonk',
-            'Accept-Language     :      baz blarg blonk',
-            'accept-language     :      baz blarg blonk',
-            'ACCEPT-LANGUAGE     :      baz blarg blonk',
-        ]
+    def canonicalFieldNames(self):
+        return['Accept-Language', 'ACCEPT-Language', 'accept-language', 'Accept-language', 'accept-Language']
+
+    @property
+    def sipHeaderFieldClassUnderTest(self):
+        return AcceptLanguageSIPHeaderField
 
     def test_parsing(self):
+        self.basic_test_parsing()
         for line in self.canonicalStrings:
             headerField = SIPHeaderFieldFactory().nextForString(line)
-            self.assertTrue(headerField.isValid, line)
             self.assertTrue(headerField.isAcceptLanguage, line)
-            self.assertTrue(headerField.isKnown, line)
-            self.assertEqual(headerField.rawString, line, line)
-            self.assertIsInstance(headerField.fieldValue, basestring, line)
-            self.assertEqual(headerField.fieldValue, "baz blarg blonk", line)
             stringio = StringIO(line + '\r\n')
             headerField = SIPHeaderFieldFactory().allForStringIO(stringio)[0]
-            self.assertTrue(headerField.isValid, line)
             self.assertTrue(headerField.isAcceptLanguage, line)
-            self.assertTrue(headerField.isKnown, line)
-            self.assertEqual(headerField.rawString, line, line)
-            self.assertIsInstance(headerField.fieldValue, basestring, line)
-            self.assertEqual(headerField.fieldValue, "baz blarg blonk", line)
             stringio.close()
-            headerField = SIPHeaderFieldFactory().nextForFieldName("Accept-Language")
-            self.assertEqual(headerField.fieldValue, "", line)
-            # Hmm, really?  An empty but non-None fieldValue is valid?
-            # self.assertFalse(headerField.isValid, line)
-            self.assertTrue(headerField.isValid, line)
-            headerField.fieldValue = "baz blarg blonk"
-            self.assertTrue(headerField.isValid, line)
+            headerField = SIPHeaderFieldFactory().nextForFieldName(self.canonicalFieldNames[0])
             self.assertTrue(headerField.isAcceptLanguage, line)
-            self.assertTrue(headerField.isKnown, line)
-            self.assertEqual(headerField.rawString, "Accept-Language: baz blarg blonk")
-            self.assertIsInstance(headerField.fieldValue, basestring)
-            self.assertEqual(headerField.fieldValue, "baz blarg blonk", line)
-            headerField = SIPHeaderFieldFactory().nextForFieldNameAndFieldValue("Accept-Language", "foo bar baz blarg")
-            self.assertTrue(headerField.isValid, line)
-            headerField.fieldValue = "baz blarg blonk"
-            self.assertTrue(headerField.isValid, line)
+            headerField = SIPHeaderFieldFactory().nextForFieldNameAndFieldValue(self.canonicalFieldNames[0], "foo bar baz blarg")
             self.assertTrue(headerField.isAcceptLanguage, line)
-            self.assertTrue(headerField.isKnown, line)
-            self.assertEqual(headerField.rawString, "Accept-Language: baz blarg blonk")
-            self.assertIsInstance(headerField.fieldValue, basestring)
-            self.assertEqual(headerField.fieldValue, "baz blarg blonk", line)
-class TestSIPHeaderFieldFactoryForAllow(TestCase):
+
+
+class TestSIPHeaderFieldFactoryForAllow(AbstractSIPHeaderFieldFromFactoryTestCase):
     @property
-    def canonicalStrings(self):
-        return [
-            'Allow: baz blarg blonk',
-            'allow: baz blarg blonk',
-            'ALLOW: baz blarg blonk',
-            'Allow:      baz blarg blonk',
-            'allow:      baz blarg blonk',
-            'ALLOW:      baz blarg blonk',
-            'Allow     : baz blarg blonk',
-            'allow     : baz blarg blonk',
-            'ALLOW     : baz blarg blonk',
-            'Allow     :      baz blarg blonk',
-            'allow     :      baz blarg blonk',
-            'ALLOW     :      baz blarg blonk',
-        ]
+    def canonicalFieldNames(self):
+        return['Allow', 'ALLOW', 'allow']
+
+    @property
+    def sipHeaderFieldClassUnderTest(self):
+        return AllowSIPHeaderField
 
     def test_parsing(self):
+        self.basic_test_parsing()
         for line in self.canonicalStrings:
             headerField = SIPHeaderFieldFactory().nextForString(line)
-            self.assertTrue(headerField.isValid, line)
             self.assertTrue(headerField.isAllow, line)
-            self.assertTrue(headerField.isKnown, line)
-            self.assertEqual(headerField.rawString, line, line)
-            self.assertIsInstance(headerField.fieldValue, basestring, line)
-            self.assertEqual(headerField.fieldValue, "baz blarg blonk", line)
             stringio = StringIO(line + '\r\n')
             headerField = SIPHeaderFieldFactory().allForStringIO(stringio)[0]
-            self.assertTrue(headerField.isValid, line)
             self.assertTrue(headerField.isAllow, line)
-            self.assertTrue(headerField.isKnown, line)
-            self.assertEqual(headerField.rawString, line, line)
-            self.assertIsInstance(headerField.fieldValue, basestring, line)
-            self.assertEqual(headerField.fieldValue, "baz blarg blonk", line)
             stringio.close()
-            headerField = SIPHeaderFieldFactory().nextForFieldName("Allow")
-            self.assertEqual(headerField.fieldValue, "", line)
-            # Hmm, really?  An empty but non-None fieldValue is valid?
-            # self.assertFalse(headerField.isValid, line)
-            self.assertTrue(headerField.isValid, line)
-            headerField.fieldValue = "baz blarg blonk"
-            self.assertTrue(headerField.isValid, line)
+            headerField = SIPHeaderFieldFactory().nextForFieldName(self.canonicalFieldNames[0])
             self.assertTrue(headerField.isAllow, line)
-            self.assertTrue(headerField.isKnown, line)
-            self.assertEqual(headerField.rawString, "Allow: baz blarg blonk")
-            self.assertIsInstance(headerField.fieldValue, basestring)
-            self.assertEqual(headerField.fieldValue, "baz blarg blonk", line)
-            headerField = SIPHeaderFieldFactory().nextForFieldNameAndFieldValue("Allow", "foo bar baz blarg")
-            self.assertTrue(headerField.isValid, line)
-            headerField.fieldValue = "baz blarg blonk"
-            self.assertTrue(headerField.isValid, line)
+            headerField = SIPHeaderFieldFactory().nextForFieldNameAndFieldValue(self.canonicalFieldNames[0], "foo bar baz blarg")
             self.assertTrue(headerField.isAllow, line)
-            self.assertTrue(headerField.isKnown, line)
-            self.assertEqual(headerField.rawString, "Allow: baz blarg blonk")
-            self.assertIsInstance(headerField.fieldValue, basestring)
-            self.assertEqual(headerField.fieldValue, "baz blarg blonk", line)
-class TestSIPHeaderFieldFactoryForAuthorization(TestCase):
+
+
+class TestSIPHeaderFieldFactoryForAuthorization(AbstractSIPHeaderFieldFromFactoryTestCase):
     @property
-    def canonicalStrings(self):
-        return [
-            'Authorization: baz blarg blonk',
-            'authorization: baz blarg blonk',
-            'AUTHORIZATION: baz blarg blonk',
-            'Authorization:      baz blarg blonk',
-            'authorization:      baz blarg blonk',
-            'AUTHORIZATION:      baz blarg blonk',
-            'Authorization     : baz blarg blonk',
-            'authorization     : baz blarg blonk',
-            'AUTHORIZATION     : baz blarg blonk',
-            'Authorization     :      baz blarg blonk',
-            'authorization     :      baz blarg blonk',
-            'AUTHORIZATION     :      baz blarg blonk',
-        ]
+    def canonicalFieldNames(self):
+        return['Authorization', 'AUTHORIZATION', 'authorization']
+
+    @property
+    def sipHeaderFieldClassUnderTest(self):
+        return AuthorizationSIPHeaderField
 
     def test_parsing(self):
+        self.basic_test_parsing()
         for line in self.canonicalStrings:
             headerField = SIPHeaderFieldFactory().nextForString(line)
-            self.assertTrue(headerField.isValid, line)
             self.assertTrue(headerField.isAuthorization, line)
-            self.assertTrue(headerField.isKnown, line)
-            self.assertEqual(headerField.rawString, line, line)
-            self.assertIsInstance(headerField.fieldValue, basestring, line)
-            self.assertEqual(headerField.fieldValue, "baz blarg blonk", line)
             stringio = StringIO(line + '\r\n')
             headerField = SIPHeaderFieldFactory().allForStringIO(stringio)[0]
-            self.assertTrue(headerField.isValid, line)
             self.assertTrue(headerField.isAuthorization, line)
-            self.assertTrue(headerField.isKnown, line)
-            self.assertEqual(headerField.rawString, line, line)
-            self.assertIsInstance(headerField.fieldValue, basestring, line)
-            self.assertEqual(headerField.fieldValue, "baz blarg blonk", line)
             stringio.close()
-            headerField = SIPHeaderFieldFactory().nextForFieldName("Authorization")
-            self.assertEqual(headerField.fieldValue, "", line)
-            # Hmm, really?  An empty but non-None fieldValue is valid?
-            # self.assertFalse(headerField.isValid, line)
-            self.assertTrue(headerField.isValid, line)
-            headerField.fieldValue = "baz blarg blonk"
-            self.assertTrue(headerField.isValid, line)
+            headerField = SIPHeaderFieldFactory().nextForFieldName(self.canonicalFieldNames[0])
             self.assertTrue(headerField.isAuthorization, line)
-            self.assertTrue(headerField.isKnown, line)
-            self.assertEqual(headerField.rawString, "Authorization: baz blarg blonk")
-            self.assertIsInstance(headerField.fieldValue, basestring)
-            self.assertEqual(headerField.fieldValue, "baz blarg blonk", line)
-            headerField = SIPHeaderFieldFactory().nextForFieldNameAndFieldValue("Authorization", "foo bar baz blarg")
-            self.assertTrue(headerField.isValid, line)
-            headerField.fieldValue = "baz blarg blonk"
-            self.assertTrue(headerField.isValid, line)
+            headerField = SIPHeaderFieldFactory().nextForFieldNameAndFieldValue(self.canonicalFieldNames[0], "foo bar baz blarg")
             self.assertTrue(headerField.isAuthorization, line)
-            self.assertTrue(headerField.isKnown, line)
-            self.assertEqual(headerField.rawString, "Authorization: baz blarg blonk")
-            self.assertIsInstance(headerField.fieldValue, basestring)
-            self.assertEqual(headerField.fieldValue, "baz blarg blonk", line)
-class TestSIPHeaderFieldFactoryForCSeq(TestCase):
+
+
+class TestSIPHeaderFieldFactoryForCSeq(AbstractSIPHeaderFieldFromFactoryTestCase):
     @property
-    def canonicalStrings(self):
-        return [
-            'CSeq: baz blarg blonk',
-            'cseq: baz blarg blonk',
-            'CSEQ: baz blarg blonk',
-            'CSeq:      baz blarg blonk',
-            'cseq:      baz blarg blonk',
-            'CSEQ:      baz blarg blonk',
-            'CSeq     : baz blarg blonk',
-            'cseq     : baz blarg blonk',
-            'CSEQ     : baz blarg blonk',
-            'CSeq     :      baz blarg blonk',
-            'cseq     :      baz blarg blonk',
-            'CSEQ     :      baz blarg blonk',
-        ]
+    def canonicalFieldNames(self):
+        return['CSeq', 'CSEQ', 'cseq']
+
+    @property
+    def sipHeaderFieldClassUnderTest(self):
+        return CSeqSIPHeaderField
 
     def test_parsing(self):
+        self.basic_test_parsing()
         for line in self.canonicalStrings:
             headerField = SIPHeaderFieldFactory().nextForString(line)
-            self.assertTrue(headerField.isValid, line)
             self.assertTrue(headerField.isCSeq, line)
-            self.assertTrue(headerField.isKnown, line)
-            self.assertEqual(headerField.rawString, line, line)
-            self.assertIsInstance(headerField.fieldValue, basestring, line)
-            self.assertEqual(headerField.fieldValue, "baz blarg blonk", line)
             stringio = StringIO(line + '\r\n')
             headerField = SIPHeaderFieldFactory().allForStringIO(stringio)[0]
-            self.assertTrue(headerField.isValid, line)
             self.assertTrue(headerField.isCSeq, line)
-            self.assertTrue(headerField.isKnown, line)
-            self.assertEqual(headerField.rawString, line, line)
-            self.assertIsInstance(headerField.fieldValue, basestring, line)
-            self.assertEqual(headerField.fieldValue, "baz blarg blonk", line)
             stringio.close()
-            headerField = SIPHeaderFieldFactory().nextForFieldName("CSeq")
-            self.assertEqual(headerField.fieldValue, "", line)
-            # Hmm, really?  An empty but non-None fieldValue is valid?
-            # self.assertFalse(headerField.isValid, line)
-            self.assertTrue(headerField.isValid, line)
-            headerField.fieldValue = "baz blarg blonk"
-            self.assertTrue(headerField.isValid, line)
+            headerField = SIPHeaderFieldFactory().nextForFieldName(self.canonicalFieldNames[0])
             self.assertTrue(headerField.isCSeq, line)
-            self.assertTrue(headerField.isKnown, line)
-            self.assertEqual(headerField.rawString, "CSeq: baz blarg blonk")
-            self.assertIsInstance(headerField.fieldValue, basestring)
-            self.assertEqual(headerField.fieldValue, "baz blarg blonk", line)
-            headerField = SIPHeaderFieldFactory().nextForFieldNameAndFieldValue("CSeq", "foo bar baz blarg")
-            self.assertTrue(headerField.isValid, line)
-            headerField.fieldValue = "baz blarg blonk"
-            self.assertTrue(headerField.isValid, line)
+            headerField = SIPHeaderFieldFactory().nextForFieldNameAndFieldValue(self.canonicalFieldNames[0], "foo bar baz blarg")
             self.assertTrue(headerField.isCSeq, line)
-            self.assertTrue(headerField.isKnown, line)
-            self.assertEqual(headerField.rawString, "CSeq: baz blarg blonk")
-            self.assertIsInstance(headerField.fieldValue, basestring)
-            self.assertEqual(headerField.fieldValue, "baz blarg blonk", line)
-class TestSIPHeaderFieldFactoryForCallID(TestCase):
+
+
+class TestSIPHeaderFieldFactoryForCallID(AbstractSIPHeaderFieldFromFactoryTestCase):
     @property
-    def canonicalStrings(self):
-        return [
-            'Call-ID: baz blarg blonk',
-            'call-id: baz blarg blonk',
-            'CALL-ID: baz blarg blonk',
-            'Call-ID:      baz blarg blonk',
-            'call-id:      baz blarg blonk',
-            'CALL-ID:      baz blarg blonk',
-            'Call-ID     : baz blarg blonk',
-            'call-id     : baz blarg blonk',
-            'CALL-ID     : baz blarg blonk',
-            'Call-ID     :      baz blarg blonk',
-            'call-id     :      baz blarg blonk',
-            'CALL-ID     :      baz blarg blonk',
-        ]
+    def canonicalFieldNames(self):
+        return['Call-ID', 'CALL-Id', 'call-id', 'Call-id', 'call-ID']
+
+    @property
+    def sipHeaderFieldClassUnderTest(self):
+        return CallIDSIPHeaderField
 
     def test_parsing(self):
+        self.basic_test_parsing()
         for line in self.canonicalStrings:
             headerField = SIPHeaderFieldFactory().nextForString(line)
-            self.assertTrue(headerField.isValid, line)
             self.assertTrue(headerField.isCallID, line)
-            self.assertTrue(headerField.isKnown, line)
-            self.assertEqual(headerField.rawString, line, line)
-            self.assertIsInstance(headerField.fieldValue, basestring, line)
-            self.assertEqual(headerField.fieldValue, "baz blarg blonk", line)
             stringio = StringIO(line + '\r\n')
             headerField = SIPHeaderFieldFactory().allForStringIO(stringio)[0]
-            self.assertTrue(headerField.isValid, line)
             self.assertTrue(headerField.isCallID, line)
-            self.assertTrue(headerField.isKnown, line)
-            self.assertEqual(headerField.rawString, line, line)
-            self.assertIsInstance(headerField.fieldValue, basestring, line)
-            self.assertEqual(headerField.fieldValue, "baz blarg blonk", line)
             stringio.close()
-            headerField = SIPHeaderFieldFactory().nextForFieldName("Call-ID")
-            self.assertEqual(headerField.fieldValue, "", line)
-            # Hmm, really?  An empty but non-None fieldValue is valid?
-            # self.assertFalse(headerField.isValid, line)
-            self.assertTrue(headerField.isValid, line)
-            headerField.fieldValue = "baz blarg blonk"
-            self.assertTrue(headerField.isValid, line)
+            headerField = SIPHeaderFieldFactory().nextForFieldName(self.canonicalFieldNames[0])
             self.assertTrue(headerField.isCallID, line)
-            self.assertTrue(headerField.isKnown, line)
-            self.assertEqual(headerField.rawString, "Call-ID: baz blarg blonk")
-            self.assertIsInstance(headerField.fieldValue, basestring)
-            self.assertEqual(headerField.fieldValue, "baz blarg blonk", line)
-            headerField = SIPHeaderFieldFactory().nextForFieldNameAndFieldValue("Call-ID", "foo bar baz blarg")
-            self.assertTrue(headerField.isValid, line)
-            headerField.fieldValue = "baz blarg blonk"
-            self.assertTrue(headerField.isValid, line)
+            headerField = SIPHeaderFieldFactory().nextForFieldNameAndFieldValue(self.canonicalFieldNames[0], "foo bar baz blarg")
             self.assertTrue(headerField.isCallID, line)
-            self.assertTrue(headerField.isKnown, line)
-            self.assertEqual(headerField.rawString, "Call-ID: baz blarg blonk")
-            self.assertIsInstance(headerField.fieldValue, basestring)
-            self.assertEqual(headerField.fieldValue, "baz blarg blonk", line)
-class TestSIPHeaderFieldFactoryForCallInfo(TestCase):
+
+class TestSIPHeaderFieldFactoryForCallInfo(AbstractSIPHeaderFieldFromFactoryTestCase):
     @property
-    def canonicalStrings(self):
-        return [
-            'Call-Info: baz blarg blonk',
-            'call-info: baz blarg blonk',
-            'CALL-INFO: baz blarg blonk',
-            'Call-Info:      baz blarg blonk',
-            'call-info:      baz blarg blonk',
-            'CALL-INFO:      baz blarg blonk',
-            'Call-Info     : baz blarg blonk',
-            'call-info     : baz blarg blonk',
-            'CALL-INFO     : baz blarg blonk',
-            'Call-Info     :      baz blarg blonk',
-            'call-info     :      baz blarg blonk',
-            'CALL-INFO     :      baz blarg blonk',
-        ]
+    def canonicalFieldNames(self):
+        return['Call-Info', 'CALL-Info', 'call-info', 'Call-info', 'call-Info']
+
+    @property
+    def sipHeaderFieldClassUnderTest(self):
+        return CallInfoSIPHeaderField
 
     def test_parsing(self):
+        self.basic_test_parsing()
         for line in self.canonicalStrings:
             headerField = SIPHeaderFieldFactory().nextForString(line)
-            self.assertTrue(headerField.isValid, line)
             self.assertTrue(headerField.isCallInfo, line)
-            self.assertTrue(headerField.isKnown, line)
-            self.assertEqual(headerField.rawString, line, line)
-            self.assertIsInstance(headerField.fieldValue, basestring, line)
-            self.assertEqual(headerField.fieldValue, "baz blarg blonk", line)
             stringio = StringIO(line + '\r\n')
             headerField = SIPHeaderFieldFactory().allForStringIO(stringio)[0]
-            self.assertTrue(headerField.isValid, line)
             self.assertTrue(headerField.isCallInfo, line)
-            self.assertTrue(headerField.isKnown, line)
-            self.assertEqual(headerField.rawString, line, line)
-            self.assertIsInstance(headerField.fieldValue, basestring, line)
-            self.assertEqual(headerField.fieldValue, "baz blarg blonk", line)
             stringio.close()
-            headerField = SIPHeaderFieldFactory().nextForFieldName("Call-Info")
-            self.assertEqual(headerField.fieldValue, "", line)
-            # Hmm, really?  An empty but non-None fieldValue is valid?
-            # self.assertFalse(headerField.isValid, line)
-            self.assertTrue(headerField.isValid, line)
-            headerField.fieldValue = "baz blarg blonk"
-            self.assertTrue(headerField.isValid, line)
+            headerField = SIPHeaderFieldFactory().nextForFieldName(self.canonicalFieldNames[0])
             self.assertTrue(headerField.isCallInfo, line)
-            self.assertTrue(headerField.isKnown, line)
-            self.assertEqual(headerField.rawString, "Call-Info: baz blarg blonk")
-            self.assertIsInstance(headerField.fieldValue, basestring)
-            self.assertEqual(headerField.fieldValue, "baz blarg blonk", line)
-            headerField = SIPHeaderFieldFactory().nextForFieldNameAndFieldValue("Call-Info", "foo bar baz blarg")
-            self.assertTrue(headerField.isValid, line)
-            headerField.fieldValue = "baz blarg blonk"
-            self.assertTrue(headerField.isValid, line)
+            headerField = SIPHeaderFieldFactory().nextForFieldNameAndFieldValue(self.canonicalFieldNames[0], "foo bar baz blarg")
             self.assertTrue(headerField.isCallInfo, line)
-            self.assertTrue(headerField.isKnown, line)
-            self.assertEqual(headerField.rawString, "Call-Info: baz blarg blonk")
-            self.assertIsInstance(headerField.fieldValue, basestring)
-            self.assertEqual(headerField.fieldValue, "baz blarg blonk", line)
-class TestSIPHeaderFieldFactoryForContact(TestCase):
+
+class TestSIPHeaderFieldFactoryForContact(AbstractSIPHeaderFieldFromFactoryTestCase):
     @property
-    def canonicalStrings(self):
-        return [
-            'Contact: baz blarg blonk',
-            'contact: baz blarg blonk',
-            'CONTACT: baz blarg blonk',
-            'Contact:      baz blarg blonk',
-            'contact:      baz blarg blonk',
-            'CONTACT:      baz blarg blonk',
-            'Contact     : baz blarg blonk',
-            'contact     : baz blarg blonk',
-            'CONTACT     : baz blarg blonk',
-            'Contact     :      baz blarg blonk',
-            'contact     :      baz blarg blonk',
-            'CONTACT     :      baz blarg blonk',
-        ]
+    def canonicalFieldNames(self):
+        return['Contact', 'CONTACT', 'contact']
+
+    @property
+    def sipHeaderFieldClassUnderTest(self):
+        return ContactSIPHeaderField
 
     def test_parsing(self):
+        self.basic_test_parsing()
         for line in self.canonicalStrings:
             headerField = SIPHeaderFieldFactory().nextForString(line)
-            self.assertTrue(headerField.isValid, line)
             self.assertTrue(headerField.isContact, line)
-            self.assertTrue(headerField.isKnown, line)
-            self.assertEqual(headerField.rawString, line, line)
-            self.assertIsInstance(headerField.fieldValue, basestring, line)
-            self.assertEqual(headerField.fieldValue, "baz blarg blonk", line)
             stringio = StringIO(line + '\r\n')
             headerField = SIPHeaderFieldFactory().allForStringIO(stringio)[0]
-            self.assertTrue(headerField.isValid, line)
             self.assertTrue(headerField.isContact, line)
-            self.assertTrue(headerField.isKnown, line)
-            self.assertEqual(headerField.rawString, line, line)
-            self.assertIsInstance(headerField.fieldValue, basestring, line)
-            self.assertEqual(headerField.fieldValue, "baz blarg blonk", line)
             stringio.close()
-            headerField = SIPHeaderFieldFactory().nextForFieldName("Contact")
-            self.assertEqual(headerField.fieldValue, "", line)
-            # Hmm, really?  An empty but non-None fieldValue is valid?
-            # self.assertFalse(headerField.isValid, line)
-            self.assertTrue(headerField.isValid, line)
-            headerField.fieldValue = "baz blarg blonk"
-            self.assertTrue(headerField.isValid, line)
+            headerField = SIPHeaderFieldFactory().nextForFieldName(self.canonicalFieldNames[0])
             self.assertTrue(headerField.isContact, line)
-            self.assertTrue(headerField.isKnown, line)
-            self.assertEqual(headerField.rawString, "Contact: baz blarg blonk")
-            self.assertIsInstance(headerField.fieldValue, basestring)
-            self.assertEqual(headerField.fieldValue, "baz blarg blonk", line)
-            headerField = SIPHeaderFieldFactory().nextForFieldNameAndFieldValue("Contact", "foo bar baz blarg")
-            self.assertTrue(headerField.isValid, line)
-            headerField.fieldValue = "baz blarg blonk"
-            self.assertTrue(headerField.isValid, line)
+            headerField = SIPHeaderFieldFactory().nextForFieldNameAndFieldValue(self.canonicalFieldNames[0], "foo bar baz blarg")
             self.assertTrue(headerField.isContact, line)
-            self.assertTrue(headerField.isKnown, line)
-            self.assertEqual(headerField.rawString, "Contact: baz blarg blonk")
-            self.assertIsInstance(headerField.fieldValue, basestring)
-            self.assertEqual(headerField.fieldValue, "baz blarg blonk", line)
-class TestSIPHeaderFieldFactoryForContentDisposition(TestCase):
+
+class TestSIPHeaderFieldFactoryForContentDisposition(AbstractSIPHeaderFieldFromFactoryTestCase):
     @property
-    def canonicalStrings(self):
-        return [
-            'Content-Disposition: baz blarg blonk',
-            'content-disposition: baz blarg blonk',
-            'CONTENT-DISPOSITION: baz blarg blonk',
-            'Content-Disposition:      baz blarg blonk',
-            'content-disposition:      baz blarg blonk',
-            'CONTENT-DISPOSITION:      baz blarg blonk',
-            'Content-Disposition     : baz blarg blonk',
-            'content-disposition     : baz blarg blonk',
-            'CONTENT-DISPOSITION     : baz blarg blonk',
-            'Content-Disposition     :      baz blarg blonk',
-            'content-disposition     :      baz blarg blonk',
-            'CONTENT-DISPOSITION     :      baz blarg blonk',
-        ]
+    def canonicalFieldNames(self):
+        return['Content-Disposition', 'CONTENT-Disposition', 'content-disposition', 'Content-disposition', 'content-Disposition']
+
+    @property
+    def sipHeaderFieldClassUnderTest(self):
+        return ContentDispositionSIPHeaderField
 
     def test_parsing(self):
+        self.basic_test_parsing()
         for line in self.canonicalStrings:
             headerField = SIPHeaderFieldFactory().nextForString(line)
-            self.assertTrue(headerField.isValid, line)
             self.assertTrue(headerField.isContentDisposition, line)
-            self.assertTrue(headerField.isKnown, line)
-            self.assertEqual(headerField.rawString, line, line)
-            self.assertIsInstance(headerField.fieldValue, basestring, line)
-            self.assertEqual(headerField.fieldValue, "baz blarg blonk", line)
             stringio = StringIO(line + '\r\n')
             headerField = SIPHeaderFieldFactory().allForStringIO(stringio)[0]
-            self.assertTrue(headerField.isValid, line)
             self.assertTrue(headerField.isContentDisposition, line)
-            self.assertTrue(headerField.isKnown, line)
-            self.assertEqual(headerField.rawString, line, line)
-            self.assertIsInstance(headerField.fieldValue, basestring, line)
-            self.assertEqual(headerField.fieldValue, "baz blarg blonk", line)
             stringio.close()
-            headerField = SIPHeaderFieldFactory().nextForFieldName("Content-Disposition")
-            self.assertEqual(headerField.fieldValue, "", line)
-            # Hmm, really?  An empty but non-None fieldValue is valid?
-            # self.assertFalse(headerField.isValid, line)
-            self.assertTrue(headerField.isValid, line)
-            headerField.fieldValue = "baz blarg blonk"
-            self.assertTrue(headerField.isValid, line)
+            headerField = SIPHeaderFieldFactory().nextForFieldName(self.canonicalFieldNames[0])
             self.assertTrue(headerField.isContentDisposition, line)
-            self.assertTrue(headerField.isKnown, line)
-            self.assertEqual(headerField.rawString, "Content-Disposition: baz blarg blonk")
-            self.assertIsInstance(headerField.fieldValue, basestring)
-            self.assertEqual(headerField.fieldValue, "baz blarg blonk", line)
-            headerField = SIPHeaderFieldFactory().nextForFieldNameAndFieldValue("Content-Disposition", "foo bar baz blarg")
-            self.assertTrue(headerField.isValid, line)
-            headerField.fieldValue = "baz blarg blonk"
-            self.assertTrue(headerField.isValid, line)
+            headerField = SIPHeaderFieldFactory().nextForFieldNameAndFieldValue(self.canonicalFieldNames[0], "foo bar baz blarg")
             self.assertTrue(headerField.isContentDisposition, line)
-            self.assertTrue(headerField.isKnown, line)
-            self.assertEqual(headerField.rawString, "Content-Disposition: baz blarg blonk")
-            self.assertIsInstance(headerField.fieldValue, basestring)
-            self.assertEqual(headerField.fieldValue, "baz blarg blonk", line)
-class TestSIPHeaderFieldFactoryForContentType(TestCase):
+
+class TestSIPHeaderFieldFactoryForContentType(AbstractSIPHeaderFieldFromFactoryTestCase):
     @property
-    def canonicalStrings(self):
-        return [
-            'Content-Type: baz blarg blonk',
-            'content-type: baz blarg blonk',
-            'CONTENT-TYPE: baz blarg blonk',
-            'Content-Type:      baz blarg blonk',
-            'content-type:      baz blarg blonk',
-            'CONTENT-TYPE:      baz blarg blonk',
-            'Content-Type     : baz blarg blonk',
-            'content-type     : baz blarg blonk',
-            'CONTENT-TYPE     : baz blarg blonk',
-            'Content-Type     :      baz blarg blonk',
-            'content-type     :      baz blarg blonk',
-            'CONTENT-TYPE     :      baz blarg blonk',
-        ]
+    def canonicalFieldNames(self):
+        return['Content-Type', 'CONTENT-Type', 'content-type', 'Content-type', 'content-Type']
+
+    @property
+    def sipHeaderFieldClassUnderTest(self):
+        return ContentTypeSIPHeaderField
 
     def test_parsing(self):
+        self.basic_test_parsing()
         for line in self.canonicalStrings:
             headerField = SIPHeaderFieldFactory().nextForString(line)
-            self.assertTrue(headerField.isValid, line)
             self.assertTrue(headerField.isContentType, line)
-            self.assertTrue(headerField.isKnown, line)
-            self.assertEqual(headerField.rawString, line, line)
-            self.assertIsInstance(headerField.fieldValue, basestring, line)
-            self.assertEqual(headerField.fieldValue, "baz blarg blonk", line)
             stringio = StringIO(line + '\r\n')
             headerField = SIPHeaderFieldFactory().allForStringIO(stringio)[0]
-            self.assertTrue(headerField.isValid, line)
             self.assertTrue(headerField.isContentType, line)
-            self.assertTrue(headerField.isKnown, line)
-            self.assertEqual(headerField.rawString, line, line)
-            self.assertIsInstance(headerField.fieldValue, basestring, line)
-            self.assertEqual(headerField.fieldValue, "baz blarg blonk", line)
             stringio.close()
-            headerField = SIPHeaderFieldFactory().nextForFieldName("Content-Type")
-            self.assertEqual(headerField.fieldValue, "", line)
-            # Hmm, really?  An empty but non-None fieldValue is valid?
-            # self.assertFalse(headerField.isValid, line)
-            self.assertTrue(headerField.isValid, line)
-            headerField.fieldValue = "baz blarg blonk"
-            self.assertTrue(headerField.isValid, line)
+            headerField = SIPHeaderFieldFactory().nextForFieldName(self.canonicalFieldNames[0])
             self.assertTrue(headerField.isContentType, line)
-            self.assertTrue(headerField.isKnown, line)
-            self.assertEqual(headerField.rawString, "Content-Type: baz blarg blonk")
-            self.assertIsInstance(headerField.fieldValue, basestring)
-            self.assertEqual(headerField.fieldValue, "baz blarg blonk", line)
-            headerField = SIPHeaderFieldFactory().nextForFieldNameAndFieldValue("Content-Type", "foo bar baz blarg")
-            self.assertTrue(headerField.isValid, line)
-            headerField.fieldValue = "baz blarg blonk"
-            self.assertTrue(headerField.isValid, line)
+            headerField = SIPHeaderFieldFactory().nextForFieldNameAndFieldValue(self.canonicalFieldNames[0], "foo bar baz blarg")
             self.assertTrue(headerField.isContentType, line)
-            self.assertTrue(headerField.isKnown, line)
-            self.assertEqual(headerField.rawString, "Content-Type: baz blarg blonk")
-            self.assertIsInstance(headerField.fieldValue, basestring)
-            self.assertEqual(headerField.fieldValue, "baz blarg blonk", line)
-class TestSIPHeaderFieldFactoryForDate(TestCase):
+
+class TestSIPHeaderFieldFactoryForDate(AbstractSIPHeaderFieldFromFactoryTestCase):
     @property
-    def canonicalStrings(self):
-        return [
-            'Date: baz blarg blonk',
-            'date: baz blarg blonk',
-            'DATE: baz blarg blonk',
-            'Date:      baz blarg blonk',
-            'date:      baz blarg blonk',
-            'DATE:      baz blarg blonk',
-            'Date     : baz blarg blonk',
-            'date     : baz blarg blonk',
-            'DATE     : baz blarg blonk',
-            'Date     :      baz blarg blonk',
-            'date     :      baz blarg blonk',
-            'DATE     :      baz blarg blonk',
-        ]
+    def canonicalFieldNames(self):
+        return['Date', 'DATE', 'date']
+
+    @property
+    def sipHeaderFieldClassUnderTest(self):
+        return DateSIPHeaderField
 
     def test_parsing(self):
+        self.basic_test_parsing()
         for line in self.canonicalStrings:
             headerField = SIPHeaderFieldFactory().nextForString(line)
-            self.assertTrue(headerField.isValid, line)
             self.assertTrue(headerField.isDate, line)
-            self.assertTrue(headerField.isKnown, line)
-            self.assertEqual(headerField.rawString, line, line)
-            self.assertIsInstance(headerField.fieldValue, basestring, line)
-            self.assertEqual(headerField.fieldValue, "baz blarg blonk", line)
             stringio = StringIO(line + '\r\n')
             headerField = SIPHeaderFieldFactory().allForStringIO(stringio)[0]
-            self.assertTrue(headerField.isValid, line)
             self.assertTrue(headerField.isDate, line)
-            self.assertTrue(headerField.isKnown, line)
-            self.assertEqual(headerField.rawString, line, line)
-            self.assertIsInstance(headerField.fieldValue, basestring, line)
-            self.assertEqual(headerField.fieldValue, "baz blarg blonk", line)
             stringio.close()
-            headerField = SIPHeaderFieldFactory().nextForFieldName("Date")
-            self.assertEqual(headerField.fieldValue, "", line)
-            # Hmm, really?  An empty but non-None fieldValue is valid?
-            # self.assertFalse(headerField.isValid, line)
-            self.assertTrue(headerField.isValid, line)
-            headerField.fieldValue = "baz blarg blonk"
-            self.assertTrue(headerField.isValid, line)
+            headerField = SIPHeaderFieldFactory().nextForFieldName(self.canonicalFieldNames[0])
             self.assertTrue(headerField.isDate, line)
-            self.assertTrue(headerField.isKnown, line)
-            self.assertEqual(headerField.rawString, "Date: baz blarg blonk")
-            self.assertIsInstance(headerField.fieldValue, basestring)
-            self.assertEqual(headerField.fieldValue, "baz blarg blonk", line)
-            headerField = SIPHeaderFieldFactory().nextForFieldNameAndFieldValue("Date", "foo bar baz blarg")
-            self.assertTrue(headerField.isValid, line)
-            headerField.fieldValue = "baz blarg blonk"
-            self.assertTrue(headerField.isValid, line)
+            headerField = SIPHeaderFieldFactory().nextForFieldNameAndFieldValue(self.canonicalFieldNames[0], "foo bar baz blarg")
             self.assertTrue(headerField.isDate, line)
-            self.assertTrue(headerField.isKnown, line)
-            self.assertEqual(headerField.rawString, "Date: baz blarg blonk")
-            self.assertIsInstance(headerField.fieldValue, basestring)
-            self.assertEqual(headerField.fieldValue, "baz blarg blonk", line)
-class TestSIPHeaderFieldFactoryForExpires(TestCase):
+
+class TestSIPHeaderFieldFactoryForExpires(AbstractIntegerSIPHeaderFieldFromFactoryTestCase):
     @property
-    def canonicalStrings(self):
-        return [
-            'Expires: 489',
-            'expires: 489',
-            'EXPIRES: 489',
-            'Expires:      489',
-            'expires:      489',
-            'EXPIRES:      489',
-            'Expires     : 489',
-            'expires     : 489',
-            'EXPIRES     : 489',
-            'Expires     :      489',
-            'expires     :      489',
-            'EXPIRES     :      489',
-        ]
+    def canonicalFieldNames(self):
+        return['Expires', 'EXPIRES', 'expires']
+
+    @property
+    def sipHeaderFieldClassUnderTest(self):
+        return ExpiresSIPHeaderField
 
     def test_parsing(self):
+        self.basic_test_parsing()
         for line in self.canonicalStrings:
             headerField = SIPHeaderFieldFactory().nextForString(line)
-            self.assertTrue(headerField.isValid, line)
             self.assertTrue(headerField.isExpires, line)
-            self.assertTrue(headerField.isKnown, line)
-            self.assertEqual(headerField.rawString, line, line)
-            self.assertIsInstance(headerField.fieldValue, basestring, line)
-            self.assertEqual(headerField.fieldValue, "489", line)
             stringio = StringIO(line + '\r\n')
             headerField = SIPHeaderFieldFactory().allForStringIO(stringio)[0]
-            self.assertTrue(headerField.isValid, line)
             self.assertTrue(headerField.isExpires, line)
-            self.assertTrue(headerField.isKnown, line)
-            self.assertEqual(headerField.rawString, line, line)
-            self.assertIsInstance(headerField.fieldValue, basestring, line)
-            self.assertEqual(headerField.fieldValue, "489", line)
             stringio.close()
-            headerField = SIPHeaderFieldFactory().nextForFieldName("Expires")
-            # self.assertEqual(headerField.fieldValue, "")
-            # Hmm, really?  An empty but non-None fieldValue is valid?
-            # self.assertFalse(headerField.isValid, line)
-            self.assertTrue(headerField.isValid, line)
-            headerField.fieldValue = "489"
-            self.assertTrue(headerField.isValid, line)
+            headerField = SIPHeaderFieldFactory().nextForFieldName(self.canonicalFieldNames[0])
             self.assertTrue(headerField.isExpires, line)
-            self.assertTrue(headerField.isKnown, line)
-            self.assertEqual(headerField.rawString, "Expires: 489")
-            self.assertIsInstance(headerField.fieldValue, basestring)
-            self.assertEqual(headerField.fieldValue, "489", line)
-            headerField = SIPHeaderFieldFactory().nextForFieldNameAndFieldValue("Expires", "foo bar baz blarg")
-            self.assertTrue(headerField.isValid, line)
-            headerField.fieldValue = "489"
-            self.assertTrue(headerField.isValid, line)
+            headerField = SIPHeaderFieldFactory().nextForFieldNameAndFieldValue(self.canonicalFieldNames[0], "foo bar baz blarg")
             self.assertTrue(headerField.isExpires, line)
-            self.assertTrue(headerField.isKnown, line)
-            self.assertEqual(headerField.rawString, "Expires: 489")
-            self.assertIsInstance(headerField.fieldValue, basestring)
-            self.assertEqual(headerField.fieldValue, "489", line)
 
 
-class TestSIPHeaderFieldFactoryForFrom(TestCase):
+class TestSIPHeaderFieldFactoryForFrom(AbstractSIPHeaderFieldFromFactoryTestCase):
     @property
-    def canonicalStrings(self):
-        return [
-            'From: baz blarg blonk',
-            'from: baz blarg blonk',
-            'FROM: baz blarg blonk',
-            'From:      baz blarg blonk',
-            'from:      baz blarg blonk',
-            'FROM:      baz blarg blonk',
-            'From     : baz blarg blonk',
-            'from     : baz blarg blonk',
-            'FROM     : baz blarg blonk',
-            'From     :      baz blarg blonk',
-            'from     :      baz blarg blonk',
-            'FROM     :      baz blarg blonk',
-        ]
+    def canonicalFieldNames(self):
+        return['From', 'FROM', 'from']
+
+    @property
+    def sipHeaderFieldClassUnderTest(self):
+        return FromSIPHeaderField
 
     def test_parsing(self):
+        self.basic_test_parsing()
         for line in self.canonicalStrings:
             headerField = SIPHeaderFieldFactory().nextForString(line)
-            self.assertTrue(headerField.isValid, line)
             self.assertTrue(headerField.isFrom, line)
-            self.assertTrue(headerField.isKnown, line)
-            self.assertEqual(headerField.rawString, line, line)
-            self.assertIsInstance(headerField.fieldValue, basestring, line)
-            self.assertEqual(headerField.fieldValue, "baz blarg blonk", line)
             stringio = StringIO(line + '\r\n')
             headerField = SIPHeaderFieldFactory().allForStringIO(stringio)[0]
-            self.assertTrue(headerField.isValid, line)
             self.assertTrue(headerField.isFrom, line)
-            self.assertTrue(headerField.isKnown, line)
-            self.assertEqual(headerField.rawString, line, line)
-            self.assertIsInstance(headerField.fieldValue, basestring, line)
-            self.assertEqual(headerField.fieldValue, "baz blarg blonk", line)
             stringio.close()
-            headerField = SIPHeaderFieldFactory().nextForFieldName("From")
-            self.assertEqual(headerField.fieldValue, "", line)
-            # Hmm, really?  An empty but non-None fieldValue is valid?
-            # self.assertFalse(headerField.isValid, line)
-            self.assertTrue(headerField.isValid, line)
-            headerField.fieldValue = "baz blarg blonk"
-            self.assertTrue(headerField.isValid, line)
+            headerField = SIPHeaderFieldFactory().nextForFieldName(self.canonicalFieldNames[0])
             self.assertTrue(headerField.isFrom, line)
-            self.assertTrue(headerField.isKnown, line)
-            self.assertEqual(headerField.rawString, "From: baz blarg blonk")
-            self.assertIsInstance(headerField.fieldValue, basestring)
-            self.assertEqual(headerField.fieldValue, "baz blarg blonk", line)
-            headerField = SIPHeaderFieldFactory().nextForFieldNameAndFieldValue("From", "foo bar baz blarg")
-            self.assertTrue(headerField.isValid, line)
-            headerField.fieldValue = "baz blarg blonk"
-            self.assertTrue(headerField.isValid, line)
+            headerField = SIPHeaderFieldFactory().nextForFieldNameAndFieldValue(self.canonicalFieldNames[0], "foo bar baz blarg")
             self.assertTrue(headerField.isFrom, line)
-            self.assertTrue(headerField.isKnown, line)
-            self.assertEqual(headerField.rawString, "From: baz blarg blonk")
-            self.assertIsInstance(headerField.fieldValue, basestring)
-            self.assertEqual(headerField.fieldValue, "baz blarg blonk", line)
-class TestSIPHeaderFieldFactoryForMaxForwards(TestCase):
+
+class TestSIPHeaderFieldFactoryForMaxForwards(AbstractIntegerSIPHeaderFieldFromFactoryTestCase):
     @property
-    def canonicalStrings(self):
-        return [
-            'Max-Forwards: 70',
-            'max-forwards: 70',
-            'MAX-FORWARDS: 70',
-            'Max-Forwards:      70',
-            'max-forwards:      70',
-            'MAX-FORWARDS:      70',
-            'Max-Forwards     : 70',
-            'max-forwards     : 70',
-            'MAX-FORWARDS     : 70',
-            'Max-Forwards     :      70',
-            'max-forwards     :      70',
-            'MAX-FORWARDS     :      70',
-        ]
+    def canonicalFieldNames(self):
+        return['Max-Forwards', 'MAX-Forwards', 'max-forwards', 'Max-forwards', 'max-Forwards']
+
+    @property
+    def sipHeaderFieldClassUnderTest(self):
+        return MaxForwardsSIPHeaderField
 
     def test_parsing(self):
+        self.basic_test_parsing()
         for line in self.canonicalStrings:
             headerField = SIPHeaderFieldFactory().nextForString(line)
-            self.assertTrue(headerField.isValid, line)
             self.assertTrue(headerField.isMaxForwards, line)
-            self.assertTrue(headerField.isKnown, line)
-            self.assertEqual(headerField.rawString, line, line)
-            self.assertIsInstance(headerField.fieldValue, basestring, line)
-            self.assertEqual(headerField.value, 70, line)
             stringio = StringIO(line + '\r\n')
             headerField = SIPHeaderFieldFactory().allForStringIO(stringio)[0]
-            self.assertTrue(headerField.isValid, line)
             self.assertTrue(headerField.isMaxForwards, line)
-            self.assertTrue(headerField.isKnown, line)
-            self.assertEqual(headerField.rawString, line, line)
-            self.assertIsInstance(headerField.fieldValue, basestring, line)
-            self.assertIsInstance(headerField.value, (int, long), line)
-            self.assertEqual(headerField.value, 70)
-            self.assertEqual(headerField.fieldValue, "70", line)
             stringio.close()
-            headerField = SIPHeaderFieldFactory().nextForFieldName("Max-Forwards")
-            self.assertEqual(headerField.fieldValue, "0", line)
-            # Hmm, really?  An empty but non-None fieldValue is valid?
-            # self.assertFalse(headerField.isValid, line)
-            self.assertTrue(headerField.isValid, line)
-            headerField.fieldValue = "70"
-            self.assertTrue(headerField.isValid, line)
+            headerField = SIPHeaderFieldFactory().nextForFieldName(self.canonicalFieldNames[0])
             self.assertTrue(headerField.isMaxForwards, line)
-            self.assertTrue(headerField.isKnown, line)
-            self.assertEqual(headerField.rawString, "Max-Forwards: 70")
-            self.assertIsInstance(headerField.fieldValue, basestring)
-            self.assertEqual(headerField.fieldValue, "70", line)
-            headerField = SIPHeaderFieldFactory().nextForFieldNameAndFieldValue("Max-Forwards", "0")
-            self.assertTrue(headerField.isValid, line)
-            headerField.fieldValue = "70"
-            self.assertTrue(headerField.isValid, line)
+            headerField = SIPHeaderFieldFactory().nextForFieldNameAndFieldValue(self.canonicalFieldNames[0], "foo bar baz blarg")
             self.assertTrue(headerField.isMaxForwards, line)
-            self.assertTrue(headerField.isKnown, line)
-            self.assertEqual(headerField.rawString, "Max-Forwards: 70")
-            self.assertIsInstance(headerField.fieldValue, basestring)
-            self.assertEqual(headerField.fieldValue, "70", line)
 
-class TestSIPHeaderFieldFactoryForRecordRoute(TestCase):
+class TestSIPHeaderFieldFactoryForRecordRoute(AbstractSIPHeaderFieldFromFactoryTestCase):
     @property
-    def canonicalStrings(self):
-        return [
-            'Record-Route: baz blarg blonk',
-            'record-route: baz blarg blonk',
-            'RECORD-ROUTE: baz blarg blonk',
-            'Record-Route:      baz blarg blonk',
-            'record-route:      baz blarg blonk',
-            'RECORD-ROUTE:      baz blarg blonk',
-            'Record-Route     : baz blarg blonk',
-            'record-route     : baz blarg blonk',
-            'RECORD-ROUTE     : baz blarg blonk',
-            'Record-Route     :      baz blarg blonk',
-            'record-route     :      baz blarg blonk',
-            'RECORD-ROUTE     :      baz blarg blonk',
-        ]
+    def canonicalFieldNames(self):
+        return['Record-Route', 'RECORD-Route', 'record-route', 'Record-route', 'record-Route']
+
+    @property
+    def sipHeaderFieldClassUnderTest(self):
+        return RecordRouteSIPHeaderField
 
     def test_parsing(self):
+        self.basic_test_parsing()
         for line in self.canonicalStrings:
             headerField = SIPHeaderFieldFactory().nextForString(line)
-            self.assertTrue(headerField.isValid, line)
             self.assertTrue(headerField.isRecordRoute, line)
-            self.assertTrue(headerField.isKnown, line)
-            self.assertEqual(headerField.rawString, line, line)
-            self.assertIsInstance(headerField.fieldValue, basestring, line)
-            self.assertEqual(headerField.fieldValue, "baz blarg blonk", line)
             stringio = StringIO(line + '\r\n')
             headerField = SIPHeaderFieldFactory().allForStringIO(stringio)[0]
-            self.assertTrue(headerField.isValid, line)
             self.assertTrue(headerField.isRecordRoute, line)
-            self.assertTrue(headerField.isKnown, line)
-            self.assertEqual(headerField.rawString, line, line)
-            self.assertIsInstance(headerField.fieldValue, basestring, line)
-            self.assertEqual(headerField.fieldValue, "baz blarg blonk", line)
             stringio.close()
-            headerField = SIPHeaderFieldFactory().nextForFieldName("Record-Route")
-            self.assertEqual(headerField.fieldValue, "", line)
-            # Hmm, really?  An empty but non-None fieldValue is valid?
-            # self.assertFalse(headerField.isValid, line)
-            self.assertTrue(headerField.isValid, line)
-            headerField.fieldValue = "baz blarg blonk"
-            self.assertTrue(headerField.isValid, line)
+            headerField = SIPHeaderFieldFactory().nextForFieldName(self.canonicalFieldNames[0])
             self.assertTrue(headerField.isRecordRoute, line)
-            self.assertTrue(headerField.isKnown, line)
-            self.assertEqual(headerField.rawString, "Record-Route: baz blarg blonk")
-            self.assertIsInstance(headerField.fieldValue, basestring)
-            self.assertEqual(headerField.fieldValue, "baz blarg blonk", line)
-            headerField = SIPHeaderFieldFactory().nextForFieldNameAndFieldValue("Record-Route", "foo bar baz blarg")
-            self.assertTrue(headerField.isValid, line)
-            headerField.fieldValue = "baz blarg blonk"
-            self.assertTrue(headerField.isValid, line)
+            headerField = SIPHeaderFieldFactory().nextForFieldNameAndFieldValue(self.canonicalFieldNames[0], "foo bar baz blarg")
             self.assertTrue(headerField.isRecordRoute, line)
-            self.assertTrue(headerField.isKnown, line)
-            self.assertEqual(headerField.rawString, "Record-Route: baz blarg blonk")
-            self.assertIsInstance(headerField.fieldValue, basestring)
-            self.assertEqual(headerField.fieldValue, "baz blarg blonk", line)
-class TestSIPHeaderFieldFactoryForRequire(TestCase):
+
+
+class TestSIPHeaderFieldFactoryForRequire(AbstractSIPHeaderFieldFromFactoryTestCase):
     @property
-    def canonicalStrings(self):
-        return [
-            'Require: baz blarg blonk',
-            'require: baz blarg blonk',
-            'REQUIRE: baz blarg blonk',
-            'Require:      baz blarg blonk',
-            'require:      baz blarg blonk',
-            'REQUIRE:      baz blarg blonk',
-            'Require     : baz blarg blonk',
-            'require     : baz blarg blonk',
-            'REQUIRE     : baz blarg blonk',
-            'Require     :      baz blarg blonk',
-            'require     :      baz blarg blonk',
-            'REQUIRE     :      baz blarg blonk',
-        ]
+    def canonicalFieldNames(self):
+        return['Require', 'REQUIRE', 'require']
+
+    @property
+    def sipHeaderFieldClassUnderTest(self):
+        return RequireSIPHeaderField
 
     def test_parsing(self):
+        self.basic_test_parsing()
         for line in self.canonicalStrings:
             headerField = SIPHeaderFieldFactory().nextForString(line)
-            self.assertTrue(headerField.isValid, line)
             self.assertTrue(headerField.isRequire, line)
-            self.assertTrue(headerField.isKnown, line)
-            self.assertEqual(headerField.rawString, line, line)
-            self.assertIsInstance(headerField.fieldValue, basestring, line)
-            self.assertEqual(headerField.fieldValue, "baz blarg blonk", line)
             stringio = StringIO(line + '\r\n')
             headerField = SIPHeaderFieldFactory().allForStringIO(stringio)[0]
-            self.assertTrue(headerField.isValid, line)
             self.assertTrue(headerField.isRequire, line)
-            self.assertTrue(headerField.isKnown, line)
-            self.assertEqual(headerField.rawString, line, line)
-            self.assertIsInstance(headerField.fieldValue, basestring, line)
-            self.assertEqual(headerField.fieldValue, "baz blarg blonk", line)
             stringio.close()
-            headerField = SIPHeaderFieldFactory().nextForFieldName("Require")
-            self.assertEqual(headerField.fieldValue, "", line)
-            # Hmm, really?  An empty but non-None fieldValue is valid?
-            # self.assertFalse(headerField.isValid, line)
-            self.assertTrue(headerField.isValid, line)
-            headerField.fieldValue = "baz blarg blonk"
-            self.assertTrue(headerField.isValid, line)
+            headerField = SIPHeaderFieldFactory().nextForFieldName(self.canonicalFieldNames[0])
             self.assertTrue(headerField.isRequire, line)
-            self.assertTrue(headerField.isKnown, line)
-            self.assertEqual(headerField.rawString, "Require: baz blarg blonk")
-            self.assertIsInstance(headerField.fieldValue, basestring)
-            self.assertEqual(headerField.fieldValue, "baz blarg blonk", line)
-            headerField = SIPHeaderFieldFactory().nextForFieldNameAndFieldValue("Require", "foo bar baz blarg")
-            self.assertTrue(headerField.isValid, line)
-            headerField.fieldValue = "baz blarg blonk"
-            self.assertTrue(headerField.isValid, line)
+            headerField = SIPHeaderFieldFactory().nextForFieldNameAndFieldValue(self.canonicalFieldNames[0], "foo bar baz blarg")
             self.assertTrue(headerField.isRequire, line)
-            self.assertTrue(headerField.isKnown, line)
-            self.assertEqual(headerField.rawString, "Require: baz blarg blonk")
-            self.assertIsInstance(headerField.fieldValue, basestring)
-            self.assertEqual(headerField.fieldValue, "baz blarg blonk", line)
-class TestSIPHeaderFieldFactoryForRetryAfter(TestCase):
+
+
+class TestSIPHeaderFieldFactoryForRetryAfter(AbstractIntegerSIPHeaderFieldFromFactoryTestCase):
     @property
-    def canonicalStrings(self):
-        return [
-            'Retry-After: 489',
-            'retry-after: 489',
-            'RETRY-AFTER: 489',
-            'Retry-After:      489',
-            'retry-after:      489',
-            'RETRY-AFTER:      489',
-            'Retry-After     : 489',
-            'retry-after     : 489',
-            'RETRY-AFTER     : 489',
-            'Retry-After     :      489',
-            'retry-after     :      489',
-            'RETRY-AFTER     :      489',
-        ]
+    def canonicalFieldNames(self):
+        return['Retry-After', 'RETRY-After', 'retry-after', 'Retry-after', 'retry-After']
+
+    @property
+    def sipHeaderFieldClassUnderTest(self):
+        return RetryAfterSIPHeaderField
 
     def test_parsing(self):
+        self.basic_test_parsing()
         for line in self.canonicalStrings:
             headerField = SIPHeaderFieldFactory().nextForString(line)
-            self.assertTrue(headerField.isValid, line)
             self.assertTrue(headerField.isRetryAfter, line)
-            self.assertTrue(headerField.isKnown, line)
-            self.assertEqual(headerField.rawString, line, line)
-            self.assertIsInstance(headerField.fieldValue, basestring, line)
-            self.assertEqual(headerField.fieldValue, "489", line)
             stringio = StringIO(line + '\r\n')
             headerField = SIPHeaderFieldFactory().allForStringIO(stringio)[0]
-            self.assertTrue(headerField.isValid, line)
             self.assertTrue(headerField.isRetryAfter, line)
-            self.assertTrue(headerField.isKnown, line)
-            self.assertEqual(headerField.rawString, line, line)
-            self.assertIsInstance(headerField.fieldValue, basestring, line)
-            self.assertEqual(headerField.fieldValue, "489", line)
             stringio.close()
-            headerField = SIPHeaderFieldFactory().nextForFieldName("Retry-After")
-            self.assertEqual(headerField.fieldValue, "0")
-            # Hmm, really?  An empty but non-None fieldValue is valid?
-            # self.assertFalse(headerField.isValid, line)
-            self.assertTrue(headerField.isValid, line)
-            headerField.fieldValue = "489"
-            self.assertTrue(headerField.isValid, line)
+            headerField = SIPHeaderFieldFactory().nextForFieldName(self.canonicalFieldNames[0])
             self.assertTrue(headerField.isRetryAfter, line)
-            self.assertTrue(headerField.isKnown, line)
-            self.assertEqual(headerField.rawString, "Retry-After: 489")
-            self.assertIsInstance(headerField.fieldValue, basestring)
-            self.assertEqual(headerField.fieldValue, "489", line)
-            headerField = SIPHeaderFieldFactory().nextForFieldNameAndFieldValue("Retry-After", "foo bar baz blarg")
-            self.assertTrue(headerField.isValid, line)
-            headerField.fieldValue = "489"
-            self.assertTrue(headerField.isValid, line)
+            headerField = SIPHeaderFieldFactory().nextForFieldNameAndFieldValue(self.canonicalFieldNames[0], "foo bar baz blarg")
             self.assertTrue(headerField.isRetryAfter, line)
-            self.assertTrue(headerField.isKnown, line)
-            self.assertEqual(headerField.rawString, "Retry-After: 489")
-            self.assertIsInstance(headerField.fieldValue, basestring)
-            self.assertEqual(headerField.fieldValue, "489", line)
-class TestSIPHeaderFieldFactoryForRoute(TestCase):
+
+
+class TestSIPHeaderFieldFactoryForRoute(AbstractSIPHeaderFieldFromFactoryTestCase):
     @property
-    def canonicalStrings(self):
-        return [
-            'Route: baz blarg blonk',
-            'route: baz blarg blonk',
-            'ROUTE: baz blarg blonk',
-            'Route:      baz blarg blonk',
-            'route:      baz blarg blonk',
-            'ROUTE:      baz blarg blonk',
-            'Route     : baz blarg blonk',
-            'route     : baz blarg blonk',
-            'ROUTE     : baz blarg blonk',
-            'Route     :      baz blarg blonk',
-            'route     :      baz blarg blonk',
-            'ROUTE     :      baz blarg blonk',
-        ]
+    def canonicalFieldNames(self):
+        return['Route', 'ROUTE', 'route']
+
+    @property
+    def sipHeaderFieldClassUnderTest(self):
+        return RouteSIPHeaderField
 
     def test_parsing(self):
+        self.basic_test_parsing()
         for line in self.canonicalStrings:
             headerField = SIPHeaderFieldFactory().nextForString(line)
-            self.assertTrue(headerField.isValid, line)
             self.assertTrue(headerField.isRoute, line)
-            self.assertTrue(headerField.isKnown, line)
-            self.assertEqual(headerField.rawString, line, line)
-            self.assertIsInstance(headerField.fieldValue, basestring, line)
-            self.assertEqual(headerField.fieldValue, "baz blarg blonk", line)
             stringio = StringIO(line + '\r\n')
             headerField = SIPHeaderFieldFactory().allForStringIO(stringio)[0]
-            self.assertTrue(headerField.isValid, line)
             self.assertTrue(headerField.isRoute, line)
-            self.assertTrue(headerField.isKnown, line)
-            self.assertEqual(headerField.rawString, line, line)
-            self.assertIsInstance(headerField.fieldValue, basestring, line)
-            self.assertEqual(headerField.fieldValue, "baz blarg blonk", line)
             stringio.close()
-            headerField = SIPHeaderFieldFactory().nextForFieldName("Route")
-            self.assertEqual(headerField.fieldValue, "", line)
-            # Hmm, really?  An empty but non-None fieldValue is valid?
-            # self.assertFalse(headerField.isValid, line)
-            self.assertTrue(headerField.isValid, line)
-            headerField.fieldValue = "baz blarg blonk"
-            self.assertTrue(headerField.isValid, line)
+            headerField = SIPHeaderFieldFactory().nextForFieldName(self.canonicalFieldNames[0])
             self.assertTrue(headerField.isRoute, line)
-            self.assertTrue(headerField.isKnown, line)
-            self.assertEqual(headerField.rawString, "Route: baz blarg blonk")
-            self.assertIsInstance(headerField.fieldValue, basestring)
-            self.assertEqual(headerField.fieldValue, "baz blarg blonk", line)
-            headerField = SIPHeaderFieldFactory().nextForFieldNameAndFieldValue("Route", "foo bar baz blarg")
-            self.assertTrue(headerField.isValid, line)
-            headerField.fieldValue = "baz blarg blonk"
-            self.assertTrue(headerField.isValid, line)
+            headerField = SIPHeaderFieldFactory().nextForFieldNameAndFieldValue(self.canonicalFieldNames[0], "foo bar baz blarg")
             self.assertTrue(headerField.isRoute, line)
-            self.assertTrue(headerField.isKnown, line)
-            self.assertEqual(headerField.rawString, "Route: baz blarg blonk")
-            self.assertIsInstance(headerField.fieldValue, basestring)
-            self.assertEqual(headerField.fieldValue, "baz blarg blonk", line)
-class TestSIPHeaderFieldFactoryForServer(TestCase):
+
+
+class TestSIPHeaderFieldFactoryForServer(AbstractSIPHeaderFieldFromFactoryTestCase):
     @property
-    def canonicalStrings(self):
-        return [
-            'Server: baz blarg blonk',
-            'server: baz blarg blonk',
-            'SERVER: baz blarg blonk',
-            'Server:      baz blarg blonk',
-            'server:      baz blarg blonk',
-            'SERVER:      baz blarg blonk',
-            'Server     : baz blarg blonk',
-            'server     : baz blarg blonk',
-            'SERVER     : baz blarg blonk',
-            'Server     :      baz blarg blonk',
-            'server     :      baz blarg blonk',
-            'SERVER     :      baz blarg blonk',
-        ]
+    def canonicalFieldNames(self):
+        return['Server', 'SERVER', 'server']
+
+    @property
+    def sipHeaderFieldClassUnderTest(self):
+        return ServerSIPHeaderField
 
     def test_parsing(self):
+        self.basic_test_parsing()
         for line in self.canonicalStrings:
             headerField = SIPHeaderFieldFactory().nextForString(line)
-            self.assertTrue(headerField.isValid, line)
             self.assertTrue(headerField.isServer, line)
-            self.assertTrue(headerField.isKnown, line)
-            self.assertEqual(headerField.rawString, line, line)
-            self.assertIsInstance(headerField.fieldValue, basestring, line)
-            self.assertEqual(headerField.fieldValue, "baz blarg blonk", line)
             stringio = StringIO(line + '\r\n')
             headerField = SIPHeaderFieldFactory().allForStringIO(stringio)[0]
-            self.assertTrue(headerField.isValid, line)
             self.assertTrue(headerField.isServer, line)
-            self.assertTrue(headerField.isKnown, line)
-            self.assertEqual(headerField.rawString, line, line)
-            self.assertIsInstance(headerField.fieldValue, basestring, line)
-            self.assertEqual(headerField.fieldValue, "baz blarg blonk", line)
             stringio.close()
-            headerField = SIPHeaderFieldFactory().nextForFieldName("Server")
-            self.assertEqual(headerField.fieldValue, "", line)
-            # Hmm, really?  An empty but non-None fieldValue is valid?
-            # self.assertFalse(headerField.isValid, line)
-            self.assertTrue(headerField.isValid, line)
-            headerField.fieldValue = "baz blarg blonk"
-            self.assertTrue(headerField.isValid, line)
+            headerField = SIPHeaderFieldFactory().nextForFieldName(self.canonicalFieldNames[0])
             self.assertTrue(headerField.isServer, line)
-            self.assertTrue(headerField.isKnown, line)
-            self.assertEqual(headerField.rawString, "Server: baz blarg blonk")
-            self.assertIsInstance(headerField.fieldValue, basestring)
-            self.assertEqual(headerField.fieldValue, "baz blarg blonk", line)
-            headerField = SIPHeaderFieldFactory().nextForFieldNameAndFieldValue("Server", "foo bar baz blarg")
-            self.assertTrue(headerField.isValid, line)
-            headerField.fieldValue = "baz blarg blonk"
-            self.assertTrue(headerField.isValid, line)
+            headerField = SIPHeaderFieldFactory().nextForFieldNameAndFieldValue(self.canonicalFieldNames[0], "foo bar baz blarg")
             self.assertTrue(headerField.isServer, line)
-            self.assertTrue(headerField.isKnown, line)
-            self.assertEqual(headerField.rawString, "Server: baz blarg blonk")
-            self.assertIsInstance(headerField.fieldValue, basestring)
-            self.assertEqual(headerField.fieldValue, "baz blarg blonk", line)
-class TestSIPHeaderFieldFactoryForSessionExpires(TestCase):
+
+
+class TestSIPHeaderFieldFactoryForSessionExpires(AbstractIntegerSIPHeaderFieldFromFactoryTestCase):
     @property
-    def canonicalStrings(self):
-        return [
-            'Session-Expires: 489',
-            'session-expires: 489',
-            'SESSION-EXPIRES: 489',
-            'Session-Expires:      489',
-            'session-expires:      489',
-            'SESSION-EXPIRES:      489',
-            'Session-Expires     : 489',
-            'session-expires     : 489',
-            'SESSION-EXPIRES     : 489',
-            'Session-Expires     :      489',
-            'session-expires     :      489',
-            'SESSION-EXPIRES     :      489',
-        ]
+    def canonicalFieldNames(self):
+        return['Session-Expires', 'SESSION-Expires', 'session-expires', 'Session-expires', 'session-Expires']
+
+    @property
+    def sipHeaderFieldClassUnderTest(self):
+        return SessionExpiresSIPHeaderField
 
     def test_parsing(self):
+        self.basic_test_parsing()
         for line in self.canonicalStrings:
             headerField = SIPHeaderFieldFactory().nextForString(line)
-            self.assertTrue(headerField.isValid, line)
             self.assertTrue(headerField.isSessionExpires, line)
-            self.assertTrue(headerField.isKnown, line)
-            self.assertEqual(headerField.rawString, line, line)
-            self.assertIsInstance(headerField.fieldValue, basestring, line)
-            self.assertEqual(headerField.fieldValue, "489", line)
             stringio = StringIO(line + '\r\n')
             headerField = SIPHeaderFieldFactory().allForStringIO(stringio)[0]
-            self.assertTrue(headerField.isValid, line)
             self.assertTrue(headerField.isSessionExpires, line)
-            self.assertTrue(headerField.isKnown, line)
-            self.assertEqual(headerField.rawString, line, line)
-            self.assertIsInstance(headerField.fieldValue, basestring, line)
-            self.assertEqual(headerField.fieldValue, "489", line)
             stringio.close()
-            headerField = SIPHeaderFieldFactory().nextForFieldName("Session-Expires")
-            self.assertEqual(headerField.fieldValue, "0")
-            # Hmm, really?  An empty but non-None fieldValue is valid?
-            # self.assertFalse(headerField.isValid, line)
-            self.assertTrue(headerField.isValid, line)
-            headerField.fieldValue = "489"
-            self.assertTrue(headerField.isValid, line)
+            headerField = SIPHeaderFieldFactory().nextForFieldName(self.canonicalFieldNames[0])
             self.assertTrue(headerField.isSessionExpires, line)
-            self.assertTrue(headerField.isKnown, line)
-            self.assertEqual(headerField.rawString, "Session-Expires: 489")
-            self.assertIsInstance(headerField.fieldValue, basestring)
-            self.assertEqual(headerField.fieldValue, "489", line)
-            headerField = SIPHeaderFieldFactory().nextForFieldNameAndFieldValue("Session-Expires", "foo bar baz blarg")
-            self.assertTrue(headerField.isValid, line)
-            headerField.fieldValue = "489"
-            self.assertTrue(headerField.isValid, line)
+            headerField = SIPHeaderFieldFactory().nextForFieldNameAndFieldValue(self.canonicalFieldNames[0], "foo bar baz blarg")
             self.assertTrue(headerField.isSessionExpires, line)
-            self.assertTrue(headerField.isKnown, line)
-            self.assertEqual(headerField.rawString, "Session-Expires: 489")
-            self.assertIsInstance(headerField.fieldValue, basestring)
-            self.assertEqual(headerField.fieldValue, "489", line)
-class TestSIPHeaderFieldFactoryForSupported(TestCase):
+
+
+class TestSIPHeaderFieldFactoryForSupported(AbstractSIPHeaderFieldFromFactoryTestCase):
     @property
-    def canonicalStrings(self):
-        return [
-            'Supported: baz blarg blonk',
-            'supported: baz blarg blonk',
-            'SUPPORTED: baz blarg blonk',
-            'Supported:      baz blarg blonk',
-            'supported:      baz blarg blonk',
-            'SUPPORTED:      baz blarg blonk',
-            'Supported     : baz blarg blonk',
-            'supported     : baz blarg blonk',
-            'SUPPORTED     : baz blarg blonk',
-            'Supported     :      baz blarg blonk',
-            'supported     :      baz blarg blonk',
-            'SUPPORTED     :      baz blarg blonk',
-        ]
+    def canonicalFieldNames(self):
+        return['Supported', 'SUPPORTED', 'supported']
+
+    @property
+    def sipHeaderFieldClassUnderTest(self):
+        return SupportedSIPHeaderField
 
     def test_parsing(self):
+        self.basic_test_parsing()
         for line in self.canonicalStrings:
             headerField = SIPHeaderFieldFactory().nextForString(line)
-            self.assertTrue(headerField.isValid, line)
             self.assertTrue(headerField.isSupported, line)
-            self.assertTrue(headerField.isKnown, line)
-            self.assertEqual(headerField.rawString, line, line)
-            self.assertIsInstance(headerField.fieldValue, basestring, line)
-            self.assertEqual(headerField.fieldValue, "baz blarg blonk", line)
             stringio = StringIO(line + '\r\n')
             headerField = SIPHeaderFieldFactory().allForStringIO(stringio)[0]
-            self.assertTrue(headerField.isValid, line)
             self.assertTrue(headerField.isSupported, line)
-            self.assertTrue(headerField.isKnown, line)
-            self.assertEqual(headerField.rawString, line, line)
-            self.assertIsInstance(headerField.fieldValue, basestring, line)
-            self.assertEqual(headerField.fieldValue, "baz blarg blonk", line)
             stringio.close()
-            headerField = SIPHeaderFieldFactory().nextForFieldName("Supported")
-            self.assertEqual(headerField.fieldValue, "", line)
-            # Hmm, really?  An empty but non-None fieldValue is valid?
-            # self.assertFalse(headerField.isValid, line)
-            self.assertTrue(headerField.isValid, line)
-            headerField.fieldValue = "baz blarg blonk"
-            self.assertTrue(headerField.isValid, line)
+            headerField = SIPHeaderFieldFactory().nextForFieldName(self.canonicalFieldNames[0])
             self.assertTrue(headerField.isSupported, line)
-            self.assertTrue(headerField.isKnown, line)
-            self.assertEqual(headerField.rawString, "Supported: baz blarg blonk")
-            self.assertIsInstance(headerField.fieldValue, basestring)
-            self.assertEqual(headerField.fieldValue, "baz blarg blonk", line)
-            headerField = SIPHeaderFieldFactory().nextForFieldNameAndFieldValue("Supported", "foo bar baz blarg")
-            self.assertTrue(headerField.isValid, line)
-            headerField.fieldValue = "baz blarg blonk"
-            self.assertTrue(headerField.isValid, line)
+            headerField = SIPHeaderFieldFactory().nextForFieldNameAndFieldValue(self.canonicalFieldNames[0], "foo bar baz blarg")
             self.assertTrue(headerField.isSupported, line)
-            self.assertTrue(headerField.isKnown, line)
-            self.assertEqual(headerField.rawString, "Supported: baz blarg blonk")
-            self.assertIsInstance(headerField.fieldValue, basestring)
-            self.assertEqual(headerField.fieldValue, "baz blarg blonk", line)
-class TestSIPHeaderFieldFactoryForTimestamp(TestCase):
+
+
+class TestSIPHeaderFieldFactoryForTimestamp(AbstractIntegerSIPHeaderFieldFromFactoryTestCase):
     @property
-    def canonicalStrings(self):
-        return [
-            'Timestamp: 489',
-            'timestamp: 489',
-            'TIMESTAMP: 489',
-            'Timestamp:      489',
-            'timestamp:      489',
-            'TIMESTAMP:      489',
-            'Timestamp     : 489',
-            'timestamp     : 489',
-            'TIMESTAMP     : 489',
-            'Timestamp     :      489',
-            'timestamp     :      489',
-            'TIMESTAMP     :      489',
-        ]
+    def canonicalFieldNames(self):
+        return['Timestamp', 'TIMESTAMP', 'timestamp']
+
+    @property
+    def sipHeaderFieldClassUnderTest(self):
+        return TimestampSIPHeaderField
 
     def test_parsing(self):
+        self.basic_test_parsing()
         for line in self.canonicalStrings:
             headerField = SIPHeaderFieldFactory().nextForString(line)
-            self.assertTrue(headerField.isValid, line)
             self.assertTrue(headerField.isTimestamp, line)
-            self.assertTrue(headerField.isKnown, line)
-            self.assertEqual(headerField.rawString, line, line)
-            self.assertIsInstance(headerField.fieldValue, basestring, line)
-            self.assertEqual(headerField.fieldValue, "489", line)
             stringio = StringIO(line + '\r\n')
             headerField = SIPHeaderFieldFactory().allForStringIO(stringio)[0]
-            self.assertTrue(headerField.isValid, line)
             self.assertTrue(headerField.isTimestamp, line)
-            self.assertTrue(headerField.isKnown, line)
-            self.assertEqual(headerField.rawString, line, line)
-            self.assertIsInstance(headerField.fieldValue, basestring, line)
-            self.assertEqual(headerField.fieldValue, "489", line)
             stringio.close()
-            headerField = SIPHeaderFieldFactory().nextForFieldName("Timestamp")
-            self.assertEqual(headerField.fieldValue, "0")
-            # Hmm, really?  An empty but non-None fieldValue is valid?
-            # self.assertFalse(headerField.isValid, line)
-            self.assertTrue(headerField.isValid, line)
-            headerField.fieldValue = "489"
-            self.assertTrue(headerField.isValid, line)
+            headerField = SIPHeaderFieldFactory().nextForFieldName(self.canonicalFieldNames[0])
             self.assertTrue(headerField.isTimestamp, line)
-            self.assertTrue(headerField.isKnown, line)
-            self.assertEqual(headerField.rawString, "Timestamp: 489")
-            self.assertIsInstance(headerField.fieldValue, basestring)
-            self.assertEqual(headerField.fieldValue, "489", line)
-            headerField = SIPHeaderFieldFactory().nextForFieldNameAndFieldValue("Timestamp", "foo bar baz blarg")
-            self.assertTrue(headerField.isValid, line)
-            headerField.fieldValue = "489"
-            self.assertTrue(headerField.isValid, line)
+            headerField = SIPHeaderFieldFactory().nextForFieldNameAndFieldValue(self.canonicalFieldNames[0], "foo bar baz blarg")
             self.assertTrue(headerField.isTimestamp, line)
-            self.assertTrue(headerField.isKnown, line)
-            self.assertEqual(headerField.rawString, "Timestamp: 489")
-            self.assertIsInstance(headerField.fieldValue, basestring)
-            self.assertEqual(headerField.fieldValue, "489", line)
-class TestSIPHeaderFieldFactoryForTo(TestCase):
+
+
+class TestSIPHeaderFieldFactoryForTo(AbstractSIPHeaderFieldFromFactoryTestCase):
     @property
-    def canonicalStrings(self):
-        return [
-            'To: baz blarg blonk',
-            'to: baz blarg blonk',
-            'TO: baz blarg blonk',
-            'To:      baz blarg blonk',
-            'to:      baz blarg blonk',
-            'TO:      baz blarg blonk',
-            'To     : baz blarg blonk',
-            'to     : baz blarg blonk',
-            'TO     : baz blarg blonk',
-            'To     :      baz blarg blonk',
-            'to     :      baz blarg blonk',
-            'TO     :      baz blarg blonk',
-        ]
+    def canonicalFieldNames(self):
+        return['To', 'TO', 'to']
+
+    @property
+    def sipHeaderFieldClassUnderTest(self):
+        return ToSIPHeaderField
 
     def test_parsing(self):
+        self.basic_test_parsing()
         for line in self.canonicalStrings:
             headerField = SIPHeaderFieldFactory().nextForString(line)
-            self.assertTrue(headerField.isValid, line)
             self.assertTrue(headerField.isTo, line)
-            self.assertTrue(headerField.isKnown, line)
-            self.assertEqual(headerField.rawString, line, line)
-            self.assertIsInstance(headerField.fieldValue, basestring, line)
-            self.assertEqual(headerField.fieldValue, "baz blarg blonk", line)
             stringio = StringIO(line + '\r\n')
             headerField = SIPHeaderFieldFactory().allForStringIO(stringio)[0]
-            self.assertTrue(headerField.isValid, line)
             self.assertTrue(headerField.isTo, line)
-            self.assertTrue(headerField.isKnown, line)
-            self.assertEqual(headerField.rawString, line, line)
-            self.assertIsInstance(headerField.fieldValue, basestring, line)
-            self.assertEqual(headerField.fieldValue, "baz blarg blonk", line)
             stringio.close()
-            headerField = SIPHeaderFieldFactory().nextForFieldName("To")
-            self.assertEqual(headerField.fieldValue, "", line)
-            # Hmm, really?  An empty but non-None fieldValue is valid?
-            # self.assertFalse(headerField.isValid, line)
-            self.assertTrue(headerField.isValid, line)
-            headerField.fieldValue = "baz blarg blonk"
-            self.assertTrue(headerField.isValid, line)
+            headerField = SIPHeaderFieldFactory().nextForFieldName(self.canonicalFieldNames[0])
             self.assertTrue(headerField.isTo, line)
-            self.assertTrue(headerField.isKnown, line)
-            self.assertEqual(headerField.rawString, "To: baz blarg blonk")
-            self.assertIsInstance(headerField.fieldValue, basestring)
-            self.assertEqual(headerField.fieldValue, "baz blarg blonk", line)
-            headerField = SIPHeaderFieldFactory().nextForFieldNameAndFieldValue("To", "foo bar baz blarg")
-            self.assertTrue(headerField.isValid, line)
-            headerField.fieldValue = "baz blarg blonk"
-            self.assertTrue(headerField.isValid, line)
+            headerField = SIPHeaderFieldFactory().nextForFieldNameAndFieldValue(self.canonicalFieldNames[0], "foo bar baz blarg")
             self.assertTrue(headerField.isTo, line)
-            self.assertTrue(headerField.isKnown, line)
-            self.assertEqual(headerField.rawString, "To: baz blarg blonk")
-            self.assertIsInstance(headerField.fieldValue, basestring)
-            self.assertEqual(headerField.fieldValue, "baz blarg blonk", line)
-class TestSIPHeaderFieldFactoryForUserAgent(TestCase):
+
+
+class TestSIPHeaderFieldFactoryForUserAgent(AbstractSIPHeaderFieldFromFactoryTestCase):
     @property
-    def canonicalStrings(self):
-        return [
-            'User-Agent: baz blarg blonk',
-            'user-agent: baz blarg blonk',
-            'USER-AGENT: baz blarg blonk',
-            'User-Agent:      baz blarg blonk',
-            'user-agent:      baz blarg blonk',
-            'USER-AGENT:      baz blarg blonk',
-            'User-Agent     : baz blarg blonk',
-            'user-agent     : baz blarg blonk',
-            'USER-AGENT     : baz blarg blonk',
-            'User-Agent     :      baz blarg blonk',
-            'user-agent     :      baz blarg blonk',
-            'USER-AGENT     :      baz blarg blonk',
-        ]
+    def canonicalFieldNames(self):
+        return['User-Agent', 'USER-Agent', 'user-agent', 'User-agent', 'user-Agent']
+
+    @property
+    def sipHeaderFieldClassUnderTest(self):
+        return UserAgentSIPHeaderField
 
     def test_parsing(self):
+        self.basic_test_parsing()
         for line in self.canonicalStrings:
             headerField = SIPHeaderFieldFactory().nextForString(line)
-            self.assertTrue(headerField.isValid, line)
             self.assertTrue(headerField.isUserAgent, line)
-            self.assertTrue(headerField.isKnown, line)
-            self.assertEqual(headerField.rawString, line, line)
-            self.assertIsInstance(headerField.fieldValue, basestring, line)
-            self.assertEqual(headerField.fieldValue, "baz blarg blonk", line)
             stringio = StringIO(line + '\r\n')
             headerField = SIPHeaderFieldFactory().allForStringIO(stringio)[0]
-            self.assertTrue(headerField.isValid, line)
             self.assertTrue(headerField.isUserAgent, line)
-            self.assertTrue(headerField.isKnown, line)
-            self.assertEqual(headerField.rawString, line, line)
-            self.assertIsInstance(headerField.fieldValue, basestring, line)
-            self.assertEqual(headerField.fieldValue, "baz blarg blonk", line)
             stringio.close()
-            headerField = SIPHeaderFieldFactory().nextForFieldName("User-Agent")
-            self.assertEqual(headerField.fieldValue, "", line)
-            # Hmm, really?  An empty but non-None fieldValue is valid?
-            # self.assertFalse(headerField.isValid, line)
-            self.assertTrue(headerField.isValid, line)
-            headerField.fieldValue = "baz blarg blonk"
-            self.assertTrue(headerField.isValid, line)
+            headerField = SIPHeaderFieldFactory().nextForFieldName(self.canonicalFieldNames[0])
             self.assertTrue(headerField.isUserAgent, line)
-            self.assertTrue(headerField.isKnown, line)
-            self.assertEqual(headerField.rawString, "User-Agent: baz blarg blonk")
-            self.assertIsInstance(headerField.fieldValue, basestring)
-            self.assertEqual(headerField.fieldValue, "baz blarg blonk", line)
-            headerField = SIPHeaderFieldFactory().nextForFieldNameAndFieldValue("User-Agent", "foo bar baz blarg")
-            self.assertTrue(headerField.isValid, line)
-            headerField.fieldValue = "baz blarg blonk"
-            self.assertTrue(headerField.isValid, line)
+            headerField = SIPHeaderFieldFactory().nextForFieldNameAndFieldValue(self.canonicalFieldNames[0], "foo bar baz blarg")
             self.assertTrue(headerField.isUserAgent, line)
-            self.assertTrue(headerField.isKnown, line)
-            self.assertEqual(headerField.rawString, "User-Agent: baz blarg blonk")
-            self.assertIsInstance(headerField.fieldValue, basestring)
-            self.assertEqual(headerField.fieldValue, "baz blarg blonk", line)
-class TestSIPHeaderFieldFactoryForWWWAuthenticate(TestCase):
+
+
+class TestSIPHeaderFieldFactoryForWWWAuthenticate(AbstractSIPHeaderFieldFromFactoryTestCase):
     @property
-    def canonicalStrings(self):
-        return [
-            'WWW-Authenticate: baz blarg blonk',
-            'www-authenticate: baz blarg blonk',
-            'WWW-AUTHENTICATE: baz blarg blonk',
-            'WWW-Authenticate:      baz blarg blonk',
-            'www-authenticate:      baz blarg blonk',
-            'WWW-AUTHENTICATE:      baz blarg blonk',
-            'WWW-Authenticate     : baz blarg blonk',
-            'www-authenticate     : baz blarg blonk',
-            'WWW-AUTHENTICATE     : baz blarg blonk',
-            'WWW-Authenticate     :      baz blarg blonk',
-            'www-authenticate     :      baz blarg blonk',
-            'WWW-AUTHENTICATE     :      baz blarg blonk',
-        ]
+    def canonicalFieldNames(self):
+        return['WWW-Authenticate', 'Www-Authenticate', 'www-authenticate', 'Www-authenticate', 'www-Authenticate']
+
+    @property
+    def sipHeaderFieldClassUnderTest(self):
+        return WWWAuthenticateSIPHeaderField
 
     def test_parsing(self):
+        self.basic_test_parsing()
         for line in self.canonicalStrings:
             headerField = SIPHeaderFieldFactory().nextForString(line)
-            self.assertTrue(headerField.isValid, line)
             self.assertTrue(headerField.isWWWAuthenticate, line)
-            self.assertTrue(headerField.isKnown, line)
-            self.assertEqual(headerField.rawString, line, line)
-            self.assertIsInstance(headerField.fieldValue, basestring, line)
-            self.assertEqual(headerField.fieldValue, "baz blarg blonk", line)
             stringio = StringIO(line + '\r\n')
             headerField = SIPHeaderFieldFactory().allForStringIO(stringio)[0]
-            self.assertTrue(headerField.isValid, line)
             self.assertTrue(headerField.isWWWAuthenticate, line)
-            self.assertTrue(headerField.isKnown, line)
-            self.assertEqual(headerField.rawString, line, line)
-            self.assertIsInstance(headerField.fieldValue, basestring, line)
-            self.assertEqual(headerField.fieldValue, "baz blarg blonk", line)
             stringio.close()
-            headerField = SIPHeaderFieldFactory().nextForFieldName("WWW-Authenticate")
-            self.assertEqual(headerField.fieldValue, "", line)
-            # Hmm, really?  An empty but non-None fieldValue is valid?
-            # self.assertFalse(headerField.isValid, line)
-            self.assertTrue(headerField.isValid, line)
-            headerField.fieldValue = "baz blarg blonk"
-            self.assertTrue(headerField.isValid, line)
+            headerField = SIPHeaderFieldFactory().nextForFieldName(self.canonicalFieldNames[0])
             self.assertTrue(headerField.isWWWAuthenticate, line)
-            self.assertTrue(headerField.isKnown, line)
-            self.assertEqual(headerField.rawString, "WWW-Authenticate: baz blarg blonk")
-            self.assertIsInstance(headerField.fieldValue, basestring)
-            self.assertEqual(headerField.fieldValue, "baz blarg blonk", line)
-            headerField = SIPHeaderFieldFactory().nextForFieldNameAndFieldValue("WWW-Authenticate", "foo bar baz blarg")
-            self.assertTrue(headerField.isValid, line)
-            headerField.fieldValue = "baz blarg blonk"
-            self.assertTrue(headerField.isValid, line)
+            headerField = SIPHeaderFieldFactory().nextForFieldNameAndFieldValue(self.canonicalFieldNames[0], "foo bar baz blarg")
             self.assertTrue(headerField.isWWWAuthenticate, line)
-            self.assertTrue(headerField.isKnown, line)
-            self.assertEqual(headerField.rawString, "WWW-Authenticate: baz blarg blonk")
-            self.assertIsInstance(headerField.fieldValue, basestring)
-            self.assertEqual(headerField.fieldValue, "baz blarg blonk", line)
-class TestSIPHeaderFieldFactoryForWarning(TestCase):
+
+
+class TestSIPHeaderFieldFactoryForWarning(AbstractSIPHeaderFieldFromFactoryTestCase):
     @property
-    def canonicalStrings(self):
-        return [
-            'Warning: baz blarg blonk',
-            'warning: baz blarg blonk',
-            'WARNING: baz blarg blonk',
-            'Warning:      baz blarg blonk',
-            'warning:      baz blarg blonk',
-            'WARNING:      baz blarg blonk',
-            'Warning     : baz blarg blonk',
-            'warning     : baz blarg blonk',
-            'WARNING     : baz blarg blonk',
-            'Warning     :      baz blarg blonk',
-            'warning     :      baz blarg blonk',
-            'WARNING     :      baz blarg blonk',
-        ]
+    def canonicalFieldNames(self):
+        return['Warning', 'WARNING', 'warning']
+
+    @property
+    def sipHeaderFieldClassUnderTest(self):
+        return WarningSIPHeaderField
 
     def test_parsing(self):
+        self.basic_test_parsing()
         for line in self.canonicalStrings:
             headerField = SIPHeaderFieldFactory().nextForString(line)
-            self.assertTrue(headerField.isValid, line)
             self.assertTrue(headerField.isWarning, line)
-            self.assertTrue(headerField.isKnown, line)
-            self.assertEqual(headerField.rawString, line, line)
-            self.assertIsInstance(headerField.fieldValue, basestring, line)
-            self.assertEqual(headerField.fieldValue, "baz blarg blonk", line)
             stringio = StringIO(line + '\r\n')
             headerField = SIPHeaderFieldFactory().allForStringIO(stringio)[0]
-            self.assertTrue(headerField.isValid, line)
             self.assertTrue(headerField.isWarning, line)
-            self.assertTrue(headerField.isKnown, line)
-            self.assertEqual(headerField.rawString, line, line)
-            self.assertIsInstance(headerField.fieldValue, basestring, line)
-            self.assertEqual(headerField.fieldValue, "baz blarg blonk", line)
             stringio.close()
-            headerField = SIPHeaderFieldFactory().nextForFieldName("Warning")
-            self.assertEqual(headerField.fieldValue, "", line)
-            # Hmm, really?  An empty but non-None fieldValue is valid?
-            # self.assertFalse(headerField.isValid, line)
-            self.assertTrue(headerField.isValid, line)
-            headerField.fieldValue = "baz blarg blonk"
-            self.assertTrue(headerField.isValid, line)
+            headerField = SIPHeaderFieldFactory().nextForFieldName(self.canonicalFieldNames[0])
             self.assertTrue(headerField.isWarning, line)
-            self.assertTrue(headerField.isKnown, line)
-            self.assertEqual(headerField.rawString, "Warning: baz blarg blonk")
-            self.assertIsInstance(headerField.fieldValue, basestring)
-            self.assertEqual(headerField.fieldValue, "baz blarg blonk", line)
-            headerField = SIPHeaderFieldFactory().nextForFieldNameAndFieldValue("Warning", "foo bar baz blarg")
-            self.assertTrue(headerField.isValid, line)
-            headerField.fieldValue = "baz blarg blonk"
-            self.assertTrue(headerField.isValid, line)
+            headerField = SIPHeaderFieldFactory().nextForFieldNameAndFieldValue(self.canonicalFieldNames[0], "foo bar baz blarg")
             self.assertTrue(headerField.isWarning, line)
-            self.assertTrue(headerField.isKnown, line)
-            self.assertEqual(headerField.rawString, "Warning: baz blarg blonk")
-            self.assertIsInstance(headerField.fieldValue, basestring)
-            self.assertEqual(headerField.fieldValue, "baz blarg blonk", line)
+
+
+class TestSIPHeaderFieldFactoryForVia(AbstractSIPHeaderFieldFromFactoryTestCase):
+    @property
+    def canonicalFieldNames(self):
+        return['Via', 'VIA', 'via']
+
+    @property
+    def sipHeaderFieldClassUnderTest(self):
+        return ViaSIPHeaderField
+
+    def test_parsing(self):
+        self.basic_test_parsing()
+        for line in self.canonicalStrings:
+            headerField = SIPHeaderFieldFactory().nextForString(line)
+            self.assertTrue(headerField.isVia, line)
+            stringio = StringIO(line + '\r\n')
+            headerField = SIPHeaderFieldFactory().allForStringIO(stringio)[0]
+            self.assertTrue(headerField.isVia, line)
+            stringio.close()
+            headerField = SIPHeaderFieldFactory().nextForFieldName(self.canonicalFieldNames[0])
+            self.assertTrue(headerField.isVia, line)
+            headerField = SIPHeaderFieldFactory().nextForFieldNameAndFieldValue(self.canonicalFieldNames[0], "foo bar baz blarg")
+            self.assertTrue(headerField.isVia, line)

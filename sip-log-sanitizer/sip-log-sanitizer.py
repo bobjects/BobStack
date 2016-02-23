@@ -27,9 +27,9 @@ startLineRegexes = ["^SIP/2.0\s+([\d]+)+\s+(.+)\s*$", "^([^\s]+)\s+([^\s]+)\s+SI
 startLineRegexes = [re.compile(s) for s in startLineRegexes]
 
 rawLogFileDirectoryPathNames = [ '../proprietary-test-data/big-lab-test-logs-raw', '../proprietary-test-data/cust-1-logs-raw' ]
-# pcapDirectoryPathNames = [ '../proprietary-test-data/cloud-resaved', '../proprietary-test-data/cust-2-logs-pcap' ]
+pcapDirectoryPathNames = [ '../proprietary-test-data/cloud-resaved', '../proprietary-test-data/cust-2-logs-pcap' ]
 # pcapDirectoryPathNames = [ '../proprietary-test-data/cloud-resaved' ]
-pcapDirectoryPathNames = [ '../proprietary-test-data/cust-2-logs-pcap' ]
+# pcapDirectoryPathNames = [ '../proprietary-test-data/cust-2-logs-pcap' ]
 
 def createInterim1File():
     print "creating interim file 1"
@@ -100,10 +100,10 @@ def processInterimFile():
                         sanitizedFile.write(line)
             print str(totalSIPMessages) + " total SIP messages"
 
-@profile
+# @profile
 def processPCAPFiles():
     print "processing pcap files"
-    with open(sanitizedFilePathName, "w") as sanitizedFile:
+    with open(sanitizedFilePathName, "a") as sanitizedFile:
         for pcapDirectoryPathName in pcapDirectoryPathNames:
             for pcapFilePathName in sorted(glob.iglob(pcapDirectoryPathName + '/*.pcap')):
                 print pcapFilePathName
@@ -122,7 +122,7 @@ def processPCAPFiles():
 
 
 if __name__ == '__main__':
-#    print timeit.timeit(createInterim1File, number=1)
-#    print timeit.timeit(createInterim2File, number=1)
-#    print timeit.timeit(processInterimFile, number=1)
+    print timeit.timeit(createInterim1File, number=1)
+    print timeit.timeit(createInterim2File, number=1)
+    print timeit.timeit(processInterimFile, number=1)
     print timeit.timeit(processPCAPFiles, number=1)

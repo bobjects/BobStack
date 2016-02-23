@@ -25,6 +25,7 @@ class IntegerSIPHeaderField(SIPHeaderField):
         answer.fieldName = fieldName
         answer.fieldValue = fieldValue
         # TODO:  May need to parse out parameters as well here.
+        # TODO:  need to cache.
         match = re.match("^(\d+)", fieldValue)
         if match:
             digits = match.group(0)
