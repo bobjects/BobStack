@@ -6,6 +6,8 @@ import re
 
 
 class SIPHeaderField(object):
+    regexForFindingParameterNamesAndValues = re.compile(";([^=;]+)=?([^;]+)?")
+
     @classmethod
     def newParsedFrom(cls, aString):
         answer = cls()
@@ -72,8 +74,8 @@ class SIPHeaderField(object):
     @property
     def parameterNamesAndValues(self):
         # RFC3261  7.3.1 Header Field Format
-        # return dict(re.findall(';([^=]+)=([^;]+)', self.fieldValue))
-        return dict(re.findall(';([^=;]+)=?([^;]+)?', self.fieldValue))
+        # return dict(re.findall(';([^=;]+)=?([^;]+)?', self.fieldValue))
+        return dict(self.__class__.regexForFindingParameterNamesAndValues.findall(self.fieldValue))
 
     def parameterNamed(self, aString):
         return self.parameterNamesAndValues.get(aString, None)

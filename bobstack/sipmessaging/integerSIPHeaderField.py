@@ -12,6 +12,8 @@ from sipHeaderField import SIPHeaderField
 # But don't do that until we refactor the tests to alleviate copy/paste.
 
 class IntegerSIPHeaderField(SIPHeaderField):
+    regexForParsingInteger = re.compile("^(\d+)")
+
     @classmethod
     def newForAttributes(cls, value=0):
         answer = cls.newForFieldAttributes(fieldName=cls.canonicalFieldName(), fieldValue=str(value))
@@ -26,7 +28,8 @@ class IntegerSIPHeaderField(SIPHeaderField):
         answer.fieldValue = fieldValue
         # TODO:  May need to parse out parameters as well here.
         # TODO:  need to cache.
-        match = re.match("^(\d+)", fieldValue)
+        # match = re.match("^(\d+)", fieldValue)
+        match = cls.regexForParsingInteger.match(fieldValue)
         if match:
             digits = match.group(0)
         else:

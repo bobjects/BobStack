@@ -13,46 +13,6 @@ class RequireSIPHeaderField(SIPHeaderField):
     def newForAttributes(cls, fieldName="Require", fieldValue=""):
         return cls.newForFieldAttributes(fieldName=fieldName, fieldValue=fieldValue)
 
-    # @classmethod
-    # def newForAttributes(cls, value=0):
-    #     answer = cls.newForFieldAttributes(fieldName="Require", fieldValue=str(value))
-    #     answer.value = value
-    #     return answer
-
-    # def __init__(self):
-    #     SIPHeaderField.__init__(self)
-    #     self._value = None
-
-    # @property
-    # def value(self):
-    #     if self._value is None:
-    #         self.parseAttributesFromRawString()
-    #     if self._value is None:
-    #         return 0
-    #     return self._value
-
-    # @value.setter
-    # def value(self, anInteger):
-    #     self._value = anInteger
-    #     self.fieldValue = str(anInteger)
-    #     self.clearRawString()
-
-    # def clearAttributes(self):
-    #     super(RequireSIPHeaderField, self).clearAttributes()
-    #     self._value = None
-
-    # def parseAttributesFromRawString(self):
-    #     super(RequireSIPHeaderField, self).parseAttributesFromRawString()
-    #     self._value = None
-    #     match = self.__class__.regexForParsing().match(self._rawString)
-    #     if match:
-    #         matchGroup = match.group(1)
-    #         if matchGroup:
-    #             self._value = int(matchGroup)
-    #         else:
-    #             # Will get here is the Require header field is present, but there is no value.
-    #             self._value = None
-
     @classmethod
     def regexForMatchingFieldName(cls):
         try:
@@ -76,12 +36,6 @@ class RequireSIPHeaderField(SIPHeaderField):
         except AttributeError:
             cls._regexForParsing = re.compile('^Require\s*:\s*(.*)', re.I)
             return cls._regexForParsing
-
-    # @property
-    # def isValid(self):
-    #     # Answer false if the value is not present.
-    #     test = self.value  # Make sure the attributes are lazily initialized.
-    #     return super(RequireSIPHeaderField, self).isValid and self._value is not None
 
     @property
     def isRequire(self):
