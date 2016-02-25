@@ -1,12 +1,7 @@
-# from stringBuffer import StringBuffer
-# from protoSIPMessage import ProtoSIPMessage
 try:
     from cStringIO import StringIO
 except ImportError:
     from StringIO import StringIO
-# from malformedSIPStartLine import MalformedSIPStartLine
-# from sipRequestStartLine import SIPRequestStartLine
-# from sipResponseStartLine import SIPResponseStartLine
 from sipStartLineFactory import SIPStartLineFactory
 from sipResponse import SIPResponse
 from concretesipmessages import ACKSIPRequest
@@ -26,6 +21,20 @@ from eventSourceMixin import EventSourceMixin
 
 
 class SIPMessageFactory(EventSourceMixin):
+    methodNamesAndClasses = {
+                'ACK': ACKSIPRequest,
+                'BYE': BYESIPRequest,
+                'CANCEL': CANCELSIPRequest,
+                'INFO': INFOSIPRequest,
+                'INVITE': INVITESIPRequest,
+                'NOTIFY': NOTIFYSIPRequest,
+                'OPTIONS': OPTIONSSIPRequest,
+                'REFER': REFERSIPRequest,
+                'REGISTER': REGISTERSIPRequest,
+                'SUBSCRIBE': SUBSCRIBESIPRequest,
+                'UPDATE': UPDATESIPRequest
+            }
+
     def __init__(self):
         EventSourceMixin.__init__(self)
 
@@ -39,23 +48,7 @@ class SIPMessageFactory(EventSourceMixin):
 
     def sipMessageClassForStartLine(self, aSIPStartLine):
         if aSIPStartLine.isRequest:
-            return {
-                'ACK': ACKSIPRequest,
-                'BYE': BYESIPRequest,
-                'CANCEL': CANCELSIPRequest,
-                'INFO': INFOSIPRequest,
-                'INVITE': INVITESIPRequest,
-                'NOTIFY': NOTIFYSIPRequest,
-                'OPTIONS': OPTIONSSIPRequest,
-                'REFER': REFERSIPRequest,
-                'REGISTER': REGISTERSIPRequest,
-                'SUBSCRIBE': SUBSCRIBESIPRequest,
-                'UPDATE': UPDATESIPRequest
-            }.get(aSIPStartLine.sipMethod, UnknownSIPRequest)
-            # if aSIPStartLine.sipMethod == 'OPTIONS':
-            #     return OPTIONSSIPRequest
-            # else:
-            #     return UnknownSIPRequest
+            return self.__class__.methodNamesAndClasses.get(aSIPStartLine.sipMethod, UnknownSIPRequest)
         elif aSIPStartLine.isResponse:
             return SIPResponse
         else:
