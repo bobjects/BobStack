@@ -43,6 +43,10 @@ class ViaSIPHeaderField(SIPHeaderField):
     def branch(self):
         return self.parameterNamed("branch")
 
+    # TODO
+    def generateTag(self):
+        pass
+
     @property
     def isVia(self):
         return True

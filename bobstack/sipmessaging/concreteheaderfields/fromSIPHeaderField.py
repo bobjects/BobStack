@@ -37,12 +37,17 @@ class FromSIPHeaderField(SIPHeaderField):
             cls._regexForParsing = re.compile('^From\s*:\s*(.*)', re.I)
             return cls._regexForParsing
 
-    @property
-    def isFrom(self):
-        return True
-
     # TODO: need to test
     # TODO: need to cache
     @property
     def tag(self):
         return self.parameterNamed("tag")
+
+    # TODO
+    def generateTag(self):
+        pass
+
+    @property
+    def isFrom(self):
+        return True
+
