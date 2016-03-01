@@ -6,9 +6,11 @@ import re
 import sys
 sys.path.append("../../..")
 from bobstack.sipmessaging import IntegerSIPHeaderField
+from bobstack.sipmessaging import classproperty
 
 
 class ContentLengthSIPHeaderField(IntegerSIPHeaderField):
+    @classproperty
     @classmethod
     def canonicalFieldName(cls):
         return 'Content-Length'

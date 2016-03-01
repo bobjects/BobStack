@@ -6,6 +6,7 @@ import re
 import sys
 sys.path.append("../../..")
 from bobstack.sipmessaging import SIPHeaderField
+from bobstack.sipmessaging import classproperty
 
 
 class AcceptLanguageSIPHeaderField(SIPHeaderField):
@@ -13,6 +14,7 @@ class AcceptLanguageSIPHeaderField(SIPHeaderField):
     def newForAttributes(cls, fieldName="Accept-Language", fieldValue=""):
         return cls.newForFieldAttributes(fieldName=fieldName, fieldValue=fieldValue)
 
+    @classproperty
     @classmethod
     def regexForMatchingFieldName(cls):
         try:
@@ -21,6 +23,7 @@ class AcceptLanguageSIPHeaderField(SIPHeaderField):
             cls._regexForMatchingFieldName = re.compile('^Accept-Language$', re.I)
             return cls._regexForMatchingFieldName
 
+    @classproperty
     @classmethod
     def regexForMatching(cls):
         try:
@@ -29,6 +32,7 @@ class AcceptLanguageSIPHeaderField(SIPHeaderField):
             cls._regexForMatching = re.compile('^Accept-Language\s*:', re.I)
             return cls._regexForMatching
 
+    @classproperty
     @classmethod
     def regexForParsing(cls):
         try:

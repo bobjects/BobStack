@@ -70,13 +70,13 @@ class TestSIPMessageFactoryForSanitizedLogFile(TestCase):
             self.printSIPMessageCounts()
         finally:
             for h, l in self.transactionHashesAndSIPMessages.iteritems():
-                self.appendStringToFileNamed(h + "\r\n", self.transactionsPathName)
+                self.appendStringToFileNamed(h + "\r\n", 'transactions')
                 for startLine in l:
-                    self.appendStringToFileNamed('    ' + startLine + "\r\n", self.transactionsPathName)
+                    self.appendStringToFileNamed('    ' + startLine + "\r\n", 'transactions')
             for h, l in self.dialogHashesAndSIPMessages.iteritems():
-                self.appendStringToFileNamed(h + "\r\n", self.dialogsPathName)
+                self.appendStringToFileNamed(h + "\r\n", 'dialogs')
                 for startLine in l:
-                    self.appendStringToFileNamed('    ' + startLine + "\r\n", self.dialogsPathName)
+                    self.appendStringToFileNamed('    ' + startLine + "\r\n", 'dialogs')
             self.closeFiles()
             # self.closeFileNamed(self.malformedSIPMessagesPathName)
             # self.closeFileNamed(self.validSIPMessagesPathName)
@@ -93,7 +93,7 @@ class TestSIPMessageFactoryForSanitizedLogFile(TestCase):
             # self.closeFileNamed(self.unknownHeaderFieldNamesPathName)
             # self.closeFileNamed(self.headerFieldParametersPathName)
             print "de-duping..."
-            subprocess.call(['../../proprietary-test-data/sanitized/dedupelinefiles.sh'])
+            subprocess.call(['../../proprietary-test-data/analyzed/dedupelinefiles.sh'])
             print "finished de-duping."
 
     def printSIPMessageCounts(self):
@@ -105,13 +105,13 @@ class TestSIPMessageFactoryForSanitizedLogFile(TestCase):
 
     def handleMalformedSIPMessage(self, aSIPMessage):
         self.malformedSIPMessageCount += 1
-        self.appendStringToFileNamed(aSIPMessage.rawString, self.malformedSIPMessagesPathName)
-        self.appendStringToFileNamed(self.messageSeparator, self.malformedSIPMessagesPathName)
+        self.appendStringToFileNamed(aSIPMessage.rawString, 'malformedSIPMessages')
+        self.appendStringToFileNamed(self.messageSeparator, 'malformedSIPMessages')
 
     def handleValidSIPMessage(self, aSIPMessage):
         self.validSIPMessageCount += 1
-        self.appendStringToFileNamed(aSIPMessage.rawString, self.validSIPMessagesPathName)
-        self.appendStringToFileNamed(self.messageSeparator, self.validSIPMessagesPathName)
+        self.appendStringToFileNamed(aSIPMessage.rawString, 'validSIPMessages')
+        self.appendStringToFileNamed(self.messageSeparator, 'validSIPMessages')
         # print aSIPMessage.transactionHash
         # print aSIPMessage.dialogHash
         if aSIPMessage.transactionHash:
@@ -123,54 +123,122 @@ class TestSIPMessageFactoryForSanitizedLogFile(TestCase):
                 self.dialogHashesAndSIPMessages[aSIPMessage.dialogHash] = []
             self.dialogHashesAndSIPMessages[aSIPMessage.dialogHash].append(aSIPMessage.startLine.rawString)
         for headerField in aSIPMessage.header.headerFields:
+            if headerField.isAccept:
+                self.appendStringToFileNamed(headerField.rawString + '\r\n', 'acceptHeaderFields')
+            if headerField.isAcceptEncoding:
+                self.appendStringToFileNamed(headerField.rawString + '\r\n', 'acceptEncodingHeaderFields')
+            if headerField.isAcceptLanguage:
+                self.appendStringToFileNamed(headerField.rawString + '\r\n', 'acceptLanguageHeaderFields')
+            if headerField.isAllow:
+                self.appendStringToFileNamed(headerField.rawString + '\r\n', 'allowHeaderFields')
+            if headerField.isAuthorization:
+                self.appendStringToFileNamed(headerField.rawString + '\r\n', 'authorizationHeaderFields')
+            if headerField.isCallID:
+                self.appendStringToFileNamed(headerField.rawString + '\r\n', 'callIDHeaderFields')
+            if headerField.isCallInfo:
+                self.appendStringToFileNamed(headerField.rawString + '\r\n', 'callInfoHeaderFields')
+            if headerField.isContact:
+                self.appendStringToFileNamed(headerField.rawString + '\r\n', 'contactHeaderFields')
+            if headerField.isContentDisposition:
+                self.appendStringToFileNamed(headerField.rawString + '\r\n', 'contentDispositionHeaderFields')
+            if headerField.isContentLength:
+                self.appendStringToFileNamed(headerField.rawString + '\r\n', 'contentLengthHeaderFields')
+            if headerField.isContentType:
+                self.appendStringToFileNamed(headerField.rawString + '\r\n', 'contentTypeHeaderFields')
+            if headerField.isCSeq:
+                self.appendStringToFileNamed(headerField.rawString + '\r\n', 'cSeqHeaderFields')
+            if headerField.isDate:
+                self.appendStringToFileNamed(headerField.rawString + '\r\n', 'dateHeaderFields')
+            if headerField.isExpires:
+                self.appendStringToFileNamed(headerField.rawString + '\r\n', 'expiresHeaderFields')
+            if headerField.isFrom:
+                self.appendStringToFileNamed(headerField.rawString + '\r\n', 'fromHeaderFields')
+            if headerField.isMaxForwards:
+                self.appendStringToFileNamed(headerField.rawString + '\r\n', 'maxForwardsHeaderFields')
+            if headerField.isRecordRoute:
+                self.appendStringToFileNamed(headerField.rawString + '\r\n', 'recordRouteHeaderFields')
+            if headerField.isRequire:
+                self.appendStringToFileNamed(headerField.rawString + '\r\n', 'requireHeaderFields')
+            if headerField.isRetryAfter:
+                self.appendStringToFileNamed(headerField.rawString + '\r\n', 'retryAfterHeaderFields')
+            if headerField.isRoute:
+                self.appendStringToFileNamed(headerField.rawString + '\r\n', 'routeHeaderFields')
+            if headerField.isServer:
+                self.appendStringToFileNamed(headerField.rawString + '\r\n', 'serverHeaderFields')
+            if headerField.isSessionExpires:
+                self.appendStringToFileNamed(headerField.rawString + '\r\n', 'sessionExpiresHeaderFields')
+            if headerField.isSupported:
+                self.appendStringToFileNamed(headerField.rawString + '\r\n', 'supportedHeaderFields')
+            if headerField.isTimestamp:
+                self.appendStringToFileNamed(headerField.rawString + '\r\n', 'timestampHeaderFields')
+            if headerField.isTo:
+                self.appendStringToFileNamed(headerField.rawString + '\r\n', 'toHeaderFields')
+            if headerField.isUserAgent:
+                self.appendStringToFileNamed(headerField.rawString + '\r\n', 'userAgentHeaderFields')
+            if headerField.isVia:
+                self.appendStringToFileNamed(headerField.rawString + '\r\n', 'viaHeaderFields')
+            if headerField.isWarning:
+                self.appendStringToFileNamed(headerField.rawString + '\r\n', 'warningHeaderFields')
+            if headerField.isWWWAuthenticate:
+                self.appendStringToFileNamed(headerField.rawString + '\r\n', 'wwwAuthenticateHeaderFields')
             if headerField.isTo or headerField.isFrom:
                 if headerField.tag:
-                    self.appendStringToFileNamed(headerField.rawString, self.toAndFromTagsPathName)
-                    self.appendStringToFileNamed('\r\n    ', self.toAndFromTagsPathName)
-                    self.appendStringToFileNamed(headerField.tag, self.toAndFromTagsPathName)
-                    self.appendStringToFileNamed('\r\n', self.toAndFromTagsPathName)
+                    self.appendStringToFileNamed(headerField.rawString, 'toAndFromHeaderFieldsAndTags')
+                    self.appendStringToFileNamed('\r\n    ', 'toAndFromHeaderFieldsAndTags')
+                    self.appendStringToFileNamed(headerField.tag, 'toAndFromHeaderFieldsAndTags')
+                    self.appendStringToFileNamed('\r\n', 'toAndFromHeaderFieldsAndTags')
+                    self.appendStringToFileNamed(headerField.tag, 'toAndFromTags')
+                    self.appendStringToFileNamed('\r\n', 'toAndFromTags')
+            if headerField.isVia:
+                if headerField.branch:
+                    self.appendStringToFileNamed(headerField.rawString, 'viaHeaderFieldsAndBranches')
+                    self.appendStringToFileNamed('\r\n    ', 'viaHeaderFieldsAndBranches')
+                    self.appendStringToFileNamed(headerField.branch, 'viaHeaderFieldsAndBranches')
+                    self.appendStringToFileNamed('\r\n', 'viaHeaderFieldsAndBranches')
+                    self.appendStringToFileNamed(headerField.branch, 'viaBranches')
+                    self.appendStringToFileNamed('\r\n', 'viaBranches')
             if headerField.parameterNamesAndValues:
-                self.appendStringToFileNamed(headerField.rawString, self.headerFieldParametersPathName)
-                self.appendStringToFileNamed('\r\n', self.headerFieldParametersPathName)
+                self.appendStringToFileNamed(headerField.rawString, 'headerFieldParameters')
+                self.appendStringToFileNamed('\r\n', 'headerFieldParameters')
                 for name, value in headerField.parameterNamesAndValues.iteritems():
-                    self.appendStringToFileNamed("    " + name + " : " + value + '\r\n', self.headerFieldParametersPathName)
+                    self.appendStringToFileNamed("    " + name + " : " + value + '\r\n', 'headerFieldParameters')
         for headerField in aSIPMessage.header.knownHeaderFields:
-            self.appendStringToFileNamed(headerField.rawString, self.knownHeaderFieldsPathName)
-            self.appendStringToFileNamed("\r\n", self.knownHeaderFieldsPathName)
+            self.appendStringToFileNamed(headerField.rawString, 'knownHeaderFields')
+            self.appendStringToFileNamed("\r\n", 'knownHeaderFields')
         for headerField in aSIPMessage.header.knownHeaderFields:
-            self.appendStringToFileNamed(headerField.fieldName, self.knownHeaderFieldNamesPathName)
-            self.appendStringToFileNamed("\r\n", self.knownHeaderFieldNamesPathName)
+            self.appendStringToFileNamed(headerField.fieldName, 'knownHeaderFieldNames')
+            self.appendStringToFileNamed("\r\n", 'knownHeaderFieldNames')
         for headerField in aSIPMessage.header.unknownHeaderFields:
-            self.appendStringToFileNamed(headerField.rawString, self.unknownHeaderFieldsPathName)
-            self.appendStringToFileNamed("\r\n", self.unknownHeaderFieldsPathName)
+            self.appendStringToFileNamed(headerField.rawString, 'unknownHeaderFields')
+            self.appendStringToFileNamed("\r\n", 'unknownHeaderFields')
         for headerField in aSIPMessage.header.unknownHeaderFields:
-            self.appendStringToFileNamed(headerField.fieldName, self.unknownHeaderFieldNamesPathName)
-            self.appendStringToFileNamed("\r\n", self.unknownHeaderFieldNamesPathName)
+            self.appendStringToFileNamed(headerField.fieldName, 'unknownHeaderFieldNames')
+            self.appendStringToFileNamed("\r\n", 'unknownHeaderFieldNames')
 
     def handleInvalidSIPMessage(self, aSIPMessage):
         self.invalidSIPMessageCount += 1
-        self.appendStringToFileNamed(aSIPMessage.rawString, self.invalidSIPMessagesPathName)
-        self.appendStringToFileNamed(self.messageSeparator, self.invalidSIPMessagesPathName)
+        self.appendStringToFileNamed(aSIPMessage.rawString, 'invalidSIPMessages')
+        self.appendStringToFileNamed(self.messageSeparator, 'invalidSIPMessages')
 
     def handleValidKnownSIPMessage(self, aSIPMessage):
         self.validKnownSIPMessageCount += 1
-        self.appendStringToFileNamed(aSIPMessage.rawString, self.validKnownSIPMessagesPathName)
-        self.appendStringToFileNamed(self.messageSeparator, self.validKnownSIPMessagesPathName)
+        self.appendStringToFileNamed(aSIPMessage.rawString, 'validKnownSIPMessages')
+        self.appendStringToFileNamed(self.messageSeparator, 'validKnownSIPMessages')
         if aSIPMessage.isRequest:
-            self.appendStringToFileNamed(aSIPMessage.startLine.rawString, self.knownSIPStartLinesPathName)
-            self.appendStringToFileNamed("\r\n", self.knownSIPStartLinesPathName)
-            self.appendStringToFileNamed(aSIPMessage.startLine.sipMethod, self.knownSIPMethodsPathName)
-            self.appendStringToFileNamed("\r\n", self.knownSIPMethodsPathName)
+            self.appendStringToFileNamed(aSIPMessage.startLine.rawString, 'knownSIPStartLines')
+            self.appendStringToFileNamed("\r\n", 'knownSIPStartLines')
+            self.appendStringToFileNamed(aSIPMessage.startLine.sipMethod, 'knownSIPMethods')
+            self.appendStringToFileNamed("\r\n", 'knownSIPMethods')
 
     def handleValidUnknownSIPMessage(self, aSIPMessage):
         self.validUnknownSIPMessageCount += 1
-        self.appendStringToFileNamed(aSIPMessage.rawString, self.validUnknownSIPMessagesPathName)
-        self.appendStringToFileNamed(self.messageSeparator, self.validUnknownSIPMessagesPathName)
+        self.appendStringToFileNamed(aSIPMessage.rawString, 'validUnknownSIPMessages')
+        self.appendStringToFileNamed(self.messageSeparator, 'validUnknownSIPMessages')
         if aSIPMessage.isRequest:
-            self.appendStringToFileNamed(aSIPMessage.startLine.rawString, self.unknownSIPStartLinesPathName)
-            self.appendStringToFileNamed("\r\n", self.unknownSIPStartLinesPathName)
-            self.appendStringToFileNamed(aSIPMessage.startLine.sipMethod, self.unknownSIPMethodsPathName)
-            self.appendStringToFileNamed("\r\n", self.unknownSIPMethodsPathName)
+            self.appendStringToFileNamed(aSIPMessage.startLine.rawString, 'unknownSIPStartLines')
+            self.appendStringToFileNamed("\r\n", 'unknownSIPStartLines')
+            self.appendStringToFileNamed(aSIPMessage.startLine.sipMethod, 'unknownSIPMethods')
+            self.appendStringToFileNamed("\r\n", 'unknownSIPMethods')
 
     def runAssertionsForSIPMessage(self, aSIPMessage):
         self.assertTrue(aSIPMessage.rawString)
@@ -208,94 +276,93 @@ class TestSIPMessageFactoryForSanitizedLogFile(TestCase):
     def sanitizedFilePathName(self):
         return '../../proprietary-test-data/sanitized/sanitized.txt'
 
-    @property
-    def validSIPMessagesPathName(self):
-        return '../../proprietary-test-data/sanitized/validSIPMessages.txt'
-
-    @property
-    def invalidSIPMessagesPathName(self):
-        return '../../proprietary-test-data/sanitized/invalidSIPMessages.txt'
-
-    @property
-    def malformedSIPMessagesPathName(self):
-        return '../../proprietary-test-data/sanitized/malformedSIPMessages.txt'
-
+    # @property
+    # def validSIPMessagesPathName(self):
+    #     return '../../proprietary-test-data/analyzed/validSIPMessages.txt'
+    #
+    # @property
+    # def invalidSIPMessagesPathName(self):
+    #     return '../../proprietary-test-data/analyzed/invalidSIPMessages.txt'
+    #
+    # @property
+    # def malformedSIPMessagesPathName(self):
+    #     return '../../proprietary-test-data/analyzed/malformedSIPMessages.txt'
+    #
     @property
     def messageSeparator(self):
         return "__MESSAGESEPARATOR__\r\n"
-
-    @property
-    def validKnownSIPMessagesPathName(self):
-        return '../../proprietary-test-data/sanitized/validKnownSIPMessages.txt'
-
-    @property
-    def validUnknownSIPMessagesPathName(self):
-        return '../../proprietary-test-data/sanitized/validUnknownSIPMessages.txt'
-
-    @property
-    def knownSIPStartLinesPathName(self):
-        return '../../proprietary-test-data/sanitized/knownSIPStartLines.txt'
-
-    @property
-    def unknownSIPStartLinesPathName(self):
-        return '../../proprietary-test-data/sanitized/unknownSIPStartLines.txt'
-
-    @property
-    def knownSIPMethodsPathName(self):
-        return '../../proprietary-test-data/sanitized/knownSIPMethods.txt'
-
-    @property
-    def unknownSIPMethodsPathName(self):
-        return '../../proprietary-test-data/sanitized/unknownSIPMethods.txt'
-
-    @property
-    def knownHeaderFieldsPathName(self):
-        return '../../proprietary-test-data/sanitized/knownHeaderFields.txt'
-
-    @property
-    def unknownHeaderFieldsPathName(self):
-        return '../../proprietary-test-data/sanitized/unknownHeaderFields.txt'
-
-    @property
-    def knownHeaderFieldNamesPathName(self):
-        return '../../proprietary-test-data/sanitized/knownHeaderFieldNames.txt'
-
-    @property
-    def unknownHeaderFieldNamesPathName(self):
-        return '../../proprietary-test-data/sanitized/unknownHeaderFieldNames.txt'
-
-    @property
-    def headerFieldParametersPathName(self):
-        return '../../proprietary-test-data/sanitized/headerFieldParameters.txt'
-
-    @property
-    def toAndFromTagsPathName(self):
-        return '../../proprietary-test-data/sanitized/toAndFromTags.txt'
-
-    @property
-    def dialogsPathName(self):
-        return '../../proprietary-test-data/sanitized/dialogs.txt'
-
-    @property
-    def transactionsPathName(self):
-        return '../../proprietary-test-data/sanitized/transactions.txt'
+    #
+    # @property
+    # def validKnownSIPMessagesPathName(self):
+    #     return '../../proprietary-test-data/analyzed/validKnownSIPMessages.txt'
+    #
+    # @property
+    # def validUnknownSIPMessagesPathName(self):
+    #     return '../../proprietary-test-data/analyzed/validUnknownSIPMessages.txt'
+    #
+    # @property
+    # def knownSIPStartLinesPathName(self):
+    #     return '../../proprietary-test-data/analyzed/knownSIPStartLines.txt'
+    #
+    # @property
+    # def unknownSIPStartLinesPathName(self):
+    #     return '../../proprietary-test-data/analyzed/unknownSIPStartLines.txt'
+    #
+    # @property
+    # def knownSIPMethodsPathName(self):
+    #     return '../../proprietary-test-data/analyzed/knownSIPMethods.txt'
+    #
+    # @property
+    # def unknownSIPMethodsPathName(self):
+    #     return '../../proprietary-test-data/analyzed/unknownSIPMethods.txt'
+    #
+    # @property
+    # def knownHeaderFieldsPathName(self):
+    #     return '../../proprietary-test-data/analyzed/knownHeaderFields.txt'
+    #
+    # @property
+    # def unknownHeaderFieldsPathName(self):
+    #     return '../../proprietary-test-data/analyzed/unknownHeaderFields.txt'
+    #
+    # @property
+    # def knownHeaderFieldNamesPathName(self):
+    #     return '../../proprietary-test-data/analyzed/knownHeaderFieldNames.txt'
+    #
+    # @property
+    # def unknownHeaderFieldNamesPathName(self):
+    #     return '../../proprietary-test-data/analyzed/unknownHeaderFieldNames.txt'
+    #
+    # @property
+    # def headerFieldParametersPathName(self):
+    #     return '../../proprietary-test-data/analyzed/headerFieldParameters.txt'
+    #
+    # @property
+    # def toAndFromHeadersAndTagsPathName(self):
+    #     return '../../proprietary-test-data/analyzed/toAndFromHeadersAndTags.txt'
+    #
+    # @property
+    # def viaHeadersAndBranchesPathName(self):
+    #     return '../../proprietary-test-data/analyzed/viaHeadersAndBranches.txt'
+    #
+    # @property
+    # def dialogsPathName(self):
+    #     return '../../proprietary-test-data/analyzed/dialogs.txt'
+    #
+    # @property
+    # def transactionsPathName(self):
+    #     return '../../proprietary-test-data/analyzed/transactions.txt'
 
     def createFileNamed(self, fileName):
-        self._fileNamesAndFiles[fileName] = open(fileName, "w")
-        # with open(fileName, "w"):
-        #     pass
+        self._fileNamesAndFiles[fileName] = open('../../proprietary-test-data/analyzed/' + fileName + ".txt", "w")
 
     def appendStringToFileNamed(self, aString, fileName):
         if fileName not in self._fileNamesAndFiles:
             self.createFileNamed(fileName)
         self._fileNamesAndFiles[fileName].write(aString)
-        # with open(fileName, "a") as f:
-        #     f.write(aString)
 
     def closeFiles(self):
         for fileName in self._fileNamesAndFiles.keys():
             self._fileNamesAndFiles[fileName].close()
-
 
 
 class TestSIPMessageFactoryForMalformedSIPRequest(AbstractMalformedSIPMessageFromFactoryTestCase):

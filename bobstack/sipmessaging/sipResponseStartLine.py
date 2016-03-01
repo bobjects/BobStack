@@ -4,6 +4,7 @@ except ImportError:
     from StringIO import StringIO
 import re
 from sipStartLine import SIPStartLine
+from classproperty import classproperty
 
 
 class SIPResponseStartLine(SIPStartLine):
@@ -48,7 +49,7 @@ class SIPResponseStartLine(SIPStartLine):
     def parseAttributesFromRawString(self):
         self._statusCode = 500
         self._reasonPhrase = ""
-        match = self.__class__.regexForParsing().match(self._rawString)
+        match = self.__class__.regexForParsing.match(self._rawString)
         if match:
             self._statusCode, self._reasonPhrase = match.group(1, 2)
             self._statusCode = int(self._statusCode)
@@ -62,10 +63,12 @@ class SIPResponseStartLine(SIPStartLine):
         self._rawString = stringio.getvalue()
         stringio.close()
 
+    @classproperty
     @classmethod
     def regexForMatching(cls):
-        return cls.regexForParsing()
+        return cls.regexForParsing
 
+    @classproperty
     @classmethod
     def regexForParsing(cls):
         try:
@@ -76,7 +79,7 @@ class SIPResponseStartLine(SIPStartLine):
 
     @classmethod
     def canMatchString(cls, aString):
-        return cls.regexForMatching().match(aString) is not None
+        return cls.regexForMatching.match(aString) is not None
 
     @property
     def isResponse(self):

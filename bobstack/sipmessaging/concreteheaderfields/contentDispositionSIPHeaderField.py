@@ -6,6 +6,7 @@ import re
 import sys
 sys.path.append("../../..")
 from bobstack.sipmessaging import SIPHeaderField
+from bobstack.sipmessaging import classproperty
 
 
 class ContentDispositionSIPHeaderField(SIPHeaderField):
@@ -13,6 +14,7 @@ class ContentDispositionSIPHeaderField(SIPHeaderField):
     def newForAttributes(cls, fieldName="Content-Disposition", fieldValue=""):
         return cls.newForFieldAttributes(fieldName=fieldName, fieldValue=fieldValue)
 
+    @classproperty
     @classmethod
     def regexForMatchingFieldName(cls):
         try:
@@ -21,6 +23,7 @@ class ContentDispositionSIPHeaderField(SIPHeaderField):
             cls._regexForMatchingFieldName = re.compile('^Content-Disposition$', re.I)
             return cls._regexForMatchingFieldName
 
+    @classproperty
     @classmethod
     def regexForMatching(cls):
         try:
@@ -29,6 +32,7 @@ class ContentDispositionSIPHeaderField(SIPHeaderField):
             cls._regexForMatching = re.compile('^Content-Disposition\s*:', re.I)
             return cls._regexForMatching
 
+    @classproperty
     @classmethod
     def regexForParsing(cls):
         try:

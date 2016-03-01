@@ -6,6 +6,7 @@ import re
 import sys
 # sys.path.append("../../..")
 # from bobstack.sipmessaging import SIPHeaderField
+from classproperty import classproperty
 from sipHeaderField import SIPHeaderField
 
 # TODO: We will need to change our tests to exercise the new header fields that are subs of IntegerSIPHeaderField.
@@ -16,7 +17,7 @@ class IntegerSIPHeaderField(SIPHeaderField):
 
     @classmethod
     def newForAttributes(cls, value=0):
-        answer = cls.newForFieldAttributes(fieldName=cls.canonicalFieldName(), fieldValue=str(value))
+        answer = cls.newForFieldAttributes(fieldName=cls.canonicalFieldName, fieldValue=str(value))
         answer.value = value
         return answer
 
@@ -62,7 +63,7 @@ class IntegerSIPHeaderField(SIPHeaderField):
     def parseAttributesFromRawString(self):
         super(IntegerSIPHeaderField, self).parseAttributesFromRawString()
         self._value = None
-        match = self.__class__.regexForParsing().match(self._rawString)
+        match = self.__class__.regexForParsing.match(self._rawString)
         if match:
             matchGroup = match.group(1)
             if matchGroup:
@@ -71,28 +72,31 @@ class IntegerSIPHeaderField(SIPHeaderField):
                 # Will get here is the header field is present, but there is no value.
                 self._value = None
 
+    @classproperty
     @classmethod
     def regexForMatchingFieldName(cls):
         try:
             return cls._regexForMatchingFieldName
         except AttributeError:
-            cls._regexForMatchingFieldName = re.compile('^' + cls.canonicalFieldName() + '$', re.I)
+            cls._regexForMatchingFieldName = re.compile('^' + cls.canonicalFieldName + '$', re.I)
             return cls._regexForMatchingFieldName
 
+    @classproperty
     @classmethod
     def regexForMatching(cls):
         try:
             return cls._regexForMatching
         except AttributeError:
-            cls._regexForMatching = re.compile('^' + cls.canonicalFieldName() + '\s*:', re.I)
+            cls._regexForMatching = re.compile('^' + cls.canonicalFieldName + '\s*:', re.I)
             return cls._regexForMatching
 
+    @classproperty
     @classmethod
     def regexForParsing(cls):
         try:
             return cls._regexForParsing
         except AttributeError:
-            cls._regexForParsing = re.compile('^' + cls.canonicalFieldName() + '\s*:\s*(\d*)', re.I)
+            cls._regexForParsing = re.compile('^' + cls.canonicalFieldName + '\s*:\s*(\d*)', re.I)
             return cls._regexForParsing
 
     @property

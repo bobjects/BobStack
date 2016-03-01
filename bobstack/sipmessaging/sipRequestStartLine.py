@@ -4,6 +4,7 @@ except ImportError:
     from StringIO import StringIO
 import re
 from sipStartLine import SIPStartLine
+from classproperty import classproperty
 
 
 class SIPRequestStartLine(SIPStartLine):
@@ -48,7 +49,7 @@ class SIPRequestStartLine(SIPStartLine):
     def parseAttributesFromRawString(self):
         self._sipMethod = ""
         self._requestURI = ""
-        match = self.__class__.regexForParsing().match(self._rawString)
+        match = self.__class__.regexForParsing.match(self._rawString)
         if match:
             self._sipMethod, self._requestURI = match.group(1, 2)
 
@@ -61,10 +62,12 @@ class SIPRequestStartLine(SIPStartLine):
         self._rawString = stringio.getvalue()
         stringio.close()
 
+    @classproperty
     @classmethod
     def regexForMatching(cls):
-        return cls.regexForParsing()
+        return cls.regexForParsing
 
+    @classproperty
     @classmethod
     def regexForParsing(cls):
         try:
@@ -75,7 +78,7 @@ class SIPRequestStartLine(SIPStartLine):
 
     @classmethod
     def canMatchString(cls, aString):
-        return cls.regexForMatching().match(aString) is not None
+        return cls.regexForMatching.match(aString) is not None
 
     @property
     def isRequest(self):

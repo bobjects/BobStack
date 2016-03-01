@@ -3,6 +3,7 @@ try:
 except ImportError:
     from StringIO import StringIO
 import re
+from classproperty import classproperty
 
 
 class SIPHeaderField(object):
@@ -25,6 +26,7 @@ class SIPHeaderField(object):
         answer.fieldValue = fieldValue
         return answer
 
+    @classproperty
     @classmethod
     def canonicalFieldName(cls):
         raise NotImplementedError('call to abstract method ' + inspect.stack()[0][3])
@@ -90,7 +92,7 @@ class SIPHeaderField(object):
     def parseAttributesFromRawString(self):
         self._fieldName = ""
         self._fieldValue = ""
-        match = self.__class__.regexForParsingFieldAndValue().match(self._rawString)
+        match = self.__class__.regexForParsingFieldAndValue.match(self._rawString)
         if match:
             self._fieldName, self._fieldValue = match.group(1, 2)
 
@@ -102,18 +104,22 @@ class SIPHeaderField(object):
         self._rawString = stringio.getvalue()
         stringio.close()
 
+    @classproperty
     @classmethod
     def regexForMatchingFieldName(cls):
-        return cls.regexToNeverMatch()
+        return cls.regexToNeverMatch
 
+    @classproperty
     @classmethod
     def regexForMatching(cls):
-        return cls.regexForParsing()
+        return cls.regexForParsing
 
+    @classproperty
     @classmethod
     def regexForParsing(cls):
-        return cls.regexToNeverMatch()
+        return cls.regexToNeverMatch
 
+    @classproperty
     @classmethod
     def regexToNeverMatch(cls):
         try:
@@ -122,6 +128,7 @@ class SIPHeaderField(object):
             cls._regexToNeverMatch = re.compile('^NEVERMATCH')
             return cls._regexToNeverMatch
 
+    @classproperty
     @classmethod
     def regexForParsingFieldAndValue(cls):
         try:
@@ -132,7 +139,7 @@ class SIPHeaderField(object):
 
     @classmethod
     def canMatchString(cls, aString):
-        return cls.regexForMatching().match(aString) is not None
+        return cls.regexForMatching.match(aString) is not None
 
     @classmethod
     def canMatchFieldName(cls, aString):

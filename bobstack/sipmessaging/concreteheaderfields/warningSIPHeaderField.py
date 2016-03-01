@@ -6,6 +6,7 @@ import re
 import sys
 sys.path.append("../../..")
 from bobstack.sipmessaging import SIPHeaderField
+from bobstack.sipmessaging import classproperty
 
 
 class WarningSIPHeaderField(SIPHeaderField):
@@ -13,6 +14,7 @@ class WarningSIPHeaderField(SIPHeaderField):
     def newForAttributes(cls, fieldName="Warning", fieldValue=""):
         return cls.newForFieldAttributes(fieldName=fieldName, fieldValue=fieldValue)
 
+    @classproperty
     @classmethod
     def regexForMatchingFieldName(cls):
         try:
@@ -21,6 +23,7 @@ class WarningSIPHeaderField(SIPHeaderField):
             cls._regexForMatchingFieldName = re.compile('^Warning$', re.I)
             return cls._regexForMatchingFieldName
 
+    @classproperty
     @classmethod
     def regexForMatching(cls):
         try:
@@ -29,6 +32,7 @@ class WarningSIPHeaderField(SIPHeaderField):
             cls._regexForMatching = re.compile('^Warning\s*:', re.I)
             return cls._regexForMatching
 
+    @classproperty
     @classmethod
     def regexForParsing(cls):
         try:
