@@ -10,9 +10,11 @@ from bobstack.sipmessaging import classproperty
 
 
 class ToSIPHeaderField(SIPHeaderField):
+    # https://tools.ietf.org/html/rfc3261#section-20.39
+
     @classmethod
-    def newForAttributes(cls, fieldName="To", fieldValue=""):
-        return cls.newForFieldAttributes(fieldName=fieldName, fieldValue=fieldValue)
+    def newForAttributes(cls, fieldName="To", fieldValueString=""):
+        return cls.newForFieldNameAndValueString(fieldName=fieldName, fieldValueString=fieldValueString)
 
     @classproperty
     @classmethod

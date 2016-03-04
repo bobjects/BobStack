@@ -55,10 +55,10 @@ do
 	# echo "            return $CLASS.newParsedFrom(aString)"
 
 	# echo "        elif $CLASS.canMatchFieldName(aString):"
-	# echo "            return $CLASS.newForFieldAttributes(fieldName=aString)"
+	# echo "            return $CLASS.newForFieldNameAndValueString(fieldName=aString)"
 
 	# echo "        elif $CLASS.canMatchFieldName(fieldName):"
-	# echo "            return $CLASS.newForFieldAttributes(fieldName=fieldName, fieldValue=fieldValue)"
+	# echo "            return $CLASS.newForFieldNameAndValueString(fieldName=fieldName, fieldValueString=fieldValueString)"
 
 	echo "    @property"
 	echo "    def is$CLASS(self):"

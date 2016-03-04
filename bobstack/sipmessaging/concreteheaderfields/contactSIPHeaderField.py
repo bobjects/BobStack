@@ -11,8 +11,8 @@ from bobstack.sipmessaging import classproperty
 
 class ContactSIPHeaderField(SIPHeaderField):
     @classmethod
-    def newForAttributes(cls, fieldName="Contact", fieldValue=""):
-        return cls.newForFieldAttributes(fieldName=fieldName, fieldValue=fieldValue)
+    def newForAttributes(cls, fieldName="Contact", fieldValueString=""):
+        return cls.newForFieldNameAndValueString(fieldName=fieldName, fieldValueString=fieldValueString)
 
     @classproperty
     @classmethod

@@ -11,8 +11,8 @@ from bobstack.sipmessaging import classproperty
 
 class AuthorizationSIPHeaderField(SIPHeaderField):
     @classmethod
-    def newForAttributes(cls, fieldName="Authorization", fieldValue=""):
-        return cls.newForFieldAttributes(fieldName=fieldName, fieldValue=fieldValue)
+    def newForAttributes(cls, fieldName="Authorization", fieldValueString=""):
+        return cls.newForFieldNameAndValueString(fieldName=fieldName, fieldValueString=fieldValueString)
 
     @classproperty
     @classmethod

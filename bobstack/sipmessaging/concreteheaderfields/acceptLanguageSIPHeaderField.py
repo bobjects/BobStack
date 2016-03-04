@@ -11,8 +11,8 @@ from bobstack.sipmessaging import classproperty
 
 class AcceptLanguageSIPHeaderField(SIPHeaderField):
     @classmethod
-    def newForAttributes(cls, fieldName="Accept-Language", fieldValue=""):
-        return cls.newForFieldAttributes(fieldName=fieldName, fieldValue=fieldValue)
+    def newForAttributes(cls, fieldName="Accept-Language", fieldValueString=""):
+        return cls.newForFieldNameAndValueString(fieldName=fieldName, fieldValueString=fieldValueString)
 
     @classproperty
     @classmethod

@@ -15,11 +15,11 @@ class AbstractSIPHeaderFieldTestCase(TestCase):
     def canonicalStrings(self):
         answer = []
         for fieldName in self.canonicalFieldNames:
-            for fieldValue in self.canonicalFieldValues:
-                answer.append(fieldName + ": " + fieldValue)
-                answer.append(fieldName + ":     " + fieldValue)
-                answer.append(fieldName + "    : " + fieldValue)
-                answer.append(fieldName + "    :     " + fieldValue)
+            for fieldValueString in self.canonicalFieldValues:
+                answer.append(fieldName + ": " + fieldValueString)
+                answer.append(fieldName + ":     " + fieldValueString)
+                answer.append(fieldName + "    : " + fieldValueString)
+                answer.append(fieldName + "    :     " + fieldValueString)
         return answer
 
     @property
@@ -43,18 +43,18 @@ class AbstractSIPHeaderFieldTestCase(TestCase):
             self.assertTrue(headerField.isKnown, line)
             self.assertEqual(headerField.rawString, line, line)
             self.assertEqual(headerField.fieldName.lower(), self.canonicalFieldNames[0].lower())
-            self.assertTrue(headerField.fieldValue in self.canonicalFieldValues)
+            self.assertTrue(headerField.fieldValueString in self.canonicalFieldValues)
             headerField.rawString = self.canonicalFieldNames[0] + ': blooey'
-            self.assertEqual("blooey", headerField.fieldValue)
+            self.assertEqual("blooey", headerField.fieldValueString)
             self.assertEqual(headerField.fieldName.lower(), self.canonicalFieldNames[0].lower())
             self.assertEqual(self.canonicalFieldNames[0] + ': blooey', headerField.rawString)
 
     def basic_test_rendering(self):
-        for fieldValue in self.canonicalFieldValues:
-            headerField = self.sipHeaderFieldClassUnderTest.newForAttributes(fieldValue=fieldValue)
+        for fieldValueString in self.canonicalFieldValues:
+            headerField = self.sipHeaderFieldClassUnderTest.newForAttributes(fieldValueString=fieldValueString)
             self.assertTrue(headerField.isValid)
             self.assertTrue(headerField.isKnown)
-            self.assertEqual(headerField.rawString, self.canonicalFieldNames[0] + ': ' + fieldValue)
-            headerField.fieldValue = "blooey"
-            self.assertEqual("blooey", headerField.fieldValue)
+            self.assertEqual(headerField.rawString, self.canonicalFieldNames[0] + ': ' + fieldValueString)
+            headerField.fieldValueString = "blooey"
+            self.assertEqual("blooey", headerField.fieldValueString)
             self.assertEqual(headerField.rawString, self.canonicalFieldNames[0] + ': blooey')

@@ -197,10 +197,10 @@ class TestSIPMessageFactoryForSanitizedLogFile(TestCase):
                     self.appendStringToFileNamed('\r\n', 'viaHeaderFieldsAndBranches')
                     self.appendStringToFileNamed(headerField.branch, 'viaBranches')
                     self.appendStringToFileNamed('\r\n', 'viaBranches')
-            if headerField.parameterNamesAndValues:
+            if headerField.parameterNamesAndValueStrings:
                 self.appendStringToFileNamed(headerField.rawString, 'headerFieldParameters')
                 self.appendStringToFileNamed('\r\n', 'headerFieldParameters')
-                for name, value in headerField.parameterNamesAndValues.iteritems():
+                for name, value in headerField.parameterNamesAndValueStrings.iteritems():
                     self.appendStringToFileNamed("    " + name + " : " + value + '\r\n', 'headerFieldParameters')
         for headerField in aSIPMessage.header.knownHeaderFields:
             self.appendStringToFileNamed(headerField.rawString, 'knownHeaderFields')

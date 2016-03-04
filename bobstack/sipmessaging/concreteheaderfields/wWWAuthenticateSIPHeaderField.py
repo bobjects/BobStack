@@ -11,8 +11,8 @@ from bobstack.sipmessaging import classproperty
 
 class WWWAuthenticateSIPHeaderField(SIPHeaderField):
     @classmethod
-    def newForAttributes(cls, fieldName="WWW-Authenticate", fieldValue=""):
-        return cls.newForFieldAttributes(fieldName=fieldName, fieldValue=fieldValue)
+    def newForAttributes(cls, fieldName="WWW-Authenticate", fieldValueString=""):
+        return cls.newForFieldNameAndValueString(fieldName=fieldName, fieldValueString=fieldValueString)
 
     @classproperty
     @classmethod

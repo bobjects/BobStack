@@ -17,20 +17,20 @@ class IntegerSIPHeaderField(SIPHeaderField):
 
     @classmethod
     def newForAttributes(cls, value=0):
-        answer = cls.newForFieldAttributes(fieldName=cls.canonicalFieldName, fieldValue=str(value))
+        answer = cls.newForFieldNameAndValueString(fieldName=cls.canonicalFieldName, fieldValueString=str(value))
         answer.value = value
         return answer
 
     # TODO:  testing.
     @classmethod
-    def newForFieldAttributes(cls, fieldName="", fieldValue="0"):
+    def newForFieldNameAndValueString(cls, fieldName="", fieldValueString="0"):
         answer = cls()
         answer.fieldName = fieldName
-        answer.fieldValue = fieldValue
+        answer.fieldValueString = fieldValueString
         # TODO:  May need to parse out parameters as well here.
         # TODO:  need to cache.
-        # match = re.match("^(\d+)", fieldValue)
-        match = cls.regexForParsingInteger.match(fieldValue)
+        # match = re.match("^(\d+)", fieldValueString)
+        match = cls.regexForParsingInteger.match(fieldValueString)
         if match:
             digits = match.group(0)
         else:
@@ -53,7 +53,7 @@ class IntegerSIPHeaderField(SIPHeaderField):
     @value.setter
     def value(self, anInteger):
         self._value = anInteger
-        self.fieldValue = str(anInteger)
+        self.fieldValueString = str(anInteger)
         self.clearRawString()
 
     def clearAttributes(self):

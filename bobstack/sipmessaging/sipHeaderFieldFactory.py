@@ -117,7 +117,7 @@ class SIPHeaderFieldFactory(object):
         return self.classForString(aString).newParsedFrom(aString)
 
     def nextForFieldName(self, aString):
-        return self.classForFieldName(aString).newForFieldAttributes(fieldName=aString)
+        return self.classForFieldName(aString).newForFieldNameAndValueString(fieldName=aString)
 
-    def nextForFieldNameAndFieldValue(self, fieldName, fieldValue):
-        return self.classForFieldName(fieldName).newForFieldAttributes(fieldName=fieldName, fieldValue=fieldValue)
+    def nextForFieldNameAndFieldValue(self, fieldName, fieldValueString):
+        return self.classForFieldName(fieldName).newForFieldNameAndValueString(fieldName=fieldName, fieldValueString=fieldValueString)

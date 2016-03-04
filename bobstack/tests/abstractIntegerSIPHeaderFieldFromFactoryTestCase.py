@@ -27,6 +27,6 @@ class AbstractIntegerSIPHeaderFieldFromFactoryTestCase(AbstractSIPHeaderFieldFro
             headerField.rawString = self.canonicalFieldNames[0] + ': 301'
             self.assertEqual(301, headerField.value)
             self.assertEqual(headerField.fieldName.lower(), self.canonicalFieldNames[0].lower())
-            self.assertEqual(headerField.fieldValue, "301")
+            self.assertEqual(headerField.fieldValueString, "301")
             self.assertEqual(self.canonicalFieldNames[0] + ': 301', headerField.rawString)
 

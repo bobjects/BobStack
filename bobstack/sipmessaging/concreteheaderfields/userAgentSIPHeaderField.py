@@ -11,8 +11,8 @@ from bobstack.sipmessaging import classproperty
 
 class UserAgentSIPHeaderField(SIPHeaderField):
     @classmethod
-    def newForAttributes(cls, fieldName="User-Agent", fieldValue=""):
-        return cls.newForFieldAttributes(fieldName=fieldName, fieldValue=fieldValue)
+    def newForAttributes(cls, fieldName="User-Agent", fieldValueString=""):
+        return cls.newForFieldNameAndValueString(fieldName=fieldName, fieldValueString=fieldValueString)
 
     @classproperty
     @classmethod

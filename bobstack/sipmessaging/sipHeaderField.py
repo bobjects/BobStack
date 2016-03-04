@@ -16,14 +16,14 @@ class SIPHeaderField(object):
         return answer
 
     @classmethod
-    def newForAttributes(cls, fieldName="", fieldValue=""):
-        return cls.newForFieldAttributes(fieldName=fieldName, fieldValue=fieldValue)
+    def newForAttributes(cls, fieldName="", fieldValueString=""):
+        return cls.newForFieldNameAndValueString(fieldName=fieldName, fieldValueString=fieldValueString)
 
     @classmethod
-    def newForFieldAttributes(cls, fieldName="", fieldValue=""):
+    def newForFieldNameAndValueString(cls, fieldName="", fieldValueString=""):
         answer = cls()
         answer.fieldName = fieldName
-        answer.fieldValue = fieldValue
+        answer.fieldValueString = fieldValueString
         return answer
 
     @classproperty
@@ -34,7 +34,7 @@ class SIPHeaderField(object):
     def __init__(self):
         self._rawString = None
         self._fieldName = None
-        self._fieldValue = None
+        self._fieldValueString = None
 
     @property
     def rawString(self):
@@ -59,14 +59,14 @@ class SIPHeaderField(object):
         self.clearRawString()
 
     @property
-    def fieldValue(self):
-        if self._fieldValue is None:
+    def fieldValueString(self):
+        if self._fieldValueString is None:
             self.parseAttributesFromRawString()
-        return self._fieldValue
+        return self._fieldValueString
 
-    @fieldValue.setter
-    def fieldValue(self, aString):
-        self._fieldValue = aString
+    @fieldValueString.setter
+    def fieldValueString(self, aString):
+        self._fieldValueString = aString
         self.clearRawString()
 
     # TODO: Answer a dict of parameter names and values encoded into the field value.
@@ -74,33 +74,33 @@ class SIPHeaderField(object):
     # TODO: need to cache
     # TODO: possibly refactor this into a mixin.
     @property
-    def parameterNamesAndValues(self):
+    def parameterNamesAndValueStrings(self):
         # RFC3261  7.3.1 Header Field Format
-        # return dict(re.findall(';([^=;]+)=?([^;]+)?', self.fieldValue))
-        return dict(self.__class__.regexForFindingParameterNamesAndValues.findall(self.fieldValue))
+        # return dict(re.findall(';([^=;]+)=?([^;]+)?', self.fieldValueString))
+        return dict(self.__class__.regexForFindingParameterNamesAndValues.findall(self.fieldValueString))
 
     def parameterNamed(self, aString):
-        return self.parameterNamesAndValues.get(aString, None)
+        return self.parameterNamesAndValueStrings.get(aString, None)
 
     def clearRawString(self):
         self._rawString = None
 
     def clearAttributes(self):
         self._fieldName = None
-        self._fieldValue = None
+        self._fieldValueString = None
 
     def parseAttributesFromRawString(self):
         self._fieldName = ""
-        self._fieldValue = ""
+        self._fieldValueString = ""
         match = self.__class__.regexForParsingFieldAndValue.match(self._rawString)
         if match:
-            self._fieldName, self._fieldValue = match.group(1, 2)
+            self._fieldName, self._fieldValueString = match.group(1, 2)
 
     def renderRawStringFromAttributes(self):
         stringio = StringIO()
         stringio.write(str(self._fieldName))
         stringio.write(": ")
-        stringio.write(str(self._fieldValue))
+        stringio.write(str(self._fieldValueString))
         self._rawString = stringio.getvalue()
         stringio.close()
 
@@ -157,7 +157,7 @@ class SIPHeaderField(object):
     def isValid(self):
         if not self.fieldName:  # fail if None or empty fieldName.
             return False
-        if self.fieldValue is None:
+        if self.fieldValueString is None:
             return False
         return True
 

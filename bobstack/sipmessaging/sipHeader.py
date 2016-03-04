@@ -56,7 +56,7 @@ class SIPHeader(object):
     @property
     def callID(self):
         if self.callIDHeaderField is not None:
-            return self.callIDHeaderField.fieldValue
+            return self.callIDHeaderField.fieldValueString
         return None
 
     # TODO - cache and test
@@ -68,7 +68,7 @@ class SIPHeader(object):
     @property
     def cSeq(self):
         if self.cSeqHeaderField is not None:
-            return self.cSeqHeaderField.fieldValue
+            return self.cSeqHeaderField.fieldValueString
         return None
 
     # TODO - cache and test
@@ -80,7 +80,7 @@ class SIPHeader(object):
     # @property
     # def to(self):
     #     if self.toHeaderField is not None:
-    #         return self.toHeaderField.fieldValue
+    #         return self.toHeaderField.fieldValueString
     #     return None
 
     # TODO - cache and test
@@ -92,7 +92,7 @@ class SIPHeader(object):
     # @property
     # def from(self):
     #     if self.fromHeaderField is not None:
-    #         return self.fromHeaderField.fieldValue
+    #         return self.fromHeaderField.fieldValueString
     #     return None
 
     # TODO - cache and test
@@ -103,7 +103,7 @@ class SIPHeader(object):
     @property
     def vias(self):
         if self._viaHeaderFields is not None:
-            return [x.fieldValue for x in self._viaHeaderFields]
+            return [x.fieldValueString for x in self._viaHeaderFields]
         return []
 
     @property
@@ -143,10 +143,10 @@ class SIPHeader(object):
                     self._headerFields = [factory.nextForString(s) for s in aListOrString]
                 elif isinstance(aListOrString[0], (list, tuple)):  # list of field names and field values
                     headerFields = []
-                    for fieldName, fieldValue in aListOrString:
-                        if isinstance(fieldValue, dict):  # fieldValue is dict of property names and values.
+                    for fieldName, fieldValueString in aListOrString:
+                        if isinstance(fieldValueString, dict):  # fieldValueString is dict of property names and values.
                             headerField = factory.nextForFieldName(fieldName)
-                            for propertyName, propertyValue in fieldValue.iteritems():
+                            for propertyName, propertyValue in fieldValueString.iteritems():
                                 prop = next(c.__dict__.get(propertyName, None) for c in headerField.__class__.__mro__ if propertyName in c.__dict__)
                                 if type(prop) is property:
                                     setter = prop.fset
@@ -154,7 +154,7 @@ class SIPHeader(object):
                                         setter(headerField, propertyValue)
                             headerFields.append(headerField)
                         else:
-                            headerFields.append(factory.nextForFieldNameAndFieldValue(fieldName, str(fieldValue)))
+                            headerFields.append(factory.nextForFieldNameAndFieldValue(fieldName, str(fieldValueString)))
                     self._headerFields = headerFields
                 else:
                     self._headerFields = aListOrString  # list of SIPHeaderField instances

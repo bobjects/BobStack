@@ -16,11 +16,11 @@ class AbstractSIPHeaderFieldFromFactoryTestCase(TestCase):
     def canonicalStrings(self):
         answer = []
         for fieldName in self.canonicalFieldNames:
-            for fieldValue in self.canonicalFieldValues:
-                answer.append(fieldName + ": " + fieldValue)
-                answer.append(fieldName + ":     " + fieldValue)
-                answer.append(fieldName + "    : " + fieldValue)
-                answer.append(fieldName + "    :     " + fieldValue)
+            for fieldValueString in self.canonicalFieldValues:
+                answer.append(fieldName + ": " + fieldValueString)
+                answer.append(fieldName + ":     " + fieldValueString)
+                answer.append(fieldName + "    : " + fieldValueString)
+                answer.append(fieldName + "    :     " + fieldValueString)
         return answer
 
     @property
@@ -42,8 +42,8 @@ class AbstractSIPHeaderFieldFromFactoryTestCase(TestCase):
             self.assertTrue(headerField.isKnown, line)
             self.assertEqual(headerField.rawString, line, line)
             self.assertEqual(headerField.fieldName.lower(), self.canonicalFieldNames[0].lower())
-            self.assertIsInstance(headerField.fieldValue, basestring, line)
-            self.assertTrue(headerField.fieldValue in self.canonicalFieldValues)
+            self.assertIsInstance(headerField.fieldValueString, basestring, line)
+            self.assertTrue(headerField.fieldValueString in self.canonicalFieldValues)
 
             stringio = StringIO(line + '\r\n')
             headerField = SIPHeaderFieldFactory().allForStringIO(stringio)[0]
@@ -51,21 +51,21 @@ class AbstractSIPHeaderFieldFromFactoryTestCase(TestCase):
             self.assertTrue(headerField.isKnown, line)
             self.assertEqual(headerField.rawString, line, line)
             self.assertEqual(headerField.fieldName.lower(), self.canonicalFieldNames[0].lower())
-            self.assertIsInstance(headerField.fieldValue, basestring, line)
-            self.assertTrue(headerField.fieldValue in self.canonicalFieldValues)
+            self.assertIsInstance(headerField.fieldValueString, basestring, line)
+            self.assertTrue(headerField.fieldValueString in self.canonicalFieldValues)
             stringio.close()
 
             headerField = SIPHeaderFieldFactory().nextForFieldName(self.canonicalFieldNames[0])
             self.assertTrue(headerField.isValid)
             self.assertTrue(headerField.isKnown)
             self.assertEqual(headerField.fieldName.lower(), self.canonicalFieldNames[0].lower())
-            self.assertIsInstance(headerField.fieldValue, basestring)
+            self.assertIsInstance(headerField.fieldValueString, basestring)
 
             headerField = SIPHeaderFieldFactory().nextForFieldNameAndFieldValue(self.canonicalFieldNames[0], self.canonicalFieldValues[0])
-            self.assertEqual(headerField.fieldValue, self.canonicalFieldValues[0], line)
+            self.assertEqual(headerField.fieldValueString, self.canonicalFieldValues[0], line)
             self.assertTrue(headerField.isValid, line)
             self.assertTrue(headerField.isKnown, line)
             self.assertEqual(headerField.rawString, self.canonicalStrings[0])
             self.assertEqual(headerField.fieldName.lower(), self.canonicalFieldNames[0].lower())
-            self.assertIsInstance(headerField.fieldValue, basestring, line)
-            self.assertTrue(headerField.fieldValue in self.canonicalFieldValues)
+            self.assertIsInstance(headerField.fieldValueString, basestring, line)
+            self.assertTrue(headerField.fieldValueString in self.canonicalFieldValues)
