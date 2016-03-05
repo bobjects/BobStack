@@ -1,5 +1,6 @@
 from classproperty import classproperty
 from strongRandomStringServer import StrongRandomStringServer
+from sipURI import SIPURI
 from sipHeaderField import SIPHeaderField
 from integerSIPHeaderField import IntegerSIPHeaderField
 from concreteheaderfields import ContentLengthSIPHeaderField
