@@ -33,7 +33,7 @@ class AbstractMalformedSIPMessageTestCase(AbstractSIPMessageTestCase):
     def run_test_rendering_from_list_of_header_fields(self):
         headerFields = self.listOfHeaderFieldsForAssertion
         # TODO underscore on next line?
-        message = self.sipMessageClassUnderTest._newForAttributes(startLine=MalformedSIPStartLine.newParsedFrom('Malformed start line'), content='Foo Content', header=SIPHeader.newForAttributes(headerFields=headerFields))
+        message = self.sipMessageClassUnderTest.newForAttributes(startLine=MalformedSIPStartLine.newParsedFrom('Malformed start line'), content='Foo Content', header=SIPHeader.newForAttributes(headerFields=headerFields))
         self.runAssertionsForSIPMessage(message)
 
     def run_test_rendering_from_one_big_header_string(self):

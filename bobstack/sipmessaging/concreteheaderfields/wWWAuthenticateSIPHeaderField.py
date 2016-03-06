@@ -10,10 +10,15 @@ from bobstack.sipmessaging import classproperty
 
 
 class WWWAuthenticateSIPHeaderField(SIPHeaderField):
+    @classproperty
+    @classmethod
+    def canonicalFieldName(cls):
+        return 'WWW-Authenticate'
+
     @classmethod
     def newForAttributes(cls, fieldName="WWW-Authenticate", fieldValueString=""):
         return cls.newForFieldNameAndValueString(fieldName=fieldName, fieldValueString=fieldValueString)
-
+    '''
     @classproperty
     @classmethod
     def regexForMatchingFieldName(cls):
@@ -40,7 +45,7 @@ class WWWAuthenticateSIPHeaderField(SIPHeaderField):
         except AttributeError:
             cls._regexForParsing = re.compile('^WWW-Authenticate\s*:\s*(.*)', re.I)
             return cls._regexForParsing
-
+    '''
     @property
     def isWWWAuthenticate(self):
         return True

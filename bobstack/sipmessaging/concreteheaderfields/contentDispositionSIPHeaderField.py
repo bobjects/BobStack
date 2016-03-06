@@ -10,10 +10,15 @@ from bobstack.sipmessaging import classproperty
 
 
 class ContentDispositionSIPHeaderField(SIPHeaderField):
+    @classproperty
+    @classmethod
+    def canonicalFieldName(cls):
+        return 'Content-Disposition'
+
     @classmethod
     def newForAttributes(cls, fieldName="Content-Disposition", fieldValueString=""):
         return cls.newForFieldNameAndValueString(fieldName=fieldName, fieldValueString=fieldValueString)
-
+    '''
     @classproperty
     @classmethod
     def regexForMatchingFieldName(cls):
@@ -40,7 +45,7 @@ class ContentDispositionSIPHeaderField(SIPHeaderField):
         except AttributeError:
             cls._regexForParsing = re.compile('^Content-Disposition\s*:\s*(.*)', re.I)
             return cls._regexForParsing
-
+    '''
     @property
     def isContentDisposition(self):
         return True

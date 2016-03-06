@@ -219,6 +219,9 @@ class TestSIPMessageFactoryForSanitizedLogFile(TestCase):
         self.invalidSIPMessageCount += 1
         self.appendStringToFileNamed(aSIPMessage.rawString, 'invalidSIPMessages')
         self.appendStringToFileNamed(self.messageSeparator, 'invalidSIPMessages')
+        for headerField in aSIPMessage.header.headerFields:
+            if headerField.isInvalid:
+                self.appendStringToFileNamed(headerField.rawString, 'invalidHeaderFields')
 
     def handleValidKnownSIPMessage(self, aSIPMessage):
         self.validKnownSIPMessageCount += 1

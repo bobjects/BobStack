@@ -10,10 +10,15 @@ from bobstack.sipmessaging import classproperty
 
 
 class DateSIPHeaderField(SIPHeaderField):
+    @classproperty
+    @classmethod
+    def canonicalFieldName(cls):
+        return 'Date'
+
     @classmethod
     def newForAttributes(cls, fieldName="Date", fieldValueString=""):
         return cls.newForFieldNameAndValueString(fieldName=fieldName, fieldValueString=fieldValueString)
-
+    '''
     @classproperty
     @classmethod
     def regexForMatchingFieldName(cls):
@@ -40,7 +45,7 @@ class DateSIPHeaderField(SIPHeaderField):
         except AttributeError:
             cls._regexForParsing = re.compile('^Date\s*:\s*(.*)', re.I)
             return cls._regexForParsing
-
+    '''
     @property
     def isDate(self):
         return True

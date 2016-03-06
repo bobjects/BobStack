@@ -10,10 +10,15 @@ from bobstack.sipmessaging import classproperty
 
 
 class CallInfoSIPHeaderField(SIPHeaderField):
+    @classproperty
+    @classmethod
+    def canonicalFieldName(cls):
+        return 'Call-Info'
+
     @classmethod
     def newForAttributes(cls, fieldName="Call-Info", fieldValueString=""):
         return cls.newForFieldNameAndValueString(fieldName=fieldName, fieldValueString=fieldValueString)
-
+    '''
     @classproperty
     @classmethod
     def regexForMatchingFieldName(cls):
@@ -40,7 +45,7 @@ class CallInfoSIPHeaderField(SIPHeaderField):
         except AttributeError:
             cls._regexForParsing = re.compile('^Call-Info\s*:\s*(.*)', re.I)
             return cls._regexForParsing
-
+    '''
     @property
     def isCallInfo(self):
         return True

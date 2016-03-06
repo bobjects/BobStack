@@ -44,6 +44,5 @@ class AbstractIntegerSIPHeaderFieldTestCase(AbstractSIPHeaderFieldTestCase):
             self.assertTrue(headerField.isKnown)
             self.assertEqual(headerField.rawString, self.canonicalFieldNames[0] + ': 500')
             self.assertIsInstance(headerField.value, (int, long))
-            # TODO:  This has turned up a BUG!  FIX IT!
-            # self.assertEqual(headerField.value, 500)
+            self.assertEqual(headerField.value, 500)
             self.assertEqual("500", headerField.fieldValueString)

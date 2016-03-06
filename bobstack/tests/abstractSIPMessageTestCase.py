@@ -6,6 +6,7 @@ from unittest import TestCase
 import inspect
 import sys
 sys.path.append("..")
+from sipmessaging import SIPURI
 from sipmessaging import ContentLengthSIPHeaderField
 from sipmessaging import ViaSIPHeaderField
 from sipmessaging import AcceptSIPHeaderField
@@ -161,7 +162,8 @@ class AbstractSIPMessageTestCase(TestCase):
     def listOfHeaderFieldsForAssertion(self):
         return [
             FromSIPHeaderField.newForAttributes(fieldValueString='<sip:200.25.3.150:5061>;tag=0ee8d3e272e31c9195299efc500'),
-            ToSIPHeaderField.newForAttributes(fieldValueString='<sip:example.com:5061>'),
+            # ToSIPHeaderField.newForAttributes(fieldValueString='<sip:example.com:5061>'),
+            ToSIPHeaderField.newForAttributes(tag=None, displayName=None, sipURI=SIPURI.newParsedFrom('sip:example.com:5061')),
             CallIDSIPHeaderField.newForAttributes(fieldValueString='0ee8d3e272e31c9195299efc500'),
             CSeqSIPHeaderField.newForAttributes(fieldValueString='6711 ' + self.sipMethodString),
             MaxForwardsSIPHeaderField.newForAttributes(value=70),

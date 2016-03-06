@@ -10,10 +10,15 @@ from bobstack.sipmessaging import classproperty
 
 
 class AcceptSIPHeaderField(SIPHeaderField):
+    @classproperty
+    @classmethod
+    def canonicalFieldName(cls):
+        return 'Accept'
+
     @classmethod
     def newForAttributes(cls, fieldName="Accept", fieldValueString=""):
         return cls.newForFieldNameAndValueString(fieldName=fieldName, fieldValueString=fieldValueString)
-
+    '''
     @classproperty
     @classmethod
     def regexForMatchingFieldName(cls):
@@ -40,7 +45,7 @@ class AcceptSIPHeaderField(SIPHeaderField):
         except AttributeError:
             cls._regexForParsing = re.compile('^Accept\s*:\s*(.*)', re.I)
             return cls._regexForParsing
-
+    '''
     @property
     def isAccept(self):
         return True

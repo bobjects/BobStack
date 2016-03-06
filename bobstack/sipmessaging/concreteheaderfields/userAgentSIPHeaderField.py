@@ -10,10 +10,15 @@ from bobstack.sipmessaging import classproperty
 
 
 class UserAgentSIPHeaderField(SIPHeaderField):
+    @classproperty
+    @classmethod
+    def canonicalFieldName(cls):
+        return 'User-Agent'
+
     @classmethod
     def newForAttributes(cls, fieldName="User-Agent", fieldValueString=""):
         return cls.newForFieldNameAndValueString(fieldName=fieldName, fieldValueString=fieldValueString)
-
+    '''
     @classproperty
     @classmethod
     def regexForMatchingFieldName(cls):
@@ -40,7 +45,7 @@ class UserAgentSIPHeaderField(SIPHeaderField):
         except AttributeError:
             cls._regexForParsing = re.compile('^User-Agent\s*:\s*(.*)', re.I)
             return cls._regexForParsing
-
+    '''
     @property
     def isUserAgent(self):
         return True

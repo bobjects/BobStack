@@ -10,10 +10,15 @@ from bobstack.sipmessaging import classproperty
 
 
 class RecordRouteSIPHeaderField(SIPHeaderField):
+    @classproperty
+    @classmethod
+    def canonicalFieldName(cls):
+        return 'Record-Route'
+
     @classmethod
     def newForAttributes(cls, fieldName="Record-Route", fieldValueString=""):
         return cls.newForFieldNameAndValueString(fieldName=fieldName, fieldValueString=fieldValueString)
-
+    '''
     @classproperty
     @classmethod
     def regexForMatchingFieldName(cls):
@@ -40,7 +45,7 @@ class RecordRouteSIPHeaderField(SIPHeaderField):
         except AttributeError:
             cls._regexForParsing = re.compile('^Record-Route\s*:\s*(.*)', re.I)
             return cls._regexForParsing
-
+    '''
     @property
     def isRecordRoute(self):
         return True

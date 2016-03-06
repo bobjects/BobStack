@@ -10,10 +10,15 @@ from bobstack.sipmessaging import classproperty
 
 
 class AuthorizationSIPHeaderField(SIPHeaderField):
+    @classproperty
+    @classmethod
+    def canonicalFieldName(cls):
+        return 'Authorization'
+
     @classmethod
     def newForAttributes(cls, fieldName="Authorization", fieldValueString=""):
         return cls.newForFieldNameAndValueString(fieldName=fieldName, fieldValueString=fieldValueString)
-
+    '''
     @classproperty
     @classmethod
     def regexForMatchingFieldName(cls):
@@ -40,7 +45,7 @@ class AuthorizationSIPHeaderField(SIPHeaderField):
         except AttributeError:
             cls._regexForParsing = re.compile('^Authorization\s*:\s*(.*)', re.I)
             return cls._regexForParsing
-
+    '''
     @property
     def isAuthorization(self):
         return True

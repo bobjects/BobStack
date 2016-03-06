@@ -10,10 +10,16 @@ from bobstack.sipmessaging import classproperty
 
 
 class FromSIPHeaderField(SIPHeaderField):
+    @classproperty
+    @classmethod
+    def canonicalFieldName(cls):
+        return 'From'
+
     @classmethod
     def newForAttributes(cls, fieldName="From", fieldValueString=""):
         return cls.newForFieldNameAndValueString(fieldName=fieldName, fieldValueString=fieldValueString)
 
+    '''
     @classproperty
     @classmethod
     def regexForMatchingFieldName(cls):
@@ -40,6 +46,7 @@ class FromSIPHeaderField(SIPHeaderField):
         except AttributeError:
             cls._regexForParsing = re.compile('^From\s*:\s*(.*)', re.I)
             return cls._regexForParsing
+    '''
 
     # TODO: need to test
     # TODO: need to cache

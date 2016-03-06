@@ -10,10 +10,15 @@ from bobstack.sipmessaging import classproperty
 
 
 class CSeqSIPHeaderField(SIPHeaderField):
+    @classproperty
+    @classmethod
+    def canonicalFieldName(cls):
+        return 'CSeq'
+
     @classmethod
     def newForAttributes(cls, fieldName="CSeq", fieldValueString=""):
         return cls.newForFieldNameAndValueString(fieldName=fieldName, fieldValueString=fieldValueString)
-
+    '''
     @classproperty
     @classmethod
     def regexForMatchingFieldName(cls):
@@ -40,7 +45,7 @@ class CSeqSIPHeaderField(SIPHeaderField):
         except AttributeError:
             cls._regexForParsing = re.compile('^CSeq\s*:\s*(.*)', re.I)
             return cls._regexForParsing
-
+    '''
     @property
     def isCSeq(self):
         return True

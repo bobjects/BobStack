@@ -3,6 +3,7 @@ try:
 except ImportError:
     from StringIO import StringIO
 import re
+import inspect
 from classproperty import classproperty
 
 
@@ -17,6 +18,7 @@ class SIPHeaderField(object):
 
     @classmethod
     def newForAttributes(cls, fieldName="", fieldValueString=""):
+        # This will typically be overridden by classes that have interesting attributes.
         return cls.newForFieldNameAndValueString(fieldName=fieldName, fieldValueString=fieldValueString)
 
     @classmethod
@@ -32,42 +34,55 @@ class SIPHeaderField(object):
         raise NotImplementedError('call to abstract method ' + inspect.stack()[0][3])
 
     def __init__(self):
-        self._rawString = None
-        self._fieldName = None
-        self._fieldValueString = None
+        self.clearRawString()
+        self.clearFieldNameAndValueString()
+        self.clearAttributes()
+
 
     @property
     def rawString(self):
-        if self._rawString is None:
-            self.renderRawStringFromAttributes()
+        if not self._rawStringHasBeenSet:
+            self.renderRawStringFromFieldNameAndValueString()
         return self._rawString
 
     @rawString.setter
     def rawString(self, aString):
         self._rawString = aString
+        self._rawStringHasBeenSet = True
+        self.clearFieldNameAndValueString()
         self.clearAttributes()
 
     @property
     def fieldName(self):
-        if self._fieldName is None:
-            self.parseAttributesFromRawString()
+        if not self._fieldNameAndValueStringHasBeenSet:
+            if self._attributeHasBeenSet:
+                self.renderFieldNameAndValueStringFromAttributes()
+            elif self._rawStringHasBeenSet:
+                self.parseFieldNameAndValueStringFromRawString()
         return self._fieldName
 
     @fieldName.setter
     def fieldName(self, aString):
         self._fieldName = aString
+        self._fieldNameAndValueStringHasBeenSet = True
         self.clearRawString()
+        self.clearAttributes()
 
     @property
     def fieldValueString(self):
-        if self._fieldValueString is None:
-            self.parseAttributesFromRawString()
+        if not self._fieldNameAndValueStringHasBeenSet:
+            if self._attributeHasBeenSet:
+                self.renderFieldNameAndValueStringFromAttributes()
+            elif self._rawStringHasBeenSet:
+                self.parseFieldNameAndValueStringFromRawString()
         return self._fieldValueString
 
     @fieldValueString.setter
     def fieldValueString(self, aString):
         self._fieldValueString = aString
+        self._fieldNameAndValueStringHasBeenSet = True
         self.clearRawString()
+        self.clearAttributes()
 
     # TODO: Answer a dict of parameter names and values encoded into the field value.
     # TODO: need to test
@@ -83,36 +98,69 @@ class SIPHeaderField(object):
         return self.parameterNamesAndValueStrings.get(aString, None)
 
     def clearRawString(self):
+        self._rawStringHasBeenSet = False
         self._rawString = None
 
     def clearAttributes(self):
+        # override in subclasses that have interesting attributes.
+        self._attributeHasBeenSet = False
+
+    def clearFieldNameAndValueString(self):
         self._fieldName = None
         self._fieldValueString = None
+        self._fieldNameAndValueStringHasBeenSet = False
 
-    def parseAttributesFromRawString(self):
+    def parseFieldNameAndValueStringFromRawString(self):
+        # self.clearAttributes()
+        # self._attributeHasBeenSet = False
         self._fieldName = ""
         self._fieldValueString = ""
         match = self.__class__.regexForParsingFieldAndValue.match(self._rawString)
         if match:
             self._fieldName, self._fieldValueString = match.group(1, 2)
+        self._fieldNameAndValueStringHasBeenSet = True
 
-    def renderRawStringFromAttributes(self):
+    def renderFieldNameAndValueStringFromAttributes(self):
+        # override in subclasses that have interesting attributes.
+        pass
+
+    def parseAttributesFromFieldValueString(self):
+        # override in subclasses that have interesting attributes.
+        pass
+
+    def renderRawStringFromFieldNameAndValueString(self):
         stringio = StringIO()
-        stringio.write(str(self._fieldName))
+        stringio.write(str(self.fieldName))
         stringio.write(": ")
-        stringio.write(str(self._fieldValueString))
+        stringio.write(str(self.fieldValueString))
         self._rawString = stringio.getvalue()
         stringio.close()
+        self._rawStringHasBeenSet = True
 
     @classproperty
     @classmethod
     def regexForMatchingFieldName(cls):
-        return cls.regexToNeverMatch
-
+        try:
+            return cls._regexForMatchingFieldName
+        except AttributeError:
+            cls._regexForMatchingFieldName = re.compile('^' + cls.canonicalFieldName + '$', re.I)
+            return cls._regexForMatchingFieldName
+    '''
     @classproperty
     @classmethod
     def regexForMatching(cls):
         return cls.regexForParsing
+    '''
+    @classproperty
+    @classmethod
+    def regexForMatching(cls):
+        try:
+            return cls._regexForMatching
+        except AttributeError:
+            cls._regexForMatching = re.compile('^' + cls.canonicalFieldName + '\s*:', re.I)
+            # cls._regexForMatching = re.compile('^To\s*:', re.I)
+            return cls._regexForMatching
+
 
     @classproperty
     @classmethod
@@ -152,6 +200,10 @@ class SIPHeaderField(object):
     @property
     def isKnown(self):
         return True
+
+    @property
+    def isInvalid(self):
+        return not self.isValid
 
     @property
     def isValid(self):

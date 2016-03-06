@@ -10,10 +10,16 @@ from bobstack.sipmessaging import classproperty
 
 
 class AcceptLanguageSIPHeaderField(SIPHeaderField):
+    @classproperty
+    @classmethod
+    def canonicalFieldName(cls):
+        return 'Accept-Language'
+
     @classmethod
     def newForAttributes(cls, fieldName="Accept-Language", fieldValueString=""):
         return cls.newForFieldNameAndValueString(fieldName=fieldName, fieldValueString=fieldValueString)
 
+    '''
     @classproperty
     @classmethod
     def regexForMatchingFieldName(cls):
@@ -40,7 +46,7 @@ class AcceptLanguageSIPHeaderField(SIPHeaderField):
         except AttributeError:
             cls._regexForParsing = re.compile('^Accept-Language\s*:\s*(.*)', re.I)
             return cls._regexForParsing
-
+    '''
     @property
     def isAcceptLanguage(self):
         return True

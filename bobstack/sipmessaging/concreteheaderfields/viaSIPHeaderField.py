@@ -10,10 +10,15 @@ from bobstack.sipmessaging import classproperty
 
 
 class ViaSIPHeaderField(SIPHeaderField):
+    @classproperty
+    @classmethod
+    def canonicalFieldName(cls):
+        return 'Via'
+
     @classmethod
     def newForAttributes(cls, fieldName="Via", fieldValueString=""):
         return cls.newForFieldNameAndValueString(fieldName=fieldName, fieldValueString=fieldValueString)
-
+    '''
     @classproperty
     @classmethod
     def regexForMatchingFieldName(cls):
@@ -40,7 +45,7 @@ class ViaSIPHeaderField(SIPHeaderField):
         except AttributeError:
             cls._regexForParsing = re.compile('^Via\s*:\s*(.*)', re.I)
             return cls._regexForParsing
-
+    '''
     # TODO: when we do warnings, warn of branch that does not start with "z9hG4bKy", i.e. a non-RFC3261 message
     # TODO: need to test
     # TODO: need to cache
