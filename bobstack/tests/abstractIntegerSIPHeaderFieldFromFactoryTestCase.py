@@ -22,10 +22,12 @@ class AbstractIntegerSIPHeaderFieldFromFactoryTestCase(AbstractSIPHeaderFieldFro
         for line in self.canonicalStrings:
             headerField = SIPHeaderFieldFactory().nextForString(line)
             self.assertEqual(headerField.fieldName.lower(), self.canonicalFieldNames[0].lower())
-            self.assertIsInstance(headerField.value, (int, long), line)
-            self.assertEqual(headerField.value, int(self.canonicalFieldValues[0]))
+            self.assertIsInstance(headerField.integerValue, (int, long), line)
+            self.assertEqual(headerField.integerValue, int(self.canonicalFieldValues[0]))
             headerField.rawString = self.canonicalFieldNames[0] + ': 301'
-            self.assertEqual(301, headerField.value)
+            self.assertNotEqual(headerField.value, None)
+            self.assertIsInstance(headerField.parameterNamesAndValueStrings, dict)
+            self.assertEqual(301, headerField.integerValue)
             self.assertEqual(headerField.fieldName.lower(), self.canonicalFieldNames[0].lower())
             self.assertEqual(headerField.fieldValueString, "301")
             self.assertEqual(self.canonicalFieldNames[0] + ': 301', headerField.rawString)

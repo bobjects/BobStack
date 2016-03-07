@@ -9,6 +9,7 @@ from classproperty import classproperty
 
 class SIPHeaderField(object):
     regexForFindingParameterNamesAndValues = re.compile(";([^=;]+)=?([^;]+)?")
+    regexForFindingValueUpToParameters = re.compile('([^;])')
 
     @classmethod
     def newParsedFrom(cls, aString):
@@ -17,9 +18,13 @@ class SIPHeaderField(object):
         return answer
 
     @classmethod
-    def newForAttributes(cls, fieldName="", fieldValueString=""):
+    def newForAttributes(cls, value='', parameterNamesAndValueStrings={}):
         # This will typically be overridden by classes that have interesting attributes.
-        return cls.newForFieldNameAndValueString(fieldName=fieldName, fieldValueString=fieldValueString)
+        # return cls.newForFieldNameAndValueString(fieldName=fieldName, fieldValueString=fieldValueString)
+        answer = cls()
+        answer.value = value
+        answer.parameterNamesAndValueStrings = parameterNamesAndValueStrings
+        return answer
 
     @classmethod
     def newForFieldNameAndValueString(cls, fieldName="", fieldValueString=""):
@@ -37,7 +42,6 @@ class SIPHeaderField(object):
         self.clearRawString()
         self.clearFieldNameAndValueString()
         self.clearAttributes()
-
 
     @property
     def rawString(self):
@@ -84,6 +88,19 @@ class SIPHeaderField(object):
         self.clearRawString()
         self.clearAttributes()
 
+    @property
+    def value(self):
+        if not self._attributeHasBeenSet:
+            self.parseAttributesFromFieldValueString()
+        return self._value
+
+    @value.setter
+    def value(self, value):
+        self._value = value
+        self._attributeHasBeenSet = True
+        self.clearRawString()
+        self.clearFieldNameAndValueString()
+
     # TODO: Answer a dict of parameter names and values encoded into the field value.
     # TODO: need to test
     # TODO: need to cache
@@ -91,11 +108,28 @@ class SIPHeaderField(object):
     @property
     def parameterNamesAndValueStrings(self):
         # RFC3261  7.3.1 Header Field Format
-        # return dict(re.findall(';([^=;]+)=?([^;]+)?', self.fieldValueString))
-        return dict(self.__class__.regexForFindingParameterNamesAndValues.findall(self.fieldValueString))
+        # return dict(self.__class__.regexForFindingParameterNamesAndValues.findall(self.fieldValueString))
+        if not self._attributeHasBeenSet:
+            self.parseAttributesFromFieldValueString()
+        return self._parameterNamesAndValueStrings
+
+    @parameterNamesAndValueStrings.setter
+    def parameterNamesAndValueStrings(self, aDictionary):
+        self._parameterNamesAndValueStrings = aDictionary
+        self._attributeHasBeenSet = True
+        self.clearRawString()
+        self.clearFieldNameAndValueString()
 
     def parameterNamed(self, aString):
         return self.parameterNamesAndValueStrings.get(aString, None)
+
+    def parameterNamedPut(self, keyString, value):
+        if value is None:
+            self.parameterNamesAndValueStrings.pop(keyString, None)
+        else:
+            self.parameterNamesAndValueStrings[keyString] = value
+        self.clearRawString()
+        self.clearFieldNameAndValueString()
 
     def clearRawString(self):
         self._rawStringHasBeenSet = False
@@ -103,6 +137,8 @@ class SIPHeaderField(object):
 
     def clearAttributes(self):
         # override in subclasses that have interesting attributes.
+        self._parameterNamesAndValueStrings = {}
+        self._value = None
         self._attributeHasBeenSet = False
 
     def clearFieldNameAndValueString(self):
@@ -121,12 +157,26 @@ class SIPHeaderField(object):
         self._fieldNameAndValueStringHasBeenSet = True
 
     def renderFieldNameAndValueStringFromAttributes(self):
-        # override in subclasses that have interesting attributes.
-        pass
+        self._fieldName = self.canonicalFieldName
+        if self.parameterNamesAndValueStrings:
+            self._fieldValueString = str(self._value)
+        else:
+            stringio = StringIO()
+            stringio.write(str(self._value))
+            for key, value in self.parameterNamesAndValueStrings.iteritems():
+                stringio.write(';')
+                stringio.write(key)
+                stringio.write('=')
+                stringio.write(str(value))
+            self._fieldValueString = stringio.getvalue()
+            stringio.close()
+        self._fieldNameAndValueStringHasBeenSet = True
 
     def parseAttributesFromFieldValueString(self):
-        # override in subclasses that have interesting attributes.
-        pass
+        self._value = self.fieldValueString
+        self._parameterNamesAndValueStrings = dict(self.__class__.regexForFindingParameterNamesAndValues.findall(self.fieldValueString))
+        if self._parameterNamesAndValueStrings:
+            self._value = self.__class__.regexForFindingValueUpToParameters.match(self.fieldValueString).group(1)
 
     def renderRawStringFromFieldNameAndValueString(self):
         stringio = StringIO()
@@ -145,12 +195,7 @@ class SIPHeaderField(object):
         except AttributeError:
             cls._regexForMatchingFieldName = re.compile('^' + cls.canonicalFieldName + '$', re.I)
             return cls._regexForMatchingFieldName
-    '''
-    @classproperty
-    @classmethod
-    def regexForMatching(cls):
-        return cls.regexForParsing
-    '''
+
     @classproperty
     @classmethod
     def regexForMatching(cls):

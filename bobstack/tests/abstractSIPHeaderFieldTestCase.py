@@ -39,11 +39,14 @@ class AbstractSIPHeaderFieldTestCase(TestCase):
             self.assertFalse(UnknownSIPHeaderField.canMatchString(line))
             self.assertTrue(self.sipHeaderFieldClassUnderTest.canMatchString(line))
             headerField = self.sipHeaderFieldClassUnderTest.newParsedFrom(line)
-            self.assertTrue(headerField.isValid, line)
-            self.assertTrue(headerField.isKnown, line)
-            self.assertEqual(headerField.rawString, line, line)
+            # print line
+            self.assertTrue(headerField.isValid)
+            self.assertTrue(headerField.isKnown)
+            self.assertEqual(headerField.rawString, line)
             self.assertEqual(headerField.fieldName.lower(), self.canonicalFieldNames[0].lower())
             self.assertTrue(headerField.fieldValueString in self.canonicalFieldValues)
+            # self.assertNotEqual(headerField.value, None)
+            self.assertIsInstance(headerField.parameterNamesAndValueStrings, dict)
             headerField.rawString = self.canonicalFieldNames[0] + ': blooey'
             self.assertEqual("blooey", headerField.fieldValueString)
             self.assertEqual(headerField.fieldName.lower(), self.canonicalFieldNames[0].lower())

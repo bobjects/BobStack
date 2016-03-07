@@ -43,7 +43,7 @@ class SIPHeader(object):
     @property
     def contentLength(self):
         if self.contentLengthHeaderField is not None:
-            return self.contentLengthHeaderField.value
+            return self.contentLengthHeaderField.integerValue
         return 0
 
     @property

@@ -299,19 +299,37 @@ class TestSIPHeaderFieldFactoryForContact(AbstractSIPHeaderFieldFromFactoryTestC
     def sipHeaderFieldClassUnderTest(self):
         return ContactSIPHeaderField
 
+    @property
+    def emptyHeaderFieldBodyIsValid(self):
+        return False
+
+    @property
+    def canonicalFieldValues(self):
+        return ['"3122221000"<sip:3122221000@200.23.3.241:5061;user=phone>;expires=1000',
+                '"3122221000"<sip:200.23.3.241;user=phone>',
+                'sip:3122221000@200.23.3.241',
+                'sip:200.23.3.241',
+                'sip:200.23.3.241:5061',
+                'sip:200.23.3.241:5061'
+                ]
+
     def test_parsing(self):
         self.basic_test_parsing()
         for line in self.canonicalStrings:
             headerField = SIPHeaderFieldFactory().nextForString(line)
             self.assertTrue(headerField.isContact, line)
+            self.assertTrue(headerField.isValid)
             stringio = StringIO(line + '\r\n')
             headerField = SIPHeaderFieldFactory().allForStringIO(stringio)[0]
             self.assertTrue(headerField.isContact, line)
+            self.assertTrue(headerField.isValid)
             stringio.close()
             headerField = SIPHeaderFieldFactory().nextForFieldName(self.canonicalFieldNames[0])
             self.assertTrue(headerField.isContact, line)
+            self.assertFalse(headerField.isValid)
             headerField = SIPHeaderFieldFactory().nextForFieldNameAndFieldValue(self.canonicalFieldNames[0], "foo bar baz blarg")
             self.assertTrue(headerField.isContact, line)
+            self.assertFalse(headerField.isValid)
 
 class TestSIPHeaderFieldFactoryForContentDisposition(AbstractSIPHeaderFieldFromFactoryTestCase):
     @property
@@ -415,19 +433,38 @@ class TestSIPHeaderFieldFactoryForFrom(AbstractSIPHeaderFieldFromFactoryTestCase
     def sipHeaderFieldClassUnderTest(self):
         return FromSIPHeaderField
 
+    @property
+    def emptyHeaderFieldBodyIsValid(self):
+        return False
+
+    @property
+    def canonicalFieldValues(self):
+        return ['"3122221000"<sip:3122221000@200.23.3.241:5061;user=phone>;tag=29de2c8-f0a1ec8-13c5-50029-98875-169ed655-98875',
+                '"3122221000"<sip:200.23.3.241;user=phone>;tag=29de2c8-f0a1ec8-13c5-50029-98875-169ed655-98875',
+                'sip:3122221000@200.23.3.241',
+                'sip:200.23.3.241',
+                'sip:200.23.3.241:5061',
+                'sip:200.23.3.241:5061;tag=29de2c8-f0a1ec8-13c5-50029-98875-169ed655-98875'
+                ]
+
     def test_parsing(self):
         self.basic_test_parsing()
         for line in self.canonicalStrings:
             headerField = SIPHeaderFieldFactory().nextForString(line)
             self.assertTrue(headerField.isFrom, line)
+            self.assertTrue(headerField.isValid)
             stringio = StringIO(line + '\r\n')
             headerField = SIPHeaderFieldFactory().allForStringIO(stringio)[0]
             self.assertTrue(headerField.isFrom, line)
+            self.assertTrue(headerField.isValid)
             stringio.close()
             headerField = SIPHeaderFieldFactory().nextForFieldName(self.canonicalFieldNames[0])
             self.assertTrue(headerField.isFrom, line)
+            self.assertFalse(headerField.isValid)
             headerField = SIPHeaderFieldFactory().nextForFieldNameAndFieldValue(self.canonicalFieldNames[0], "foo bar baz blarg")
             self.assertTrue(headerField.isFrom, line)
+            self.assertFalse(headerField.isValid)
+
 
 class TestSIPHeaderFieldFactoryForMaxForwards(AbstractIntegerSIPHeaderFieldFromFactoryTestCase):
     @property
@@ -653,19 +690,37 @@ class TestSIPHeaderFieldFactoryForTo(AbstractSIPHeaderFieldFromFactoryTestCase):
     def sipHeaderFieldClassUnderTest(self):
         return ToSIPHeaderField
 
+    @property
+    def emptyHeaderFieldBodyIsValid(self):
+        return False
+
+    @property
+    def canonicalFieldValues(self):
+        return ['"3122221000"<sip:3122221000@200.23.3.241:5061;user=phone>;tag=29de2c8-f0a1ec8-13c5-50029-98875-169ed655-98875',
+                '"3122221000"<sip:200.23.3.241;user=phone>;tag=29de2c8-f0a1ec8-13c5-50029-98875-169ed655-98875',
+                'sip:3122221000@200.23.3.241',
+                'sip:200.23.3.241',
+                'sip:200.23.3.241:5061',
+                'sip:200.23.3.241:5061;tag=29de2c8-f0a1ec8-13c5-50029-98875-169ed655-98875'
+                ]
+
     def test_parsing(self):
         self.basic_test_parsing()
         for line in self.canonicalStrings:
             headerField = SIPHeaderFieldFactory().nextForString(line)
             self.assertTrue(headerField.isTo, line)
+            self.assertTrue(headerField.isValid)
             stringio = StringIO(line + '\r\n')
             headerField = SIPHeaderFieldFactory().allForStringIO(stringio)[0]
             self.assertTrue(headerField.isTo, line)
+            self.assertTrue(headerField.isValid)
             stringio.close()
             headerField = SIPHeaderFieldFactory().nextForFieldName(self.canonicalFieldNames[0])
             self.assertTrue(headerField.isTo, line)
+            self.assertFalse(headerField.isValid)
             headerField = SIPHeaderFieldFactory().nextForFieldNameAndFieldValue(self.canonicalFieldNames[0], "foo bar baz blarg")
             self.assertTrue(headerField.isTo, line)
+            self.assertFalse(headerField.isValid)
 
 
 class TestSIPHeaderFieldFactoryForUserAgent(AbstractSIPHeaderFieldFromFactoryTestCase):

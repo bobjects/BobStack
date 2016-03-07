@@ -181,7 +181,22 @@ class TestSIPMessageFactoryForSanitizedLogFile(TestCase):
                 self.appendStringToFileNamed(headerField.rawString + '\r\n', 'warningHeaderFields')
             if headerField.isWWWAuthenticate:
                 self.appendStringToFileNamed(headerField.rawString + '\r\n', 'wwwAuthenticateHeaderFields')
-            if headerField.isTo or headerField.isFrom:
+            if headerField.isTo:
+                self.appendStringToFileNamed(headerField.rawString, 'toHeaderFieldsAndAttributes')
+                self.appendStringToFileNamed('\r\n    displayName:  ' + str(headerField.displayName), 'toHeaderFieldsAndAttributes')
+                self.appendStringToFileNamed('\r\n    tag:  ' + str(headerField.tag), 'toHeaderFieldsAndAttributes')
+                if headerField.sipURI:
+                    self.appendStringToFileNamed('\r\n        scheme:  ' + str(headerField.sipURI.scheme), 'toHeaderFieldsAndAttributes')
+                    self.appendStringToFileNamed('\r\n        user:  ' + str(headerField.sipURI.user), 'toHeaderFieldsAndAttributes')
+                    self.appendStringToFileNamed('\r\n        host:  ' + str(headerField.sipURI.host), 'toHeaderFieldsAndAttributes')
+                    self.appendStringToFileNamed('\r\n        port:  ' + str(headerField.sipURI.port), 'toHeaderFieldsAndAttributes')
+                    self.appendStringToFileNamed('\r\n        uriParameters:  ' + str(headerField.sipURI.parameterNamesAndValueStrings), 'toHeaderFieldsAndAttributes')
+                self.appendStringToFileNamed('\r\n    headerFieldParameters:  ' + str(headerField.parameterNamesAndValueStrings), 'toHeaderFieldsAndAttributes')
+                self.appendStringToFileNamed('\r\n', 'toHeaderFieldsAndAttributes')
+                if headerField.tag:
+                    self.appendStringToFileNamed(headerField.tag, 'toAndFromTags')
+                    self.appendStringToFileNamed('\r\n', 'toAndFromTags')
+            if headerField.isFrom:
                 if headerField.tag:
                     self.appendStringToFileNamed(headerField.rawString, 'toAndFromHeaderFieldsAndTags')
                     self.appendStringToFileNamed('\r\n    ', 'toAndFromHeaderFieldsAndTags')
@@ -279,81 +294,9 @@ class TestSIPMessageFactoryForSanitizedLogFile(TestCase):
     def sanitizedFilePathName(self):
         return '../../proprietary-test-data/sanitized/sanitized.txt'
 
-    # @property
-    # def validSIPMessagesPathName(self):
-    #     return '../../proprietary-test-data/analyzed/validSIPMessages.txt'
-    #
-    # @property
-    # def invalidSIPMessagesPathName(self):
-    #     return '../../proprietary-test-data/analyzed/invalidSIPMessages.txt'
-    #
-    # @property
-    # def malformedSIPMessagesPathName(self):
-    #     return '../../proprietary-test-data/analyzed/malformedSIPMessages.txt'
-    #
     @property
     def messageSeparator(self):
         return "__MESSAGESEPARATOR__\r\n"
-    #
-    # @property
-    # def validKnownSIPMessagesPathName(self):
-    #     return '../../proprietary-test-data/analyzed/validKnownSIPMessages.txt'
-    #
-    # @property
-    # def validUnknownSIPMessagesPathName(self):
-    #     return '../../proprietary-test-data/analyzed/validUnknownSIPMessages.txt'
-    #
-    # @property
-    # def knownSIPStartLinesPathName(self):
-    #     return '../../proprietary-test-data/analyzed/knownSIPStartLines.txt'
-    #
-    # @property
-    # def unknownSIPStartLinesPathName(self):
-    #     return '../../proprietary-test-data/analyzed/unknownSIPStartLines.txt'
-    #
-    # @property
-    # def knownSIPMethodsPathName(self):
-    #     return '../../proprietary-test-data/analyzed/knownSIPMethods.txt'
-    #
-    # @property
-    # def unknownSIPMethodsPathName(self):
-    #     return '../../proprietary-test-data/analyzed/unknownSIPMethods.txt'
-    #
-    # @property
-    # def knownHeaderFieldsPathName(self):
-    #     return '../../proprietary-test-data/analyzed/knownHeaderFields.txt'
-    #
-    # @property
-    # def unknownHeaderFieldsPathName(self):
-    #     return '../../proprietary-test-data/analyzed/unknownHeaderFields.txt'
-    #
-    # @property
-    # def knownHeaderFieldNamesPathName(self):
-    #     return '../../proprietary-test-data/analyzed/knownHeaderFieldNames.txt'
-    #
-    # @property
-    # def unknownHeaderFieldNamesPathName(self):
-    #     return '../../proprietary-test-data/analyzed/unknownHeaderFieldNames.txt'
-    #
-    # @property
-    # def headerFieldParametersPathName(self):
-    #     return '../../proprietary-test-data/analyzed/headerFieldParameters.txt'
-    #
-    # @property
-    # def toAndFromHeadersAndTagsPathName(self):
-    #     return '../../proprietary-test-data/analyzed/toAndFromHeadersAndTags.txt'
-    #
-    # @property
-    # def viaHeadersAndBranchesPathName(self):
-    #     return '../../proprietary-test-data/analyzed/viaHeadersAndBranches.txt'
-    #
-    # @property
-    # def dialogsPathName(self):
-    #     return '../../proprietary-test-data/analyzed/dialogs.txt'
-    #
-    # @property
-    # def transactionsPathName(self):
-    #     return '../../proprietary-test-data/analyzed/transactions.txt'
 
     def createFileNamed(self, fileName):
         self._fileNamesAndFiles[fileName] = open('../../proprietary-test-data/analyzed/' + fileName + ".txt", "w")

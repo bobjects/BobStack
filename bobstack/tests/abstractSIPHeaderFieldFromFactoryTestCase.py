@@ -32,15 +32,22 @@ class AbstractSIPHeaderFieldFromFactoryTestCase(TestCase):
         return ["baz blarg blonk"]
 
     @property
+    def emptyHeaderFieldBodyIsValid(self):
+        return True
+
+    @property
     def sipHeaderFieldClassUnderTest(self):
         raise NotImplementedError('call to abstract method ' + inspect.stack()[0][3])
 
     def basic_test_parsing(self):
         for line in self.canonicalStrings:
             headerField = SIPHeaderFieldFactory().nextForString(line)
+            # print line
             self.assertTrue(headerField.isValid, line)
             self.assertTrue(headerField.isKnown, line)
             self.assertEqual(headerField.rawString, line, line)
+            # self.assertNotEqual(headerField.value, None)
+            self.assertIsInstance(headerField.parameterNamesAndValueStrings, dict)
             self.assertEqual(headerField.fieldName.lower(), self.canonicalFieldNames[0].lower())
             self.assertIsInstance(headerField.fieldValueString, basestring, line)
             self.assertTrue(headerField.fieldValueString in self.canonicalFieldValues)
@@ -50,16 +57,21 @@ class AbstractSIPHeaderFieldFromFactoryTestCase(TestCase):
             self.assertTrue(headerField.isValid, line)
             self.assertTrue(headerField.isKnown, line)
             self.assertEqual(headerField.rawString, line, line)
+            # self.assertNotEqual(headerField.value, None)
+            self.assertIsInstance(headerField.parameterNamesAndValueStrings, dict)
             self.assertEqual(headerField.fieldName.lower(), self.canonicalFieldNames[0].lower())
             self.assertIsInstance(headerField.fieldValueString, basestring, line)
             self.assertTrue(headerField.fieldValueString in self.canonicalFieldValues)
             stringio.close()
 
+            # print self.canonicalFieldNames[0]
             headerField = SIPHeaderFieldFactory().nextForFieldName(self.canonicalFieldNames[0])
-            self.assertTrue(headerField.isValid)
+            self.assertEqual(self.emptyHeaderFieldBodyIsValid, headerField.isValid)
             self.assertTrue(headerField.isKnown)
             self.assertEqual(headerField.fieldName.lower(), self.canonicalFieldNames[0].lower())
             self.assertIsInstance(headerField.fieldValueString, basestring)
+            # self.assertNotEqual(headerField.value, None)
+            self.assertIsInstance(headerField.parameterNamesAndValueStrings, dict)
 
             headerField = SIPHeaderFieldFactory().nextForFieldNameAndFieldValue(self.canonicalFieldNames[0], self.canonicalFieldValues[0])
             self.assertEqual(headerField.fieldValueString, self.canonicalFieldValues[0], line)
@@ -69,3 +81,5 @@ class AbstractSIPHeaderFieldFromFactoryTestCase(TestCase):
             self.assertEqual(headerField.fieldName.lower(), self.canonicalFieldNames[0].lower())
             self.assertIsInstance(headerField.fieldValueString, basestring, line)
             self.assertTrue(headerField.fieldValueString in self.canonicalFieldValues)
+            # self.assertNotEqual(headerField.value, None)
+            self.assertIsInstance(headerField.parameterNamesAndValueStrings, dict)

@@ -277,8 +277,173 @@ class TestContactSipHeaderField(AbstractSIPHeaderFieldTestCase):
         return['Contact', 'CONTACT', 'contact']
 
     @property
+    def canonicalFieldValues(self):
+        return ['"3122221000"<sip:3122221000@200.23.3.241:5061;user=phone>;expires=1000',
+                '<sip:3122221000@200.23.3.241:5061;user=phone>',
+                '"3122221000"<sip:200.23.3.241:5061;user=phone>',
+                '"3122221000"<sip:3122221000@200.23.3.241;user=phone>',
+                '"3122221000"<sip:3122221000@200.23.3.241:5061>',
+                '"3122221000"<sip:3122221000@200.23.3.241:5061;user=phone>',
+                '<sip:3122221000@200.23.3.241:5061;user=phone>',
+                'sip:3122221000@200.23.3.241:5061',
+                '"3122221000"<sip:3122221000@200.23.3.241:5061>',
+                '"3122221000"<sip:200.23.3.241>',
+                '"3122221000"<sip:200.23.3.241',
+                'sip:3122221000@200.23.3.241',
+                'sip:200.23.3.241',
+                'sip:200.23.3.241:5061']
+
+    @property
     def sipHeaderFieldClassUnderTest(self):
         return ContactSIPHeaderField
+
+    def test_parseSetValuesAndReParse(self):
+        headerFieldString = 'Contact: "3122221000"<sip:3122221000@200.23.3.241:5061;user=phone>;expires=1000'
+        headerField = self.sipHeaderFieldClassUnderTest.newParsedFrom(headerFieldString)
+        self.assertEqual(headerField.rawString, headerFieldString)
+        self.assertTrue(headerField.isValid)
+        self.assertEqual(headerField.displayName, '"3122221000"')
+        self.assertEqual(headerField.parameterNamesAndValueStrings, {'expires': '1000'})
+        self.assertEqual(headerField.sipURI.rawString, 'sip:3122221000@200.23.3.241:5061;user=phone')
+        self.assertEqual(headerField.sipURI.host, '200.23.3.241')
+        self.assertEqual(headerField.sipURI.port, 5061)
+        self.assertEqual(headerField.sipURI.scheme, 'sip')
+        self.assertEqual(headerField.sipURI.parameterNamesAndValueStrings, {'user': 'phone'})
+        self.assertEqual(headerField.sipURI.user, '3122221000')
+        headerField.displayName = 'foo'
+        self.assertEqual(headerField.rawString, 'Contact: "foo"<sip:3122221000@200.23.3.241:5061;user=phone>;expires=1000')
+        self.assertTrue(headerField.isValid)
+        self.assertEqual(headerField.displayName, 'foo')
+        self.assertEqual(headerField.parameterNamesAndValueStrings, {'expires': '1000'})
+        self.assertEqual(headerField.sipURI.rawString, 'sip:3122221000@200.23.3.241:5061;user=phone')
+        self.assertEqual(headerField.sipURI.host, '200.23.3.241')
+        self.assertEqual(headerField.sipURI.port, 5061)
+        self.assertEqual(headerField.sipURI.scheme, 'sip')
+        self.assertEqual(headerField.sipURI.parameterNamesAndValueStrings, {'user': 'phone'})
+        self.assertEqual(headerField.sipURI.user, '3122221000')
+        headerField.sipURI = SIPURI.newParsedFrom('sip:0.0.0.0')
+        self.assertEqual(headerField.rawString, 'Contact: "foo"<sip:0.0.0.0>;expires=1000')
+        self.assertTrue(headerField.isValid)
+        self.assertEqual(headerField.displayName, 'foo')
+        self.assertEqual(headerField.parameterNamesAndValueStrings, {'expires': '1000'})
+        self.assertEqual(headerField.sipURI.rawString, 'sip:0.0.0.0')
+        self.assertEqual(headerField.sipURI.host, '0.0.0.0')
+        self.assertEqual(headerField.sipURI.port, None)
+        self.assertEqual(headerField.sipURI.scheme, 'sip')
+        self.assertEqual(headerField.sipURI.parameterNamesAndValueStrings, {})
+        self.assertEqual(headerField.sipURI.user, None)
+
+    def test_parseValid001(self):
+        headerFieldString = 'Contact: "3122221000"<sip:3122221000@200.23.3.241:5061;user=phone>'
+        headerField = self.sipHeaderFieldClassUnderTest.newParsedFrom(headerFieldString)
+        self.assertEqual(headerField.rawString, headerFieldString)
+        self.assertTrue(headerField.isValid)
+        self.assertEqual(headerField.displayName, '"3122221000"')
+        self.assertEqual(headerField.parameterNamesAndValueStrings, {})
+        self.assertEqual(headerField.sipURI.rawString, 'sip:3122221000@200.23.3.241:5061;user=phone')
+        self.assertEqual(headerField.sipURI.host, '200.23.3.241')
+        self.assertEqual(headerField.sipURI.port, 5061)
+        self.assertEqual(headerField.sipURI.scheme, 'sip')
+        self.assertEqual(headerField.sipURI.parameterNamesAndValueStrings, {'user': 'phone'})
+        self.assertEqual(headerField.sipURI.user, '3122221000')
+
+    def test_parseValid002(self):
+        headerFieldString = 'Contact: <sip:3122221000@200.23.3.241:5061;user=phone>'
+        headerField = self.sipHeaderFieldClassUnderTest.newParsedFrom(headerFieldString)
+        self.assertEqual(headerField.rawString, headerFieldString)
+        self.assertTrue(headerField.isValid)
+        self.assertEqual(headerField.displayName, '')
+        self.assertEqual(headerField.parameterNamesAndValueStrings, {})
+        self.assertEqual(headerField.sipURI.rawString, 'sip:3122221000@200.23.3.241:5061;user=phone')
+        self.assertEqual(headerField.sipURI.host, '200.23.3.241')
+        self.assertEqual(headerField.sipURI.port, 5061)
+        self.assertEqual(headerField.sipURI.scheme, 'sip')
+        self.assertEqual(headerField.sipURI.parameterNamesAndValueStrings, {'user': 'phone'})
+        self.assertEqual(headerField.sipURI.user, '3122221000')
+
+    def test_parseValid003(self):
+        headerFieldString = 'Contact: "3122221000"<sip:200.23.3.241:5061;user=phone>'
+        headerField = self.sipHeaderFieldClassUnderTest.newParsedFrom(headerFieldString)
+        self.assertEqual(headerField.rawString, headerFieldString)
+        self.assertTrue(headerField.isValid)
+        self.assertEqual(headerField.displayName, '"3122221000"')
+        self.assertEqual(headerField.parameterNamesAndValueStrings, {})
+        self.assertEqual(headerField.sipURI.rawString, 'sip:200.23.3.241:5061;user=phone')
+        self.assertEqual(headerField.sipURI.host, '200.23.3.241')
+        self.assertEqual(headerField.sipURI.port, 5061)
+        self.assertEqual(headerField.sipURI.scheme, 'sip')
+        self.assertEqual(headerField.sipURI.parameterNamesAndValueStrings, {'user': 'phone'})
+        self.assertEqual(headerField.sipURI.user, None)
+
+    def test_parseValid004(self):
+        headerFieldString = 'Contact: "3122221000"<sip:3122221000@200.23.3.241;user=phone>'
+        headerField = self.sipHeaderFieldClassUnderTest.newParsedFrom(headerFieldString)
+        self.assertEqual(headerField.rawString, headerFieldString)
+        self.assertTrue(headerField.isValid)
+        self.assertEqual(headerField.displayName, '"3122221000"')
+        self.assertEqual(headerField.parameterNamesAndValueStrings, {})
+        self.assertEqual(headerField.sipURI.rawString, 'sip:3122221000@200.23.3.241;user=phone')
+        self.assertEqual(headerField.sipURI.host, '200.23.3.241')
+        self.assertEqual(headerField.sipURI.port, None)
+        self.assertEqual(headerField.sipURI.scheme, 'sip')
+        self.assertEqual(headerField.sipURI.parameterNamesAndValueStrings, {'user': 'phone'})
+        self.assertEqual(headerField.sipURI.user, '3122221000')
+
+    def test_parseValid005(self):
+        headerFieldString = 'Contact: "3122221000"<sip:3122221000@200.23.3.241:5061>'
+        headerField = self.sipHeaderFieldClassUnderTest.newParsedFrom(headerFieldString)
+        self.assertEqual(headerField.rawString, headerFieldString)
+        self.assertTrue(headerField.isValid)
+        self.assertEqual(headerField.displayName, '"3122221000"')
+        self.assertEqual(headerField.parameterNamesAndValueStrings, {})
+        self.assertEqual(headerField.sipURI.rawString, 'sip:3122221000@200.23.3.241:5061')
+        self.assertEqual(headerField.sipURI.host, '200.23.3.241')
+        self.assertEqual(headerField.sipURI.port, 5061)
+        self.assertEqual(headerField.sipURI.scheme, 'sip')
+        self.assertEqual(headerField.sipURI.parameterNamesAndValueStrings, {})
+        self.assertEqual(headerField.sipURI.user, '3122221000')
+
+    def test_parseValid006(self):
+        headerFieldString = 'Contact: "3122221000"<sip:3122221000@200.23.3.241:5061;user=phone>'
+        headerField = self.sipHeaderFieldClassUnderTest.newParsedFrom(headerFieldString)
+        self.assertEqual(headerField.rawString, headerFieldString)
+        self.assertTrue(headerField.isValid)
+        self.assertEqual(headerField.displayName, '"3122221000"')
+        self.assertEqual(headerField.parameterNamesAndValueStrings, {})
+        self.assertEqual(headerField.sipURI.rawString, 'sip:3122221000@200.23.3.241:5061;user=phone')
+        self.assertEqual(headerField.sipURI.host, '200.23.3.241')
+        self.assertEqual(headerField.sipURI.port, 5061)
+        self.assertEqual(headerField.sipURI.scheme, 'sip')
+        self.assertEqual(headerField.sipURI.parameterNamesAndValueStrings, {'user': 'phone'})
+        self.assertEqual(headerField.sipURI.user, '3122221000')
+
+    def test_parseValid007(self):
+        headerFieldString = 'Contact: <sip:3122221000@200.23.3.241:5061;user=phone>'
+        headerField = self.sipHeaderFieldClassUnderTest.newParsedFrom(headerFieldString)
+        self.assertEqual(headerField.rawString, headerFieldString)
+        self.assertTrue(headerField.isValid)
+        self.assertEqual(headerField.displayName, '')
+        self.assertEqual(headerField.parameterNamesAndValueStrings, {})
+        self.assertEqual(headerField.sipURI.rawString, 'sip:3122221000@200.23.3.241:5061;user=phone')
+        self.assertEqual(headerField.sipURI.host, '200.23.3.241')
+        self.assertEqual(headerField.sipURI.port, 5061)
+        self.assertEqual(headerField.sipURI.scheme, 'sip')
+        self.assertEqual(headerField.sipURI.parameterNamesAndValueStrings, {'user': 'phone'})
+        self.assertEqual(headerField.sipURI.user, '3122221000')
+
+    def test_parseValid008(self):
+        headerFieldString = 'Contact: sip:3122221000@200.23.3.241:5061'
+        headerField = self.sipHeaderFieldClassUnderTest.newParsedFrom(headerFieldString)
+        self.assertEqual(headerField.rawString, headerFieldString)
+        self.assertTrue(headerField.isValid)
+        self.assertEqual(headerField.displayName, None)
+        self.assertEqual(headerField.parameterNamesAndValueStrings, {})
+        self.assertEqual(headerField.sipURI.rawString, 'sip:3122221000@200.23.3.241:5061')
+        self.assertEqual(headerField.sipURI.host, '200.23.3.241')
+        self.assertEqual(headerField.sipURI.port, 5061)
+        self.assertEqual(headerField.sipURI.scheme, 'sip')
+        self.assertEqual(headerField.sipURI.parameterNamesAndValueStrings, {})
+        self.assertEqual(headerField.sipURI.user, '3122221000')
 
     def test_parsing(self):
         self.basic_test_parsing()
@@ -287,11 +452,18 @@ class TestContactSipHeaderField(AbstractSIPHeaderFieldTestCase):
             self.assertTrue(headerField.isContact, line)
 
     def test_rendering(self):
-        self.basic_test_rendering()
-        for fieldName in self.canonicalFieldNames:
-            for fieldValueString in self.canonicalFieldValues:
-                headerField = self.sipHeaderFieldClassUnderTest.newForAttributes(fieldValueString=fieldValueString)
-                self.assertTrue(headerField.isContact)
+        headerFieldString = 'Contact: "3122221000"<sip:3122221000@200.23.3.241:5061;user=phone>'
+        headerField = self.sipHeaderFieldClassUnderTest.newForAttributes(displayName='3122221000', sipURI=SIPURI.newParsedFrom('sip:3122221000@200.23.3.241:5061;user=phone'))
+        self.assertEqual(headerField.rawString, headerFieldString)
+        self.assertTrue(headerField.isValid)
+        self.assertEqual(headerField.displayName, '3122221000')
+        self.assertEqual(headerField.parameterNamesAndValueStrings, {})
+        self.assertEqual(headerField.sipURI.rawString, 'sip:3122221000@200.23.3.241:5061;user=phone')
+        self.assertEqual(headerField.sipURI.host, '200.23.3.241')
+        self.assertEqual(headerField.sipURI.port, 5061)
+        self.assertEqual(headerField.sipURI.scheme, 'sip')
+        self.assertEqual(headerField.sipURI.parameterNamesAndValueStrings, {'user': 'phone'})
+        self.assertEqual(headerField.sipURI.user, '3122221000')
 
 
 class TestContentDispositionSipHeaderField(AbstractSIPHeaderFieldTestCase):
@@ -391,8 +563,198 @@ class TestFromSipHeaderField(AbstractSIPHeaderFieldTestCase):
         return['From', 'FROM', 'from']
 
     @property
+    def canonicalFieldValues(self):
+        return ['"3122221000"<sip:3122221000@200.23.3.241:5061;user=phone>;tag=29de2c8-f0a1ec8-13c5-50029-98875-169ed655-98875',
+                '<sip:3122221000@200.23.3.241:5061;user=phone>;tag=29de2c8-f0a1ec8-13c5-50029-98875-169ed655-98875',
+                '"3122221000"<sip:200.23.3.241:5061;user=phone>;tag=29de2c8-f0a1ec8-13c5-50029-98875-169ed655-98875',
+                '"3122221000"<sip:3122221000@200.23.3.241;user=phone>;tag=29de2c8-f0a1ec8-13c5-50029-98875-169ed655-98875',
+                '"3122221000"<sip:3122221000@200.23.3.241:5061>;tag=29de2c8-f0a1ec8-13c5-50029-98875-169ed655-98875',
+                '"3122221000"<sip:3122221000@200.23.3.241:5061;user=phone>',
+                '<sip:3122221000@200.23.3.241:5061;user=phone>',
+                'sip:3122221000@200.23.3.241:5061;tag=29de2c8-f0a1ec8-13c5-50029-98875-169ed655-98875',
+                'sip:3122221000@200.23.3.241:5061',
+                '"3122221000"<sip:3122221000@200.23.3.241:5061>',
+                '"3122221000"<sip:200.23.3.241>;tag=29de2c8-f0a1ec8-13c5-50029-98875-169ed655-98875',
+                '"3122221000"<sip:200.23.3.241>',
+                '"3122221000"<sip:200.23.3.241;user=phone>;tag=29de2c8-f0a1ec8-13c5-50029-98875-169ed655-98875',
+                'sip:3122221000@200.23.3.241',
+                'sip:200.23.3.241',
+                'sip:200.23.3.241:5061']
+
+    @property
     def sipHeaderFieldClassUnderTest(self):
         return FromSIPHeaderField
+
+    def test_parseSetValuesAndReParse(self):
+        headerFieldString = 'From: "3122221000"<sip:3122221000@200.23.3.241:5061;user=phone>;tag=29de2c8-f0a1ec8-13c5-50029-98875-169ed655-98875'
+        headerField = self.sipHeaderFieldClassUnderTest.newParsedFrom(headerFieldString)
+        self.assertEqual(headerField.rawString, headerFieldString)
+        self.assertTrue(headerField.isValid)
+        self.assertEqual(headerField.tag, '29de2c8-f0a1ec8-13c5-50029-98875-169ed655-98875')
+        self.assertEqual(headerField.displayName, '"3122221000"')
+        self.assertEqual(headerField.parameterNamesAndValueStrings, {'tag': '29de2c8-f0a1ec8-13c5-50029-98875-169ed655-98875'})
+        self.assertEqual(headerField.sipURI.rawString, 'sip:3122221000@200.23.3.241:5061;user=phone')
+        self.assertEqual(headerField.sipURI.host, '200.23.3.241')
+        self.assertEqual(headerField.sipURI.port, 5061)
+        self.assertEqual(headerField.sipURI.scheme, 'sip')
+        self.assertEqual(headerField.sipURI.parameterNamesAndValueStrings, {'user': 'phone'})
+        self.assertEqual(headerField.sipURI.user, '3122221000')
+        headerField.displayName = 'foo'
+        self.assertEqual(headerField.rawString, 'From: "foo"<sip:3122221000@200.23.3.241:5061;user=phone>;tag=29de2c8-f0a1ec8-13c5-50029-98875-169ed655-98875')
+        self.assertTrue(headerField.isValid)
+        self.assertEqual(headerField.tag, '29de2c8-f0a1ec8-13c5-50029-98875-169ed655-98875')
+        self.assertEqual(headerField.displayName, 'foo')
+        self.assertEqual(headerField.parameterNamesAndValueStrings, {'tag': '29de2c8-f0a1ec8-13c5-50029-98875-169ed655-98875'})
+        self.assertEqual(headerField.sipURI.rawString, 'sip:3122221000@200.23.3.241:5061;user=phone')
+        self.assertEqual(headerField.sipURI.host, '200.23.3.241')
+        self.assertEqual(headerField.sipURI.port, 5061)
+        self.assertEqual(headerField.sipURI.scheme, 'sip')
+        self.assertEqual(headerField.sipURI.parameterNamesAndValueStrings, {'user': 'phone'})
+        self.assertEqual(headerField.sipURI.user, '3122221000')
+        headerField.tag = 'TESTTAG'
+        self.assertEqual(headerField.rawString, 'From: "foo"<sip:3122221000@200.23.3.241:5061;user=phone>;tag=TESTTAG')
+        self.assertTrue(headerField.isValid)
+        self.assertEqual(headerField.tag, 'TESTTAG')
+        self.assertEqual(headerField.displayName, 'foo')
+        self.assertEqual(headerField.parameterNamesAndValueStrings, {'tag': 'TESTTAG'})
+        self.assertEqual(headerField.sipURI.rawString, 'sip:3122221000@200.23.3.241:5061;user=phone')
+        self.assertEqual(headerField.sipURI.host, '200.23.3.241')
+        self.assertEqual(headerField.sipURI.port, 5061)
+        self.assertEqual(headerField.sipURI.scheme, 'sip')
+        self.assertEqual(headerField.sipURI.parameterNamesAndValueStrings, {'user': 'phone'})
+        self.assertEqual(headerField.sipURI.user, '3122221000')
+        headerField.sipURI = SIPURI.newParsedFrom('sip:0.0.0.0')
+        self.assertEqual(headerField.rawString, 'From: "foo"<sip:0.0.0.0>;tag=TESTTAG')
+        self.assertTrue(headerField.isValid)
+        self.assertEqual(headerField.tag, 'TESTTAG')
+        self.assertEqual(headerField.displayName, 'foo')
+        self.assertEqual(headerField.parameterNamesAndValueStrings, {'tag': 'TESTTAG'})
+        self.assertEqual(headerField.sipURI.rawString, 'sip:0.0.0.0')
+        self.assertEqual(headerField.sipURI.host, '0.0.0.0')
+        self.assertEqual(headerField.sipURI.port, None)
+        self.assertEqual(headerField.sipURI.scheme, 'sip')
+        self.assertEqual(headerField.sipURI.parameterNamesAndValueStrings, {})
+        self.assertEqual(headerField.sipURI.user, None)
+
+    def test_parseValid001(self):
+        headerFieldString = 'From: "3122221000"<sip:3122221000@200.23.3.241:5061;user=phone>;tag=29de2c8-f0a1ec8-13c5-50029-98875-169ed655-98875'
+        headerField = self.sipHeaderFieldClassUnderTest.newParsedFrom(headerFieldString)
+        self.assertEqual(headerField.rawString, headerFieldString)
+        self.assertTrue(headerField.isValid)
+        self.assertEqual(headerField.tag, '29de2c8-f0a1ec8-13c5-50029-98875-169ed655-98875')
+        self.assertEqual(headerField.displayName, '"3122221000"')
+        self.assertEqual(headerField.parameterNamesAndValueStrings, {'tag': '29de2c8-f0a1ec8-13c5-50029-98875-169ed655-98875'})
+        self.assertEqual(headerField.sipURI.rawString, 'sip:3122221000@200.23.3.241:5061;user=phone')
+        self.assertEqual(headerField.sipURI.host, '200.23.3.241')
+        self.assertEqual(headerField.sipURI.port, 5061)
+        self.assertEqual(headerField.sipURI.scheme, 'sip')
+        self.assertEqual(headerField.sipURI.parameterNamesAndValueStrings, {'user': 'phone'})
+        self.assertEqual(headerField.sipURI.user, '3122221000')
+
+    def test_parseValid002(self):
+        headerFieldString = 'From: <sip:3122221000@200.23.3.241:5061;user=phone>;tag=29de2c8-f0a1ec8-13c5-50029-98875-169ed655-98875'
+        headerField = self.sipHeaderFieldClassUnderTest.newParsedFrom(headerFieldString)
+        self.assertEqual(headerField.rawString, headerFieldString)
+        self.assertTrue(headerField.isValid)
+        self.assertEqual(headerField.tag, '29de2c8-f0a1ec8-13c5-50029-98875-169ed655-98875')
+        self.assertEqual(headerField.displayName, '')
+        self.assertEqual(headerField.parameterNamesAndValueStrings, {'tag': '29de2c8-f0a1ec8-13c5-50029-98875-169ed655-98875'})
+        self.assertEqual(headerField.sipURI.rawString, 'sip:3122221000@200.23.3.241:5061;user=phone')
+        self.assertEqual(headerField.sipURI.host, '200.23.3.241')
+        self.assertEqual(headerField.sipURI.port, 5061)
+        self.assertEqual(headerField.sipURI.scheme, 'sip')
+        self.assertEqual(headerField.sipURI.parameterNamesAndValueStrings, {'user': 'phone'})
+        self.assertEqual(headerField.sipURI.user, '3122221000')
+
+    def test_parseValid003(self):
+        headerFieldString = 'From: "3122221000"<sip:200.23.3.241:5061;user=phone>;tag=29de2c8-f0a1ec8-13c5-50029-98875-169ed655-98875'
+        headerField = self.sipHeaderFieldClassUnderTest.newParsedFrom(headerFieldString)
+        self.assertEqual(headerField.rawString, headerFieldString)
+        self.assertTrue(headerField.isValid)
+        self.assertEqual(headerField.tag, '29de2c8-f0a1ec8-13c5-50029-98875-169ed655-98875')
+        self.assertEqual(headerField.displayName, '"3122221000"')
+        self.assertEqual(headerField.parameterNamesAndValueStrings, {'tag': '29de2c8-f0a1ec8-13c5-50029-98875-169ed655-98875'})
+        self.assertEqual(headerField.sipURI.rawString, 'sip:200.23.3.241:5061;user=phone')
+        self.assertEqual(headerField.sipURI.host, '200.23.3.241')
+        self.assertEqual(headerField.sipURI.port, 5061)
+        self.assertEqual(headerField.sipURI.scheme, 'sip')
+        self.assertEqual(headerField.sipURI.parameterNamesAndValueStrings, {'user': 'phone'})
+        self.assertEqual(headerField.sipURI.user, None)
+
+    def test_parseValid004(self):
+        headerFieldString = 'From: "3122221000"<sip:3122221000@200.23.3.241;user=phone>;tag=29de2c8-f0a1ec8-13c5-50029-98875-169ed655-98875'
+        headerField = self.sipHeaderFieldClassUnderTest.newParsedFrom(headerFieldString)
+        self.assertEqual(headerField.rawString, headerFieldString)
+        self.assertTrue(headerField.isValid)
+        self.assertEqual(headerField.tag, '29de2c8-f0a1ec8-13c5-50029-98875-169ed655-98875')
+        self.assertEqual(headerField.displayName, '"3122221000"')
+        self.assertEqual(headerField.parameterNamesAndValueStrings, {'tag': '29de2c8-f0a1ec8-13c5-50029-98875-169ed655-98875'})
+        self.assertEqual(headerField.sipURI.rawString, 'sip:3122221000@200.23.3.241;user=phone')
+        self.assertEqual(headerField.sipURI.host, '200.23.3.241')
+        self.assertEqual(headerField.sipURI.port, None)
+        self.assertEqual(headerField.sipURI.scheme, 'sip')
+        self.assertEqual(headerField.sipURI.parameterNamesAndValueStrings, {'user': 'phone'})
+        self.assertEqual(headerField.sipURI.user, '3122221000')
+
+    def test_parseValid005(self):
+        headerFieldString = 'From: "3122221000"<sip:3122221000@200.23.3.241:5061>;tag=29de2c8-f0a1ec8-13c5-50029-98875-169ed655-98875'
+        headerField = self.sipHeaderFieldClassUnderTest.newParsedFrom(headerFieldString)
+        self.assertEqual(headerField.rawString, headerFieldString)
+        self.assertTrue(headerField.isValid)
+        self.assertEqual(headerField.tag, '29de2c8-f0a1ec8-13c5-50029-98875-169ed655-98875')
+        self.assertEqual(headerField.displayName, '"3122221000"')
+        self.assertEqual(headerField.parameterNamesAndValueStrings, {'tag': '29de2c8-f0a1ec8-13c5-50029-98875-169ed655-98875'})
+        self.assertEqual(headerField.sipURI.rawString, 'sip:3122221000@200.23.3.241:5061')
+        self.assertEqual(headerField.sipURI.host, '200.23.3.241')
+        self.assertEqual(headerField.sipURI.port, 5061)
+        self.assertEqual(headerField.sipURI.scheme, 'sip')
+        self.assertEqual(headerField.sipURI.parameterNamesAndValueStrings, {})
+        self.assertEqual(headerField.sipURI.user, '3122221000')
+
+    def test_parseValid006(self):
+        headerFieldString = 'From: "3122221000"<sip:3122221000@200.23.3.241:5061;user=phone>'
+        headerField = self.sipHeaderFieldClassUnderTest.newParsedFrom(headerFieldString)
+        self.assertEqual(headerField.rawString, headerFieldString)
+        self.assertTrue(headerField.isValid)
+        self.assertEqual(headerField.tag, None)
+        self.assertEqual(headerField.displayName, '"3122221000"')
+        self.assertEqual(headerField.parameterNamesAndValueStrings, {})
+        self.assertEqual(headerField.sipURI.rawString, 'sip:3122221000@200.23.3.241:5061;user=phone')
+        self.assertEqual(headerField.sipURI.host, '200.23.3.241')
+        self.assertEqual(headerField.sipURI.port, 5061)
+        self.assertEqual(headerField.sipURI.scheme, 'sip')
+        self.assertEqual(headerField.sipURI.parameterNamesAndValueStrings, {'user': 'phone'})
+        self.assertEqual(headerField.sipURI.user, '3122221000')
+
+    def test_parseValid007(self):
+        headerFieldString = 'From: <sip:3122221000@200.23.3.241:5061;user=phone>'
+        headerField = self.sipHeaderFieldClassUnderTest.newParsedFrom(headerFieldString)
+        self.assertEqual(headerField.rawString, headerFieldString)
+        self.assertTrue(headerField.isValid)
+        self.assertEqual(headerField.tag, None)
+        self.assertEqual(headerField.displayName, '')
+        self.assertEqual(headerField.parameterNamesAndValueStrings, {})
+        self.assertEqual(headerField.sipURI.rawString, 'sip:3122221000@200.23.3.241:5061;user=phone')
+        self.assertEqual(headerField.sipURI.host, '200.23.3.241')
+        self.assertEqual(headerField.sipURI.port, 5061)
+        self.assertEqual(headerField.sipURI.scheme, 'sip')
+        self.assertEqual(headerField.sipURI.parameterNamesAndValueStrings, {'user': 'phone'})
+        self.assertEqual(headerField.sipURI.user, '3122221000')
+
+    def test_parseValid008(self):
+        headerFieldString = 'From: sip:3122221000@200.23.3.241:5061'
+        headerField = self.sipHeaderFieldClassUnderTest.newParsedFrom(headerFieldString)
+        self.assertEqual(headerField.rawString, headerFieldString)
+        self.assertTrue(headerField.isValid)
+        self.assertEqual(headerField.tag, None)
+        self.assertEqual(headerField.displayName, None)
+        self.assertEqual(headerField.parameterNamesAndValueStrings, {})
+        self.assertEqual(headerField.sipURI.rawString, 'sip:3122221000@200.23.3.241:5061')
+        self.assertEqual(headerField.sipURI.host, '200.23.3.241')
+        self.assertEqual(headerField.sipURI.port, 5061)
+        self.assertEqual(headerField.sipURI.scheme, 'sip')
+        self.assertEqual(headerField.sipURI.parameterNamesAndValueStrings, {})
+        self.assertEqual(headerField.sipURI.user, '3122221000')
 
     def test_parsing(self):
         self.basic_test_parsing()
@@ -401,11 +763,28 @@ class TestFromSipHeaderField(AbstractSIPHeaderFieldTestCase):
             self.assertTrue(headerField.isFrom, line)
 
     def test_rendering(self):
-        self.basic_test_rendering()
-        for fieldName in self.canonicalFieldNames:
-            for fieldValueString in self.canonicalFieldValues:
-                headerField = self.sipHeaderFieldClassUnderTest.newForAttributes(fieldValueString=fieldValueString)
-                self.assertTrue(headerField.isFrom)
+        headerFieldString = 'From: "3122221000"<sip:3122221000@200.23.3.241:5061;user=phone>;tag=29de2c8-f0a1ec8-13c5-50029-98875-169ed655-98875'
+        headerField = self.sipHeaderFieldClassUnderTest.newForAttributes(displayName='3122221000', tag='29de2c8-f0a1ec8-13c5-50029-98875-169ed655-98875', sipURI=SIPURI.newParsedFrom('sip:3122221000@200.23.3.241:5061;user=phone'))
+        self.assertEqual(headerField.rawString, headerFieldString)
+        self.assertTrue(headerField.isValid)
+        self.assertEqual(headerField.tag, '29de2c8-f0a1ec8-13c5-50029-98875-169ed655-98875')
+        self.assertEqual(headerField.displayName, '3122221000')
+        self.assertEqual(headerField.parameterNamesAndValueStrings, {'tag': '29de2c8-f0a1ec8-13c5-50029-98875-169ed655-98875'})
+        self.assertEqual(headerField.sipURI.rawString, 'sip:3122221000@200.23.3.241:5061;user=phone')
+        self.assertEqual(headerField.sipURI.host, '200.23.3.241')
+        self.assertEqual(headerField.sipURI.port, 5061)
+        self.assertEqual(headerField.sipURI.scheme, 'sip')
+        self.assertEqual(headerField.sipURI.parameterNamesAndValueStrings, {'user': 'phone'})
+        self.assertEqual(headerField.sipURI.user, '3122221000')
+
+    def test_tagGeneration(self):
+        headerFieldString = 'From: sip:3122221000@200.23.3.241:5061'
+        headerField = self.sipHeaderFieldClassUnderTest.newParsedFrom(headerFieldString)
+        self.assertEqual(headerField.tag, None)
+        self.assertEqual(headerField.parameterNamesAndValueStrings, {})
+        headerField.generateTag()
+        self.assertIsInstance(headerField.tag, basestring)
+        self.assertTrue('tag' in headerField.parameterNamesAndValueStrings)
 
 
 class TestMaxForwardsSipHeaderField(AbstractIntegerSIPHeaderFieldTestCase):
@@ -619,40 +998,228 @@ class TestToSipHeaderField(AbstractSIPHeaderFieldTestCase):
         return['To', 'TO', 'to']
 
     @property
+    def canonicalFieldValues(self):
+        return ['"3122221000"<sip:3122221000@200.23.3.241:5061;user=phone>;tag=29de2c8-f0a1ec8-13c5-50029-98875-169ed655-98875',
+                '<sip:3122221000@200.23.3.241:5061;user=phone>;tag=29de2c8-f0a1ec8-13c5-50029-98875-169ed655-98875',
+                '"3122221000"<sip:200.23.3.241:5061;user=phone>;tag=29de2c8-f0a1ec8-13c5-50029-98875-169ed655-98875',
+                '"3122221000"<sip:3122221000@200.23.3.241;user=phone>;tag=29de2c8-f0a1ec8-13c5-50029-98875-169ed655-98875',
+                '"3122221000"<sip:3122221000@200.23.3.241:5061>;tag=29de2c8-f0a1ec8-13c5-50029-98875-169ed655-98875',
+                '"3122221000"<sip:3122221000@200.23.3.241:5061;user=phone>',
+                '<sip:3122221000@200.23.3.241:5061;user=phone>',
+                'sip:3122221000@200.23.3.241:5061;tag=29de2c8-f0a1ec8-13c5-50029-98875-169ed655-98875',
+                'sip:3122221000@200.23.3.241:5061',
+                '"3122221000"<sip:3122221000@200.23.3.241:5061>',
+                '"3122221000"<sip:200.23.3.241>;tag=29de2c8-f0a1ec8-13c5-50029-98875-169ed655-98875',
+                '"3122221000"<sip:200.23.3.241>',
+                '"3122221000"<sip:200.23.3.241;user=phone>;tag=29de2c8-f0a1ec8-13c5-50029-98875-169ed655-98875',
+                'sip:3122221000@200.23.3.241',
+                'sip:200.23.3.241',
+                'sip:200.23.3.241:5061']
+
+    @property
     def sipHeaderFieldClassUnderTest(self):
         return ToSIPHeaderField
 
-    # TODO:  way more test samples and assertions.  Lots of overridden canonicalFieldValues.
+    def test_parseSetValuesAndReParse(self):
+        headerFieldString = 'To: "3122221000"<sip:3122221000@200.23.3.241:5061;user=phone>;tag=29de2c8-f0a1ec8-13c5-50029-98875-169ed655-98875'
+        headerField = self.sipHeaderFieldClassUnderTest.newParsedFrom(headerFieldString)
+        self.assertEqual(headerField.rawString, headerFieldString)
+        self.assertTrue(headerField.isValid)
+        self.assertEqual(headerField.tag, '29de2c8-f0a1ec8-13c5-50029-98875-169ed655-98875')
+        self.assertEqual(headerField.displayName, '"3122221000"')
+        self.assertEqual(headerField.parameterNamesAndValueStrings, {'tag': '29de2c8-f0a1ec8-13c5-50029-98875-169ed655-98875'})
+        self.assertEqual(headerField.sipURI.rawString, 'sip:3122221000@200.23.3.241:5061;user=phone')
+        self.assertEqual(headerField.sipURI.host, '200.23.3.241')
+        self.assertEqual(headerField.sipURI.port, 5061)
+        self.assertEqual(headerField.sipURI.scheme, 'sip')
+        self.assertEqual(headerField.sipURI.parameterNamesAndValueStrings, {'user': 'phone'})
+        self.assertEqual(headerField.sipURI.user, '3122221000')
+        headerField.displayName = 'foo'
+        self.assertEqual(headerField.rawString, 'To: "foo"<sip:3122221000@200.23.3.241:5061;user=phone>;tag=29de2c8-f0a1ec8-13c5-50029-98875-169ed655-98875')
+        self.assertTrue(headerField.isValid)
+        self.assertEqual(headerField.tag, '29de2c8-f0a1ec8-13c5-50029-98875-169ed655-98875')
+        self.assertEqual(headerField.displayName, 'foo')
+        self.assertEqual(headerField.parameterNamesAndValueStrings, {'tag': '29de2c8-f0a1ec8-13c5-50029-98875-169ed655-98875'})
+        self.assertEqual(headerField.sipURI.rawString, 'sip:3122221000@200.23.3.241:5061;user=phone')
+        self.assertEqual(headerField.sipURI.host, '200.23.3.241')
+        self.assertEqual(headerField.sipURI.port, 5061)
+        self.assertEqual(headerField.sipURI.scheme, 'sip')
+        self.assertEqual(headerField.sipURI.parameterNamesAndValueStrings, {'user': 'phone'})
+        self.assertEqual(headerField.sipURI.user, '3122221000')
+        headerField.tag = 'TESTTAG'
+        self.assertEqual(headerField.rawString, 'To: "foo"<sip:3122221000@200.23.3.241:5061;user=phone>;tag=TESTTAG')
+        self.assertTrue(headerField.isValid)
+        self.assertEqual(headerField.tag, 'TESTTAG')
+        self.assertEqual(headerField.displayName, 'foo')
+        self.assertEqual(headerField.parameterNamesAndValueStrings, {'tag': 'TESTTAG'})
+        self.assertEqual(headerField.sipURI.rawString, 'sip:3122221000@200.23.3.241:5061;user=phone')
+        self.assertEqual(headerField.sipURI.host, '200.23.3.241')
+        self.assertEqual(headerField.sipURI.port, 5061)
+        self.assertEqual(headerField.sipURI.scheme, 'sip')
+        self.assertEqual(headerField.sipURI.parameterNamesAndValueStrings, {'user': 'phone'})
+        self.assertEqual(headerField.sipURI.user, '3122221000')
+        headerField.sipURI = SIPURI.newParsedFrom('sip:0.0.0.0')
+        self.assertEqual(headerField.rawString, 'To: "foo"<sip:0.0.0.0>;tag=TESTTAG')
+        self.assertTrue(headerField.isValid)
+        self.assertEqual(headerField.tag, 'TESTTAG')
+        self.assertEqual(headerField.displayName, 'foo')
+        self.assertEqual(headerField.parameterNamesAndValueStrings, {'tag': 'TESTTAG'})
+        self.assertEqual(headerField.sipURI.rawString, 'sip:0.0.0.0')
+        self.assertEqual(headerField.sipURI.host, '0.0.0.0')
+        self.assertEqual(headerField.sipURI.port, None)
+        self.assertEqual(headerField.sipURI.scheme, 'sip')
+        self.assertEqual(headerField.sipURI.parameterNamesAndValueStrings, {})
+        self.assertEqual(headerField.sipURI.user, None)
+
+    def test_parseValid001(self):
+        headerFieldString = 'To: "3122221000"<sip:3122221000@200.23.3.241:5061;user=phone>;tag=29de2c8-f0a1ec8-13c5-50029-98875-169ed655-98875'
+        headerField = self.sipHeaderFieldClassUnderTest.newParsedFrom(headerFieldString)
+        self.assertEqual(headerField.rawString, headerFieldString)
+        self.assertTrue(headerField.isValid)
+        self.assertEqual(headerField.tag, '29de2c8-f0a1ec8-13c5-50029-98875-169ed655-98875')
+        self.assertEqual(headerField.displayName, '"3122221000"')
+        self.assertEqual(headerField.parameterNamesAndValueStrings, {'tag': '29de2c8-f0a1ec8-13c5-50029-98875-169ed655-98875'})
+        self.assertEqual(headerField.sipURI.rawString, 'sip:3122221000@200.23.3.241:5061;user=phone')
+        self.assertEqual(headerField.sipURI.host, '200.23.3.241')
+        self.assertEqual(headerField.sipURI.port, 5061)
+        self.assertEqual(headerField.sipURI.scheme, 'sip')
+        self.assertEqual(headerField.sipURI.parameterNamesAndValueStrings, {'user': 'phone'})
+        self.assertEqual(headerField.sipURI.user, '3122221000')
+
+    def test_parseValid002(self):
+        headerFieldString = 'To: <sip:3122221000@200.23.3.241:5061;user=phone>;tag=29de2c8-f0a1ec8-13c5-50029-98875-169ed655-98875'
+        headerField = self.sipHeaderFieldClassUnderTest.newParsedFrom(headerFieldString)
+        self.assertEqual(headerField.rawString, headerFieldString)
+        self.assertTrue(headerField.isValid)
+        self.assertEqual(headerField.tag, '29de2c8-f0a1ec8-13c5-50029-98875-169ed655-98875')
+        self.assertEqual(headerField.displayName, '')
+        self.assertEqual(headerField.parameterNamesAndValueStrings, {'tag': '29de2c8-f0a1ec8-13c5-50029-98875-169ed655-98875'})
+        self.assertEqual(headerField.sipURI.rawString, 'sip:3122221000@200.23.3.241:5061;user=phone')
+        self.assertEqual(headerField.sipURI.host, '200.23.3.241')
+        self.assertEqual(headerField.sipURI.port, 5061)
+        self.assertEqual(headerField.sipURI.scheme, 'sip')
+        self.assertEqual(headerField.sipURI.parameterNamesAndValueStrings, {'user': 'phone'})
+        self.assertEqual(headerField.sipURI.user, '3122221000')
+
+    def test_parseValid003(self):
+        headerFieldString = 'To: "3122221000"<sip:200.23.3.241:5061;user=phone>;tag=29de2c8-f0a1ec8-13c5-50029-98875-169ed655-98875'
+        headerField = self.sipHeaderFieldClassUnderTest.newParsedFrom(headerFieldString)
+        self.assertEqual(headerField.rawString, headerFieldString)
+        self.assertTrue(headerField.isValid)
+        self.assertEqual(headerField.tag, '29de2c8-f0a1ec8-13c5-50029-98875-169ed655-98875')
+        self.assertEqual(headerField.displayName, '"3122221000"')
+        self.assertEqual(headerField.parameterNamesAndValueStrings, {'tag': '29de2c8-f0a1ec8-13c5-50029-98875-169ed655-98875'})
+        self.assertEqual(headerField.sipURI.rawString, 'sip:200.23.3.241:5061;user=phone')
+        self.assertEqual(headerField.sipURI.host, '200.23.3.241')
+        self.assertEqual(headerField.sipURI.port, 5061)
+        self.assertEqual(headerField.sipURI.scheme, 'sip')
+        self.assertEqual(headerField.sipURI.parameterNamesAndValueStrings, {'user': 'phone'})
+        self.assertEqual(headerField.sipURI.user, None)
+
+    def test_parseValid004(self):
+        headerFieldString = 'To: "3122221000"<sip:3122221000@200.23.3.241;user=phone>;tag=29de2c8-f0a1ec8-13c5-50029-98875-169ed655-98875'
+        headerField = self.sipHeaderFieldClassUnderTest.newParsedFrom(headerFieldString)
+        self.assertEqual(headerField.rawString, headerFieldString)
+        self.assertTrue(headerField.isValid)
+        self.assertEqual(headerField.tag, '29de2c8-f0a1ec8-13c5-50029-98875-169ed655-98875')
+        self.assertEqual(headerField.displayName, '"3122221000"')
+        self.assertEqual(headerField.parameterNamesAndValueStrings, {'tag': '29de2c8-f0a1ec8-13c5-50029-98875-169ed655-98875'})
+        self.assertEqual(headerField.sipURI.rawString, 'sip:3122221000@200.23.3.241;user=phone')
+        self.assertEqual(headerField.sipURI.host, '200.23.3.241')
+        self.assertEqual(headerField.sipURI.port, None)
+        self.assertEqual(headerField.sipURI.scheme, 'sip')
+        self.assertEqual(headerField.sipURI.parameterNamesAndValueStrings, {'user': 'phone'})
+        self.assertEqual(headerField.sipURI.user, '3122221000')
+
+    def test_parseValid005(self):
+        headerFieldString = 'To: "3122221000"<sip:3122221000@200.23.3.241:5061>;tag=29de2c8-f0a1ec8-13c5-50029-98875-169ed655-98875'
+        headerField = self.sipHeaderFieldClassUnderTest.newParsedFrom(headerFieldString)
+        self.assertEqual(headerField.rawString, headerFieldString)
+        self.assertTrue(headerField.isValid)
+        self.assertEqual(headerField.tag, '29de2c8-f0a1ec8-13c5-50029-98875-169ed655-98875')
+        self.assertEqual(headerField.displayName, '"3122221000"')
+        self.assertEqual(headerField.parameterNamesAndValueStrings, {'tag': '29de2c8-f0a1ec8-13c5-50029-98875-169ed655-98875'})
+        self.assertEqual(headerField.sipURI.rawString, 'sip:3122221000@200.23.3.241:5061')
+        self.assertEqual(headerField.sipURI.host, '200.23.3.241')
+        self.assertEqual(headerField.sipURI.port, 5061)
+        self.assertEqual(headerField.sipURI.scheme, 'sip')
+        self.assertEqual(headerField.sipURI.parameterNamesAndValueStrings, {})
+        self.assertEqual(headerField.sipURI.user, '3122221000')
+
+    def test_parseValid006(self):
+        headerFieldString = 'To: "3122221000"<sip:3122221000@200.23.3.241:5061;user=phone>'
+        headerField = self.sipHeaderFieldClassUnderTest.newParsedFrom(headerFieldString)
+        self.assertEqual(headerField.rawString, headerFieldString)
+        self.assertTrue(headerField.isValid)
+        self.assertEqual(headerField.tag, None)
+        self.assertEqual(headerField.displayName, '"3122221000"')
+        self.assertEqual(headerField.parameterNamesAndValueStrings, {})
+        self.assertEqual(headerField.sipURI.rawString, 'sip:3122221000@200.23.3.241:5061;user=phone')
+        self.assertEqual(headerField.sipURI.host, '200.23.3.241')
+        self.assertEqual(headerField.sipURI.port, 5061)
+        self.assertEqual(headerField.sipURI.scheme, 'sip')
+        self.assertEqual(headerField.sipURI.parameterNamesAndValueStrings, {'user': 'phone'})
+        self.assertEqual(headerField.sipURI.user, '3122221000')
+
+    def test_parseValid007(self):
+        headerFieldString = 'To: <sip:3122221000@200.23.3.241:5061;user=phone>'
+        headerField = self.sipHeaderFieldClassUnderTest.newParsedFrom(headerFieldString)
+        self.assertEqual(headerField.rawString, headerFieldString)
+        self.assertTrue(headerField.isValid)
+        self.assertEqual(headerField.tag, None)
+        self.assertEqual(headerField.displayName, '')
+        self.assertEqual(headerField.parameterNamesAndValueStrings, {})
+        self.assertEqual(headerField.sipURI.rawString, 'sip:3122221000@200.23.3.241:5061;user=phone')
+        self.assertEqual(headerField.sipURI.host, '200.23.3.241')
+        self.assertEqual(headerField.sipURI.port, 5061)
+        self.assertEqual(headerField.sipURI.scheme, 'sip')
+        self.assertEqual(headerField.sipURI.parameterNamesAndValueStrings, {'user': 'phone'})
+        self.assertEqual(headerField.sipURI.user, '3122221000')
+
+    def test_parseValid008(self):
+        headerFieldString = 'To: sip:3122221000@200.23.3.241:5061'
+        headerField = self.sipHeaderFieldClassUnderTest.newParsedFrom(headerFieldString)
+        self.assertEqual(headerField.rawString, headerFieldString)
+        self.assertTrue(headerField.isValid)
+        self.assertEqual(headerField.tag, None)
+        self.assertEqual(headerField.displayName, None)
+        self.assertEqual(headerField.parameterNamesAndValueStrings, {})
+        self.assertEqual(headerField.sipURI.rawString, 'sip:3122221000@200.23.3.241:5061')
+        self.assertEqual(headerField.sipURI.host, '200.23.3.241')
+        self.assertEqual(headerField.sipURI.port, 5061)
+        self.assertEqual(headerField.sipURI.scheme, 'sip')
+        self.assertEqual(headerField.sipURI.parameterNamesAndValueStrings, {})
+        self.assertEqual(headerField.sipURI.user, '3122221000')
+
     def test_parsing(self):
         self.basic_test_parsing()
         for line in self.canonicalStrings:
             headerField = self.sipHeaderFieldClassUnderTest.newParsedFrom(line)
             self.assertTrue(headerField.isTo, line)
 
-    # TODO:  way more test samples.  Lots of overridden canonicalFieldValues.
     def test_rendering(self):
-        pass
-        headerField = self.sipHeaderFieldClassUnderTest.newForAttributes(tag=None, displayName=None, sipURI=SIPURI.newParsedFrom('sip:example.com:5061'))
-        # TODO: Now do a bunch of testing on this shiz.
+        headerFieldString = 'To: "3122221000"<sip:3122221000@200.23.3.241:5061;user=phone>;tag=29de2c8-f0a1ec8-13c5-50029-98875-169ed655-98875'
+        headerField = self.sipHeaderFieldClassUnderTest.newForAttributes(displayName='3122221000', tag='29de2c8-f0a1ec8-13c5-50029-98875-169ed655-98875', sipURI=SIPURI.newParsedFrom('sip:3122221000@200.23.3.241:5061;user=phone'))
+        self.assertEqual(headerField.rawString, headerFieldString)
+        self.assertTrue(headerField.isValid)
+        self.assertEqual(headerField.tag, '29de2c8-f0a1ec8-13c5-50029-98875-169ed655-98875')
+        self.assertEqual(headerField.displayName, '3122221000')
+        self.assertEqual(headerField.parameterNamesAndValueStrings, {'tag': '29de2c8-f0a1ec8-13c5-50029-98875-169ed655-98875'})
+        self.assertEqual(headerField.sipURI.rawString, 'sip:3122221000@200.23.3.241:5061;user=phone')
+        self.assertEqual(headerField.sipURI.host, '200.23.3.241')
+        self.assertEqual(headerField.sipURI.port, 5061)
+        self.assertEqual(headerField.sipURI.scheme, 'sip')
+        self.assertEqual(headerField.sipURI.parameterNamesAndValueStrings, {'user': 'phone'})
+        self.assertEqual(headerField.sipURI.user, '3122221000')
 
-        '''
-        for fieldValueString in self.canonicalFieldValues:
-            headerField = self.sipHeaderFieldClassUnderTest.newForAttributes(fieldValueString=fieldValueString)
-            self.assertTrue(headerField.isValid)
-            self.assertTrue(headerField.isKnown)
-            self.assertEqual(headerField.rawString, self.canonicalFieldNames[0] + ': ' + fieldValueString)
-            headerField.fieldValueString = "blooey"
-            self.assertEqual("blooey", headerField.fieldValueString)
-            self.assertEqual(headerField.rawString, self.canonicalFieldNames[0] + ': blooey')
-        '''
-        '''
-        GENERIC, do not use.
-        self.basic_test_rendering()
-        for fieldName in self.canonicalFieldNames:
-            for fieldValueString in self.canonicalFieldValues:
-                headerField = self.sipHeaderFieldClassUnderTest.newForAttributes(fieldValueString=fieldValueString)
-                self.assertTrue(headerField.isTo)
-        '''
+    def test_tagGeneration(self):
+        headerFieldString = 'To: sip:3122221000@200.23.3.241:5061'
+        headerField = self.sipHeaderFieldClassUnderTest.newParsedFrom(headerFieldString)
+        self.assertEqual(headerField.tag, None)
+        self.assertEqual(headerField.parameterNamesAndValueStrings, {})
+        headerField.generateTag()
+        self.assertIsInstance(headerField.tag, basestring)
+        self.assertTrue('tag' in headerField.parameterNamesAndValueStrings)
 
 class TestUserAgentSipHeaderField(AbstractSIPHeaderFieldTestCase):
     @property

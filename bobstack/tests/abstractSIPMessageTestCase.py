@@ -161,7 +161,8 @@ class AbstractSIPMessageTestCase(TestCase):
     @property
     def listOfHeaderFieldsForAssertion(self):
         return [
-            FromSIPHeaderField.newForAttributes(fieldValueString='<sip:200.25.3.150:5061>;tag=0ee8d3e272e31c9195299efc500'),
+            # FromSIPHeaderField.newForAttributes(fieldValueString='<sip:200.25.3.150:5061>;tag=0ee8d3e272e31c9195299efc500'),
+            FromSIPHeaderField.newForAttributes(tag='0ee8d3e272e31c9195299efc500', displayName=None, sipURI=SIPURI.newParsedFrom('sip:200.25.3.150:5061')),
             # ToSIPHeaderField.newForAttributes(fieldValueString='<sip:example.com:5061>'),
             ToSIPHeaderField.newForAttributes(tag=None, displayName=None, sipURI=SIPURI.newParsedFrom('sip:example.com:5061')),
             CallIDSIPHeaderField.newForAttributes(fieldValueString='0ee8d3e272e31c9195299efc500'),
@@ -171,7 +172,8 @@ class AbstractSIPMessageTestCase(TestCase):
             ViaSIPHeaderField.newForAttributes(fieldValueString='SIP/2.0/TLS 200.25.3.250;branch=fdkajhdiruyalkghjladksjf'),
             ViaSIPHeaderField.newForAttributes(fieldValueString='SIP/2.0/TLS 200.25.3.255;branch=duyroiuryaludhgviukfhlasf'),
             UserAgentSIPHeaderField.newForAttributes(fieldValueString='Example User Agent'),
-            ContactSIPHeaderField.newForAttributes(fieldValueString='<sip:invalid@200.25.3.150:5061;transport=tls>'),
+            # ContactSIPHeaderField.newForAttributes(fieldValueString='<sip:invalid@200.25.3.150:5061;transport=tls>'),
+            ContactSIPHeaderField.newForAttributes(displayName=None, sipURI=SIPURI.newParsedFrom('sip:invalid@200.25.3.150:5061;transport=tls')),
             RouteSIPHeaderField.newForAttributes(fieldValueString='<sip:200.30.10.12:5061;transport=tls;lr>'),
             ExpiresSIPHeaderField.newForAttributes(value=0),
             AcceptSIPHeaderField.newForAttributes(fieldValueString='application/sdp,application/isup,application/dtmf,application/dtmf-relay,multipart/mixed'),
@@ -196,10 +198,10 @@ class AbstractSIPMessageTestCase(TestCase):
             TimestampSIPHeaderField.newForAttributes(value=1392061773),
             WWWAuthenticateSIPHeaderField.newForAttributes(fieldValueString='Digest algorithm=MD5,nonce="1111790769596",realm="SomeRealm"'),
             WarningSIPHeaderField.newForAttributes(fieldValueString='370 200.21.3.10 "Insufficient Bandwidth"'),
-            UnknownSIPHeaderField.newForAttributes(fieldName='X-RTP-Stat', fieldValueString=' PR=0;ER=0;PL=0;RB=0/0;DE=PCMU;EN=PCMU;JI=0;DL=0,0;IP=10.1.0.33:16384,132.52.127.200:20048'),
-            UnknownSIPHeaderField.newForAttributes(fieldName='x-channel', fieldValueString=' ds/ds1-3/12;IP=132.52.127.16'),
-            UnknownSIPHeaderField.newForAttributes(fieldName='Referred-By', fieldValueString='<sip:6006665100@example.com;user=phone> ; CorrelationID="0508817f84e7ce64745ef9753e2fbff4664321a4@200.23.3.240"'),
-            UnknownSIPHeaderField.newForAttributes(fieldName='Refer-To', fieldValueString='<sip:6006665499;rfrid=28661859@example.com;user=phone?x-nt-resource-priority=YNBvf.2j00qao>'),
+            UnknownSIPHeaderField.newForFieldNameAndValueString(fieldName='X-RTP-Stat', fieldValueString=' PR=0;ER=0;PL=0;RB=0/0;DE=PCMU;EN=PCMU;JI=0;DL=0,0;IP=10.1.0.33:16384,132.52.127.200:20048'),
+            UnknownSIPHeaderField.newForFieldNameAndValueString(fieldName='x-channel', fieldValueString=' ds/ds1-3/12;IP=132.52.127.16'),
+            UnknownSIPHeaderField.newForFieldNameAndValueString(fieldName='Referred-By', fieldValueString='<sip:6006665100@example.com;user=phone> ; CorrelationID="0508817f84e7ce64745ef9753e2fbff4664321a4@200.23.3.240"'),
+            UnknownSIPHeaderField.newForFieldNameAndValueString(fieldName='Refer-To', fieldValueString='<sip:6006665499;rfrid=28661859@example.com;user=phone?x-nt-resource-priority=YNBvf.2j00qao>'),
             ContentLengthSIPHeaderField.newForAttributes(value=11)]
 
     @property

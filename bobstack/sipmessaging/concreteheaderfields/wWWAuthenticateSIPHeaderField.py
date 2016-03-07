@@ -18,34 +18,7 @@ class WWWAuthenticateSIPHeaderField(SIPHeaderField):
     @classmethod
     def newForAttributes(cls, fieldName="WWW-Authenticate", fieldValueString=""):
         return cls.newForFieldNameAndValueString(fieldName=fieldName, fieldValueString=fieldValueString)
-    '''
-    @classproperty
-    @classmethod
-    def regexForMatchingFieldName(cls):
-        try:
-            return cls._regexForMatchingFieldName
-        except AttributeError:
-            cls._regexForMatchingFieldName = re.compile('^WWW-Authenticate$', re.I)
-            return cls._regexForMatchingFieldName
 
-    @classproperty
-    @classmethod
-    def regexForMatching(cls):
-        try:
-            return cls._regexForMatching
-        except AttributeError:
-            cls._regexForMatching = re.compile('^WWW-Authenticate\s*:', re.I)
-            return cls._regexForMatching
-
-    @classproperty
-    @classmethod
-    def regexForParsing(cls):
-        try:
-            return cls._regexForParsing
-        except AttributeError:
-            cls._regexForParsing = re.compile('^WWW-Authenticate\s*:\s*(.*)', re.I)
-            return cls._regexForParsing
-    '''
     @property
     def isWWWAuthenticate(self):
         return True
