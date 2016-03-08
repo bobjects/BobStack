@@ -27,9 +27,11 @@ startLineRegexes = ["^SIP/2.0\s+([\d]+)+\s+(.+)\s*$", "^([^\s]+)\s+([^\s]+)\s+SI
 startLineRegexes = [re.compile(s) for s in startLineRegexes]
 
 rawLogFileDirectoryPathNames = [ '../proprietary-test-data/big-lab-test-logs-raw', '../proprietary-test-data/cust-1-logs-raw' ]
-pcapDirectoryPathNames = [ '../proprietary-test-data/cloud-resaved', '../proprietary-test-data/cust-2-logs-pcap' ]
+# rawLogFileDirectoryPathNames = []
+pcapDirectoryPathNames = [ '../proprietary-test-data/cloud-resaved', '../proprietary-test-data/cust-2-logs-pcap', '../proprietary-test-data/from-bobstack-testbed' ]
 # pcapDirectoryPathNames = [ '../proprietary-test-data/cloud-resaved' ]
 # pcapDirectoryPathNames = [ '../proprietary-test-data/cust-2-logs-pcap' ]
+# pcapDirectoryPathNames = [ '../proprietary-test-data/from-bobstack-testbed' ]
 
 def createInterim1File():
     print "creating interim file 1"

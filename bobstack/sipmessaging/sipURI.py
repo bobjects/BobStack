@@ -9,6 +9,10 @@ import re
 # like ANTLR to create a parser.  The RFC4475 and RFC5118 torture tests should inform that.
 
 class SIPURI(object):
+    regexForParsingHostPort = re.compile('([^:]*):?(.*)')
+    regexForFindingParameterNamesAndValues = re.compile(';([^=;]+)=?([^;]+)?')
+    regexForURI = re.compile('(([^:]*):([^@;]*)@?([^;]*)?)')
+
     @classmethod
     def newParsedFrom(cls, aString):
         answer = cls()
@@ -119,12 +123,11 @@ class SIPURI(object):
         self._attributesMustBeParsed = True
 
     def parseAttributesFromRawString(self):
-        #TODO - will need to cache regexes.
         self.clearAttributes()
         self._attributesMustBeParsed = False
         # TODO - put in exception handler for malformed SIPURI, after we do some testing.
-        self._parameterNamesAndValueStrings = dict(re.findall(';([^=;]+)=?([^;]+)?', self._rawString))
-        uriMatchGroups = re.match('(([^:]*):([^@;]*)@?([^;]*)?)', self._rawString).groups()
+        self._parameterNamesAndValueStrings = dict(self.__class__.regexForFindingParameterNamesAndValues.findall(self._rawString))
+        uriMatchGroups = self.__class__.regexForURI.match(self._rawString).groups()
         # parsedAttributes['sipURI'] = uriMatchGroups[0]
         self._scheme = uriMatchGroups[1]
         if uriMatchGroups[3]:
@@ -133,7 +136,7 @@ class SIPURI(object):
         else:
             self._user = None
             hostPort = uriMatchGroups[2]
-        hostPortMatchGroups = re.match('([^:]*):?(.*)', hostPort).groups()
+        hostPortMatchGroups = self.__class__.regexForParsingHostPort.match(hostPort).groups()
         self._host = hostPortMatchGroups[0]
         if hostPortMatchGroups[1]:
             self._port = int(hostPortMatchGroups[1])

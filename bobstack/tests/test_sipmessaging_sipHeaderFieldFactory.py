@@ -804,16 +804,45 @@ class TestSIPHeaderFieldFactoryForVia(AbstractSIPHeaderFieldFromFactoryTestCase)
     def sipHeaderFieldClassUnderTest(self):
         return ViaSIPHeaderField
 
+    @property
+    def emptyHeaderFieldBodyIsValid(self):
+        return False
+
+    # def test_parsing(self):
+    #     self.basic_test_parsing()
+    #     for line in self.canonicalStrings:
+    #         headerField = SIPHeaderFieldFactory().nextForString(line)
+    #         self.assertTrue(headerField.isVia, line)
+    #         stringio = StringIO(line + '\r\n')
+    #         headerField = SIPHeaderFieldFactory().allForStringIO(stringio)[0]
+    #         self.assertTrue(headerField.isVia, line)
+    #         stringio.close()
+    #         headerField = SIPHeaderFieldFactory().nextForFieldName(self.canonicalFieldNames[0])
+    #         self.assertTrue(headerField.isVia, line)
+    #         headerField = SIPHeaderFieldFactory().nextForFieldNameAndFieldValue(self.canonicalFieldNames[0], "foo bar baz blarg")
+    #         self.assertTrue(headerField.isVia, line)
+    #
+    @property
+    def canonicalFieldValues(self):
+        return ['SIP/2.0/TLS 200.25.3.150;branch=z9hG4bK0ee8d3e272e31ca195299efc500',
+                'SIP/2.0/TLS 200.25.3.250:5061;branch=z9hG4bKfdkajhdiruyalkghjladksjf',
+                'SIP/2.0/TLS 200.25.3.255;branch=z9hG4bKduyroiuryaludhgviukfhlasf'
+                ]
+
     def test_parsing(self):
         self.basic_test_parsing()
         for line in self.canonicalStrings:
             headerField = SIPHeaderFieldFactory().nextForString(line)
             self.assertTrue(headerField.isVia, line)
+            self.assertTrue(headerField.isValid)
             stringio = StringIO(line + '\r\n')
             headerField = SIPHeaderFieldFactory().allForStringIO(stringio)[0]
             self.assertTrue(headerField.isVia, line)
+            self.assertTrue(headerField.isValid)
             stringio.close()
             headerField = SIPHeaderFieldFactory().nextForFieldName(self.canonicalFieldNames[0])
             self.assertTrue(headerField.isVia, line)
+            self.assertFalse(headerField.isValid)
             headerField = SIPHeaderFieldFactory().nextForFieldNameAndFieldValue(self.canonicalFieldNames[0], "foo bar baz blarg")
             self.assertTrue(headerField.isVia, line)
+            self.assertFalse(headerField.isValid)

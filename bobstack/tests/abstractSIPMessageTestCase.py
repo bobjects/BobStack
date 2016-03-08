@@ -75,8 +75,8 @@ class AbstractSIPMessageTestCase(TestCase):
                 'CSeq: 6711 ' + self.sipMethodString,
                 'Max-Forwards: 70',
                 'Via: SIP/2.0/TLS 200.25.3.150;branch=z9hG4bK0ee8d3e272e31ca195299efc500',
-                'Via: SIP/2.0/TLS 200.25.3.250;branch=fdkajhdiruyalkghjladksjf',
-                'Via: SIP/2.0/TLS 200.25.3.255;branch=duyroiuryaludhgviukfhlasf',
+                'Via: SIP/2.0/TLS 200.25.3.250;branch=z9hG4bKfdkajhdiruyalkghjladksjf',
+                'Via: SIP/2.0/TLS 200.25.3.255;branch=z9hG4bKduyroiuryaludhgviukfhlasf',
                 'User-Agent: Example User Agent',
                 'Contact: <sip:invalid@200.25.3.150:5061;transport=tls>',
                 'Route: <sip:200.30.10.12:5061;transport=tls;lr>',
@@ -122,8 +122,8 @@ class AbstractSIPMessageTestCase(TestCase):
                     'CSeq: 6711 SIPMETHODTOREPLACE\r\n'
                     'Max-Forwards: 70\r\n'
                     'Via: SIP/2.0/TLS 200.25.3.150;branch=z9hG4bK0ee8d3e272e31ca195299efc500\r\n'
-                    'Via: SIP/2.0/TLS 200.25.3.250;branch=fdkajhdiruyalkghjladksjf\r\n'
-                    'Via: SIP/2.0/TLS 200.25.3.255;branch=duyroiuryaludhgviukfhlasf\r\n'
+                    'Via: SIP/2.0/TLS 200.25.3.250;branch=z9hG4bKfdkajhdiruyalkghjladksjf\r\n'
+                    'Via: SIP/2.0/TLS 200.25.3.255;branch=z9hG4bKduyroiuryaludhgviukfhlasf\r\n'
                     'User-Agent: Example User Agent\r\n'
                     'Contact: <sip:invalid@200.25.3.150:5061;transport=tls>\r\n'
                     'Route: <sip:200.30.10.12:5061;transport=tls;lr>\r\n'
@@ -168,9 +168,12 @@ class AbstractSIPMessageTestCase(TestCase):
             CallIDSIPHeaderField.newForAttributes(fieldValueString='0ee8d3e272e31c9195299efc500'),
             CSeqSIPHeaderField.newForAttributes(fieldValueString='6711 ' + self.sipMethodString),
             MaxForwardsSIPHeaderField.newForAttributes(value=70),
-            ViaSIPHeaderField.newForAttributes(fieldValueString='SIP/2.0/TLS 200.25.3.150;branch=z9hG4bK0ee8d3e272e31ca195299efc500'),
-            ViaSIPHeaderField.newForAttributes(fieldValueString='SIP/2.0/TLS 200.25.3.250;branch=fdkajhdiruyalkghjladksjf'),
-            ViaSIPHeaderField.newForAttributes(fieldValueString='SIP/2.0/TLS 200.25.3.255;branch=duyroiuryaludhgviukfhlasf'),
+            # ViaSIPHeaderField.newForAttributes(fieldValueString='SIP/2.0/TLS 200.25.3.150;branch=z9hG4bK0ee8d3e272e31ca195299efc500'),
+            ViaSIPHeaderField.newForAttributes(transport='TLS', host='200.25.3.150', branch='z9hG4bK0ee8d3e272e31ca195299efc500'),
+            # ViaSIPHeaderField.newForAttributes(fieldValueString='SIP/2.0/TLS 200.25.3.250;branch=z9hG4bKfdkajhdiruyalkghjladksjf'),
+            ViaSIPHeaderField.newForAttributes(transport='TLS', host='200.25.3.250', branch='z9hG4bKfdkajhdiruyalkghjladksjf'),
+            # ViaSIPHeaderField.newForAttributes(fieldValueString='SIP/2.0/TLS 200.25.3.255;branch=z9hG4bKduyroiuryaludhgviukfhlasf'),
+            ViaSIPHeaderField.newForAttributes(transport='TLS', host='200.25.3.255', branch='z9hG4bKduyroiuryaludhgviukfhlasf'),
             UserAgentSIPHeaderField.newForAttributes(fieldValueString='Example User Agent'),
             # ContactSIPHeaderField.newForAttributes(fieldValueString='<sip:invalid@200.25.3.150:5061;transport=tls>'),
             ContactSIPHeaderField.newForAttributes(displayName=None, sipURI=SIPURI.newParsedFrom('sip:invalid@200.25.3.150:5061;transport=tls')),
@@ -212,8 +215,8 @@ class AbstractSIPMessageTestCase(TestCase):
                         'CSeq: 6711 ' + self.sipMethodString,
                         'Max-Forwards: 70',
                         'Via: SIP/2.0/TLS 200.25.3.150;branch=z9hG4bK0ee8d3e272e31ca195299efc500',
-                        'Via: SIP/2.0/TLS 200.25.3.250;branch=fdkajhdiruyalkghjladksjf',
-                        'Via: SIP/2.0/TLS 200.25.3.255;branch=duyroiuryaludhgviukfhlasf',
+                        'Via: SIP/2.0/TLS 200.25.3.250;branch=z9hG4bKfdkajhdiruyalkghjladksjf',
+                        'Via: SIP/2.0/TLS 200.25.3.255;branch=z9hG4bKduyroiuryaludhgviukfhlasf',
                         'User-Agent: Example User Agent',
                         'Contact: <sip:invalid@200.25.3.150:5061;transport=tls>',
                         'Route: <sip:200.30.10.12:5061;transport=tls;lr>',
@@ -254,8 +257,8 @@ class AbstractSIPMessageTestCase(TestCase):
                         ('CSeq', '6711 ' + self.sipMethodString),
                         ('Max-Forwards', 70),  # note the integer value.
                         ('Via', 'SIP/2.0/TLS 200.25.3.150;branch=z9hG4bK0ee8d3e272e31ca195299efc500'),
-                        ('Via', 'SIP/2.0/TLS 200.25.3.250;branch=fdkajhdiruyalkghjladksjf'),
-                        ('Via', 'SIP/2.0/TLS 200.25.3.255;branch=duyroiuryaludhgviukfhlasf'),
+                        ('Via', 'SIP/2.0/TLS 200.25.3.250;branch=z9hG4bKfdkajhdiruyalkghjladksjf'),
+                        ('Via', 'SIP/2.0/TLS 200.25.3.255;branch=z9hG4bKduyroiuryaludhgviukfhlasf'),
                         ('User-Agent', 'Example User Agent'),
                         ('Contact', '<sip:invalid@200.25.3.150:5061;transport=tls>'),
                         ('Route', '<sip:200.30.10.12:5061;transport=tls;lr>'),
@@ -296,8 +299,8 @@ class AbstractSIPMessageTestCase(TestCase):
                         ('CSeq', '6711 ' + self.sipMethodString),
                         ('Max-Forwards', 70),  # note the integer value.
                         ('Via', 'SIP/2.0/TLS 200.25.3.150;branch=z9hG4bK0ee8d3e272e31ca195299efc500'),
-                        ('Via', 'SIP/2.0/TLS 200.25.3.250;branch=fdkajhdiruyalkghjladksjf'),
-                        ('Via', 'SIP/2.0/TLS 200.25.3.255;branch=duyroiuryaludhgviukfhlasf'),
+                        ('Via', 'SIP/2.0/TLS 200.25.3.250;branch=z9hG4bKfdkajhdiruyalkghjladksjf'),
+                        ('Via', 'SIP/2.0/TLS 200.25.3.255;branch=z9hG4bKduyroiuryaludhgviukfhlasf'),
                         ('User-Agent', 'Example User Agent'),
                         ('Contact', '<sip:invalid@200.25.3.150:5061;transport=tls>'),
                         ('Route', '<sip:200.30.10.12:5061;transport=tls;lr>'),
@@ -338,8 +341,8 @@ class AbstractSIPMessageTestCase(TestCase):
         self.assertEqual(3, aSIPMessage.header.vias.__len__())
         # TODO: assert other headers besides just content-length and via.
         self.assertEqual('SIP/2.0/TLS 200.25.3.150;branch=z9hG4bK0ee8d3e272e31ca195299efc500', aSIPMessage.header.vias[0])
-        self.assertEqual('SIP/2.0/TLS 200.25.3.250;branch=fdkajhdiruyalkghjladksjf', aSIPMessage.header.vias[1])
-        self.assertEqual('SIP/2.0/TLS 200.25.3.255;branch=duyroiuryaludhgviukfhlasf', aSIPMessage.header.vias[2])
+        self.assertEqual('SIP/2.0/TLS 200.25.3.250;branch=z9hG4bKfdkajhdiruyalkghjladksjf', aSIPMessage.header.vias[1])
+        self.assertEqual('SIP/2.0/TLS 200.25.3.255;branch=z9hG4bKduyroiuryaludhgviukfhlasf', aSIPMessage.header.vias[2])
         self.assertEqual(4, aSIPMessage.header.unknownHeaderFields.__len__())
         self.assertEqual('Foo Content', aSIPMessage.content)
 

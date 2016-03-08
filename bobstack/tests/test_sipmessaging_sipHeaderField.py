@@ -1292,12 +1292,113 @@ class TestWarningSipHeaderField(AbstractSIPHeaderFieldTestCase):
 
 class TestViaSipHeaderField(AbstractSIPHeaderFieldTestCase):
     @property
+    def sipHeaderFieldClassUnderTest(self):
+        return ViaSIPHeaderField
+
+    @property
     def canonicalFieldNames(self):
         return['Via', 'VIA', 'via']
 
     @property
-    def sipHeaderFieldClassUnderTest(self):
-        return ViaSIPHeaderField
+    def canonicalFieldValues(self):
+        return ['SIP/2.0/TLS 200.25.3.150;branch=z9hG4bK0ee8d3e272e31ca195299efc500',
+                'SIP/2.0/TLS 200.25.3.250:5061;branch=z9hG4bKfdkajhdiruyalkghjladksjf',
+                'SIP/2.0/TLS 200.25.3.255;branch=z9hG4bKduyroiuryaludhgviukfhlasf'
+                ]
+
+    def test_parseSetValuesAndReParse(self):
+        headerFieldString = 'Via: SIP/2.0/TLS 200.25.3.150;branch=z9hG4bK0ee8d3e272e31ca195299efc500'
+        headerField = self.sipHeaderFieldClassUnderTest.newParsedFrom(headerFieldString)
+        self.assertEqual(headerField.rawString, headerFieldString)
+        self.assertTrue(headerField.isValid)
+        self.assertEqual(headerField.branch, 'z9hG4bK0ee8d3e272e31ca195299efc500')
+        self.assertEqual(headerField.parameterNamesAndValueStrings, {'branch': 'z9hG4bK0ee8d3e272e31ca195299efc500'})
+        self.assertEqual(headerField.transport, 'TLS')
+        self.assertEqual(headerField.host, '200.25.3.150')
+        self.assertEqual(headerField.port, None)
+        headerField.host = '192.168.0.5'
+        self.assertEqual(headerField.rawString, 'Via: SIP/2.0/TLS 192.168.0.5;branch=z9hG4bK0ee8d3e272e31ca195299efc500')
+        self.assertTrue(headerField.isValid)
+        self.assertEqual(headerField.branch, 'z9hG4bK0ee8d3e272e31ca195299efc500')
+        self.assertEqual(headerField.parameterNamesAndValueStrings, {'branch': 'z9hG4bK0ee8d3e272e31ca195299efc500'})
+        self.assertEqual(headerField.transport, 'TLS')
+        self.assertEqual(headerField.host, '192.168.0.5')
+        self.assertEqual(headerField.port, None)
+        headerField.port = 5061
+        self.assertEqual(headerField.rawString, 'Via: SIP/2.0/TLS 192.168.0.5:5061;branch=z9hG4bK0ee8d3e272e31ca195299efc500')
+        self.assertTrue(headerField.isValid)
+        self.assertEqual(headerField.branch, 'z9hG4bK0ee8d3e272e31ca195299efc500')
+        self.assertEqual(headerField.parameterNamesAndValueStrings, {'branch': 'z9hG4bK0ee8d3e272e31ca195299efc500'})
+        self.assertEqual(headerField.transport, 'TLS')
+        self.assertEqual(headerField.host, '192.168.0.5')
+        self.assertEqual(headerField.port, 5061)
+        headerField.transport = 'UDP'
+        self.assertEqual(headerField.rawString, 'Via: SIP/2.0/UDP 192.168.0.5:5061;branch=z9hG4bK0ee8d3e272e31ca195299efc500')
+        self.assertTrue(headerField.isValid)
+        self.assertEqual(headerField.branch, 'z9hG4bK0ee8d3e272e31ca195299efc500')
+        self.assertEqual(headerField.parameterNamesAndValueStrings, {'branch': 'z9hG4bK0ee8d3e272e31ca195299efc500'})
+        self.assertEqual(headerField.transport, 'UDP')
+        self.assertEqual(headerField.host, '192.168.0.5')
+        self.assertEqual(headerField.port, 5061)
+        headerField.branch = 'z9hG4bKblarg'
+        self.assertEqual(headerField.rawString, 'Via: SIP/2.0/UDP 192.168.0.5:5061;branch=z9hG4bKblarg')
+        self.assertTrue(headerField.isValid)
+        self.assertEqual(headerField.branch, 'z9hG4bKblarg')
+        self.assertEqual(headerField.parameterNamesAndValueStrings, {'branch': 'z9hG4bKblarg'})
+        self.assertEqual(headerField.transport, 'UDP')
+        self.assertEqual(headerField.host, '192.168.0.5')
+        self.assertEqual(headerField.port, 5061)
+
+    def test_parseValid001(self):
+        headerFieldString = 'Via: SIP/2.0/TLS 200.25.3.150;branch=z9hG4bK0ee8d3e272e31ca195299efc500'
+        headerField = self.sipHeaderFieldClassUnderTest.newParsedFrom(headerFieldString)
+        self.assertEqual(headerField.rawString, headerFieldString)
+        self.assertTrue(headerField.isValid)
+        self.assertEqual(headerField.branch, 'z9hG4bK0ee8d3e272e31ca195299efc500')
+        self.assertEqual(headerField.parameterNamesAndValueStrings, {'branch': 'z9hG4bK0ee8d3e272e31ca195299efc500'})
+        self.assertEqual(headerField.transport, 'TLS')
+        self.assertEqual(headerField.host, '200.25.3.150')
+        self.assertEqual(headerField.port, None)
+
+    def test_parseValid002(self):
+        headerFieldString = 'Via: SIP/2.0/TLS 200.25.3.150;branch=z9hG4bK0ee8d3e272e31ca195299efc500'
+        headerField = self.sipHeaderFieldClassUnderTest.newParsedFrom(headerFieldString)
+        self.assertTrue(headerField.isValid)
+        self.assertEqual(headerField.branch, 'z9hG4bK0ee8d3e272e31ca195299efc500')
+        self.assertEqual(headerField.parameterNamesAndValueStrings, {'branch': 'z9hG4bK0ee8d3e272e31ca195299efc500'})
+        self.assertEqual(headerField.transport, 'TLS')
+        self.assertEqual(headerField.host, '200.25.3.150')
+        self.assertEqual(headerField.port, None)
+
+    def test_parseValid003(self):
+        headerFieldString = 'Via: SIP/2.0/TLS 192.168.0.5:5061;branch=z9hG4bK0ee8d3e272e31ca195299efc500'
+        headerField = self.sipHeaderFieldClassUnderTest.newParsedFrom(headerFieldString)
+        self.assertTrue(headerField.isValid)
+        self.assertEqual(headerField.branch, 'z9hG4bK0ee8d3e272e31ca195299efc500')
+        self.assertEqual(headerField.parameterNamesAndValueStrings, {'branch': 'z9hG4bK0ee8d3e272e31ca195299efc500'})
+        self.assertEqual(headerField.transport, 'TLS')
+        self.assertEqual(headerField.host, '192.168.0.5')
+        self.assertEqual(headerField.port, 5061)
+
+    def test_parseValid004(self):
+        headerFieldString = 'Via: SIP/2.0/UDP 192.168.0.5:5061;branch=z9hG4bK0ee8d3e272e31ca195299efc500'
+        headerField = self.sipHeaderFieldClassUnderTest.newParsedFrom(headerFieldString)
+        self.assertTrue(headerField.isValid)
+        self.assertEqual(headerField.branch, 'z9hG4bK0ee8d3e272e31ca195299efc500')
+        self.assertEqual(headerField.parameterNamesAndValueStrings, {'branch': 'z9hG4bK0ee8d3e272e31ca195299efc500'})
+        self.assertEqual(headerField.transport, 'UDP')
+        self.assertEqual(headerField.host, '192.168.0.5')
+        self.assertEqual(headerField.port, 5061)
+
+    def test_parseValid005(self):
+        headerFieldString = 'Via: SIP/2.0/UDP 192.168.0.5:5061;branch=z9hG4bKblarg'
+        headerField = self.sipHeaderFieldClassUnderTest.newParsedFrom(headerFieldString)
+        self.assertTrue(headerField.isValid)
+        self.assertEqual(headerField.branch, 'z9hG4bKblarg')
+        self.assertEqual(headerField.parameterNamesAndValueStrings, {'branch': 'z9hG4bKblarg'})
+        self.assertEqual(headerField.transport, 'UDP')
+        self.assertEqual(headerField.host, '192.168.0.5')
+        self.assertEqual(headerField.port, 5061)
 
     def test_parsing(self):
         self.basic_test_parsing()
@@ -1306,8 +1407,22 @@ class TestViaSipHeaderField(AbstractSIPHeaderFieldTestCase):
             self.assertTrue(headerField.isVia, line)
 
     def test_rendering(self):
-        self.basic_test_rendering()
-        for fieldName in self.canonicalFieldNames:
-            for fieldValueString in self.canonicalFieldValues:
-                headerField = self.sipHeaderFieldClassUnderTest.newForAttributes(fieldValueString=fieldValueString)
-                self.assertTrue(headerField.isVia)
+        headerFieldString = 'Via: SIP/2.0/UDP 192.168.0.5:5061;branch=z9hG4bK0ee8d3e272e31ca195299efc500'
+        headerField = self.sipHeaderFieldClassUnderTest.newForAttributes(host='192.168.0.5', port=5061, transport='UDP', branch='z9hG4bK0ee8d3e272e31ca195299efc500')
+        self.assertEqual(headerField.rawString, headerFieldString)
+        self.assertTrue(headerField.isValid)
+        self.assertEqual(headerField.branch, 'z9hG4bK0ee8d3e272e31ca195299efc500')
+        self.assertEqual(headerField.parameterNamesAndValueStrings, {'branch': 'z9hG4bK0ee8d3e272e31ca195299efc500'})
+        self.assertEqual(headerField.transport, 'UDP')
+        self.assertEqual(headerField.host, '192.168.0.5')
+        self.assertEqual(headerField.port, 5061)
+
+    def test_branchGeneration(self):
+        headerFieldString = 'Via: SIP/2.0/UDP 192.168.0.5:5061'
+        headerField = self.sipHeaderFieldClassUnderTest.newParsedFrom(headerFieldString)
+        self.assertTrue(headerField.isVia)
+        self.assertEqual(headerField.branch, None)
+        self.assertEqual(headerField.parameterNamesAndValueStrings, {})
+        headerField.generateBranch()
+        self.assertIsInstance(headerField.branch, basestring)
+        self.assertTrue('branch' in headerField.parameterNamesAndValueStrings)

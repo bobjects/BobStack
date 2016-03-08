@@ -181,6 +181,27 @@ class TestSIPMessageFactoryForSanitizedLogFile(TestCase):
                 self.appendStringToFileNamed(headerField.rawString + '\r\n', 'warningHeaderFields')
             if headerField.isWWWAuthenticate:
                 self.appendStringToFileNamed(headerField.rawString + '\r\n', 'wwwAuthenticateHeaderFields')
+            if headerField.isVia:
+                self.appendStringToFileNamed(headerField.rawString, 'viaHeaderFieldsAndAttributes')
+                self.appendStringToFileNamed('\r\n    host:  ' + str(headerField.host), 'viaHeaderFieldsAndAttributes')
+                self.appendStringToFileNamed('\r\n    port:  ' + str(headerField.port), 'viaHeaderFieldsAndAttributes')
+                self.appendStringToFileNamed('\r\n    transport:  ' + str(headerField.transport), 'viaHeaderFieldsAndAttributes')
+                self.appendStringToFileNamed('\r\n    branch:  ' + str(headerField.branch), 'viaHeaderFieldsAndAttributes')
+                self.appendStringToFileNamed('\r\n    headerFieldParameters:  ' + str(headerField.parameterNamesAndValueStrings), 'viaHeaderFieldsAndAttributes')
+                self.appendStringToFileNamed('\r\n', 'viaHeaderFieldsAndAttributes')
+                self.appendStringToFileNamed(str(headerField.branch), 'viaBranches')
+                self.appendStringToFileNamed('\r\n', 'viaBranches')
+            if headerField.isContact:
+                self.appendStringToFileNamed(headerField.rawString, 'contactHeaderFieldsAndAttributes')
+                self.appendStringToFileNamed('\r\n    displayName:  ' + str(headerField.displayName), 'contactHeaderFieldsAndAttributes')
+                if headerField.sipURI:
+                    self.appendStringToFileNamed('\r\n        scheme:  ' + str(headerField.sipURI.scheme), 'contactHeaderFieldsAndAttributes')
+                    self.appendStringToFileNamed('\r\n        user:  ' + str(headerField.sipURI.user), 'contactHeaderFieldsAndAttributes')
+                    self.appendStringToFileNamed('\r\n        host:  ' + str(headerField.sipURI.host), 'contactHeaderFieldsAndAttributes')
+                    self.appendStringToFileNamed('\r\n        port:  ' + str(headerField.sipURI.port), 'contactHeaderFieldsAndAttributes')
+                    self.appendStringToFileNamed('\r\n        uriParameters:  ' + str(headerField.sipURI.parameterNamesAndValueStrings), 'contactHeaderFieldsAndAttributes')
+                self.appendStringToFileNamed('\r\n    headerFieldParameters:  ' + str(headerField.parameterNamesAndValueStrings), 'contactHeaderFieldsAndAttributes')
+                self.appendStringToFileNamed('\r\n', 'contactHeaderFieldsAndAttributes')
             if headerField.isTo:
                 self.appendStringToFileNamed(headerField.rawString, 'toHeaderFieldsAndAttributes')
                 self.appendStringToFileNamed('\r\n    displayName:  ' + str(headerField.displayName), 'toHeaderFieldsAndAttributes')
@@ -197,21 +218,20 @@ class TestSIPMessageFactoryForSanitizedLogFile(TestCase):
                     self.appendStringToFileNamed(headerField.tag, 'toAndFromTags')
                     self.appendStringToFileNamed('\r\n', 'toAndFromTags')
             if headerField.isFrom:
+                self.appendStringToFileNamed(headerField.rawString, 'fromHeaderFieldsAndAttributes')
+                self.appendStringToFileNamed('\r\n    displayName:  ' + str(headerField.displayName), 'fromHeaderFieldsAndAttributes')
+                self.appendStringToFileNamed('\r\n    tag:  ' + str(headerField.tag), 'fromHeaderFieldsAndAttributes')
+                if headerField.sipURI:
+                    self.appendStringToFileNamed('\r\n        scheme:  ' + str(headerField.sipURI.scheme), 'fromHeaderFieldsAndAttributes')
+                    self.appendStringToFileNamed('\r\n        user:  ' + str(headerField.sipURI.user), 'fromHeaderFieldsAndAttributes')
+                    self.appendStringToFileNamed('\r\n        host:  ' + str(headerField.sipURI.host), 'fromHeaderFieldsAndAttributes')
+                    self.appendStringToFileNamed('\r\n        port:  ' + str(headerField.sipURI.port), 'fromHeaderFieldsAndAttributes')
+                    self.appendStringToFileNamed('\r\n        uriParameters:  ' + str(headerField.sipURI.parameterNamesAndValueStrings), 'fromHeaderFieldsAndAttributes')
+                self.appendStringToFileNamed('\r\n    headerFieldParameters:  ' + str(headerField.parameterNamesAndValueStrings), 'fromHeaderFieldsAndAttributes')
+                self.appendStringToFileNamed('\r\n', 'fromHeaderFieldsAndAttributes')
                 if headerField.tag:
-                    self.appendStringToFileNamed(headerField.rawString, 'toAndFromHeaderFieldsAndTags')
-                    self.appendStringToFileNamed('\r\n    ', 'toAndFromHeaderFieldsAndTags')
-                    self.appendStringToFileNamed(headerField.tag, 'toAndFromHeaderFieldsAndTags')
-                    self.appendStringToFileNamed('\r\n', 'toAndFromHeaderFieldsAndTags')
                     self.appendStringToFileNamed(headerField.tag, 'toAndFromTags')
                     self.appendStringToFileNamed('\r\n', 'toAndFromTags')
-            if headerField.isVia:
-                if headerField.branch:
-                    self.appendStringToFileNamed(headerField.rawString, 'viaHeaderFieldsAndBranches')
-                    self.appendStringToFileNamed('\r\n    ', 'viaHeaderFieldsAndBranches')
-                    self.appendStringToFileNamed(headerField.branch, 'viaHeaderFieldsAndBranches')
-                    self.appendStringToFileNamed('\r\n', 'viaHeaderFieldsAndBranches')
-                    self.appendStringToFileNamed(headerField.branch, 'viaBranches')
-                    self.appendStringToFileNamed('\r\n', 'viaBranches')
             if headerField.parameterNamesAndValueStrings:
                 self.appendStringToFileNamed(headerField.rawString, 'headerFieldParameters')
                 self.appendStringToFileNamed('\r\n', 'headerFieldParameters')
@@ -282,8 +302,8 @@ class TestSIPMessageFactoryForSanitizedLogFile(TestCase):
         self.assertIsInstance(aSIPMessage.header.unknownHeaderFields, list)
         # print aSIPMessage.startLine.rawString
         # print aSIPMessage.rawString
-        self.assertFalse(aSIPMessage.isMalformed)
-        self.assertFalse(aSIPMessage.startLine.isMalformed)
+        self.assertIsInstance(aSIPMessage.isMalformed, bool)
+        self.assertIsInstance(aSIPMessage.startLine.isMalformed, bool)
         self.assertIsInstance(aSIPMessage.startLine.isRequest, bool)
         self.assertIsInstance(aSIPMessage.startLine.isResponse, bool)
         self.assertIsInstance(aSIPMessage.content, basestring)

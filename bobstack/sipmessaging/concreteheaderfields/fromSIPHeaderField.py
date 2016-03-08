@@ -127,7 +127,7 @@ class FromSIPHeaderField(SIPHeaderField):
         self._fieldNameAndValueStringHasBeenSet = True
 
     def generateTag(self):
-        self.tag = StrongRandomStringServer.instance.next32Bits
+        self.tag = StrongRandomStringServer.instance.next32Bits + "-BobStack"
 
     @property
     def isFrom(self):
