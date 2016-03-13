@@ -3,6 +3,7 @@ from abstractSIPMessageTestCase import AbstractSIPMessageTestCase
 from sipmessaging import SIPHeader
 from sipmessaging import MalformedSIPStartLine
 
+
 class AbstractMalformedSIPMessageTestCase(AbstractSIPMessageTestCase):
     @property
     def sipMethodString(self):
@@ -13,6 +14,10 @@ class AbstractMalformedSIPMessageTestCase(AbstractSIPMessageTestCase):
     def canonicalStartLineStrings(self):
         # TODO - Moar???
         return ["Malformed start line"]
+
+    @property
+    def sipMessageClassUnderTest(self):
+        raise NotImplementedError('call to abstract method ' + inspect.stack()[0][3])
 
     def runAssertionsForSIPMessage(self, aSIPMessage):
         super(AbstractMalformedSIPMessageTestCase, self).runAssertionsForSIPMessage(aSIPMessage)

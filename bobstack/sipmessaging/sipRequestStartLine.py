@@ -62,11 +62,13 @@ class SIPRequestStartLine(SIPStartLine):
         self._rawString = stringio.getvalue()
         stringio.close()
 
+    # noinspection PyNestedDecorators
     @classproperty
     @classmethod
     def regexForMatching(cls):
         return cls.regexForParsing
 
+    # noinspection PyNestedDecorators
     @classproperty
     @classmethod
     def regexForParsing(cls):

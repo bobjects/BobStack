@@ -15,6 +15,7 @@ class ViaSIPHeaderField(SIPHeaderField):
     regexForViaSpecificValue = re.compile('SIP\s*/\s*(\d.\d)\s*/\s*([^\s]+)\s+([^;]+)')
     regexForParsingHostPort = re.compile('([^:]*):?(.*)')
 
+    # noinspection PyNestedDecorators
     @classproperty
     @classmethod
     def canonicalFieldName(cls):
@@ -29,6 +30,13 @@ class ViaSIPHeaderField(SIPHeaderField):
         answer.branch = branch
         answer._isValid = True
         return answer
+
+    def __init__(self):
+        self._host = None
+        self._port = None
+        self._transport = None
+        self._isValid = None
+        super(ViaSIPHeaderField, self).__init__()
 
     # TODO: when we do warnings, warn of branch that does not start with "z9hG4bKy", i.e. a non-RFC3261 message.  Also, a full-blown error if SIP/2.0 is not exactly that.
     @property
@@ -98,6 +106,7 @@ class ViaSIPHeaderField(SIPHeaderField):
         self._port = None
         self._transport = None
         self._parameterNamesAndValueStrings = {}
+        # noinspection PyBroadException
         try:
             super(ViaSIPHeaderField, self).parseAttributesFromFieldValueString()
             match = self.__class__.regexForViaSpecificValue.match(self.fieldValueString)
@@ -115,7 +124,7 @@ class ViaSIPHeaderField(SIPHeaderField):
                 self._isValid = (sipVersion == '2.0')
             self._attributeHasBeenSet = True
             self._isValid = self._isValid and bool(self.branch)
-        except:
+        except Exception:
             self._isValid = False
 
     def renderFieldNameAndValueStringFromAttributes(self):

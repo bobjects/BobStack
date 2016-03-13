@@ -1,4 +1,3 @@
-from unittest import TestCase
 from abstractSIPRequestTestCase import AbstractSIPRequestTestCase
 import sys
 sys.path.append("..")

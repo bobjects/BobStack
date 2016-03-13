@@ -7,8 +7,6 @@ import unittest
 import sys
 import settings
 import subprocess
-#sys.path.append("..")
-#from sipmessaging import SIPMessageFactory
 sys.path.append("../..")
 from abstractSIPRequestFromFactoryTestCase import AbstractSIPRequestFromFactoryTestCase
 from abstractSIPResponseFromFactoryTestCase import AbstractSIPResponseFromFactoryTestCase
@@ -115,11 +113,11 @@ class TestSIPMessageFactoryForSanitizedLogFile(TestCase):
         # print aSIPMessage.transactionHash
         # print aSIPMessage.dialogHash
         if aSIPMessage.transactionHash:
-            if not aSIPMessage.transactionHash in self.transactionHashesAndSIPMessages:
+            if aSIPMessage.transactionHash not in self.transactionHashesAndSIPMessages:
                 self.transactionHashesAndSIPMessages[aSIPMessage.transactionHash] = []
             self.transactionHashesAndSIPMessages[aSIPMessage.transactionHash].append(aSIPMessage.startLine.rawString)
         if aSIPMessage.dialogHash:
-            if not aSIPMessage.dialogHash in self.dialogHashesAndSIPMessages:
+            if aSIPMessage.dialogHash not in self.dialogHashesAndSIPMessages:
                 self.dialogHashesAndSIPMessages[aSIPMessage.dialogHash] = []
             self.dialogHashesAndSIPMessages[aSIPMessage.dialogHash].append(aSIPMessage.startLine.rawString)
         for headerField in aSIPMessage.header.headerFields:

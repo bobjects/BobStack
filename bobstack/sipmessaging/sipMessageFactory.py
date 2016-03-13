@@ -22,18 +22,18 @@ from eventSourceMixin import EventSourceMixin
 
 class SIPMessageFactory(EventSourceMixin):
     methodNamesAndClasses = {
-                'ACK': ACKSIPRequest,
-                'BYE': BYESIPRequest,
-                'CANCEL': CANCELSIPRequest,
-                'INFO': INFOSIPRequest,
-                'INVITE': INVITESIPRequest,
-                'NOTIFY': NOTIFYSIPRequest,
-                'OPTIONS': OPTIONSSIPRequest,
-                'REFER': REFERSIPRequest,
-                'REGISTER': REGISTERSIPRequest,
-                'SUBSCRIBE': SUBSCRIBESIPRequest,
-                'UPDATE': UPDATESIPRequest
-            }
+        'ACK': ACKSIPRequest,
+        'BYE': BYESIPRequest,
+        'CANCEL': CANCELSIPRequest,
+        'INFO': INFOSIPRequest,
+        'INVITE': INVITESIPRequest,
+        'NOTIFY': NOTIFYSIPRequest,
+        'OPTIONS': OPTIONSSIPRequest,
+        'REFER': REFERSIPRequest,
+        'REGISTER': REGISTERSIPRequest,
+        'SUBSCRIBE': SUBSCRIBESIPRequest,
+        'UPDATE': UPDATESIPRequest
+    }
 
     def __init__(self):
         EventSourceMixin.__init__(self)

@@ -79,7 +79,7 @@ class AbstractSIPMessageTestCase(TestCase):
                 'Via: SIP/2.0/TLS 200.25.3.255;branch=z9hG4bKduyroiuryaludhgviukfhlasf',
                 'User-Agent: Example User Agent',
                 'Contact: <sip:invalid@200.25.3.150:5061;transport=tls>',
-                'Route: <sip:200.30.10.12:5061;transport=tls;lr>',
+                'Route: <sip:200.25.3.230:5061;transport=tls;lr>',
                 'Expires: 0',
                 'Accept: application/sdp,application/isup,application/dtmf,application/dtmf-relay,multipart/mixed',
                 'Accept-Encoding: x-nortel-short',
@@ -116,7 +116,7 @@ class AbstractSIPMessageTestCase(TestCase):
 
     @property
     def oneBigHeaderStringForAssertion(self):
-        answer = ('From: <sip:200.25.3.150:5061>;tag=0ee8d3e272e31c9195299efc500\r\n'
+        answer =   ('From: <sip:200.25.3.150:5061>;tag=0ee8d3e272e31c9195299efc500\r\n'
                     'To: <sip:example.com:5061>\r\n'
                     'Call-ID: 0ee8d3e272e31c9195299efc500\r\n'
                     'CSeq: 6711 SIPMETHODTOREPLACE\r\n'
@@ -126,7 +126,7 @@ class AbstractSIPMessageTestCase(TestCase):
                     'Via: SIP/2.0/TLS 200.25.3.255;branch=z9hG4bKduyroiuryaludhgviukfhlasf\r\n'
                     'User-Agent: Example User Agent\r\n'
                     'Contact: <sip:invalid@200.25.3.150:5061;transport=tls>\r\n'
-                    'Route: <sip:200.30.10.12:5061;transport=tls;lr>\r\n'
+                    'Route: <sip:200.25.3.230:5061;transport=tls;lr>\r\n'
                     'Expires: 0\r\n'
                     'Accept: application/sdp,application/isup,application/dtmf,application/dtmf-relay,multipart/mixed\r\n'
                     'Accept-Encoding: x-nortel-short\r\n'
@@ -157,7 +157,6 @@ class AbstractSIPMessageTestCase(TestCase):
                     'Content-Length: 11')  # This last one actually instantiates a ContentLengthSIPHeaderField.
         return answer.replace("SIPMETHODTOREPLACE", self.sipMethodString)
 
-
     @property
     def listOfHeaderFieldsForAssertion(self):
         return [
@@ -177,7 +176,7 @@ class AbstractSIPMessageTestCase(TestCase):
             UserAgentSIPHeaderField.newForAttributes(fieldValueString='Example User Agent'),
             # ContactSIPHeaderField.newForAttributes(fieldValueString='<sip:invalid@200.25.3.150:5061;transport=tls>'),
             ContactSIPHeaderField.newForAttributes(displayName=None, sipURI=SIPURI.newParsedFrom('sip:invalid@200.25.3.150:5061;transport=tls')),
-            RouteSIPHeaderField.newForAttributes(fieldValueString='<sip:200.30.10.12:5061;transport=tls;lr>'),
+            RouteSIPHeaderField.newForAttributes(sipURI=SIPURI.newParsedFrom('sip:200.25.3.230:5061;transport=tls;lr')),
             ExpiresSIPHeaderField.newForAttributes(value=0),
             AcceptSIPHeaderField.newForAttributes(fieldValueString='application/sdp,application/isup,application/dtmf,application/dtmf-relay,multipart/mixed'),
             AcceptEncodingSIPHeaderField.newForAttributes(fieldValueString='x-nortel-short'),
@@ -188,7 +187,7 @@ class AbstractSIPMessageTestCase(TestCase):
             ContentDispositionSIPHeaderField.newForAttributes(fieldValueString='session;handling=required'),
             ContentTypeSIPHeaderField.newForAttributes(fieldValueString='application/sdp'),
             DateSIPHeaderField.newForAttributes(fieldValueString='Sat, 01 Feb 2014 22:07:34 GMT'),
-            RecordRouteSIPHeaderField.newForAttributes(fieldValueString='<sip:200.25.3.230:5061;transport=tls;lr>'),
+            RecordRouteSIPHeaderField.newForAttributes(sipURI=SIPURI.newParsedFrom('sip:200.25.3.230:5061;transport=tls;lr')),
             RequireSIPHeaderField.newForAttributes(fieldValueString='sdp-anat'),
             RetryAfterSIPHeaderField.newForAttributes(value=30),
             ServerSIPHeaderField.newForAttributes(fieldValueString='Blargomatic 2.0'),
@@ -210,128 +209,128 @@ class AbstractSIPMessageTestCase(TestCase):
     @property
     def listOfHeaderFieldStringsForAssertion(self):
         return ['From: <sip:200.25.3.150:5061>;tag=0ee8d3e272e31c9195299efc500',
-                        'To: <sip:example.com:5061>',
-                        'Call-ID: 0ee8d3e272e31c9195299efc500',
-                        'CSeq: 6711 ' + self.sipMethodString,
-                        'Max-Forwards: 70',
-                        'Via: SIP/2.0/TLS 200.25.3.150;branch=z9hG4bK0ee8d3e272e31ca195299efc500',
-                        'Via: SIP/2.0/TLS 200.25.3.250;branch=z9hG4bKfdkajhdiruyalkghjladksjf',
-                        'Via: SIP/2.0/TLS 200.25.3.255;branch=z9hG4bKduyroiuryaludhgviukfhlasf',
-                        'User-Agent: Example User Agent',
-                        'Contact: <sip:invalid@200.25.3.150:5061;transport=tls>',
-                        'Route: <sip:200.30.10.12:5061;transport=tls;lr>',
-                        'Expires: 0',
-                        'Accept: application/sdp,application/isup,application/dtmf,application/dtmf-relay,multipart/mixed',
-                        'Accept-Encoding: x-nortel-short',
-                        'Accept-Language: en-us,fr-fr',
-                        'Allow:  ACK,BYE,CANCEL,INFO,INVITE,OPTIONS,REGISTER,SUBSCRIBE,UPDATE',
-                        'Authorization: Digest username="3122221000",realm="SomeRealm",nonce="1111790769596",uri="sip:3122211004@example.com",response="9bf77d8238664fe08dafd4d2abb6f1cb",algorithm=MD5',
-                        'Call-Info: <https://lsc14pa.example.com:443/pa/direct/pictureServlet?user=3126805100@example.com>;Purpose=icon',
-                        'Content-Disposition: session;handling=required',
-                        'Content-Type: application/sdp',
-                        'Date: Sat, 01 Feb 2014 22:07:34 GMT',
-                        'Record-Route: <sip:200.25.3.230:5061;transport=tls;lr>',
-                        'Require: sdp-anat',
-                        'Retry-After: 30',
-                        'Server: Blargomatic 2.0',
-                        # TODO:  We will need to deal with the refresher parameter, i.e. we will need to
-                        # be able to specify parameter dictionaries to the newForAttributes method for
-                        # Integer header fields.  Maybe even more generically; for all SIP header fields.
-                        # 'Session-Expires: 1200;refresher=uac',
-                        'Session-Expires: 1200',
-                        'Supported: 100rel,histinfo,join,replaces,sdp-anat,timer',
-                        'Timestamp: 1392061773',
-                        'WWW-Authenticate: Digest algorithm=MD5,nonce="1111790769596",realm="SomeRealm"',
-                        'Warning: 370 200.21.3.10 "Insufficient Bandwidth"',
-                        'X-RTP-Stat:  PR=0;ER=0;PL=0;RB=0/0;DE=PCMU;EN=PCMU;JI=0;DL=0,0;IP=10.1.0.33:16384,132.52.127.200:20048',
-                        'x-channel:  ds/ds1-3/12;IP=132.52.127.16',
-                        'Referred-By: <sip:6006665100@example.com;user=phone> ; CorrelationID="0508817f84e7ce64745ef9753e2fbff4664321a4@200.23.3.240"',
-                        'Refer-To: <sip:6006665499;rfrid=28661859@example.com;user=phone?x-nt-resource-priority=YNBvf.2j00qao>',
-                        'Content-Length: 11']  # This last one actually instantiates a ContentLengthSIPHeaderField.
+                'To: <sip:example.com:5061>',
+                'Call-ID: 0ee8d3e272e31c9195299efc500',
+                'CSeq: 6711 ' + self.sipMethodString,
+                'Max-Forwards: 70',
+                'Via: SIP/2.0/TLS 200.25.3.150;branch=z9hG4bK0ee8d3e272e31ca195299efc500',
+                'Via: SIP/2.0/TLS 200.25.3.250;branch=z9hG4bKfdkajhdiruyalkghjladksjf',
+                'Via: SIP/2.0/TLS 200.25.3.255;branch=z9hG4bKduyroiuryaludhgviukfhlasf',
+                'User-Agent: Example User Agent',
+                'Contact: <sip:invalid@200.25.3.150:5061;transport=tls>',
+                'Route: <sip:200.25.3.230:5061;transport=tls;lr>',
+                'Expires: 0',
+                'Accept: application/sdp,application/isup,application/dtmf,application/dtmf-relay,multipart/mixed',
+                'Accept-Encoding: x-nortel-short',
+                'Accept-Language: en-us,fr-fr',
+                'Allow:  ACK,BYE,CANCEL,INFO,INVITE,OPTIONS,REGISTER,SUBSCRIBE,UPDATE',
+                'Authorization: Digest username="3122221000",realm="SomeRealm",nonce="1111790769596",uri="sip:3122211004@example.com",response="9bf77d8238664fe08dafd4d2abb6f1cb",algorithm=MD5',
+                'Call-Info: <https://lsc14pa.example.com:443/pa/direct/pictureServlet?user=3126805100@example.com>;Purpose=icon',
+                'Content-Disposition: session;handling=required',
+                'Content-Type: application/sdp',
+                'Date: Sat, 01 Feb 2014 22:07:34 GMT',
+                'Record-Route: <sip:200.25.3.230:5061;transport=tls;lr>',
+                'Require: sdp-anat',
+                'Retry-After: 30',
+                'Server: Blargomatic 2.0',
+                # TODO:  We will need to deal with the refresher parameter, i.e. we will need to
+                # be able to specify parameter dictionaries to the newForAttributes method for
+                # Integer header fields.  Maybe even more generically; for all SIP header fields.
+                # 'Session-Expires: 1200;refresher=uac',
+                'Session-Expires: 1200',
+                'Supported: 100rel,histinfo,join,replaces,sdp-anat,timer',
+                'Timestamp: 1392061773',
+                'WWW-Authenticate: Digest algorithm=MD5,nonce="1111790769596",realm="SomeRealm"',
+                'Warning: 370 200.21.3.10 "Insufficient Bandwidth"',
+                'X-RTP-Stat:  PR=0;ER=0;PL=0;RB=0/0;DE=PCMU;EN=PCMU;JI=0;DL=0,0;IP=10.1.0.33:16384,132.52.127.200:20048',
+                'x-channel:  ds/ds1-3/12;IP=132.52.127.16',
+                'Referred-By: <sip:6006665100@example.com;user=phone> ; CorrelationID="0508817f84e7ce64745ef9753e2fbff4664321a4@200.23.3.240"',
+                'Refer-To: <sip:6006665499;rfrid=28661859@example.com;user=phone?x-nt-resource-priority=YNBvf.2j00qao>',
+                'Content-Length: 11']  # This last one actually instantiates a ContentLengthSIPHeaderField.
 
     @property
     def listOfHeaderFieldNamesAndValuesForAssertion(self):
         return [('From', '<sip:200.25.3.150:5061>;tag=0ee8d3e272e31c9195299efc500'),
-                        ('To', '<sip:example.com:5061>'),
-                        ('Call-ID', '0ee8d3e272e31c9195299efc500'),
-                        ('CSeq', '6711 ' + self.sipMethodString),
-                        ('Max-Forwards', 70),  # note the integer value.
-                        ('Via', 'SIP/2.0/TLS 200.25.3.150;branch=z9hG4bK0ee8d3e272e31ca195299efc500'),
-                        ('Via', 'SIP/2.0/TLS 200.25.3.250;branch=z9hG4bKfdkajhdiruyalkghjladksjf'),
-                        ('Via', 'SIP/2.0/TLS 200.25.3.255;branch=z9hG4bKduyroiuryaludhgviukfhlasf'),
-                        ('User-Agent', 'Example User Agent'),
-                        ('Contact', '<sip:invalid@200.25.3.150:5061;transport=tls>'),
-                        ('Route', '<sip:200.30.10.12:5061;transport=tls;lr>'),
-                        ('Expires', 0),
-                        ('Accept', 'application/sdp,application/isup,application/dtmf,application/dtmf-relay,multipart/mixed'),
-                        ('Accept-Encoding', 'x-nortel-short'),
-                        ('Accept-Language', 'en-us,fr-fr'),
-                        ('Allow', ' ACK,BYE,CANCEL,INFO,INVITE,OPTIONS,REGISTER,SUBSCRIBE,UPDATE'),
-                        ('Authorization', 'Digest username="3122221000",realm="SomeRealm",nonce="1111790769596",uri="sip:3122211004@example.com",response="9bf77d8238664fe08dafd4d2abb6f1cb",algorithm=MD5'),
-                        ('Call-Info', '<https://lsc14pa.example.com:443/pa/direct/pictureServlet?user=3126805100@example.com>;Purpose=icon'),
-                        ('Content-Disposition', 'session;handling=required'),
-                        ('Content-Type', 'application/sdp'),
-                        ('Date', 'Sat, 01 Feb 2014 22:07:34 GMT'),
-                        ('Record-Route', '<sip:200.25.3.230:5061;transport=tls;lr>'),
-                        ('Require', 'sdp-anat'),
-                        ('Retry-After', '30'),
-                        ('Server', 'Blargomatic 2.0'),
-                        # TODO:  We will need to deal with the refresher parameter, i.e. we will need to
-                        # be able to specify parameter dictionaries to the newForAttributes method for
-                        # Integer header fields.  Maybe even more generically; for all SIP header fields.
-                        # ('Session-Expires', '1200;refresher=uac'),
-                        ('Session-Expires', 1200),
-                        ('Supported', '100rel,histinfo,join,replaces,sdp-anat,timer'),
-                        ('Timestamp', '1392061773'),
-                        ('WWW-Authenticate', 'Digest algorithm=MD5,nonce="1111790769596",realm="SomeRealm"'),
-                        ('Warning', '370 200.21.3.10 "Insufficient Bandwidth"'),
-                        ('X-RTP-Stat', ' PR=0;ER=0;PL=0;RB=0/0;DE=PCMU;EN=PCMU;JI=0;DL=0,0;IP=10.1.0.33:16384,132.52.127.200:20048'),
-                        ('x-channel', ' ds/ds1-3/12;IP=132.52.127.16'),
-                        ('Referred-By', '<sip:6006665100@example.com;user=phone> ; CorrelationID="0508817f84e7ce64745ef9753e2fbff4664321a4@200.23.3.240"'),
-                        ('Refer-To', '<sip:6006665499;rfrid=28661859@example.com;user=phone?x-nt-resource-priority=YNBvf.2j00qao>'),
-                        ('Content-Length', 11)]  # This last one actually instantiates a ContentLengthSIPHeaderField.
+                ('To', '<sip:example.com:5061>'),
+                ('Call-ID', '0ee8d3e272e31c9195299efc500'),
+                ('CSeq', '6711 ' + self.sipMethodString),
+                ('Max-Forwards', 70),  # note the integer value.
+                ('Via', 'SIP/2.0/TLS 200.25.3.150;branch=z9hG4bK0ee8d3e272e31ca195299efc500'),
+                ('Via', 'SIP/2.0/TLS 200.25.3.250;branch=z9hG4bKfdkajhdiruyalkghjladksjf'),
+                ('Via', 'SIP/2.0/TLS 200.25.3.255;branch=z9hG4bKduyroiuryaludhgviukfhlasf'),
+                ('User-Agent', 'Example User Agent'),
+                ('Contact', '<sip:invalid@200.25.3.150:5061;transport=tls>'),
+                ('Route', '<sip:200.25.3.230:5061;transport=tls;lr>'),
+                ('Expires', 0),
+                ('Accept', 'application/sdp,application/isup,application/dtmf,application/dtmf-relay,multipart/mixed'),
+                ('Accept-Encoding', 'x-nortel-short'),
+                ('Accept-Language', 'en-us,fr-fr'),
+                ('Allow', ' ACK,BYE,CANCEL,INFO,INVITE,OPTIONS,REGISTER,SUBSCRIBE,UPDATE'),
+                ('Authorization', 'Digest username="3122221000",realm="SomeRealm",nonce="1111790769596",uri="sip:3122211004@example.com",response="9bf77d8238664fe08dafd4d2abb6f1cb",algorithm=MD5'),
+                ('Call-Info', '<https://lsc14pa.example.com:443/pa/direct/pictureServlet?user=3126805100@example.com>;Purpose=icon'),
+                ('Content-Disposition', 'session;handling=required'),
+                ('Content-Type', 'application/sdp'),
+                ('Date', 'Sat, 01 Feb 2014 22:07:34 GMT'),
+                ('Record-Route', '<sip:200.25.3.230:5061;transport=tls;lr>'),
+                ('Require', 'sdp-anat'),
+                ('Retry-After', '30'),
+                ('Server', 'Blargomatic 2.0'),
+                # TODO:  We will need to deal with the refresher parameter, i.e. we will need to
+                # be able to specify parameter dictionaries to the newForAttributes method for
+                # Integer header fields.  Maybe even more generically; for all SIP header fields.
+                # ('Session-Expires', '1200;refresher=uac'),
+                ('Session-Expires', 1200),
+                ('Supported', '100rel,histinfo,join,replaces,sdp-anat,timer'),
+                ('Timestamp', '1392061773'),
+                ('WWW-Authenticate', 'Digest algorithm=MD5,nonce="1111790769596",realm="SomeRealm"'),
+                ('Warning', '370 200.21.3.10 "Insufficient Bandwidth"'),
+                ('X-RTP-Stat', ' PR=0;ER=0;PL=0;RB=0/0;DE=PCMU;EN=PCMU;JI=0;DL=0,0;IP=10.1.0.33:16384,132.52.127.200:20048'),
+                ('x-channel', ' ds/ds1-3/12;IP=132.52.127.16'),
+                ('Referred-By', '<sip:6006665100@example.com;user=phone> ; CorrelationID="0508817f84e7ce64745ef9753e2fbff4664321a4@200.23.3.240"'),
+                ('Refer-To', '<sip:6006665499;rfrid=28661859@example.com;user=phone?x-nt-resource-priority=YNBvf.2j00qao>'),
+                ('Content-Length', 11)]  # This last one actually instantiates a ContentLengthSIPHeaderField.
 
     @property
     def listOfHeaderFieldNamesAndValuesUsingPropertyDictForAssertion(self):
         return [('From', '<sip:200.25.3.150:5061>;tag=0ee8d3e272e31c9195299efc500'),
-                        ('To', '<sip:example.com:5061>'),
-                        ('Call-ID', '0ee8d3e272e31c9195299efc500'),
-                        ('CSeq', '6711 ' + self.sipMethodString),
-                        ('Max-Forwards', 70),  # note the integer value.
-                        ('Via', 'SIP/2.0/TLS 200.25.3.150;branch=z9hG4bK0ee8d3e272e31ca195299efc500'),
-                        ('Via', 'SIP/2.0/TLS 200.25.3.250;branch=z9hG4bKfdkajhdiruyalkghjladksjf'),
-                        ('Via', 'SIP/2.0/TLS 200.25.3.255;branch=z9hG4bKduyroiuryaludhgviukfhlasf'),
-                        ('User-Agent', 'Example User Agent'),
-                        ('Contact', '<sip:invalid@200.25.3.150:5061;transport=tls>'),
-                        ('Route', '<sip:200.30.10.12:5061;transport=tls;lr>'),
-                        ('Expires', 0),
-                        ('Accept', 'application/sdp,application/isup,application/dtmf,application/dtmf-relay,multipart/mixed'),
-                        ('Accept-Encoding', 'x-nortel-short'),
-                        ('Accept-Language', 'en-us,fr-fr'),
-                        ('Allow', ' ACK,BYE,CANCEL,INFO,INVITE,OPTIONS,REGISTER,SUBSCRIBE,UPDATE'),
-                        ('Authorization', 'Digest username="3122221000",realm="SomeRealm",nonce="1111790769596",uri="sip:3122211004@example.com",response="9bf77d8238664fe08dafd4d2abb6f1cb",algorithm=MD5'),
-                        ('Call-Info', '<https://lsc14pa.example.com:443/pa/direct/pictureServlet?user=3126805100@example.com>;Purpose=icon'),
-                        ('Content-Disposition', 'session;handling=required'),
-                        ('Content-Type', 'application/sdp'),
-                        ('Date', 'Sat, 01 Feb 2014 22:07:34 GMT'),
-                        ('Record-Route', '<sip:200.25.3.230:5061;transport=tls;lr>'),
-                        ('Require', 'sdp-anat'),
-                        ('Retry-After', '30'),
-                        ('Server', 'Blargomatic 2.0'),
-                        # TODO:  We will need to deal with the refresher parameter, i.e. we will need to
-                        # be able to specify parameter dictionaries to the newForAttributes method for
-                        # Integer header fields.  Maybe even more generically; for all SIP header fields.
-                        # ('Session-Expires', '1200;refresher=uac'),
-                        ('Session-Expires', {"value": 1200}),
-                        ('Supported', '100rel,histinfo,join,replaces,sdp-anat,timer'),
-                        ('Timestamp', '1392061773'),
-                        ('WWW-Authenticate', 'Digest algorithm=MD5,nonce="1111790769596",realm="SomeRealm"'),
-                        ('Warning', '370 200.21.3.10 "Insufficient Bandwidth"'),
-                        ('X-RTP-Stat', ' PR=0;ER=0;PL=0;RB=0/0;DE=PCMU;EN=PCMU;JI=0;DL=0,0;IP=10.1.0.33:16384,132.52.127.200:20048'),
-                        ('x-channel', ' ds/ds1-3/12;IP=132.52.127.16'),
-                        ('Referred-By', '<sip:6006665100@example.com;user=phone> ; CorrelationID="0508817f84e7ce64745ef9753e2fbff4664321a4@200.23.3.240"'),
-                        ('Refer-To', '<sip:6006665499;rfrid=28661859@example.com;user=phone?x-nt-resource-priority=YNBvf.2j00qao>'),
-                        ('Content-Length', {"value": 11})]  # This last one actually instantiates a ContentLengthSIPHeaderField.
+                ('To', '<sip:example.com:5061>'),
+                ('Call-ID', '0ee8d3e272e31c9195299efc500'),
+                ('CSeq', '6711 ' + self.sipMethodString),
+                ('Max-Forwards', 70),  # note the integer value.
+                ('Via', 'SIP/2.0/TLS 200.25.3.150;branch=z9hG4bK0ee8d3e272e31ca195299efc500'),
+                ('Via', 'SIP/2.0/TLS 200.25.3.250;branch=z9hG4bKfdkajhdiruyalkghjladksjf'),
+                ('Via', 'SIP/2.0/TLS 200.25.3.255;branch=z9hG4bKduyroiuryaludhgviukfhlasf'),
+                ('User-Agent', 'Example User Agent'),
+                ('Contact', '<sip:invalid@200.25.3.150:5061;transport=tls>'),
+                ('Route', '<sip:200.25.3.230:5061;transport=tls;lr>'),
+                ('Expires', 0),
+                ('Accept', 'application/sdp,application/isup,application/dtmf,application/dtmf-relay,multipart/mixed'),
+                ('Accept-Encoding', 'x-nortel-short'),
+                ('Accept-Language', 'en-us,fr-fr'),
+                ('Allow', ' ACK,BYE,CANCEL,INFO,INVITE,OPTIONS,REGISTER,SUBSCRIBE,UPDATE'),
+                ('Authorization', 'Digest username="3122221000",realm="SomeRealm",nonce="1111790769596",uri="sip:3122211004@example.com",response="9bf77d8238664fe08dafd4d2abb6f1cb",algorithm=MD5'),
+                ('Call-Info', '<https://lsc14pa.example.com:443/pa/direct/pictureServlet?user=3126805100@example.com>;Purpose=icon'),
+                ('Content-Disposition', 'session;handling=required'),
+                ('Content-Type', 'application/sdp'),
+                ('Date', 'Sat, 01 Feb 2014 22:07:34 GMT'),
+                ('Record-Route', '<sip:200.25.3.230:5061;transport=tls;lr>'),
+                ('Require', 'sdp-anat'),
+                ('Retry-After', '30'),
+                ('Server', 'Blargomatic 2.0'),
+                # TODO:  We will need to deal with the refresher parameter, i.e. we will need to
+                # be able to specify parameter dictionaries to the newForAttributes method for
+                # Integer header fields.  Maybe even more generically; for all SIP header fields.
+                # ('Session-Expires', '1200;refresher=uac'),
+                ('Session-Expires', {"value": 1200}),
+                ('Supported', '100rel,histinfo,join,replaces,sdp-anat,timer'),
+                ('Timestamp', '1392061773'),
+                ('WWW-Authenticate', 'Digest algorithm=MD5,nonce="1111790769596",realm="SomeRealm"'),
+                ('Warning', '370 200.21.3.10 "Insufficient Bandwidth"'),
+                ('X-RTP-Stat', ' PR=0;ER=0;PL=0;RB=0/0;DE=PCMU;EN=PCMU;JI=0;DL=0,0;IP=10.1.0.33:16384,132.52.127.200:20048'),
+                ('x-channel', ' ds/ds1-3/12;IP=132.52.127.16'),
+                ('Referred-By', '<sip:6006665100@example.com;user=phone> ; CorrelationID="0508817f84e7ce64745ef9753e2fbff4664321a4@200.23.3.240"'),
+                ('Refer-To', '<sip:6006665499;rfrid=28661859@example.com;user=phone?x-nt-resource-priority=YNBvf.2j00qao>'),
+                ('Content-Length', {"value": 11})]  # This last one actually instantiates a ContentLengthSIPHeaderField.
 
     def runAssertionsForSIPMessage(self, aSIPMessage):
         self.assertEqual(aSIPMessage.rawString, self.canonicalStrings[0])

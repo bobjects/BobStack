@@ -33,12 +33,22 @@ class SIPHeaderField(object):
         answer.fieldValueString = fieldValueString
         return answer
 
+    # noinspection PyNestedDecorators
     @classproperty
     @classmethod
     def canonicalFieldName(cls):
         raise NotImplementedError('call to abstract method ' + inspect.stack()[0][3])
 
     def __init__(self):
+        self._value = None
+        self._attributeHasBeenSet = None
+        self._rawStringHasBeenSet = None
+        self._rawString = None
+        self._parameterNamesAndValueStrings = None
+        self._fieldName = None
+        self._fieldNameAndValueStringHasBeenSet = None
+        self._fieldValueString = None
+
         self.clearRawString()
         self.clearFieldNameAndValueString()
         self.clearAttributes()
@@ -187,6 +197,7 @@ class SIPHeaderField(object):
         stringio.close()
         self._rawStringHasBeenSet = True
 
+    # noinspection PyNestedDecorators
     @classproperty
     @classmethod
     def regexForMatchingFieldName(cls):
@@ -196,6 +207,7 @@ class SIPHeaderField(object):
             cls._regexForMatchingFieldName = re.compile('^' + cls.canonicalFieldName + '$', re.I)
             return cls._regexForMatchingFieldName
 
+    # noinspection PyNestedDecorators
     @classproperty
     @classmethod
     def regexForMatching(cls):
@@ -206,12 +218,13 @@ class SIPHeaderField(object):
             # cls._regexForMatching = re.compile('^To\s*:', re.I)
             return cls._regexForMatching
 
-
+    # noinspection PyNestedDecorators
     @classproperty
     @classmethod
     def regexForParsing(cls):
         return cls.regexToNeverMatch
 
+    # noinspection PyNestedDecorators
     @classproperty
     @classmethod
     def regexToNeverMatch(cls):
@@ -221,6 +234,7 @@ class SIPHeaderField(object):
             cls._regexToNeverMatch = re.compile('^NEVERMATCH')
             return cls._regexToNeverMatch
 
+    # noinspection PyNestedDecorators,PyNestedDecorators
     @classproperty
     @classmethod
     def regexForParsingFieldAndValue(cls):

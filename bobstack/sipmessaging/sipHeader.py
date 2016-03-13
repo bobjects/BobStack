@@ -5,6 +5,7 @@ except ImportError:
 from hashlib import sha1
 from sipHeaderFieldFactory import SIPHeaderFieldFactory
 
+
 class SIPHeader(object):
     @classmethod
     def newParsedFrom(cls, stringioToParse):
@@ -169,7 +170,6 @@ class SIPHeader(object):
     def transactionHash(self):
         # cseq + branch id on Via header (the last one, which is the via of the original request)
         if not self._transactionHash:
-            answer = None
             viaFields = self.viaHeaderFields
             cseq = self.cSeq
             if viaFields:
@@ -185,7 +185,6 @@ class SIPHeader(object):
     @property
     def dialogHash(self):
         if not self._dialogHash:
-            answer = None
             toTag = self.toTag
             fromTag = self.fromTag
             callID = self.callID

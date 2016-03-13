@@ -1,7 +1,20 @@
 from abstractSIPMessageTestCase import AbstractSIPMessageTestCase
 from sipmessaging import SIPHeader
 
+
 class AbstractSIPRequestTestCase(AbstractSIPMessageTestCase):
+    @property
+    def sipMethodString(self):
+        raise NotImplementedError('call to abstract method ' + inspect.stack()[0][3])
+
+    @property
+    def sipMessageClassUnderTest(self):
+        raise NotImplementedError('call to abstract method ' + inspect.stack()[0][3])
+
+    @property
+    def canonicalStartLineStrings(self):
+        raise NotImplementedError('call to abstract method ' + inspect.stack()[0][3])
+
     @property
     def sipMethodString(self):
         raise NotImplementedError('call to abstract method ' + inspect.stack()[0][3])

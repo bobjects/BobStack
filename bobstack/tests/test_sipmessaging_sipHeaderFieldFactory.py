@@ -39,6 +39,7 @@ from sipmessaging import SIPHeaderFieldFactory
 from abstractSIPHeaderFieldFromFactoryTestCase import AbstractSIPHeaderFieldFromFactoryTestCase
 from abstractIntegerSIPHeaderFieldFromFactoryTestCase import AbstractIntegerSIPHeaderFieldFromFactoryTestCase
 
+
 class TestSIPHeaderFieldFactoryForUnknown(TestCase):
     @property
     def canonicalStrings(self):
@@ -101,6 +102,7 @@ class TestSIPHeaderFieldFactoryForContentLength(AbstractIntegerSIPHeaderFieldFro
             headerField = SIPHeaderFieldFactory().nextForFieldNameAndFieldValue(self.canonicalFieldNames[0], "foo bar baz blarg")
             self.assertTrue(headerField.isContentLength, line)
 
+
 class TestSIPHeaderFieldFactoryForAccept(AbstractSIPHeaderFieldFromFactoryTestCase):
     @property
     def canonicalFieldNames(self):
@@ -123,6 +125,7 @@ class TestSIPHeaderFieldFactoryForAccept(AbstractSIPHeaderFieldFromFactoryTestCa
             self.assertTrue(headerField.isAccept, line)
             headerField = SIPHeaderFieldFactory().nextForFieldNameAndFieldValue(self.canonicalFieldNames[0], "foo bar baz blarg")
             self.assertTrue(headerField.isAccept, line)
+
 
 class TestSIPHeaderFieldFactoryForAcceptEncoding(AbstractSIPHeaderFieldFromFactoryTestCase):
     @property
@@ -267,6 +270,7 @@ class TestSIPHeaderFieldFactoryForCallID(AbstractSIPHeaderFieldFromFactoryTestCa
             headerField = SIPHeaderFieldFactory().nextForFieldNameAndFieldValue(self.canonicalFieldNames[0], "foo bar baz blarg")
             self.assertTrue(headerField.isCallID, line)
 
+
 class TestSIPHeaderFieldFactoryForCallInfo(AbstractSIPHeaderFieldFromFactoryTestCase):
     @property
     def canonicalFieldNames(self):
@@ -289,6 +293,7 @@ class TestSIPHeaderFieldFactoryForCallInfo(AbstractSIPHeaderFieldFromFactoryTest
             self.assertTrue(headerField.isCallInfo, line)
             headerField = SIPHeaderFieldFactory().nextForFieldNameAndFieldValue(self.canonicalFieldNames[0], "foo bar baz blarg")
             self.assertTrue(headerField.isCallInfo, line)
+
 
 class TestSIPHeaderFieldFactoryForContact(AbstractSIPHeaderFieldFromFactoryTestCase):
     @property
@@ -331,6 +336,7 @@ class TestSIPHeaderFieldFactoryForContact(AbstractSIPHeaderFieldFromFactoryTestC
             self.assertTrue(headerField.isContact, line)
             self.assertFalse(headerField.isValid)
 
+
 class TestSIPHeaderFieldFactoryForContentDisposition(AbstractSIPHeaderFieldFromFactoryTestCase):
     @property
     def canonicalFieldNames(self):
@@ -353,6 +359,7 @@ class TestSIPHeaderFieldFactoryForContentDisposition(AbstractSIPHeaderFieldFromF
             self.assertTrue(headerField.isContentDisposition, line)
             headerField = SIPHeaderFieldFactory().nextForFieldNameAndFieldValue(self.canonicalFieldNames[0], "foo bar baz blarg")
             self.assertTrue(headerField.isContentDisposition, line)
+
 
 class TestSIPHeaderFieldFactoryForContentType(AbstractSIPHeaderFieldFromFactoryTestCase):
     @property
@@ -377,6 +384,7 @@ class TestSIPHeaderFieldFactoryForContentType(AbstractSIPHeaderFieldFromFactoryT
             headerField = SIPHeaderFieldFactory().nextForFieldNameAndFieldValue(self.canonicalFieldNames[0], "foo bar baz blarg")
             self.assertTrue(headerField.isContentType, line)
 
+
 class TestSIPHeaderFieldFactoryForDate(AbstractSIPHeaderFieldFromFactoryTestCase):
     @property
     def canonicalFieldNames(self):
@@ -399,6 +407,7 @@ class TestSIPHeaderFieldFactoryForDate(AbstractSIPHeaderFieldFromFactoryTestCase
             self.assertTrue(headerField.isDate, line)
             headerField = SIPHeaderFieldFactory().nextForFieldNameAndFieldValue(self.canonicalFieldNames[0], "foo bar baz blarg")
             self.assertTrue(headerField.isDate, line)
+
 
 class TestSIPHeaderFieldFactoryForExpires(AbstractIntegerSIPHeaderFieldFromFactoryTestCase):
     @property
@@ -489,14 +498,28 @@ class TestSIPHeaderFieldFactoryForMaxForwards(AbstractIntegerSIPHeaderFieldFromF
             headerField = SIPHeaderFieldFactory().nextForFieldNameAndFieldValue(self.canonicalFieldNames[0], "foo bar baz blarg")
             self.assertTrue(headerField.isMaxForwards, line)
 
+
 class TestSIPHeaderFieldFactoryForRecordRoute(AbstractSIPHeaderFieldFromFactoryTestCase):
     @property
     def canonicalFieldNames(self):
         return['Record-Route', 'RECORD-Route', 'record-route', 'Record-route', 'record-Route']
 
     @property
+    def canonicalFieldValues(self):
+        return ['<sip:200.30.10.12:5061;transport=tls;lr>',
+                '<sip:3122221000@200.23.3.241:5061;lr>',
+                '<sip:3122221000@200.23.3.241:5061>'
+                ]
+
+    @property
     def sipHeaderFieldClassUnderTest(self):
         return RecordRouteSIPHeaderField
+
+    @property
+    def emptyHeaderFieldBodyIsValid(self):
+        return False
+
+    # TODO:  MOAR TESTS!  Use To tests as a guide.
 
     def test_parsing(self):
         self.basic_test_parsing()
@@ -567,8 +590,21 @@ class TestSIPHeaderFieldFactoryForRoute(AbstractSIPHeaderFieldFromFactoryTestCas
         return['Route', 'ROUTE', 'route']
 
     @property
+    def canonicalFieldValues(self):
+        return ['<sip:200.30.10.12:5061;transport=tls;lr>',
+                '<sip:3122221000@200.23.3.241:5061;lr>',
+                '<sip:3122221000@200.23.3.241:5061>'
+                ]
+
+    @property
     def sipHeaderFieldClassUnderTest(self):
         return RouteSIPHeaderField
+
+    @property
+    def emptyHeaderFieldBodyIsValid(self):
+        return False
+
+    # TODO:  MOAR TESTS!  Use To tests as a guide.
 
     def test_parsing(self):
         self.basic_test_parsing()

@@ -63,11 +63,13 @@ class SIPResponseStartLine(SIPStartLine):
         self._rawString = stringio.getvalue()
         stringio.close()
 
+    # noinspection PyNestedDecorators
     @classproperty
     @classmethod
     def regexForMatching(cls):
         return cls.regexForParsing
 
+    # noinspection PyNestedDecorators
     @classproperty
     @classmethod
     def regexForParsing(cls):
@@ -85,11 +87,11 @@ class SIPResponseStartLine(SIPStartLine):
     def isResponse(self):
         return True
 
-    # TODO:  True if 1xx
     # TODO:  need to test.
     @property
     def isProvisional(self):
-        pass
+        # True if 1xx
+        return self.statusCode.startsWith('1')
 
     # TODO:  need to test.
     @property

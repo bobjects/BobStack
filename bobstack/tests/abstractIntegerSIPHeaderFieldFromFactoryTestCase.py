@@ -2,7 +2,6 @@ try:
     from cStringIO import StringIO
 except ImportError:
     from StringIO import StringIO
-from unittest import TestCase
 import inspect
 import sys
 sys.path.append("..")
@@ -11,8 +10,19 @@ from sipmessaging import SIPHeaderFieldFactory
 from abstractSIPHeaderFieldFromFactoryTestCase import AbstractSIPHeaderFieldFromFactoryTestCase
 
 
-
 class AbstractIntegerSIPHeaderFieldFromFactoryTestCase(AbstractSIPHeaderFieldFromFactoryTestCase):
+    @property
+    def sipMethodString(self):
+        raise NotImplementedError('call to abstract method ' + inspect.stack()[0][3])
+
+    @property
+    def sipMessageClassUnderTest(self):
+        raise NotImplementedError('call to abstract method ' + inspect.stack()[0][3])
+
+    @property
+    def canonicalStartLineStrings(self):
+        raise NotImplementedError('call to abstract method ' + inspect.stack()[0][3])
+
     @property
     def canonicalFieldValues(self):
         return ["489"]

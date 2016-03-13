@@ -3,6 +3,7 @@ import sys
 sys.path.append("..")
 from sipmessaging import SIPURI
 
+
 class TestSIPURI(TestCase):
     def test_parseSetValuesAndReParse(self):
         uriString = 'sips:8005551212@192.168.0.99:5061;user=phone'

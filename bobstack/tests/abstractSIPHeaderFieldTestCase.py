@@ -9,7 +9,6 @@ sys.path.append("..")
 from sipmessaging import UnknownSIPHeaderField
 
 
-
 class AbstractSIPHeaderFieldTestCase(TestCase):
     @property
     def canonicalStrings(self):

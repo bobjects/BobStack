@@ -8,6 +8,7 @@ import re
 # correctly parse escaped strings or IPv6, I don't think.  We will either need to revisit our regexes, or use something
 # like ANTLR to create a parser.  The RFC4475 and RFC5118 torture tests should inform that.
 
+
 class SIPURI(object):
     regexForParsingHostPort = re.compile('([^:]*):?(.*)')
     regexForFindingParameterNamesAndValues = re.compile(';([^=;]+)=?([^;]+)?')
@@ -30,6 +31,15 @@ class SIPURI(object):
         return answer
 
     def __init__(self):
+        self._rawString = None
+        self._user = None
+        self._host = None
+        self._port = None
+        self._scheme = None
+        self._user = None
+        self._parameterNamesAndValueStrings = None
+        self._attributesMustBeParsed = None
+
         self.clearRawString()
         self.clearAttributes()
 
@@ -117,9 +127,9 @@ class SIPURI(object):
     def clearAttributes(self):
         self._host = None
         self._port = None
-        self._scheme=None
-        self._user=None
-        self._parameterNamesAndValueStrings=None
+        self._scheme = None
+        self._user = None
+        self._parameterNamesAndValueStrings = None
         self._attributesMustBeParsed = True
 
     def parseAttributesFromRawString(self):
@@ -146,7 +156,7 @@ class SIPURI(object):
         scheme = self.scheme
         if not scheme:
             scheme = 'sip'
-        stringio.write(str(self.scheme))
+        stringio.write(str(scheme))
         stringio.write(':')
         if self.user:
             stringio.write(self.user)

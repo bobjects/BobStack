@@ -17,7 +17,6 @@ class TestSIPResponse(AbstractSIPResponseTestCase):
     def sipMessageClassUnderTest(self):
         return SIPResponse
 
-
     def test_parsing(self):
         self.run_test_parsing()
 

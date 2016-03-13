@@ -1,7 +1,17 @@
+import inspect
 from abstractSIPResponseTestCase import AbstractSIPResponseTestCase
 from sipmessaging import SIPMessageFactory
 
+
 class AbstractSIPResponseFromFactoryTestCase(AbstractSIPResponseTestCase):
+    @property
+    def sipMessageClassUnderTest(self):
+        raise NotImplementedError('call to abstract method ' + inspect.stack()[0][3])
+
+    @property
+    def sipMessageClassUnderTest(self):
+        raise NotImplementedError('call to abstract method ' + inspect.stack()[0][3])
+
     def run_test_parsing(self):
         for messageString in self.canonicalStrings:
             response = SIPMessageFactory().nextForString(messageString)

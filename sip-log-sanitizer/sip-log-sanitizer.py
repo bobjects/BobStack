@@ -118,8 +118,9 @@ def processPCAPFiles():
                         if ( ip.p==dpkt.ip.IP_PROTO_UDP or ip.p==dpkt.ip.IP_PROTO_TCP ) and ip.data.dport in [5060, 5062, 5080]:
                             data = ip.data.data
                             if data.__len__() > 2:
-                                sanitizedFile.write(data)
-                                sanitizedFile.write(messageSeparator + "\r\n")
+                                if re.match('[^\s]+', data):  # Bria and some others periodically send CRLFCRLF by itself, presumably as a keepalive.  We don't want those.
+                                    sanitizedFile.write(data)
+                                    sanitizedFile.write(messageSeparator + "\r\n")
 
 
 

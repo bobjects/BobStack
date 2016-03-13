@@ -7,6 +7,7 @@ from bobstack.sipmessaging import classproperty
 
 
 class UnknownSIPHeaderField(SIPHeaderField):
+    # noinspection PyNestedDecorators
     @classproperty
     @classmethod
     def canonicalFieldName(cls):

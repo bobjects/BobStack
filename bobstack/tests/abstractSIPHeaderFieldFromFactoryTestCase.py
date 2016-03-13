@@ -10,7 +10,6 @@ from sipmessaging import UnknownSIPHeaderField
 from sipmessaging import SIPHeaderFieldFactory
 
 
-
 class AbstractSIPHeaderFieldFromFactoryTestCase(TestCase):
     @property
     def canonicalStrings(self):

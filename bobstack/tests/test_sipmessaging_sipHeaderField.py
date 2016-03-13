@@ -35,6 +35,7 @@ from sipmessaging import ViaSIPHeaderField
 from sipmessaging import WWWAuthenticateSIPHeaderField
 from sipmessaging import WarningSIPHeaderField
 
+
 class TestUnknownSipHeaderField(TestCase):
     @property
     def canonicalStrings(self):
@@ -83,6 +84,8 @@ class TestContentLengthSipHeaderField(AbstractIntegerSIPHeaderFieldTestCase):
         self.basic_test_rendering()
         for fieldName in self.canonicalFieldNames:
             for fieldValueString in self.canonicalFieldValues:
+                headerField = self.sipHeaderFieldClassUnderTest.newForFieldNameAndValueString(fieldName=fieldName, fieldValueString=fieldValueString)
+                self.assertTrue(headerField.isContentLength)
                 headerField = self.sipHeaderFieldClassUnderTest.newForFieldNameAndValueString(fieldValueString=fieldValueString)
                 self.assertTrue(headerField.isContentLength)
 
@@ -106,6 +109,8 @@ class TestAcceptSipHeaderField(AbstractSIPHeaderFieldTestCase):
         self.basic_test_rendering()
         for fieldName in self.canonicalFieldNames:
             for fieldValueString in self.canonicalFieldValues:
+                headerField = self.sipHeaderFieldClassUnderTest.newForFieldNameAndValueString(fieldName=fieldName, fieldValueString=fieldValueString)
+                self.assertTrue(headerField.isAccept)
                 headerField = self.sipHeaderFieldClassUnderTest.newForAttributes(fieldValueString=fieldValueString)
                 self.assertTrue(headerField.isAccept)
 
@@ -129,6 +134,8 @@ class TestAcceptEncodingSipHeaderField(AbstractSIPHeaderFieldTestCase):
         self.basic_test_rendering()
         for fieldName in self.canonicalFieldNames:
             for fieldValueString in self.canonicalFieldValues:
+                headerField = self.sipHeaderFieldClassUnderTest.newForFieldNameAndValueString(fieldName=fieldName, fieldValueString=fieldValueString)
+                self.assertTrue(headerField.isAcceptEncoding)
                 headerField = self.sipHeaderFieldClassUnderTest.newForAttributes(fieldValueString=fieldValueString)
                 self.assertTrue(headerField.isAcceptEncoding)
 
@@ -152,6 +159,8 @@ class TestAcceptLanguageSipHeaderField(AbstractSIPHeaderFieldTestCase):
         self.basic_test_rendering()
         for fieldName in self.canonicalFieldNames:
             for fieldValueString in self.canonicalFieldValues:
+                headerField = self.sipHeaderFieldClassUnderTest.newForFieldNameAndValueString(fieldName=fieldName, fieldValueString=fieldValueString)
+                self.assertTrue(headerField.isAcceptLanguage)
                 headerField = self.sipHeaderFieldClassUnderTest.newForAttributes(fieldValueString=fieldValueString)
                 self.assertTrue(headerField.isAcceptLanguage)
 
@@ -175,6 +184,8 @@ class TestAllowSipHeaderField(AbstractSIPHeaderFieldTestCase):
         self.basic_test_rendering()
         for fieldName in self.canonicalFieldNames:
             for fieldValueString in self.canonicalFieldValues:
+                headerField = self.sipHeaderFieldClassUnderTest.newForFieldNameAndValueString(fieldName=fieldName, fieldValueString=fieldValueString)
+                self.assertTrue(headerField.isAllow)
                 headerField = self.sipHeaderFieldClassUnderTest.newForAttributes(fieldValueString=fieldValueString)
                 self.assertTrue(headerField.isAllow)
 
@@ -198,6 +209,8 @@ class TestAuthorizationSipHeaderField(AbstractSIPHeaderFieldTestCase):
         self.basic_test_rendering()
         for fieldName in self.canonicalFieldNames:
             for fieldValueString in self.canonicalFieldValues:
+                headerField = self.sipHeaderFieldClassUnderTest.newForFieldNameAndValueString(fieldName=fieldName, fieldValueString=fieldValueString)
+                self.assertTrue(headerField.isAuthorization)
                 headerField = self.sipHeaderFieldClassUnderTest.newForAttributes(fieldValueString=fieldValueString)
                 self.assertTrue(headerField.isAuthorization)
 
@@ -221,6 +234,8 @@ class TestCSeqSipHeaderField(AbstractSIPHeaderFieldTestCase):
         self.basic_test_rendering()
         for fieldName in self.canonicalFieldNames:
             for fieldValueString in self.canonicalFieldValues:
+                headerField = self.sipHeaderFieldClassUnderTest.newForFieldNameAndValueString(fieldName=fieldName, fieldValueString=fieldValueString)
+                self.assertTrue(headerField.isCSeq)
                 headerField = self.sipHeaderFieldClassUnderTest.newForAttributes(fieldValueString=fieldValueString)
                 self.assertTrue(headerField.isCSeq)
 
@@ -244,6 +259,8 @@ class TestCallIDSipHeaderField(AbstractSIPHeaderFieldTestCase):
         self.basic_test_rendering()
         for fieldName in self.canonicalFieldNames:
             for fieldValueString in self.canonicalFieldValues:
+                headerField = self.sipHeaderFieldClassUnderTest.newForFieldNameAndValueString(fieldName=fieldName, fieldValueString=fieldValueString)
+                self.assertTrue(headerField.isCallID)
                 headerField = self.sipHeaderFieldClassUnderTest.newForAttributes(fieldValueString=fieldValueString)
                 self.assertTrue(headerField.isCallID)
 
@@ -267,6 +284,8 @@ class TestCallInfoSipHeaderField(AbstractSIPHeaderFieldTestCase):
         self.basic_test_rendering()
         for fieldName in self.canonicalFieldNames:
             for fieldValueString in self.canonicalFieldValues:
+                headerField = self.sipHeaderFieldClassUnderTest.newForFieldNameAndValueString(fieldName=fieldName, fieldValueString=fieldValueString)
+                self.assertTrue(headerField.isCallInfo)
                 headerField = self.sipHeaderFieldClassUnderTest.newForAttributes(fieldValueString=fieldValueString)
                 self.assertTrue(headerField.isCallInfo)
 
@@ -485,6 +504,8 @@ class TestContentDispositionSipHeaderField(AbstractSIPHeaderFieldTestCase):
         self.basic_test_rendering()
         for fieldName in self.canonicalFieldNames:
             for fieldValueString in self.canonicalFieldValues:
+                headerField = self.sipHeaderFieldClassUnderTest.newForFieldNameAndValueString(fieldName=fieldName, fieldValueString=fieldValueString)
+                self.assertTrue(headerField.isContentDisposition)
                 headerField = self.sipHeaderFieldClassUnderTest.newForAttributes(fieldValueString=fieldValueString)
                 self.assertTrue(headerField.isContentDisposition)
 
@@ -508,6 +529,8 @@ class TestContentTypeSipHeaderField(AbstractSIPHeaderFieldTestCase):
         self.basic_test_rendering()
         for fieldName in self.canonicalFieldNames:
             for fieldValueString in self.canonicalFieldValues:
+                headerField = self.sipHeaderFieldClassUnderTest.newForFieldNameAndValueString(fieldName=fieldName, fieldValueString=fieldValueString)
+                self.assertTrue(headerField.isContentType)
                 headerField = self.sipHeaderFieldClassUnderTest.newForAttributes(fieldValueString=fieldValueString)
                 self.assertTrue(headerField.isContentType)
 
@@ -531,8 +554,11 @@ class TestDateSipHeaderField(AbstractSIPHeaderFieldTestCase):
         self.basic_test_rendering()
         for fieldName in self.canonicalFieldNames:
             for fieldValueString in self.canonicalFieldValues:
+                headerField = self.sipHeaderFieldClassUnderTest.newForFieldNameAndValueString(fieldName=fieldName, fieldValueString=fieldValueString)
+                self.assertTrue(headerField.isDate)
                 headerField = self.sipHeaderFieldClassUnderTest.newForAttributes(fieldValueString=fieldValueString)
                 self.assertTrue(headerField.isDate)
+
 
 class TestExpiresSipHeaderField(AbstractIntegerSIPHeaderFieldTestCase):
     @property
@@ -553,6 +579,8 @@ class TestExpiresSipHeaderField(AbstractIntegerSIPHeaderFieldTestCase):
         self.basic_test_rendering()
         for fieldName in self.canonicalFieldNames:
             for fieldValueString in self.canonicalFieldValues:
+                headerField = self.sipHeaderFieldClassUnderTest.newForFieldNameAndValueString(fieldName=fieldName, fieldValueString=fieldValueString)
+                self.assertTrue(headerField.isExpires)
                 headerField = self.sipHeaderFieldClassUnderTest.newForFieldNameAndValueString(fieldValueString=fieldValueString)
                 self.assertTrue(headerField.isExpires)
 
@@ -806,8 +834,11 @@ class TestMaxForwardsSipHeaderField(AbstractIntegerSIPHeaderFieldTestCase):
         self.basic_test_rendering()
         for fieldName in self.canonicalFieldNames:
             for fieldValueString in self.canonicalFieldValues:
+                headerField = self.sipHeaderFieldClassUnderTest.newForFieldNameAndValueString(fieldName=fieldName, fieldValueString=fieldValueString)
+                self.assertTrue(headerField.isMaxForwards)
                 headerField = self.sipHeaderFieldClassUnderTest.newForFieldNameAndValueString(fieldValueString=fieldValueString)
                 self.assertTrue(headerField.isMaxForwards)
+
 
 class TestRecordRouteSipHeaderField(AbstractSIPHeaderFieldTestCase):
     @property
@@ -815,21 +846,60 @@ class TestRecordRouteSipHeaderField(AbstractSIPHeaderFieldTestCase):
         return['Record-Route', 'RECORD-Route', 'record-route', 'Record-route', 'record-Route']
 
     @property
+    def canonicalFieldValues(self):
+        return ['<sip:3122221000@200.23.3.241:5061;lr>',
+                '<sip:3122221000@200.23.3.241:5061>'
+                ]
+
+    @property
+    def canonicalFieldValues(self):
+        return ['<sip:3122221000@200.23.3.241:5061;lr>',
+                '<sip:3122221000@200.23.3.241:5061>'
+                ]
+
+    @property
     def sipHeaderFieldClassUnderTest(self):
         return RecordRouteSIPHeaderField
+
+    def test_parseSetValuesAndReParse(self):
+        headerFieldString = 'Record-Route: <sip:3122221000@200.23.3.241:5061;transport=TLS>'
+        headerField = self.sipHeaderFieldClassUnderTest.newParsedFrom(headerFieldString)
+        self.assertEqual(headerField.rawString, headerFieldString)
+        self.assertTrue(headerField.isValid)
+        self.assertEqual(headerField.parameterNamesAndValueStrings, {})
+        self.assertEqual(headerField.sipURI.rawString, 'sip:3122221000@200.23.3.241:5061;transport=TLS')
+        self.assertEqual(headerField.sipURI.host, '200.23.3.241')
+        self.assertEqual(headerField.sipURI.port, 5061)
+        self.assertEqual(headerField.sipURI.scheme, 'sip')
+        self.assertEqual(headerField.parameterNamesAndValueStrings, {})
+        headerField.sipURI = SIPURI.newParsedFrom('sip:0.0.0.0')
+        self.assertEqual(headerField.rawString, 'Record-Route: <sip:0.0.0.0>')
+        self.assertTrue(headerField.isValid)
+        self.assertEqual(headerField.parameterNamesAndValueStrings, {})
+        self.assertEqual(headerField.sipURI.rawString, 'sip:0.0.0.0')
+        self.assertEqual(headerField.sipURI.host, '0.0.0.0')
+        self.assertEqual(headerField.sipURI.port, None)
+        self.assertEqual(headerField.sipURI.scheme, 'sip')
+        self.assertEqual(headerField.parameterNamesAndValueStrings, {})
 
     def test_parsing(self):
         self.basic_test_parsing()
         for line in self.canonicalStrings:
             headerField = self.sipHeaderFieldClassUnderTest.newParsedFrom(line)
-            self.assertTrue(headerField.isRecordRoute, line)
+            self.assertTrue(headerField.isRecordRoute)
 
     def test_rendering(self):
-        self.basic_test_rendering()
-        for fieldName in self.canonicalFieldNames:
-            for fieldValueString in self.canonicalFieldValues:
-                headerField = self.sipHeaderFieldClassUnderTest.newForAttributes(fieldValueString=fieldValueString)
-                self.assertTrue(headerField.isRecordRoute)
+        headerFieldString = 'Record-Route: <sip:3122221000@200.23.3.241:5061;transport=TLS>'
+        headerField = self.sipHeaderFieldClassUnderTest.newForAttributes(sipURI=SIPURI.newParsedFrom('sip:3122221000@200.23.3.241:5061;transport=TLS'))
+        self.assertEqual(headerField.rawString, headerFieldString)
+        self.assertTrue(headerField.isValid)
+        self.assertEqual(headerField.parameterNamesAndValueStrings, {})
+        self.assertEqual(headerField.sipURI.rawString, 'sip:3122221000@200.23.3.241:5061;transport=TLS')
+        self.assertEqual(headerField.sipURI.host, '200.23.3.241')
+        self.assertEqual(headerField.sipURI.port, 5061)
+        self.assertEqual(headerField.sipURI.scheme, 'sip')
+        self.assertEqual(headerField.parameterNamesAndValueStrings, {})
+        self.assertEqual(headerField.sipURI.user, '3122221000')
 
 
 class TestRequireSipHeaderField(AbstractSIPHeaderFieldTestCase):
@@ -851,6 +921,8 @@ class TestRequireSipHeaderField(AbstractSIPHeaderFieldTestCase):
         self.basic_test_rendering()
         for fieldName in self.canonicalFieldNames:
             for fieldValueString in self.canonicalFieldValues:
+                headerField = self.sipHeaderFieldClassUnderTest.newForFieldNameAndValueString(fieldName=fieldName, fieldValueString=fieldValueString)
+                self.assertTrue(headerField.isRequire)
                 headerField = self.sipHeaderFieldClassUnderTest.newForAttributes(fieldValueString=fieldValueString)
                 self.assertTrue(headerField.isRequire)
 
@@ -874,11 +946,19 @@ class TestRetryAfterSipHeaderField(AbstractIntegerSIPHeaderFieldTestCase):
         self.basic_test_rendering()
         for fieldName in self.canonicalFieldNames:
             for fieldValueString in self.canonicalFieldValues:
+                headerField = self.sipHeaderFieldClassUnderTest.newForFieldNameAndValueString(fieldName=fieldName, fieldValueString=fieldValueString)
+                self.assertTrue(headerField.isRetryAfter)
                 headerField = self.sipHeaderFieldClassUnderTest.newForFieldNameAndValueString(fieldValueString=fieldValueString)
                 self.assertTrue(headerField.isRetryAfter)
 
 
 class TestRouteSipHeaderField(AbstractSIPHeaderFieldTestCase):
+    @property
+    def canonicalFieldValues(self):
+        return ['<sip:3122221000@200.23.3.241:5061;lr>',
+                '<sip:3122221000@200.23.3.241:5061>'
+                ]
+
     @property
     def canonicalFieldNames(self):
         return['Route', 'ROUTE', 'route']
@@ -887,18 +967,45 @@ class TestRouteSipHeaderField(AbstractSIPHeaderFieldTestCase):
     def sipHeaderFieldClassUnderTest(self):
         return RouteSIPHeaderField
 
+    def test_parseSetValuesAndReParse(self):
+        headerFieldString = 'Route: <sip:3122221000@200.23.3.241:5061;transport=TLS>'
+        headerField = self.sipHeaderFieldClassUnderTest.newParsedFrom(headerFieldString)
+        self.assertEqual(headerField.rawString, headerFieldString)
+        self.assertTrue(headerField.isValid)
+        self.assertEqual(headerField.parameterNamesAndValueStrings, {})
+        self.assertEqual(headerField.sipURI.rawString, 'sip:3122221000@200.23.3.241:5061;transport=TLS')
+        self.assertEqual(headerField.sipURI.host, '200.23.3.241')
+        self.assertEqual(headerField.sipURI.port, 5061)
+        self.assertEqual(headerField.sipURI.scheme, 'sip')
+        self.assertEqual(headerField.parameterNamesAndValueStrings, {})
+        headerField.sipURI = SIPURI.newParsedFrom('sip:0.0.0.0')
+        self.assertEqual(headerField.rawString, 'Route: <sip:0.0.0.0>')
+        self.assertTrue(headerField.isValid)
+        self.assertEqual(headerField.parameterNamesAndValueStrings, {})
+        self.assertEqual(headerField.sipURI.rawString, 'sip:0.0.0.0')
+        self.assertEqual(headerField.sipURI.host, '0.0.0.0')
+        self.assertEqual(headerField.sipURI.port, None)
+        self.assertEqual(headerField.sipURI.scheme, 'sip')
+        self.assertEqual(headerField.parameterNamesAndValueStrings, {})
+
     def test_parsing(self):
         self.basic_test_parsing()
         for line in self.canonicalStrings:
             headerField = self.sipHeaderFieldClassUnderTest.newParsedFrom(line)
-            self.assertTrue(headerField.isRoute, line)
+            self.assertTrue(headerField.isRoute)
 
     def test_rendering(self):
-        self.basic_test_rendering()
-        for fieldName in self.canonicalFieldNames:
-            for fieldValueString in self.canonicalFieldValues:
-                headerField = self.sipHeaderFieldClassUnderTest.newForAttributes(fieldValueString=fieldValueString)
-                self.assertTrue(headerField.isRoute)
+        headerFieldString = 'Route: <sip:3122221000@200.23.3.241:5061;transport=TLS>'
+        headerField = self.sipHeaderFieldClassUnderTest.newForAttributes(sipURI=SIPURI.newParsedFrom('sip:3122221000@200.23.3.241:5061;transport=TLS'))
+        self.assertEqual(headerField.rawString, headerFieldString)
+        self.assertTrue(headerField.isValid)
+        self.assertEqual(headerField.parameterNamesAndValueStrings, {})
+        self.assertEqual(headerField.sipURI.rawString, 'sip:3122221000@200.23.3.241:5061;transport=TLS')
+        self.assertEqual(headerField.sipURI.host, '200.23.3.241')
+        self.assertEqual(headerField.sipURI.port, 5061)
+        self.assertEqual(headerField.sipURI.scheme, 'sip')
+        self.assertEqual(headerField.parameterNamesAndValueStrings, {})
+        self.assertEqual(headerField.sipURI.user, '3122221000')
 
 
 class TestServerSipHeaderField(AbstractSIPHeaderFieldTestCase):
@@ -920,6 +1027,8 @@ class TestServerSipHeaderField(AbstractSIPHeaderFieldTestCase):
         self.basic_test_rendering()
         for fieldName in self.canonicalFieldNames:
             for fieldValueString in self.canonicalFieldValues:
+                headerField = self.sipHeaderFieldClassUnderTest.newForFieldNameAndValueString(fieldName=fieldName, fieldValueString=fieldValueString)
+                self.assertTrue(headerField.isServer)
                 headerField = self.sipHeaderFieldClassUnderTest.newForAttributes(fieldValueString=fieldValueString)
                 self.assertTrue(headerField.isServer)
 
@@ -943,6 +1052,8 @@ class TestSessionExpiresSipHeaderField(AbstractIntegerSIPHeaderFieldTestCase):
         self.basic_test_rendering()
         for fieldName in self.canonicalFieldNames:
             for fieldValueString in self.canonicalFieldValues:
+                headerField = self.sipHeaderFieldClassUnderTest.newForFieldNameAndValueString(fieldName=fieldName, fieldValueString=fieldValueString)
+                self.assertTrue(headerField.isSessionExpires)
                 headerField = self.sipHeaderFieldClassUnderTest.newForFieldNameAndValueString(fieldValueString=fieldValueString)
                 self.assertTrue(headerField.isSessionExpires)
 
@@ -966,6 +1077,8 @@ class TestSupportedSipHeaderField(AbstractSIPHeaderFieldTestCase):
         self.basic_test_rendering()
         for fieldName in self.canonicalFieldNames:
             for fieldValueString in self.canonicalFieldValues:
+                headerField = self.sipHeaderFieldClassUnderTest.newForFieldNameAndValueString(fieldName=fieldName, fieldValueString=fieldValueString)
+                self.assertTrue(headerField.isSupported)
                 headerField = self.sipHeaderFieldClassUnderTest.newForAttributes(fieldValueString=fieldValueString)
                 self.assertTrue(headerField.isSupported)
 
@@ -989,8 +1102,11 @@ class TestTimestampSipHeaderField(AbstractIntegerSIPHeaderFieldTestCase):
         self.basic_test_rendering()
         for fieldName in self.canonicalFieldNames:
             for fieldValueString in self.canonicalFieldValues:
+                headerField = self.sipHeaderFieldClassUnderTest.newForFieldNameAndValueString(fieldName=fieldName, fieldValueString=fieldValueString)
+                self.assertTrue(headerField.isTimestamp)
                 headerField = self.sipHeaderFieldClassUnderTest.newForFieldNameAndValueString(fieldValueString=fieldValueString)
                 self.assertTrue(headerField.isTimestamp)
+
 
 class TestToSipHeaderField(AbstractSIPHeaderFieldTestCase):
     @property
@@ -1221,6 +1337,7 @@ class TestToSipHeaderField(AbstractSIPHeaderFieldTestCase):
         self.assertIsInstance(headerField.tag, basestring)
         self.assertTrue('tag' in headerField.parameterNamesAndValueStrings)
 
+
 class TestUserAgentSipHeaderField(AbstractSIPHeaderFieldTestCase):
     @property
     def canonicalFieldNames(self):
@@ -1240,6 +1357,8 @@ class TestUserAgentSipHeaderField(AbstractSIPHeaderFieldTestCase):
         self.basic_test_rendering()
         for fieldName in self.canonicalFieldNames:
             for fieldValueString in self.canonicalFieldValues:
+                headerField = self.sipHeaderFieldClassUnderTest.newForFieldNameAndValueString(fieldName=fieldName, fieldValueString=fieldValueString)
+                self.assertTrue(headerField.isUserAgent)
                 headerField = self.sipHeaderFieldClassUnderTest.newForAttributes(fieldValueString=fieldValueString)
                 self.assertTrue(headerField.isUserAgent)
 
@@ -1263,6 +1382,8 @@ class TestWWWAuthenticateSipHeaderField(AbstractSIPHeaderFieldTestCase):
         self.basic_test_rendering()
         for fieldName in self.canonicalFieldNames:
             for fieldValueString in self.canonicalFieldValues:
+                headerField = self.sipHeaderFieldClassUnderTest.newForFieldNameAndValueString(fieldName=fieldName, fieldValueString=fieldValueString)
+                self.assertTrue(headerField.isWWWAuthenticate)
                 headerField = self.sipHeaderFieldClassUnderTest.newForAttributes(fieldValueString=fieldValueString)
                 self.assertTrue(headerField.isWWWAuthenticate)
 
@@ -1286,6 +1407,8 @@ class TestWarningSipHeaderField(AbstractSIPHeaderFieldTestCase):
         self.basic_test_rendering()
         for fieldName in self.canonicalFieldNames:
             for fieldValueString in self.canonicalFieldValues:
+                headerField = self.sipHeaderFieldClassUnderTest.newForFieldNameAndValueString(fieldName=fieldName, fieldValueString=fieldValueString)
+                self.assertTrue(headerField.isWarning)
                 headerField = self.sipHeaderFieldClassUnderTest.newForAttributes(fieldValueString=fieldValueString)
                 self.assertTrue(headerField.isWarning)
 
