@@ -3,7 +3,7 @@ import glob
 import dpkt
 
 import sys
-sys.path.append("..")
+sys.path.append("../bobstack")
 # from sipmessaging.sipMessageFactory import SIPMessageFactory
 from bobstack.sipmessaging import SIPMessageFactory
 import os
@@ -28,8 +28,8 @@ startLineRegexes = [re.compile(s) for s in startLineRegexes]
 
 rawLogFileDirectoryPathNames = [ '../proprietary-test-data/big-lab-test-logs-raw', '../proprietary-test-data/cust-1-logs-raw' ]
 # rawLogFileDirectoryPathNames = []
-pcapDirectoryPathNames = [ '../proprietary-test-data/cloud-resaved', '../proprietary-test-data/cust-2-logs-pcap', '../proprietary-test-data/from-bobstack-testbed' ]
-# pcapDirectoryPathNames = [ '../proprietary-test-data/cloud-resaved' ]
+pcapDirectoryPathNames = [ '../proprietary-test-data/cloud', '../proprietary-test-data/cust-2-logs-pcap', '../proprietary-test-data/from-bobstack-testbed' ]
+# pcapDirectoryPathNames = [ '../proprietary-test-data/cloud' ]
 # pcapDirectoryPathNames = [ '../proprietary-test-data/cust-2-logs-pcap' ]
 # pcapDirectoryPathNames = [ '../proprietary-test-data/from-bobstack-testbed' ]
 

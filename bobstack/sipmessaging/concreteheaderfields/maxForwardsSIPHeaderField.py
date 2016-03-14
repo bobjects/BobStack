@@ -4,8 +4,10 @@ except ImportError:
     from StringIO import StringIO
 import sys
 sys.path.append("../../..")
-from bobstack.sipmessaging import IntegerSIPHeaderField
-from bobstack.sipmessaging import classproperty
+# from bobstack.sipmessaging import IntegerSIPHeaderField
+# from bobstack.sipmessaging import classproperty
+from sipmessaging import IntegerSIPHeaderField
+from sipmessaging import classproperty
 
 
 class MaxForwardsSIPHeaderField(IntegerSIPHeaderField):

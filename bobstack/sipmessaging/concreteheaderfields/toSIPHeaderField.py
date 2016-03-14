@@ -5,10 +5,14 @@ except ImportError:
 import re
 import sys
 sys.path.append("../../..")
-from bobstack.sipmessaging import SIPHeaderField
-from bobstack.sipmessaging import SIPURI
-from bobstack.sipmessaging import classproperty
-from bobstack.sipmessaging import StrongRandomStringServer
+# from bobstack.sipmessaging import SIPHeaderField
+# from bobstack.sipmessaging import SIPURI
+# from bobstack.sipmessaging import classproperty
+# from bobstack.sipmessaging import StrongRandomStringServer
+from sipmessaging import SIPHeaderField
+from sipmessaging import SIPURI
+from sipmessaging import classproperty
+from sipmessaging import StrongRandomStringServer
 
 
 # TODO: may want to factor parsing from this, To, and Contact into a mixin.

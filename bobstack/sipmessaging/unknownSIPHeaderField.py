@@ -3,7 +3,7 @@ try:
 except ImportError:
     from StringIO import StringIO
 from sipHeaderField import SIPHeaderField
-from bobstack.sipmessaging import classproperty
+from classproperty import classproperty
 
 
 class UnknownSIPHeaderField(SIPHeaderField):
