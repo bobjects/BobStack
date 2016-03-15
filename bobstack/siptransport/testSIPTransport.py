@@ -1,4 +1,5 @@
 from sipTransport import SIPTransport
+from testSIPTransportConnection import TestSIPTransportConnection
 
 
 class TestSIPTransport(SIPTransport):
@@ -8,7 +9,8 @@ class TestSIPTransport(SIPTransport):
 
     def connectToAddressAndPort(self, addressString, portInteger):
         # TODO instantiate a TestSIPTransportConection, trigger event.
-        pass
+        connection = TestSIPTransportConnection(addressString, portInteger)
+        self.subscribeToTransportConnectionEvents(connection)
 
     def bind(self):
         self.triggerBound()
