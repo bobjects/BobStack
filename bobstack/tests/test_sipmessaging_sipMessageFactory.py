@@ -17,8 +17,15 @@ from bobstack.sipmessaging import SIPMessageFactory
 class TestSIPMessageFactoryForSanitizedLogFile(TestCase):
     def setUp(self):
         self.malformedSIPMessageCount = 0
+        self.sipMessageCount = 0
+        self.sipRequestCount = 0
+        self.sipResponseCount = 0
         self.validSIPMessageCount = 0
+        self.validSIPRequestCount = 0
+        self.validSIPResponseCount = 0
         self.invalidSIPMessageCount = 0
+        self.invalidSIPRequestCount = 0
+        self.invalidSIPResponseCount = 0
         self.validKnownSIPMessageCount = 0
         self.validUnknownSIPMessageCount = 0
         self.transactionHashesAndSIPMessages = {}
@@ -27,26 +34,18 @@ class TestSIPMessageFactoryForSanitizedLogFile(TestCase):
     @unittest.skipIf(settings.skipLongTests, "Skipping long tests for now.")
     def test_parsing_sanitized_log_file(self):
         self._fileNamesAndFiles = {}
-        # self.createFileNamed(self.malformedSIPMessagesPathName)
-        # self.createFileNamed(self.validSIPMessagesPathName)
-        # self.createFileNamed(self.invalidSIPMessagesPathName)
-        # self.createFileNamed(self.validKnownSIPMessagesPathName)
-        # self.createFileNamed(self.validUnknownSIPMessagesPathName)
-        # self.createFileNamed(self.knownSIPStartLinesPathName)
-        # self.createFileNamed(self.unknownSIPStartLinesPathName)
-        # self.createFileNamed(self.knownSIPMethodsPathName)
-        # self.createFileNamed(self.unknownSIPMethodsPathName)
-        # self.createFileNamed(self.knownHeaderFieldsPathName)
-        # self.createFileNamed(self.knownHeaderFieldNamesPathName)
-        # self.createFileNamed(self.unknownHeaderFieldsPathName)
-        # self.createFileNamed(self.unknownHeaderFieldNamesPathName)
-        # self.createFileNamed(self.headerFieldParametersPathName)
-
         try:
             factory = SIPMessageFactory()
             factory.whenEventDo("malformedSIPMessage", self.handleMalformedSIPMessage)
+            factory.whenEventDo("sipMessage", self.handleSIPMessage)
+            factory.whenEventDo("sipRequest", self.handleSIPRequest)
+            factory.whenEventDo("sipResponse", self.handleSIPResponse)
             factory.whenEventDo("validSIPMessage", self.handleValidSIPMessage)
+            factory.whenEventDo("validSIPRequest", self.handleValidSIPRequest)
+            factory.whenEventDo("validSIPResponse", self.handleValidSIPResponse)
             factory.whenEventDo("invalidSIPMessage", self.handleInvalidSIPMessage)
+            factory.whenEventDo("invalidSIPRequest", self.handleInvalidSIPRequest)
+            factory.whenEventDo("invalidSIPResponse", self.handleInvalidSIPResponse)
             factory.whenEventDo("validKnownSIPMessage", self.handleValidKnownSIPMessage)
             factory.whenEventDo("validUnknownSIPMessage", self.handleValidUnknownSIPMessage)
             with open(self.sanitizedFilePathName, "r") as sanitizedFile:
@@ -96,10 +95,31 @@ class TestSIPMessageFactoryForSanitizedLogFile(TestCase):
 
     def printSIPMessageCounts(self):
         print "malformed: " + str(self.malformedSIPMessageCount)
-        print "valid: " + str(self.validSIPMessageCount)
-        print "invalid: " + str(self.invalidSIPMessageCount)
+        print "total messages: " + str(self.sipMessageCount)
+        print "total requests: " + str(self.sipRequestCount)
+        print "total responses: " + str(self.sipResponseCount)
+        print "valid messages: " + str(self.validSIPMessageCount)
+        print "valid requests: " + str(self.validSIPRequestCount)
+        print "valid responses: " + str(self.validSIPResponseCount)
+        print "invalid messages: " + str(self.invalidSIPMessageCount)
+        print "invalid requests: " + str(self.invalidSIPRequestCount)
+        print "invalid responses: " + str(self.invalidSIPResponseCount)
         print "valid known: " + str(self.validKnownSIPMessageCount)
         print "valid unknown: " + str(self.validUnknownSIPMessageCount)
+
+        self.malformedSIPMessageCount = 0
+        self.sipMessageCount = 0
+        self.sipRequestCount = 0
+        self.sipResponseCount = 0
+        self.validSIPMessageCount = 0
+        self.validSIPRequestCount = 0
+        self.validSIPResponseCount = 0
+        self.invalidSIPMessageCount = 0
+        self.invalidSIPRequestCount = 0
+        self.invalidSIPResponseCount = 0
+        self.validKnownSIPMessageCount = 0
+        self.validUnknownSIPMessageCount = 0
+
 
     def handleMalformedSIPMessage(self, aSIPMessage):
         self.malformedSIPMessageCount += 1
@@ -108,6 +128,7 @@ class TestSIPMessageFactoryForSanitizedLogFile(TestCase):
 
     def handleValidSIPMessage(self, aSIPMessage):
         self.validSIPMessageCount += 1
+        self.assertTrue(aSIPMessage.isValid)
         self.appendStringToFileNamed(aSIPMessage.rawString, 'validSIPMessages')
         self.appendStringToFileNamed(self.messageSeparator, 'validSIPMessages')
         # print aSIPMessage.transactionHash
@@ -248,16 +269,64 @@ class TestSIPMessageFactoryForSanitizedLogFile(TestCase):
             self.appendStringToFileNamed(headerField.fieldName, 'unknownHeaderFieldNames')
             self.appendStringToFileNamed("\r\n", 'unknownHeaderFieldNames')
 
+    def handleValidSIPRequest(self, aSIPRequest):
+        self.validSIPRequestCount += 1
+        self.assertTrue(aSIPRequest.isRequest)
+        self.assertTrue(aSIPRequest.isValid)
+        self.appendStringToFileNamed(aSIPRequest.rawString, 'validSIPRequests')
+        self.appendStringToFileNamed(self.messageSeparator, 'validSIPRequests')
+
+    def handleValidSIPResponse(self, aSIPResponse):
+        self.validSIPResponseCount += 1
+        self.assertTrue(aSIPResponse.isResponse)
+        self.assertTrue(aSIPResponse.isValid)
+        self.appendStringToFileNamed(aSIPResponse.rawString, 'validSIPResponses')
+        self.appendStringToFileNamed(self.messageSeparator, 'validSIPResponses')
+
     def handleInvalidSIPMessage(self, aSIPMessage):
         self.invalidSIPMessageCount += 1
+        self.assertFalse(aSIPMessage.isValid)
         self.appendStringToFileNamed(aSIPMessage.rawString, 'invalidSIPMessages')
         self.appendStringToFileNamed(self.messageSeparator, 'invalidSIPMessages')
         for headerField in aSIPMessage.header.headerFields:
             if headerField.isInvalid:
                 self.appendStringToFileNamed(headerField.rawString, 'invalidHeaderFields')
 
+    def handleInvalidSIPRequest(self, aSIPRequest):
+        self.invalidSIPRequestCount += 1
+        self.assertTrue(aSIPRequest.isRequest)
+        self.assertFalse(aSIPRequest.isValid)
+        self.appendStringToFileNamed(aSIPRequest.rawString, 'invalidSIPRequests')
+        self.appendStringToFileNamed(self.messageSeparator, 'invalidSIPRequests')
+
+    def handleInvalidSIPResponse(self, aSIPResponse):
+        self.invalidSIPResponseCount += 1
+        self.assertTrue(aSIPResponse.isResponse)
+        self.assertFalse(aSIPResponse.isValid)
+        self.appendStringToFileNamed(aSIPResponse.rawString, 'invalidSIPResponses')
+        self.appendStringToFileNamed(self.messageSeparator, 'invalidSIPResponses')
+
+    def handleSIPMessage(self, aSIPMessage):
+        self.sipMessageCount += 1
+        self.appendStringToFileNamed(aSIPMessage.rawString, 'sipMessages')
+        self.appendStringToFileNamed(self.messageSeparator, 'sipMessages')
+
+    def handleSIPRequest(self, aSIPRequest):
+        self.sipRequestCount += 1
+        self.assertTrue(aSIPRequest.isRequest)
+        self.appendStringToFileNamed(aSIPRequest.rawString, 'sipRequests')
+        self.appendStringToFileNamed(self.messageSeparator, 'sipRequests')
+
+    def handleSIPResponse(self, aSIPResponse):
+        self.sipResponseCount += 1
+        self.assertTrue(aSIPResponse.isResponse)
+        self.appendStringToFileNamed(aSIPResponse.rawString, 'sipResponses')
+        self.appendStringToFileNamed(self.messageSeparator, 'sipResponses')
+
     def handleValidKnownSIPMessage(self, aSIPMessage):
         self.validKnownSIPMessageCount += 1
+        self.assertTrue(aSIPMessage.isKnown)
+        self.assertTrue(aSIPMessage.isValid)
         self.appendStringToFileNamed(aSIPMessage.rawString, 'validKnownSIPMessages')
         self.appendStringToFileNamed(self.messageSeparator, 'validKnownSIPMessages')
         if aSIPMessage.isRequest:
@@ -268,6 +337,8 @@ class TestSIPMessageFactoryForSanitizedLogFile(TestCase):
 
     def handleValidUnknownSIPMessage(self, aSIPMessage):
         self.validUnknownSIPMessageCount += 1
+        self.assertFalse(aSIPMessage.isKnown)
+        self.assertTrue(aSIPMessage.isValid)
         self.appendStringToFileNamed(aSIPMessage.rawString, 'validUnknownSIPMessages')
         self.appendStringToFileNamed(self.messageSeparator, 'validUnknownSIPMessages')
         if aSIPMessage.isRequest:

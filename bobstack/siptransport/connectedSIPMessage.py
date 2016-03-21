@@ -1,5 +1,6 @@
 
 
 class ConnectedSIPMessage(object):
-    # TODO
-    pass
+    def __init__(self, aSIPTransportConnection, aSIPMessage):
+        self.connection = aSIPTransportConnection
+        self.sipMessage = aSIPMessage
