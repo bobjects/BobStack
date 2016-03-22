@@ -1,8 +1,9 @@
 
 
 class SIPTransportConnection(object):
-    def __init__(self, addressString, portInteger):
+    def __init__(self, addressString, localPortInteger, remotePortInteger):
         self.address = addressString
-        self.port = portInteger
+        self.localPort = localPortInteger
+        self.remotePort = remotePortInteger
 
 

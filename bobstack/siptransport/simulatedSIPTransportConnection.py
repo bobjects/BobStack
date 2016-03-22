@@ -1,4 +1,4 @@
 from sipTransportConnection import SIPTransportConnection
 
-class TestSIPTransportConnection(SIPTransportConnection):
+class SimulatedSIPTransportConnection(SIPTransportConnection):
     pass
