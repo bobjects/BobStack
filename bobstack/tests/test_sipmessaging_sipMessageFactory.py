@@ -31,7 +31,7 @@ class TestSIPMessageFactoryForSanitizedLogFile(TestCase):
         self.transactionHashesAndSIPMessages = {}
         self.dialogHashesAndSIPMessages = {}
 
-    @unittest.skipIf(settings.skipLongTests, "Skipping long tests for now.")
+    @unittest.skipIf(settings.skipLongTests, "Skipping long tests for now.\n")
     def test_parsing_sanitized_log_file(self):
         self._fileNamesAndFiles = {}
         try:
