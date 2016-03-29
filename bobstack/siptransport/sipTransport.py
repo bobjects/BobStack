@@ -52,9 +52,17 @@ class SIPTransport(EventSourceMixin):
         print "bound event"
         self.triggerEvent("bound")
 
+    def triggerBindFailed(self):
+        print "bindFailed event"
+        self.triggerEvent("bindFailed")
+
     def triggerMadeConnection(self, aSIPTransportConnection):
         print "madeConnection event - " + str(aSIPTransportConnection)
         self.triggerEvent("madeConnection", aSIPTransportConnection)
+
+    def triggerCouldNotMakeConnection(self, addressString, portInteger):
+        print "couldNotMakeConnection event - " + str((addressString, portInteger))
+        self.triggerEvent("couldNotMakeConnection", (addressString, portInteger))
 
     def triggerLostConnection(self, aSIPTransportConnection):
         print "lostConnection event - " + str(aSIPTransportConnection)

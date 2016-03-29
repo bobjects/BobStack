@@ -4,4 +4,4 @@ from connectedSIPMessage import ConnectedSIPMessage
 from connectedSIPMessageFactory import ConnectedSIPMessageFactory
 from sipTransport import SIPTransport
 from sipTransportConnection import SIPTransportConnection
-
+from simulatedNetwork import SimulatedNetwork

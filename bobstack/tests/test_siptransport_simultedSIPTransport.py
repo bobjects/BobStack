@@ -5,10 +5,13 @@ sys.path.append("../..")
 from bobstack.sipmessaging import SIPMessageFactory
 from bobstack.siptransport import SimulatedSIPTransport
 from bobstack.siptransport import SimulatedSIPTransportConnection
+from bobstack.siptransport import SimulatedNetwork
 
 
 class TestSimulatedTransportConnection(TestCase):
-    def setUp(self):
+    # def setUp(self):
+    def __init__(self, *args, **kwargs):
+        super(TestSimulatedTransportConnection, self).__init__(*args, **kwargs)
         self.hasBound = False
         self.bindHasFailed = False
         self.connectedConnections = []
@@ -27,9 +30,18 @@ class TestSimulatedTransportConnection(TestCase):
         self.transport3 = SimulatedSIPTransport(self.bindAddress3, self.bindPort3)
 
 
-    # order of test execution matters, so use integers for specifying test execution order.
+    def test(self):
+        self.run_00_initialSanityCheck()
+        self.run_01_bind()
+        self.run_02_makeOutboundConnection()
+        self.run_03_makeInboundConnection()
+        # self.run_04_attemptSecondBind()
+        # self.run_05_attemptConnectToBogusAddressAndPort()
+        # self.run_06_attemptConnectToOwnAddressAndPort()
+        # self.run_07_sendRequestsVerifyReceipt()
+        # self.run_08_sendResponsesVerifyReceipt()
 
-    def test_00_initialSanityCheck(self):
+    def run_00_initialSanityCheck(self):
         self.assertIsInstance(self.transport1, SimulatedSIPTransport)
         self.assertEqual(0, len(self.transport1.connections))
         self.assertEqual(0, len(self.connectedConnections))
@@ -53,43 +65,49 @@ class TestSimulatedTransportConnection(TestCase):
         self.assertEqual('SIM', self.transport3.transportParameterName)
         self.assertEqual(self.bindAddress3, self.transport3.bindAddress)
         self.assertEqual(self.bindPort3, self.transport3.bindPort)
+        self.assertEqual(0, len(SimulatedNetwork.instance.boundTransports))
 
-    def test_01_bind(self):
+    def run_01_bind(self):
         self.transport1.bind()
+        self.assertEqual(1, len(SimulatedNetwork.instance.boundTransports))
         self.assertTrue(self.hasBound)
         self.assertFalse(self.bindHasFailed)
         self.assertEqual(0, len(self.transport1.connections))
         self.assertEqual(0, len(self.connectedConnections))
         self.transport2.bind()
+        self.assertEqual(2, len(SimulatedNetwork.instance.boundTransports))
         self.transport3.bind()
+        self.assertEqual(3, len(SimulatedNetwork.instance.boundTransports))
+        self.assertEqual(self.transport1, SimulatedNetwork.instance.boundTransports[0])
+        self.assertEqual(self.transport2, SimulatedNetwork.instance.boundTransports[1])
+        self.assertEqual(self.transport3, SimulatedNetwork.instance.boundTransports[2])
+        self.assertIs(self.transport1, SimulatedNetwork.instance.boundTransportWithAddressAndPort(self.bindAddress1, self.bindPort1))
+        self.assertIs(self.transport2, SimulatedNetwork.instance.boundTransportWithAddressAndPort(self.bindAddress2, self.bindPort2))
+        self.assertIs(self.transport3, SimulatedNetwork.instance.boundTransportWithAddressAndPort(self.bindAddress3, self.bindPort3))
 
-    # TODO
-    @unittest.skip("TODO\n")
-    def test_02_makeOutboundConnection(self):
+    def run_02_makeOutboundConnection(self):
         # Connect transport1 to transport2
         self.transport1.connectToAddressAndPort(self.bindAddress2, self.bindPort2)
         self.assertEqual(1, len(self.transport1.connections))
-        self.assertEqual(1, len(self.transport2.connections))
-        self.assertEqual(0, len(self.transport2.connections))
         self.assertEqual(1, len(self.connectedConnections))
         self.assertIs(self.connectedConnections[0], self.transport1.connections[0])
         self.assertEqual(self.bindAddress2, self.transport1.connections[0].address)
         self.assertIsInstance(self.transport1.connections[0].localPort, int)
         self.assertEqual(self.bindPort2, self.transport1.connections[0].remotePort)
+        self.assertEqual(1, len(self.transport2.connections))
+        self.assertEqual(0, len(self.transport3.connections))
         self.assertEqual(self.bindAddress1, self.transport2.connections[0].address)
         self.assertIsInstance(self.transport2.connections[0].remotePort, int)
         self.assertEqual(self.bindPort2, self.transport2.connections[0].localPort)
 
-    # TODO
-    @unittest.skip("TODO\n")
-    def test_03_makeInboundConnection(self):
+    def run_03_makeInboundConnection(self):
         # Connect transport3 to transport1
         self.transport3.connectToAddressAndPort(self.bindAddress1, self.bindPort1)
         self.assertEqual(2, len(self.transport1.connections))
         self.assertEqual(1, len(self.transport2.connections))
         self.assertEqual(1, len(self.transport3.connections))
         self.assertEqual(2, len(self.connectedConnections))
-        self.assertIs(self.connectedConnections[1], self.transport3.connections[0])
+        self.assertIs(self.connectedConnections[1], self.transport1.connections[1])
         self.assertEqual(self.bindAddress3, self.transport1.connections[1].address)
         self.assertIsInstance(self.transport3.connections[0].localPort, int)
         self.assertEqual(self.bindPort1, self.transport1.connections[0].localPort)
@@ -97,18 +115,14 @@ class TestSimulatedTransportConnection(TestCase):
         self.assertIsInstance(self.transport1.connections[0].remotePort, int)
         self.assertEqual(self.bindPort1, self.transport3.connections[0].remotePort)
 
-    # TODO
-    @unittest.skip("TODO\n")
-    def test_04_attemptSecondBind(self):
+    def run_04_attemptSecondBind(self):
         self.assertFalse(self.bindHasFailed)
         transport = SimulatedSIPTransport(self.bindAddress1, self.bindPort1)
         transport.whenEventDo("bindFailed", self.bindFailedEventHandler)
         transport.bind()
         self.assertTrue(self.bindHasFailed)
 
-    # TODO
-    @unittest.skip("TODO\n")
-    def test_05_attemptConnectToBogusAddressAndPort(self):
+    def run_05_attemptConnectToBogusAddressAndPort(self):
         self.assertEqual(0, len(self.notConnectedAddressesAndPorts))
         self.assertEqual(2, len(self.transport1.connections))
         self.transport1.connectToAddressAndPort('192.168.4.254', 5060)
@@ -120,9 +134,7 @@ class TestSimulatedTransportConnection(TestCase):
         self.assertEqual(2, len(self.transport1.connections))
         self.assertEqual((self.bindAddress2, 5555), self.notConnectedAddressesAndPorts[1])
 
-    # TODO
-    @unittest.skip("TODO\n")
-    def test_06_attemptConnectToOwnAddressAndPort(self):
+    def run_06_attemptConnectToOwnAddressAndPort(self):
         self.assertEqual(2, len(self.notConnectedAddressesAndPorts))
         self.assertEqual(2, len(self.transport1.connections))
         self.transport1.connectToAddressAndPort(self.bindAddress1, self.bindPort1)
@@ -130,9 +142,7 @@ class TestSimulatedTransportConnection(TestCase):
         self.assertEqual(2, len(self.transport1.connections))
         self.assertEqual((self.bindAddress1, self.bindPort1), self.notConnectedAddressesAndPorts[2])
 
-    # TODO
-    @unittest.skip("TODO\n")
-    def test_07_sendRequestsVerifyReceipt(self):
+    def run_07_sendRequestsVerifyReceipt(self):
         self.assertTrue(self.sampleRequest.isRequest)
         self.assertTrue(self.sampleRequest2.isRequest)
         self.assertEqual(0, len(self.receivedRequests))
@@ -148,9 +158,7 @@ class TestSimulatedTransportConnection(TestCase):
         self.assertIs(self.sampleRequest2.__class__, self.receivedRequests[1].__class__)
         self.assertEqual(self.sampleRequest2.rawString, self.receivedRequests[1].rawString)
 
-    # TODO
-    @unittest.skip("TODO\n")
-    def test_08_sendResponsesVerifyReceipt(self):
+    def run_08_sendResponsesVerifyReceipt(self):
         self.assertTrue(self.sampleResponse.isResponse)
         self.assertTrue(self.sampleResponse2.isResponse)
         self.assertEqual(2, len(self.receivedRequests))
