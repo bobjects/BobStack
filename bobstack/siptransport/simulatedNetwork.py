@@ -11,7 +11,7 @@ class SimulatedNetwork(Singleton):
         return next((t for t in self.boundTransports if t.bindAddress == boundAddressString and t.bindPort == boundPortInteger), None)
 
     def bindTransport(self, aSimulatedSIPTransport):
-        if aSimulatedSIPTransport not in self.boundTransports:
+        if self.boundTransportWithAddressAndPort(aSimulatedSIPTransport.bindAddress, aSimulatedSIPTransport.bindPort) is None:
             self.boundTransports.append(aSimulatedSIPTransport)
             return True
         else:

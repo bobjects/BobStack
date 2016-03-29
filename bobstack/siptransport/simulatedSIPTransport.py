@@ -10,8 +10,11 @@ class SimulatedSIPTransport(SIPTransport):
     def connectToAddressAndPort(self, addressString, portInteger):
         connectedTransport = SimulatedNetwork.instance.boundTransportWithAddressAndPort(addressString, portInteger)
         if connectedTransport:
-            self.basicConnectToAddressAndPort(addressString, portInteger)
-            connectedTransport.basicConnectToAddressAndPort(self.bindAddress, self.bindPort)
+            if connectedTransport is not self:
+                self.basicConnectToAddressAndPort(addressString, portInteger)
+                connectedTransport.basicConnectToAddressAndPort(self.bindAddress, self.bindPort)
+            else:
+                self.triggerCouldNotMakeConnection(addressString, portInteger)
         else:
             self.triggerCouldNotMakeConnection(addressString, portInteger)
 

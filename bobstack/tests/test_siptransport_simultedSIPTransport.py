@@ -35,9 +35,9 @@ class TestSimulatedTransportConnection(TestCase):
         self.run_01_bind()
         self.run_02_makeOutboundConnection()
         self.run_03_makeInboundConnection()
-        # self.run_04_attemptSecondBind()
-        # self.run_05_attemptConnectToBogusAddressAndPort()
-        # self.run_06_attemptConnectToOwnAddressAndPort()
+        self.run_04_attemptSecondBind()
+        self.run_05_attemptConnectToBogusAddressAndPort()
+        self.run_06_attemptConnectToOwnAddressAndPort()
         # self.run_07_sendRequestsVerifyReceipt()
         # self.run_08_sendResponsesVerifyReceipt()
 
