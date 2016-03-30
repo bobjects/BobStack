@@ -14,17 +14,20 @@ class ConnectedSIPMessageFactory(EventSourceMixin):
         self.subscribeToSIPMessageFactoryEvents()
 
     def subscribeToSIPMessageFactoryEvents(self):
-        self.sipMessageFactory.whenEventDo("validSIPRequest", self.receivedValidSIPRequest)
-        self.sipMessageFactory.whenEventDo("validSIPResponse", self.receivedValidSIPResponse)
+        self.sipMessageFactory.whenEventDo("validSIPRequest", self.receivedValidSIPRequestEventHandler)
+        self.sipMessageFactory.whenEventDo("validSIPResponse", self.receivedValidSIPResponseEventHandler)
 
-    def receivedValidSIPRequest(self, aSIPRequest):
+    def nextForString(self, aString):
+        self.sipMessageFactory.nextForString(aString)
+
+    def receivedValidSIPRequestEventHandler(self, aSIPRequest):
         self.triggerReceivedValidConnectedRequest(ConnectedSIPMessage(self.connection, aSIPRequest))
 
     def triggerReceivedValidConnectedRequest(self, aConectedSIPMessage):
         print "receivedValidConnectedRequest event - " + str(aConectedSIPMessage)
         self.triggerEvent("receivedValidConnectedRequest", aConectedSIPMessage)
 
-    def receivedValidSIPResponse(self, aSIPResponse):
+    def receivedValidSIPResponseEventHandler(self, aSIPResponse):
         self.triggerReceivedValidConnectedResponse(ConnectedSIPMessage(self.connection, aSIPResponse))
 
     def triggerReceivedValidConnectedResponse(self, aConectedSIPMessage):

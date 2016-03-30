@@ -25,28 +25,30 @@ class SIPTransport(EventSourceMixin):
         raise NotImplementedError('call to abstract method ' + inspect.stack()[0][3])
 
     def subscribeToTransportConnectionEvents(self, aSIPTransportConnection):
-        aSIPTransportConnection.whenEventDo('receivedValidConnectedRequest', self.receivedValidConnectedRequest)
-        aSIPTransportConnection.whenEventDo('receivedValidConnectedResponse', self.receivedValidConnectedResponse)
-        aSIPTransportConnection.whenEventDo('madeConnection', self.madeConnection)
-        aSIPTransportConnection.whenEventDo('lostConnection', self.lostConnection)
+        aSIPTransportConnection.whenEventDo('receivedValidConnectedRequest', self.receivedValidConnectedRequestEventHandler)
+        aSIPTransportConnection.whenEventDo('receivedValidConnectedResponse', self.receivedValidConnectedResponseEventHandler)
+        aSIPTransportConnection.whenEventDo('madeConnection', self.madeConnectionEventHandler)
+        aSIPTransportConnection.whenEventDo('lostConnection', self.lostConnectionEventHandler)
 
     def unSubscribeFromTransportConnectionEvents(self, aSIPTransportConnection):
-        aSIPTransportConnection.whenEventDoNot('receivedValidConnectedRequest', self.receivedValidConnectedRequest)
-        aSIPTransportConnection.whenEventDoNot('receivedValidConnectedResponse', self.receivedValidConnectedResponse)
-        aSIPTransportConnection.whenEventDoNot('madeConnection', self.madeConnection)
-        aSIPTransportConnection.whenEventDoNot('lostConnection', self.lostConnection)
+        aSIPTransportConnection.whenEventDoNot('receivedValidConnectedRequest', self.receivedValidConnectedRequestEventHandler)
+        aSIPTransportConnection.whenEventDoNot('receivedValidConnectedResponse', self.receivedValidConnectedResponseEventHandler)
+        aSIPTransportConnection.whenEventDoNot('madeConnection', self.madeConnectionEventHandler)
+        aSIPTransportConnection.whenEventDoNot('lostConnection', self.lostConnectionEventHandler)
 
-    def madeConnection(self, aSIPTransportConnection):
+    def madeConnectionEventHandler(self, aSIPTransportConnection):
         pass
 
-    def lostConnection(self, aSIPTransportConnction):
+    def lostConnectionEventHandler(self, aSIPTransportConnction):
         pass
 
-    def receivedValidConnectedRequest(self, aConnectedSIPMessage):
-        pass
+    def receivedValidConnectedRequestEventHandler(self, aConnectedSIPMessage):
+        print "(transport) receivedValidConnectedRequest event"
+        self.triggerEvent("receivedValidConnectedRequest", aConnectedSIPMessage)
 
-    def receivedValidConnectedResponse(self, aConnectedSIPMessage):
-        pass
+    def receivedValidConnectedResponseEventHandler(self, aConnectedSIPMessage):
+        print "(transport) receivedValidConnectedResponse event"
+        self.triggerEvent("receivedValidConnectedResponse", aConnectedSIPMessage)
 
     def triggerBound(self):
         print "bound event"

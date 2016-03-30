@@ -20,7 +20,7 @@ class SimulatedSIPTransport(SIPTransport):
 
     def basicConnectToAddressAndPort(self, addressString, portInteger):
         # TODO: the local port is not necessarily our bind port, it may be a random upper port.
-        connection = SimulatedSIPTransportConnection(addressString, self.bindPort, portInteger)
+        connection = SimulatedSIPTransportConnection(self.bindAddress, addressString, self.bindPort, portInteger)
         self.connections.append(connection)
         self.subscribeToTransportConnectionEvents(connection)
         self.triggerMadeConnection(connection)

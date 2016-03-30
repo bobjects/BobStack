@@ -19,26 +19,26 @@ class SIPEntity(object):
             self.unSubscribeFromTransportEvents(t)
 
     def subscribeToTransportEvents(self, aSIPTransport):
-        aSIPTransport.whenEventDo('receivedValidConnectedRequest', self.receivedValidConnectedRequest)
-        aSIPTransport.whenEventDo('receivedValidConnectedResponse', self.receivedValidConnectedResponse)
-        aSIPTransport.whenEventDo('madeConnection', self.madeConnection)
-        aSIPTransport.whenEventDo('lostConnection', self.lostConnection)
+        aSIPTransport.whenEventDo('receivedValidConnectedRequest', self.receivedValidConnectedRequestEventHandler)
+        aSIPTransport.whenEventDo('receivedValidConnectedResponse', self.receivedValidConnectedResponseEventHandler)
+        aSIPTransport.whenEventDo('madeConnection', self.madeConnectionEventHandler)
+        aSIPTransport.whenEventDo('lostConnection', self.lostConnectionEventHandler)
 
     def unSubscribeFromTransportEvents(self, aSIPTransport):
-        aSIPTransport.whenEventDoNot('receivedValidConnectedRequest', self.receivedValidConnectedRequest)
-        aSIPTransport.whenEventDoNot('receivedValidConnectedResponse', self.receivedValidConnectedResponse)
-        aSIPTransport.whenEventDoNot('madeConnection', self.madeConnection)
-        aSIPTransport.whenEventDoNot('lostConnection', self.lostConnection)
+        aSIPTransport.whenEventDoNot('receivedValidConnectedRequest', self.receivedValidConnectedRequestEventHandler)
+        aSIPTransport.whenEventDoNot('receivedValidConnectedResponse', self.receivedValidConnectedResponseEventHandler)
+        aSIPTransport.whenEventDoNot('madeConnection', self.madeConnectionEventHandler)
+        aSIPTransport.whenEventDoNot('lostConnection', self.lostConnectionEventHandler)
 
-    def madeConnection(self, aSIPTransportConnection):
+    def madeConnectionEventHandler(self, aSIPTransportConnection):
         pass
 
-    def lostConnection(self, aSIPTransportConnction):
+    def lostConnectionEventHandler(self, aSIPTransportConnction):
         pass
 
-    def receivedValidConnectedRequest(self, aConnectedSIPMessage):
+    def receivedValidConnectedRequestEventHandler(self, aConnectedSIPMessage):
         pass
 
-    def receivedValidConnectedResponse(self, aConnectedSIPMessage):
+    def receivedValidConnectedResponseEventHandler(self, aConnectedSIPMessage):
         pass
 

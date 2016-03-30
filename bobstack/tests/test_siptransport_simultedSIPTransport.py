@@ -38,8 +38,8 @@ class TestSimulatedTransportConnection(TestCase):
         self.run_04_attemptSecondBind()
         self.run_05_attemptConnectToBogusAddressAndPort()
         self.run_06_attemptConnectToOwnAddressAndPort()
-        # self.run_07_sendRequestsVerifyReceipt()
-        # self.run_08_sendResponsesVerifyReceipt()
+        self.run_07_sendRequestsVerifyReceipt()
+        self.run_08_sendResponsesVerifyReceipt()
 
     def run_00_initialSanityCheck(self):
         self.assertIsInstance(self.transport1, SimulatedSIPTransport)
@@ -91,14 +91,14 @@ class TestSimulatedTransportConnection(TestCase):
         self.assertEqual(1, len(self.transport1.connections))
         self.assertEqual(1, len(self.connectedConnections))
         self.assertIs(self.connectedConnections[0], self.transport1.connections[0])
-        self.assertEqual(self.bindAddress2, self.transport1.connections[0].address)
-        self.assertIsInstance(self.transport1.connections[0].localPort, int)
+        self.assertEqual(self.bindAddress2, self.transport1.connections[0].remoteAddress)
+        self.assertIsInstance(self.transport1.connections[0].bindPort, int)
         self.assertEqual(self.bindPort2, self.transport1.connections[0].remotePort)
         self.assertEqual(1, len(self.transport2.connections))
         self.assertEqual(0, len(self.transport3.connections))
-        self.assertEqual(self.bindAddress1, self.transport2.connections[0].address)
+        self.assertEqual(self.bindAddress1, self.transport2.connections[0].remoteAddress)
         self.assertIsInstance(self.transport2.connections[0].remotePort, int)
-        self.assertEqual(self.bindPort2, self.transport2.connections[0].localPort)
+        self.assertEqual(self.bindPort2, self.transport2.connections[0].bindPort)
 
     def run_03_makeInboundConnection(self):
         # Connect transport3 to transport1
@@ -108,10 +108,10 @@ class TestSimulatedTransportConnection(TestCase):
         self.assertEqual(1, len(self.transport3.connections))
         self.assertEqual(2, len(self.connectedConnections))
         self.assertIs(self.connectedConnections[1], self.transport1.connections[1])
-        self.assertEqual(self.bindAddress3, self.transport1.connections[1].address)
-        self.assertIsInstance(self.transport3.connections[0].localPort, int)
-        self.assertEqual(self.bindPort1, self.transport1.connections[0].localPort)
-        self.assertEqual(self.bindAddress1, self.transport3.connections[0].address)
+        self.assertEqual(self.bindAddress3, self.transport1.connections[1].remoteAddress)
+        self.assertIsInstance(self.transport3.connections[0].bindPort, int)
+        self.assertEqual(self.bindPort1, self.transport1.connections[0].bindPort)
+        self.assertEqual(self.bindAddress1, self.transport3.connections[0].remoteAddress)
         self.assertIsInstance(self.transport1.connections[0].remotePort, int)
         self.assertEqual(self.bindPort1, self.transport3.connections[0].remotePort)
 
@@ -150,13 +150,13 @@ class TestSimulatedTransportConnection(TestCase):
         self.transport2.connections[0].sendMessage(self.sampleRequest)
         self.assertEqual(1, len(self.receivedRequests))
         self.assertEqual(0, len(self.receivedResponses))
-        self.assertIs(self.sampleRequest.__class__, self.receivedRequests[0].__class__)
-        self.assertEqual(self.sampleRequest.rawString, self.receivedRequests[0].rawString)
+        self.assertIs(self.sampleRequest.__class__, self.receivedRequests[0].sipMessage.__class__)
+        self.assertEqual(self.sampleRequest.rawString, self.receivedRequests[0].sipMessage.rawString)
         self.transport3.connections[0].sendMessage(self.sampleRequest2)
         self.assertEqual(2, len(self.receivedRequests))
         self.assertEqual(0, len(self.receivedResponses))
-        self.assertIs(self.sampleRequest2.__class__, self.receivedRequests[1].__class__)
-        self.assertEqual(self.sampleRequest2.rawString, self.receivedRequests[1].rawString)
+        self.assertIs(self.sampleRequest2.__class__, self.receivedRequests[1].sipMessage.__class__)
+        self.assertEqual(self.sampleRequest2.rawString, self.receivedRequests[1].sipMessage.rawString)
 
     def run_08_sendResponsesVerifyReceipt(self):
         self.assertTrue(self.sampleResponse.isResponse)
@@ -166,13 +166,13 @@ class TestSimulatedTransportConnection(TestCase):
         self.transport2.connections[0].sendMessage(self.sampleResponse)
         self.assertEqual(2, len(self.receivedRequests))
         self.assertEqual(1, len(self.receivedResponses))
-        self.assertIs(self.sampleResponse.__class__, self.receivedResponses[0].__class__)
-        self.assertEqual(self.sampleResponse.rawString, self.receivedResponses[0].rawString)
+        self.assertIs(self.sampleResponse.__class__, self.receivedResponses[0].sipMessage.__class__)
+        self.assertEqual(self.sampleResponse.rawString, self.receivedResponses[0].sipMessage.rawString)
         self.transport3.connections[0].sendMessage(self.sampleResponse2)
         self.assertEqual(2, len(self.receivedRequests))
         self.assertEqual(2, len(self.receivedResponses))
-        self.assertIs(self.sampleResponse2.__class__, self.receivedResponses[1].__class__)
-        self.assertEqual(self.sampleResponse2.rawString, self.receivedResponses[1].rawString)
+        self.assertIs(self.sampleResponse2.__class__, self.receivedResponses[1].sipMessage.__class__)
+        self.assertEqual(self.sampleResponse2.rawString, self.receivedResponses[1].sipMessage.rawString)
 
     def boundEventHandler(self):
         self.hasBound = True
@@ -192,9 +192,11 @@ class TestSimulatedTransportConnection(TestCase):
             self.connectedConnections.remove(aSimulatedSIPTransportConnection)
 
     def receivedValidConnectedRequestEventHandler(self, aConnectedSIPMessage):
+        print "receivedValidConnectedRequestEventHandler"
         self.receivedRequests.append(aConnectedSIPMessage)
 
     def receivedValidConnectedResponseEventHandler(self, aConnectedSIPMessage):
+        print "receivedValidConnectedResponseEventHandler"
         self.receivedResponses.append(aConnectedSIPMessage)
 
     @property
