@@ -10,8 +10,6 @@ from bobstack.siptransport import SimulatedNetwork
 
 class TestSimulatedTransportConnection(TestCase):
     def setUp(self):
-    # def __init__(self, *args, **kwargs):
-        # super(TestSimulatedTransportConnection, self).__init__(*args, **kwargs)
         SimulatedNetwork.clear()
         self.hasBound = False
         self.bindHasFailed = False
@@ -29,7 +27,6 @@ class TestSimulatedTransportConnection(TestCase):
         self.transport1.whenEventDo("receivedValidConnectedResponse", self.receivedValidConnectedResponseEventHandler)
         self.transport2 = SimulatedSIPTransport(self.bindAddress2, self.bindPort2)
         self.transport3 = SimulatedSIPTransport(self.bindAddress3, self.bindPort3)
-
 
     def test(self):
         self.run_00_initialSanityCheck()

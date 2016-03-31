@@ -1,4 +1,3 @@
-from connectedSIPMessage import ConnectedSIPMessage
 import sys
 sys.path.append("../..")
 from bobstack.sipmessaging import SIPMessageFactory

@@ -1,5 +1,6 @@
 from sipEntity import SIPEntity
 
+
 class SIPStatelessProxy(SIPEntity):
     def __init__(self):
         super(SIPStatelessProxy, self).__init__()

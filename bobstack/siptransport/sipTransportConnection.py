@@ -2,6 +2,7 @@ import inspect
 from eventSourceMixin import EventSourceMixin
 from connectedSIPMessageFactory import ConnectedSIPMessageFactory
 
+
 class SIPTransportConnection(EventSourceMixin):
     def __init__(self, bindAddressString, remoteAddressString, bindPortInteger, remotePortInteger):
         EventSourceMixin.__init__(self)

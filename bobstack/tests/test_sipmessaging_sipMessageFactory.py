@@ -120,7 +120,6 @@ class TestSIPMessageFactoryForSanitizedLogFile(TestCase):
         self.validKnownSIPMessageCount = 0
         self.validUnknownSIPMessageCount = 0
 
-
     def handleMalformedSIPMessage(self, aSIPMessage):
         self.malformedSIPMessageCount += 1
         self.appendStringToFileNamed(aSIPMessage.rawString, 'malformedSIPMessages')

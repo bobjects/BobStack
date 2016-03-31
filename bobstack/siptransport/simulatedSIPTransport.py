@@ -2,6 +2,7 @@ from sipTransport import SIPTransport
 from simulatedSIPTransportConnection import SimulatedSIPTransportConnection
 from simulatedNetwork import SimulatedNetwork
 
+
 class SimulatedSIPTransport(SIPTransport):
     @property
     def transportParameterName(self):
