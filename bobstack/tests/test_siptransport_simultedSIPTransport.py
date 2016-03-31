@@ -9,9 +9,10 @@ from bobstack.siptransport import SimulatedNetwork
 
 
 class TestSimulatedTransportConnection(TestCase):
-    # def setUp(self):
-    def __init__(self, *args, **kwargs):
-        super(TestSimulatedTransportConnection, self).__init__(*args, **kwargs)
+    def setUp(self):
+    # def __init__(self, *args, **kwargs):
+        # super(TestSimulatedTransportConnection, self).__init__(*args, **kwargs)
+        SimulatedNetwork.clear()
         self.hasBound = False
         self.bindHasFailed = False
         self.connectedConnections = []

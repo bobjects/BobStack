@@ -1,6 +1,7 @@
 from threading import RLock
 from classproperty import classproperty
 
+
 class Singleton(object):
     _instance = None
     _lock = RLock()
@@ -14,3 +15,8 @@ class Singleton(object):
                 if cls._instance is None:
                     cls._instance = cls()
         return cls._instance
+
+    @classmethod
+    def clear(cls):
+        with cls._lock:
+            cls._instance = None

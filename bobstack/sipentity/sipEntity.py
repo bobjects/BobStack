@@ -15,22 +15,39 @@ class SIPEntity(object):
         oldTransports = [t for t in self._transports if t not in sipTransports]
         for t in newTransports:
             self.subscribeToTransportEvents(t)
+            t.bind()
         for t in oldTransports:
             self.unSubscribeFromTransportEvents(t)
+            # TODO - will need to un-bind, and also probably break all connections.
 
     def subscribeToTransportEvents(self, aSIPTransport):
         aSIPTransport.whenEventDo('receivedValidConnectedRequest', self.receivedValidConnectedRequestEventHandler)
         aSIPTransport.whenEventDo('receivedValidConnectedResponse', self.receivedValidConnectedResponseEventHandler)
+        aSIPTransport.whenEventDo('bound', self.boundEventHandler)
+        aSIPTransport.whenEventDo('bindFailed', self.bindFailedEventHandler)
         aSIPTransport.whenEventDo('madeConnection', self.madeConnectionEventHandler)
+        aSIPTransport.whenEventDo('couldNotMakeConnection', self.couldNotMakeConnectionEventHandler)
         aSIPTransport.whenEventDo('lostConnection', self.lostConnectionEventHandler)
 
     def unSubscribeFromTransportEvents(self, aSIPTransport):
         aSIPTransport.whenEventDoNot('receivedValidConnectedRequest', self.receivedValidConnectedRequestEventHandler)
         aSIPTransport.whenEventDoNot('receivedValidConnectedResponse', self.receivedValidConnectedResponseEventHandler)
+        aSIPTransport.whenEventDoNot('bound', self.boundEventHandler)
+        aSIPTransport.whenEventDoNot('bindFailed', self.bindFailedEventHandler)
         aSIPTransport.whenEventDoNot('madeConnection', self.madeConnectionEventHandler)
+        aSIPTransport.whenEventDoNot('couldNotMakeConnection', self.couldNotMakeConnectionEventHandler)
         aSIPTransport.whenEventDoNot('lostConnection', self.lostConnectionEventHandler)
 
+    def boundEventHandler(self):
+        pass
+
+    def bindFailedEventHandler(self):
+        pass
+
     def madeConnectionEventHandler(self, aSIPTransportConnection):
+        pass
+
+    def couldNotMakeConnectionEventHandler(self, bindAddressAndPort):
         pass
 
     def lostConnectionEventHandler(self, aSIPTransportConnction):
