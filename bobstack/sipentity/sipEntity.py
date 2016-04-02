@@ -16,9 +16,11 @@ class SIPEntity(object):
         for t in newTransports:
             self.subscribeToTransportEvents(t)
             t.bind()
+            self._transports.append(t)
         for t in oldTransports:
             self.unSubscribeFromTransportEvents(t)
             # TODO - will need to un-bind, and also probably break all connections.
+            self._transports.remove(t)
 
     def subscribeToTransportEvents(self, aSIPTransport):
         aSIPTransport.whenEventDo('receivedValidConnectedRequest', self.receivedValidConnectedRequestEventHandler)

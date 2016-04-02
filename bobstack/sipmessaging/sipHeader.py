@@ -113,6 +113,48 @@ class SIPHeader(object):
             self._viaHeaderFields = [headerField for headerField in self.headerFields if headerField.isVia]
         return self._viaHeaderFields
 
+    # TODO:  need to test
+    def addHeaderFieldAfterHeaderFieldsOfSameClass(self, aHeaderField):
+        headerFields = self.headerFields
+        classIndex = -1
+        toFromIndex = -1
+        for i, header in enumerate(headerFields):
+            if header.__class__ == aHeaderField.__class__:
+                classIndex = i
+            if header.isTo:
+                toFromIndex = i
+            if header.isFrom:
+                toFromIndex = i
+        insertionIndex = classIndex
+        if insertionIndex == -1:
+            insertionIndex = toFromIndex
+        headerFields.insert(insertionIndex + 1, aHeaderField)
+        self.headerFields = headerFields
+
+    # TODO:  need to test
+    def addHeaderFieldBeforeHeaderFieldsOfSameClass(self, aHeaderField):
+        headerFields = self.headerFields
+        classIndex = -1
+        toFromIndex = -1
+        for i, header in enumerate(headerFields):
+            if header.__class__ == aHeaderField.__class__:
+                classIndex = i
+            if header.isTo:
+                toFromIndex = i
+            if header.isFrom:
+                toFromIndex = i
+        insertionIndex = classIndex
+        if insertionIndex == -1:
+            insertionIndex = toFromIndex
+        headerFields.insert(max(0, insertionIndex), aHeaderField)
+        self.headerFields = headerFields
+
+    @property
+    def knownHeaderFields(self):
+        if not self._knownHeaderFields:
+            self._knownHeaderFields = [headerField for headerField in self.headerFields if headerField.isKnown]
+        return self._knownHeaderFields
+
     @property
     def knownHeaderFields(self):
         if not self._knownHeaderFields:
