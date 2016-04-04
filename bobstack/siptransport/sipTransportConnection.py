@@ -28,3 +28,4 @@ class SIPTransportConnection(EventSourceMixin):
         print "(connection) receivedValidConnectedResponse event"
         self.triggerEvent("receivedValidConnectedResponse", aConnectedSIPMessage)
 
+    # TODO - need to get invalid messages as well, so that entities can deal with problems.

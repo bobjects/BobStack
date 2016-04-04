@@ -1,0 +1,16 @@
+        messageString = (
+            'OPTIONS sip:user@example.com SIP/2.0\r\n'
+            'To: sip:user@example.com\r\n'
+            'From: <sip:caller@example.com>;tag=323\r\n'
+            'Max-Forwards: 70\r\n'
+            'Call-ID:  transports.kijh4akdnaqjkwendsasfdj\r\n'
+            'Accept: application/sdp\r\n'
+            'CSeq: 60 OPTIONS\r\n'
+            'Via: SIP/2.0/UDP t1.example.com;branch=z9hG4bKkdjuw\r\n'
+            'Via: SIP/2.0/SCTP t2.example.com;branch=z9hG4bKklasjdhf\r\n'
+            'Via: SIP/2.0/TLS t3.example.com;branch=z9hG4bK2980unddj\r\n'
+            'Via: SIP/2.0/UNKNOWN t4.example.com;branch=z9hG4bKasd0f3en\r\n'
+            'Via: SIP/2.0/TCP t5.example.com;branch=z9hG4bK0a9idfnee\r\n'
+            'l: 0\r\n'
+            '\r\n'
+        )

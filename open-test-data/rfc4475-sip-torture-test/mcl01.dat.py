@@ -1,0 +1,15 @@
+        messageString = (
+            'OPTIONS sip:user@example.com SIP/2.0\r\n'
+            'Via: SIP/2.0/UDP host5.example.net;branch=z9hG4bK293423\r\n'
+            'To: sip:user@example.com\r\n'
+            'From: sip:other@example.net;tag=3923942\r\n'
+            'Call-ID: mcl01.fhn2323orihawfdoa3o4r52o3irsdf\r\n'
+            'CSeq: 15932 OPTIONS\r\n'
+            'Content-Length: 13\r\n'
+            'Max-Forwards: 60\r\n'
+            'Content-Length: 5\r\n'
+            'Content-Type: text/plain\r\n'
+            '\r\n'
+            'There's no way to know how many octets are supposed to be here.\r\n'
+            '\r\n'
+        )

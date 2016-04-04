@@ -1,0 +1,17 @@
+        messageString = (
+            'INVITE sip:UserB@example.com SIP/2.0\r\n'
+            'Via: SIP/2.0/UDP iftgw.example.com\r\n'
+            'From: <sip:+13035551111@ift.client.example.net;user=phone>\r\n'
+            'Record-Route: <sip:UserB@example.com;maddr=ss1.example.com>\r\n'
+            'To: sip:+16505552222@ss1.example.net;user=phone\r\n'
+            'Call-ID: inv2543.1717@ift.client.example.com\r\n'
+            'CSeq: 56 INVITE\r\n'
+            'Content-Type: application/sdp\r\n'
+            '\r\n'
+            'v=0\r\n'
+            'o=mhandley 29739 7272939 IN IP4 192.0.2.5\r\n'
+            's=-\r\n'
+            'c=IN IP4 192.0.2.5\r\n'
+            't=0 0\r\n'
+            'm=audio 49217 RTP/AVP 0\r\n'
+        )
