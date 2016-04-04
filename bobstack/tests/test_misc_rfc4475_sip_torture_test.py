@@ -52,13 +52,17 @@ class TestRFC4475SIPTortureTest(TestCase):
             'm=video 3227 RTP/AVP 31\r\n'
             'a=rtpmap:31 LPC\r\n'
         )
-        self.assertIsNotNone(SIPMessageFactory().nextForString(messageString))
+        message = SIPMessageFactory().nextForString(messageString)
+        self.assertIsNotNone(message)
+        self.assertIsInstance(message.isValid, bool)
+        # TODO
 
     def testWideRangeOfValidCharacters(self):
         # https://tools.ietf.org/html/rfc4475#section-3.1.1.2
         # intmeth
         # Note:  this message string has weird characters.  Need to deal with that.
         pass
+        # TODO
 
     def testValidUseOfThePercentEscapingMechanism(self):
         # https://tools.ietf.org/html/rfc4475#section-3.1.1.3
@@ -85,7 +89,10 @@ class TestRFC4475SIPTortureTest(TestCase):
             'm=video 3227 RTP/AVP 31\r\n'
             'a=rtpmap:31 LPC\r\n'
         )
-        self.assertIsNotNone(SIPMessageFactory().nextForString(messageString))
+        message = SIPMessageFactory().nextForString(messageString)
+        self.assertIsNotNone(message)
+        self.assertIsInstance(message.isValid, bool)
+        # TODO
 
 
     def testEscapedNullsInURIs(self):
@@ -104,7 +111,10 @@ class TestRFC4475SIPTortureTest(TestCase):
             'L:0\r\n'
             '\r\n'
         )
-        self.assertIsNotNone(SIPMessageFactory().nextForString(messageString))
+        message = SIPMessageFactory().nextForString(messageString)
+        self.assertIsNotNone(message)
+        self.assertIsInstance(message.isValid, bool)
+        # TODO
 
 
     def testUseOfPercentWhenItIsNotAnEscape(self):
@@ -124,7 +134,10 @@ class TestRFC4475SIPTortureTest(TestCase):
             'l: 0\r\n'
             '\r\n'
         )
-        self.assertIsNotNone(SIPMessageFactory().nextForString(messageString))
+        message = SIPMessageFactory().nextForString(messageString)
+        self.assertIsNotNone(message)
+        self.assertIsInstance(message.isValid, bool)
+        # TODO
 
 
     def testMessageWithNoLWSBetweenDisplayNameAndAngleBracket(self):
@@ -141,7 +154,10 @@ class TestRFC4475SIPTortureTest(TestCase):
             'l: 0\r\n'
             '\r\n'
         )
-        self.assertIsNotNone(SIPMessageFactory().nextForString(messageString))
+        message = SIPMessageFactory().nextForString(messageString)
+        self.assertIsNotNone(message)
+        self.assertIsInstance(message.isValid, bool)
+        # TODO
 
 
     def testLongValuesInHeaderFields(self):
@@ -202,7 +218,10 @@ class TestRFC4475SIPTortureTest(TestCase):
             'm=video 3227 RTP/AVP 31\r\n'
             'a=rtpmap:31 LPC\r\n'
         )
-        self.assertIsNotNone(SIPMessageFactory().nextForString(messageString))
+        message = SIPMessageFactory().nextForString(messageString)
+        self.assertIsNotNone(message)
+        self.assertIsInstance(message.isValid, bool)
+        # TODO
 
 
     def testExtraTrailingOctetsInAUDPDatagram(self):
@@ -240,7 +259,10 @@ class TestRFC4475SIPTortureTest(TestCase):
             'a=rtpmap:31 LPC\r\n'
             '\r\n'
         )
-        self.assertIsNotNone(SIPMessageFactory().nextForString(messageString))
+        message = SIPMessageFactory().nextForString(messageString)
+        self.assertIsNotNone(message)
+        self.assertIsInstance(message.isValid, bool)
+        # TODO
 
 
     def testSemicolonSeparatedParametersInURIUserPart(self):
@@ -260,7 +282,10 @@ class TestRFC4475SIPTortureTest(TestCase):
             'l: 0\r\n'
             '\r\n'
         )
-        self.assertIsNotNone(SIPMessageFactory().nextForString(messageString))
+        message = SIPMessageFactory().nextForString(messageString)
+        self.assertIsNotNone(message)
+        self.assertIsInstance(message.isValid, bool)
+        # TODO
 
 
     def testVariedAndUnknownTransportTypes(self):
@@ -282,7 +307,10 @@ class TestRFC4475SIPTortureTest(TestCase):
             'l: 0\r\n'
             '\r\n'
         )
-        self.assertIsNotNone(SIPMessageFactory().nextForString(messageString))
+        message = SIPMessageFactory().nextForString(messageString)
+        self.assertIsNotNone(message)
+        self.assertIsInstance(message.isValid, bool)
+        # TODO
 
 
     def testMultipartMIMEMessage(self):
@@ -290,6 +318,7 @@ class TestRFC4475SIPTortureTest(TestCase):
         # mpart01
         # Note:  this message string has weird characters.  Need to deal with that.
         pass
+        # TODO
 
 
     def testUnusualReasonPhrase(self):
@@ -297,6 +326,7 @@ class TestRFC4475SIPTortureTest(TestCase):
         # unreason
         # Note:  this message string has weird characters.  Need to deal with that.
         pass
+        # TODO
 
 
     def testEmptyReasonPhrase(self):
@@ -313,7 +343,10 @@ class TestRFC4475SIPTortureTest(TestCase):
             'Contact: <sip:user@host105.example.com>\r\n'
             '\r\n'
         )
-        self.assertIsNotNone(SIPMessageFactory().nextForString(messageString))
+        message = SIPMessageFactory().nextForString(messageString)
+        self.assertIsNotNone(message)
+        self.assertIsInstance(message.isValid, bool)
+        # TODO
 
 
     def testExtraneousHeaderFieldSeparators(self):
@@ -340,7 +373,10 @@ class TestRFC4475SIPTortureTest(TestCase):
             'm=video 3227 RTP/AVP 31\r\n'
             'a=rtpmap:31 LPC\r\n'
         )
-        self.assertIsNotNone(SIPMessageFactory().nextForString(messageString))
+        message = SIPMessageFactory().nextForString(messageString)
+        self.assertIsNotNone(message)
+        self.assertIsInstance(message.isValid, bool)
+        # TODO
 
 
     def testContentLengthLargerThanMessage(self):
@@ -367,7 +403,10 @@ class TestRFC4475SIPTortureTest(TestCase):
             'm=video 3227 RTP/AVP 31\r\n'
             'a=rtpmap:31 LPC\r\n'
         )
-        self.assertIsNotNone(SIPMessageFactory().nextForString(messageString))
+        message = SIPMessageFactory().nextForString(messageString)
+        self.assertIsNotNone(message)
+        self.assertIsInstance(message.isValid, bool)
+        # TODO
 
 
     def testNegativeContentLength(self):
@@ -394,7 +433,10 @@ class TestRFC4475SIPTortureTest(TestCase):
             'm=video 3227 RTP/AVP 31\r\n'
             'a=rtpmap:31 LPC\r\n'
         )
-        self.assertIsNotNone(SIPMessageFactory().nextForString(messageString))
+        message = SIPMessageFactory().nextForString(messageString)
+        self.assertIsNotNone(message)
+        self.assertIsInstance(message.isValid, bool)
+        # TODO
 
 
     def testRequestScalarFieldsWithOverlargeValues(self):
@@ -414,7 +456,10 @@ class TestRFC4475SIPTortureTest(TestCase):
             'Content-Length: 0\r\n'
             '\r\n'
         )
-        self.assertIsNotNone(SIPMessageFactory().nextForString(messageString))
+        message = SIPMessageFactory().nextForString(messageString)
+        self.assertIsNotNone(message)
+        self.assertIsInstance(message.isValid, bool)
+        # TODO
 
 
     def testResponseScalarFieldsWithOverlargeValues(self):
@@ -432,7 +477,10 @@ class TestRFC4475SIPTortureTest(TestCase):
             'Content-Length: 0\r\n'
             '\r\n'
         )
-        self.assertIsNotNone(SIPMessageFactory().nextForString(messageString))
+        message = SIPMessageFactory().nextForString(messageString)
+        self.assertIsNotNone(message)
+        self.assertIsInstance(message.isValid, bool)
+        # TODO
 
 
     def testUnterminatedQuotedStringInDisplayName(self):
@@ -459,7 +507,10 @@ class TestRFC4475SIPTortureTest(TestCase):
             'm=video 3227 RTP/AVP 31\r\n'
             'a=rtpmap:31 LPC\r\n'
         )
-        self.assertIsNotNone(SIPMessageFactory().nextForString(messageString))
+        message = SIPMessageFactory().nextForString(messageString)
+        self.assertIsNotNone(message)
+        self.assertIsInstance(message.isValid, bool)
+        # TODO
 
 
     def testAngleBracketEnclosingRequestURI(self):
@@ -486,7 +537,10 @@ class TestRFC4475SIPTortureTest(TestCase):
             'm=video 3227 RTP/AVP 31\r\n'
             'a=rtpmap:31 LPC\r\n'
         )
-        self.assertIsNotNone(SIPMessageFactory().nextForString(messageString))
+        message = SIPMessageFactory().nextForString(messageString)
+        self.assertIsNotNone(message)
+        self.assertIsInstance(message.isValid, bool)
+        # TODO
 
 
     def testMalformedSIPRequestURIEmbeddedLWS(self):
@@ -513,7 +567,10 @@ class TestRFC4475SIPTortureTest(TestCase):
             'm=video 3227 RTP/AVP 31\r\n'
             'a=rtpmap:31 LPC\r\n'
         )
-        self.assertIsNotNone(SIPMessageFactory().nextForString(messageString))
+        message = SIPMessageFactory().nextForString(messageString)
+        self.assertIsNotNone(message)
+        self.assertIsInstance(message.isValid, bool)
+        # TODO
 
 
     def testMultipleSPSeparatingRequestLineElements(self):
@@ -540,7 +597,10 @@ class TestRFC4475SIPTortureTest(TestCase):
             'm=video 3227 RTP/AVP 31\r\n'
             'a=rtpmap:31 LPC\r\n'
         )
-        self.assertIsNotNone(SIPMessageFactory().nextForString(messageString))
+        message = SIPMessageFactory().nextForString(messageString)
+        self.assertIsNotNone(message)
+        self.assertIsInstance(message.isValid, bool)
+        # TODO
 
 
     def testSPCharactersAtEndOfRequestLine(self):
@@ -558,7 +618,10 @@ class TestRFC4475SIPTortureTest(TestCase):
             'Content-Length: 0\r\n'
             '\r\n'
         )
-        self.assertIsNotNone(SIPMessageFactory().nextForString(messageString))
+        message = SIPMessageFactory().nextForString(messageString)
+        self.assertIsNotNone(message)
+        self.assertIsInstance(message.isValid, bool)
+        # TODO
 
 
     def testEscapedHeadersInSIPRequestURI(self):
@@ -585,7 +648,10 @@ class TestRFC4475SIPTortureTest(TestCase):
             'm=video 3227 RTP/AVP 31\r\n'
             'a=rtpmap:31 LPC\r\n'
         )
-        self.assertIsNotNone(SIPMessageFactory().nextForString(messageString))
+        message = SIPMessageFactory().nextForString(messageString)
+        self.assertIsNotNone(message)
+        self.assertIsInstance(message.isValid, bool)
+        # TODO
 
 
     def testInvalidTimezoneInDateHeaderField(self):
@@ -613,7 +679,10 @@ class TestRFC4475SIPTortureTest(TestCase):
             'm=video 3227 RTP/AVP 31\r\n'
             'a=rtpmap:31 LPC\r\n'
         )
-        self.assertIsNotNone(SIPMessageFactory().nextForString(messageString))
+        message = SIPMessageFactory().nextForString(messageString)
+        self.assertIsNotNone(message)
+        self.assertIsInstance(message.isValid, bool)
+        # TODO
 
 
     def testFailureToEncloseNameAddrURIInAngleBrackets(self):
@@ -631,7 +700,10 @@ class TestRFC4475SIPTortureTest(TestCase):
             'l: 0\r\n'
             '\r\n'
         )
-        self.assertIsNotNone(SIPMessageFactory().nextForString(messageString))
+        message = SIPMessageFactory().nextForString(messageString)
+        self.assertIsNotNone(message)
+        self.assertIsInstance(message.isValid, bool)
+        # TODO
 
 
     def testSpacesWithinAddrSpec(self):
@@ -649,7 +721,10 @@ class TestRFC4475SIPTortureTest(TestCase):
             'l: 0\r\n'
             '\r\n'
         )
-        self.assertIsNotNone(SIPMessageFactory().nextForString(messageString))
+        message = SIPMessageFactory().nextForString(messageString)
+        self.assertIsNotNone(message)
+        self.assertIsInstance(message.isValid, bool)
+        # TODO
 
 
     def testNonTokenCharactersInDisplayName(self):
@@ -666,7 +741,10 @@ class TestRFC4475SIPTortureTest(TestCase):
             'CSeq:    3923239 OPTIONS\r\n'
             'l: 0\r\n'
         )
-        self.assertIsNotNone(SIPMessageFactory().nextForString(messageString))
+        message = SIPMessageFactory().nextForString(messageString)
+        self.assertIsNotNone(message)
+        self.assertIsInstance(message.isValid, bool)
+        # TODO
 
 
     def testUnknownProtocolVersion(self):
@@ -683,7 +761,10 @@ class TestRFC4475SIPTortureTest(TestCase):
             'l: 0\r\n'
             '\r\n'
         )
-        self.assertIsNotNone(SIPMessageFactory().nextForString(messageString))
+        message = SIPMessageFactory().nextForString(messageString)
+        self.assertIsNotNone(message)
+        self.assertIsInstance(message.isValid, bool)
+        # TODO
 
 
     def testStartLineAndCSeqMethodMismatch(self):
@@ -700,7 +781,10 @@ class TestRFC4475SIPTortureTest(TestCase):
             'l: 0\r\n'
             '\r\n'
         )
-        self.assertIsNotNone(SIPMessageFactory().nextForString(messageString))
+        message = SIPMessageFactory().nextForString(messageString)
+        self.assertIsNotNone(message)
+        self.assertIsInstance(message.isValid, bool)
+        # TODO
 
 
     def testUnknownMethodWithCSeqMethodMismatch(self):
@@ -725,7 +809,10 @@ class TestRFC4475SIPTortureTest(TestCase):
             'm=video 3227 RTP/AVP 31\r\n'
             'a=rtpmap:31 LPC\r\n'
         )
-        self.assertIsNotNone(SIPMessageFactory().nextForString(messageString))
+        message = SIPMessageFactory().nextForString(messageString)
+        self.assertIsNotNone(message)
+        self.assertIsInstance(message.isValid, bool)
+        # TODO
 
 
     def testOverlargeResponseCode(self):
@@ -742,7 +829,10 @@ class TestRFC4475SIPTortureTest(TestCase):
             'Contact: <sip:user@host105.example.com>\r\n'
             '\r\n'
         )
-        self.assertIsNotNone(SIPMessageFactory().nextForString(messageString))
+        message = SIPMessageFactory().nextForString(messageString)
+        self.assertIsNotNone(message)
+        self.assertIsInstance(message.isValid, bool)
+        # TODO
 
 
     def testMissingTransactionIdentifier(self):
@@ -760,7 +850,10 @@ class TestRFC4475SIPTortureTest(TestCase):
             'l: 0\r\n'
             '\r\n'
         )
-        self.assertIsNotNone(SIPMessageFactory().nextForString(messageString))
+        message = SIPMessageFactory().nextForString(messageString)
+        self.assertIsNotNone(message)
+        self.assertIsInstance(message.isValid, bool)
+        # TODO
 
 
     def testMissingRequiredHeaderFields(self):
@@ -782,7 +875,10 @@ class TestRFC4475SIPTortureTest(TestCase):
             'm=video 3227 RTP/AVP 31\r\n'
             'a=rtpmap:31 LPC\r\n'
         )
-        self.assertIsNotNone(SIPMessageFactory().nextForString(messageString))
+        message = SIPMessageFactory().nextForString(messageString)
+        self.assertIsNotNone(message)
+        self.assertIsInstance(message.isValid, bool)
+        # TODO
 
 
     def testRequestURIWithUnknownScheme(self):
@@ -799,7 +895,10 @@ class TestRFC4475SIPTortureTest(TestCase):
             'Content-Length: 0\r\n'
             '\r\n'
         )
-        self.assertIsNotNone(SIPMessageFactory().nextForString(messageString))
+        message = SIPMessageFactory().nextForString(messageString)
+        self.assertIsNotNone(message)
+        self.assertIsInstance(message.isValid, bool)
+        # TODO
 
 
     def testRequestURIWithKnownButAtypicalScheme(self):
@@ -816,7 +915,10 @@ class TestRFC4475SIPTortureTest(TestCase):
             'Content-Length: 0\r\n'
             '\r\n'
         )
-        self.assertIsNotNone(SIPMessageFactory().nextForString(messageString))
+        message = SIPMessageFactory().nextForString(messageString)
+        self.assertIsNotNone(message)
+        self.assertIsInstance(message.isValid, bool)
+        # TODO
 
 
     def testUnknownURISchemesInHeaderFields(self):
@@ -834,7 +936,10 @@ class TestRFC4475SIPTortureTest(TestCase):
             'l: 0\r\n'
             '\r\n'
         )
-        self.assertIsNotNone(SIPMessageFactory().nextForString(messageString))
+        message = SIPMessageFactory().nextForString(messageString)
+        self.assertIsNotNone(message)
+        self.assertIsInstance(message.isValid, bool)
+        # TODO
 
 
     def testProxyRequireAndRequire(self):
@@ -853,7 +958,10 @@ class TestRFC4475SIPTortureTest(TestCase):
             'Content-Length: 0\r\n'
             '\r\n'
         )
-        self.assertIsNotNone(SIPMessageFactory().nextForString(messageString))
+        message = SIPMessageFactory().nextForString(messageString)
+        self.assertIsNotNone(message)
+        self.assertIsInstance(message.isValid, bool)
+        # TODO
 
 
     def testUnknownContentType(self):
@@ -875,7 +983,10 @@ class TestRFC4475SIPTortureTest(TestCase):
             ' <pcmu port="443"/>\r\n'
             '</audio>\r\n'
         )
-        self.assertIsNotNone(SIPMessageFactory().nextForString(messageString))
+        message = SIPMessageFactory().nextForString(messageString)
+        self.assertIsNotNone(message)
+        self.assertIsInstance(message.isValid, bool)
+        # TODO
 
 
     def testUnknownAuthorizationScheme(self):
@@ -893,7 +1004,10 @@ class TestRFC4475SIPTortureTest(TestCase):
             'Content-Length:0\r\n'
             '\r\n'
         )
-        self.assertIsNotNone(SIPMessageFactory().nextForString(messageString))
+        message = SIPMessageFactory().nextForString(messageString)
+        self.assertIsNotNone(message)
+        self.assertIsInstance(message.isValid, bool)
+        # TODO
 
 
     def testMultipleValuesInSingleValueRequiredFields(self):
@@ -927,7 +1041,10 @@ class TestRFC4475SIPTortureTest(TestCase):
             'a=rtpmap:31 LPC\r\n'
             '\r\n'
         )
-        self.assertIsNotNone(SIPMessageFactory().nextForString(messageString))
+        message = SIPMessageFactory().nextForString(messageString)
+        self.assertIsNotNone(message)
+        self.assertIsInstance(message.isValid, bool)
+        # TODO
 
 
     def testMultipleContentLengthValues(self):
@@ -948,7 +1065,10 @@ class TestRFC4475SIPTortureTest(TestCase):
             "There's no way to know how many octets are supposed to be here.\r\n"
             '\r\n'
         )
-        self.assertIsNotNone(SIPMessageFactory().nextForString(messageString))
+        message = SIPMessageFactory().nextForString(messageString)
+        self.assertIsNotNone(message)
+        self.assertIsInstance(message.isValid, bool)
+        # TODO
 
 
     def test200OKResponseWithBroadcastViaHeaderFieldValue(self):
@@ -975,7 +1095,10 @@ class TestRFC4475SIPTortureTest(TestCase):
             'm=video 3227 RTP/AVP 31\r\n'
             'a=rtpmap:31 LPC\r\n'
         )
-        self.assertIsNotNone(SIPMessageFactory().nextForString(messageString))
+        message = SIPMessageFactory().nextForString(messageString)
+        self.assertIsNotNone(message)
+        self.assertIsInstance(message.isValid, bool)
+        # TODO
 
 
     def testMaxForwardsOfZero(self):
@@ -992,7 +1115,10 @@ class TestRFC4475SIPTortureTest(TestCase):
             'Content-Length: 0\r\n'
             '\r\n'
         )
-        self.assertIsNotNone(SIPMessageFactory().nextForString(messageString))
+        message = SIPMessageFactory().nextForString(messageString)
+        self.assertIsNotNone(message)
+        self.assertIsInstance(message.isValid, bool)
+        # TODO
 
 
     def testREGISTERwithAContactHeaderParameter(self):
@@ -1010,7 +1136,10 @@ class TestRFC4475SIPTortureTest(TestCase):
             'l: 0\r\n'
             '\r\n'
         )
-        self.assertIsNotNone(SIPMessageFactory().nextForString(messageString))
+        message = SIPMessageFactory().nextForString(messageString)
+        self.assertIsNotNone(message)
+        self.assertIsInstance(message.isValid, bool)
+        # TODO
 
 
     def testREGISTERWithAURLParameter(self):
@@ -1028,7 +1157,10 @@ class TestRFC4475SIPTortureTest(TestCase):
             'l: 0\r\n'
             '\r\n'
         )
-        self.assertIsNotNone(SIPMessageFactory().nextForString(messageString))
+        message = SIPMessageFactory().nextForString(messageString)
+        self.assertIsNotNone(message)
+        self.assertIsInstance(message.isValid, bool)
+        # TODO
 
 
     def testREGISTERWithAURLEscapedHeader(self):
@@ -1046,7 +1178,10 @@ class TestRFC4475SIPTortureTest(TestCase):
             'L:0\r\n'
             '\r\n'
         )
-        self.assertIsNotNone(SIPMessageFactory().nextForString(messageString))
+        message = SIPMessageFactory().nextForString(messageString)
+        self.assertIsNotNone(message)
+        self.assertIsInstance(message.isValid, bool)
+        # TODO
 
 
     def testUnacceptableAcceptOffering(self):
@@ -1074,7 +1209,10 @@ class TestRFC4475SIPTortureTest(TestCase):
             'm=video 3227 RTP/AVP 31\r\n'
             'a=rtpmap:31 LPC\r\n'
         )
-        self.assertIsNotNone(SIPMessageFactory().nextForString(messageString))
+        message = SIPMessageFactory().nextForString(messageString)
+        self.assertIsNotNone(message)
+        self.assertIsInstance(message.isValid, bool)
+        # TODO
 
 
     def testINVITEWithRFC2543Syntax(self):
@@ -1097,5 +1235,7 @@ class TestRFC4475SIPTortureTest(TestCase):
             't=0 0\r\n'
             'm=audio 49217 RTP/AVP 0\r\n'
         )
-        self.assertIsNotNone(SIPMessageFactory().nextForString(messageString))
-
+        message = SIPMessageFactory().nextForString(messageString)
+        self.assertIsNotNone(message)
+        self.assertIsInstance(message.isValid, bool)
+        # TODO

@@ -2,7 +2,7 @@ import glob
 import os
 import re
 
-directoryPaths = ['/Users/bob/bobstack/open-test-data/rfc4475-sip-torture-test', '~/bobstack/open-test-data/rfc5118-sip-torture-test']
+directoryPaths = ['/Users/bob/bobstack/open-test-data/rfc4475-sip-torture-test', '/Users/bob/bobstack/open-test-data/rfc5118-sip-torture-test']
 for directoryPath in directoryPaths:
     print directoryPath
     for datFilePathName in sorted(glob.iglob(directoryPath + '/*.dat')):
