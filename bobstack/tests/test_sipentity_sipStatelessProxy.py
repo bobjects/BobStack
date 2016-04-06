@@ -12,15 +12,32 @@ from bobstack.siptransport import SimulatedNetwork
 class TestStatelessProxy(TestCase):
     def setUp(self):
         SimulatedNetwork.clear()
+        self.aliceReceivedRequests = []
+        self.aliceReceivedResponses = []
+        self.atlantaReceivedRequests = []
+        self.atlantaReceivedResponses = []
+        self.biloxiReceivedRequests = []
+        self.biloxiReceivedResponses = []
+        self.bobReceivedRequests = []
+        self.bobReceivedResponses = []
         self.atlanta = SIPStatelessProxy()
         self.atlanta.transports = [SimulatedSIPTransport(self.atlantaBindAddress, self.atlantaBindPort)]
         self.biloxi = SIPStatelessProxy()
         self.biloxi.transports = [SimulatedSIPTransport(self.biloxiBindAddress, self.biloxiBindPort)]
         self.aliceTransport = SimulatedSIPTransport(self.aliceBindAddress, self.aliceBindPort)
         self.bobTransport = SimulatedSIPTransport(self.bobBindAddress, self.bobBindPort)
+        self.aliceTransport.whenEventDo("receivedValidConnectedRequest", self.aliceRequestEventHandler)
+        self.aliceTransport.whenEventDo("receivedValidConnectedResponse", self.aliceResponseEventHandler)
+        self.atlanta.transports[0].whenEventDo("receivedValidConnectedRequest", self.atlantaRequestEventHandler)
+        self.atlanta.transports[0].whenEventDo("receivedValidConnectedResponse", self.atlantaResponseEventHandler)
+        self.biloxi.transports[0].whenEventDo("receivedValidConnectedRequest", self.biloxiRequestEventHandler)
+        self.biloxi.transports[0].whenEventDo("receivedValidConnectedResponse", self.biloxiResponseEventHandler)
+        self.bobTransport.whenEventDo("receivedValidConnectedRequest", self.bobRequestEventHandler)
+        self.bobTransport.whenEventDo("receivedValidConnectedResponse", self.bobResponseEventHandler)
         self.aliceTransport.connectToAddressAndPort(self.atlantaBindAddress, self.atlantaBindPort)
         # Let Biloxi connect to Bob.  Don't pre-connect Bob to Biloxi.
         # self.bobTransport.connectToAddressAndPort(self.biloxiBindAddress, self.biloxiBindPort)
+        # TODO:  need to bind?
 
     def test(self):
         self.run_00_initialSanityCheck()
@@ -42,9 +59,26 @@ class TestStatelessProxy(TestCase):
         self.assertEqual(self.aliceBindPort, self.atlanta.transports[0].connections[0].remotePort)
         self.assertEqual(self.biloxiBindAddress, self.biloxi.transports[0].bindAddress)
         self.assertEqual(self.biloxiBindPort, self.biloxi.transports[0].bindPort)
+        self.assertEqual(0, len(self.aliceReceivedRequests))
+        self.assertEqual(0, len(self.aliceReceivedResponses))
+        self.assertEqual(0, len(self.atlantaReceivedRequests))
+        self.assertEqual(0, len(self.atlantaReceivedResponses))
+        self.assertEqual(0, len(self.biloxiReceivedRequests))
+        self.assertEqual(0, len(self.biloxiReceivedResponses))
+        self.assertEqual(0, len(self.bobReceivedRequests))
+        self.assertEqual(0, len(self.bobReceivedResponses))
 
     def run_01_atlantaToBiloxi(self):
         self.aliceTransport.connections[0].sendString(self.aliceRequestString)
+        self.assertEqual(0, len(self.aliceReceivedRequests))
+        self.assertEqual(0, len(self.aliceReceivedResponses))
+        self.assertEqual(1, len(self.atlantaReceivedRequests))
+        self.assertEqual(0, len(self.atlantaReceivedResponses))
+        self.assertEqual(0, len(self.biloxiReceivedRequests))
+        self.assertEqual(0, len(self.biloxiReceivedResponses))
+        self.assertEqual(0, len(self.bobReceivedRequests))
+        self.assertEqual(0, len(self.bobReceivedResponses))
+        self.assertEqual(self.aliceRequestString, self.atlantaReceivedRequests[0].rawString)
         # TODO:  Moar!!!
 
     def run_02_biloxiToAtlanta(self):
@@ -201,4 +235,28 @@ class TestStatelessProxy(TestCase):
                          'Content-Length: 0\r\n'
                          '\r\n')
         return messageString
+
+    def aliceRequestEventHandler(self, aConnectedSIPMessage):
+        self.aliceReceivedRequests.append(aConnectedSIPMessage)
+
+    def aliceResponseEventHandler(self, aConnectedSIPMessage):
+        self.aliceReceivedResponses.append(aConnectedSIPMessage)
+
+    def atlantaRequestEventHandler(self, aConnectedSIPMessage):
+        self.atlantaReceivedRequests.append(aConnectedSIPMessage)
+
+    def atlantaResponseEventHandler(self, aConnectedSIPMessage):
+        self.atlantaReceivedResponses.append(aConnectedSIPMessage)
+
+    def biloxiRequestEventHandler(self, aConnectedSIPMessage):
+        self.biloxiReceivedRequests.append(aConnectedSIPMessage)
+
+    def biloxiResponseEventHandler(self, aConnectedSIPMessage):
+        self.biloxiReceivedResponses.append(aConnectedSIPMessage)
+
+    def bobRequestEventHandler(self, aConnectedSIPMessage):
+        self.bobReceivedRequests.append(aConnectedSIPMessage)
+
+    def bobResponseEventHandler(self, aConnectedSIPMessage):
+        self.bobReceivedResponses.append(aConnectedSIPMessage)
 

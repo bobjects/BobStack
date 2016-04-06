@@ -15,6 +15,10 @@ class SIPTransport(EventSourceMixin):
         return True
 
     @property
+    def isStateful(self):
+        return True
+
+    @property
     def transportParameterName(self):
         raise NotImplementedError('call to abstract method ' + inspect.stack()[0][3])
 

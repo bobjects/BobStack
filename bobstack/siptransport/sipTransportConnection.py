@@ -14,6 +14,14 @@ class SIPTransportConnection(EventSourceMixin):
         self.messageFactory.whenEventDo('receivedValidConnectedRequest', self.receivedValidConnectedRequestEventHandler)
         self.messageFactory.whenEventDo('receivedValidConnectedResponse', self.receivedValidConnectedResponseEventHandler)
 
+    @property
+    def isReliable(self):
+        return True
+
+    @property
+    def isStateful(self):
+        return True
+
     def sendMessage(self, aSIPMessage):
         raise NotImplementedError('call to abstract method ' + inspect.stack()[0][3])
 

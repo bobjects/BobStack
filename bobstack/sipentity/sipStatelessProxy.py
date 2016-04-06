@@ -7,6 +7,8 @@ class SIPStatelessProxy(SIPEntity):
 
     def receivedValidConnectedRequestEventHandler(self, aConnectedSIPMessage):
         # TODO - do a lot of cool stuff with the request.  Add headers, forward it downstream, etc.
+        # - If the transport connection isStateful, get the ID of the transport, and use it ensure that
+        #   our response goes back through the correct transport connection.
         print "Stateless proxy request payload - " + str(aConnectedSIPMessage)
 
     def receivedValidConnectedResponseEventHandler(self, aConnectedSIPMessage):
