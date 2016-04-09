@@ -1,4 +1,5 @@
 from sipEntity import SIPEntity
+from sipEntityExceptions import DropMessageSIPEntityException, DropMessageAndDropConnectionSIPEntityException, SendResponseSIPEntityException
 
 
 class SIPStatelessProxy(SIPEntity):
@@ -17,10 +18,25 @@ class SIPStatelessProxy(SIPEntity):
         #     - (optional) Loop check.  Via header with sent-by value that's already been placed into previous requests by us
         #        - Maybe only appropriate for stateful proxy.
         #     - Proxy-Require test - 420 (Bad Extension)
-        #     - Proxy-Authorization check - 
+        #     - Proxy-Authorization check -
         print "Stateless proxy request payload - " + str(aConnectedSIPMessage)
+        requestArrivalTransportConnectionID = self.transportConnectionIDForMessage(aConnectedSIPMessage)
+
 
     def receivedValidConnectedResponseEventHandler(self, aConnectedSIPMessage):
         # TODO - do a lot of cool stuff with the response.  Remove headers, forward it upstream, etc.
         print "Stateless proxy response payload - " + str(aConnectedSIPMessage)
 
+
+    def transportConnectionIDForMessage(self, aConnectedSIPMessage):
+        '''
+        https://tools.ietf.org/html/rfc3261#section-16.1
+        In some circumstances, a proxy MAY forward requests using stateful
+       transports (such as TCP) without being transaction-stateful.  For
+       instance, a proxy MAY forward a request from one TCP connection to
+       another transaction statelessly as long as it places enough
+       information in the message to be able to forward the response down
+       the same connection the request arrived on.
+        '''
+        # TODO
+        pass
