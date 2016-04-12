@@ -1,34 +1,49 @@
 from sipEntity import SIPEntity
 from sipEntityExceptions import DropMessageSIPEntityException, DropMessageAndDropConnectionSIPEntityException, SendResponseSIPEntityException
 
+'''
+Proxy behavior is defined in RFC3261, section 16, https://tools.ietf.org/html/rfc3261#section-16
+Behavior specific to stateless proxies is defined in Section 16.11, https://tools.ietf.org/html/rfc3261#section-16.11
+'''
+
 
 class SIPStatelessProxy(SIPEntity):
     def __init__(self):
         super(SIPStatelessProxy, self).__init__()
 
-    def receivedValidConnectedRequestEventHandler(self, aConnectedSIPMessage):
-        # TODO - do a lot of cool stuff with the request.  Add headers, forward it downstream, etc.
-        # - If the transport connection isStateful, get the ID of the transport, and use it ensure that
-        #   our response goes back through the correct transport connection.
-        # - Validate the request - https://tools.ietf.org/html/rfc3261#section-16.3
-        #     - isMalformed is False
-        #     - Check for a merged request (i.e. 482 (Loop Detected))
-        #     - Check the request URI scheme, to ensure that we understand it (i.e. "sip" or "sips") 416 (Unsupported URI Scheme)
-        #     - Check Max-Forwards.  If 0, don't forward the request, 483 (Too Many Hops)
-        #     - (optional) Loop check.  Via header with sent-by value that's already been placed into previous requests by us
-        #        - Maybe only appropriate for stateful proxy.
-        #     - Proxy-Require test - 420 (Bad Extension)
-        #     - Proxy-Authorization check -
-        print "Stateless proxy request payload - " + str(aConnectedSIPMessage)
-        requestArrivalTransportConnectionID = self.transportConnectionIDForMessage(aConnectedSIPMessage)
+    def receivedValidConnectedRequestEventHandler(self, receivedConnectedSIPMessage):
+        print "Stateless proxy request payload - " + str(receivedConnectedSIPMessage)
+        try:
+            requestArrivalTransportConnectionID = self.transportConnectionIDForRequest(receivedConnectedSIPMessage)
+            self.validateRequest(receivedConnectedSIPMessage)
+            connectedSIPMessageToSend = self.createConnectedSIPMessageToSendForRequest(receivedConnectedSIPMessage)
+            self.preprocessRoutingInformationForRequest(connectedSIPMessageToSend)
+            self.determineTargetForRequest(connectedSIPMessageToSend)
+            self.forwardRequestToTarget(connectedSIPMessageToSend, transportIDForVia=requestArrivalTransportConnectionID)
+        except DropMessageSIPEntityException:
+            pass
+        except DropMessageAndDropConnectionSIPEntityException:
+            receivedConnectedSIPMessage.disconnect()
+        except SendResponseSIPEntityException as ex:
+            self.sendErrorResponseForRequest(statusCodeInteger=ex.statusCode, reasonPhraseString=ex.reasonPhrase, descriptionString=ex.description)
 
+    def receivedValidConnectedResponseEventHandler(self, receivedConnectedSIPMessage):
+        '''
+        Stateful proxy response processing is defined in RFC3261 section 16.7.  But for stateless proxy behavior, see
+        notes toward the bottom of section 16.11, https://tools.ietf.org/html/rfc3261#section-16.11
+        '''
+        print "Stateless proxy response payload - " + str(receivedConnectedSIPMessage)
+        requestArrivalTransportConnectionID = self.transportConnectionIDForResponse(receivedConnectedSIPMessage)
+        responseSendTransportConnection = self.responseSendTransportConnectionForConnectionID(requestArrivalTransportConnectionID)
+        self.validateResponse(receivedConnectedSIPMessage)
+        if self.responseShouldBeForwarded(receivedConnectedSIPMessage):
+            connectedSIPMessageToSend = self.createConnectedSIPMessageToSendForResponse(receivedConnectedSIPMessage, responseSendTransportConnection)
+            self.removeViaForResponse(connectedSIPMessageToSend)
+            self.rewriteRecordRouteForResponse(connectedSIPMessageToSend)
+            self.determineTargetForResponse(connectedSIPMessageToSend)
+            self.forwardResponseToTarget(connectedSIPMessageToSend)
 
-    def receivedValidConnectedResponseEventHandler(self, aConnectedSIPMessage):
-        # TODO - do a lot of cool stuff with the response.  Remove headers, forward it upstream, etc.
-        print "Stateless proxy response payload - " + str(aConnectedSIPMessage)
-
-
-    def transportConnectionIDForMessage(self, aConnectedSIPMessage):
+    def transportConnectionIDForRequest(self, receivedConnectedSIPMessage):
         '''
         https://tools.ietf.org/html/rfc3261#section-16.1
         In some circumstances, a proxy MAY forward requests using stateful
@@ -38,5 +53,90 @@ class SIPStatelessProxy(SIPEntity):
        information in the message to be able to forward the response down
        the same connection the request arrived on.
         '''
+        # TODO
+        pass
+
+    def validateRequest(self, receivedConnectedSIPMessage):
+        '''
+        https://tools.ietf.org/html/rfc3261#section-16.3
+        Validate the request
+             - isMalformed is False
+             - Check for a merged request (i.e. 482 (Loop Detected))
+             - Check the request URI scheme, to ensure that we understand it (i.e. "sip" or "sips") 416 (Unsupported URI Scheme)
+             - Check Max-Forwards.  If 0, don't forward the request, 483 (Too Many Hops)
+             - (optional) Loop check.  Via header with sent-by value that's already been placed into previous requests by us
+                - Maybe only appropriate for stateful proxy.
+             - Proxy-Require test - 420 (Bad Extension)
+             - Proxy-Authorization check -
+        '''
+        # TODO
+        pass
+
+    def createConnectedSIPMessageToSendForRequest(self, receivedConnectedSIPMessage):
+        # TODO
+        pass
+
+    def preprocessRoutingInformationForRequest(self, connectedSIPMessageToSend):
+        '''
+        https://tools.ietf.org/html/rfc3261#section-16.4
+
+        '''
+        # TODO
+        pass
+
+    def determineTargetForRequest(self, connectedSIPMessageToSend):
+        '''
+        https://tools.ietf.org/html/rfc3261#section-16.5
+
+        '''
+        # TODO
+        pass
+
+    def forwardRequestToTarget(self, connectedSIPMessageToSend, transportIDForVia=None):
+        '''
+        https://tools.ietf.org/html/rfc3261#section-16.6
+
+        '''
+        # TODO
+        pass
+
+    def sendErrorResponseForRequest(self, statusCodeInteger=500, reasonPhraseString='Server Error', descriptionString='An unknown server error occurred.'):
+        # TODO: I believe we need to reliably send this response, including retransmission, etc.  For now, just send the damn thing.
+        # TODO
+        pass
+
+    def transportConnectionIDForResponse(self, receivedConnectedSIPMessage):
+        # TODO
+        pass
+
+    def responseSendTransportConnectionForConnectionID(self, receivedConnectedSIPMessage):
+        # TODO
+        pass
+
+    def validateResponse(self, receivedConnectedSIPMessage):
+        # TODO
+        pass
+
+    def responseShouldBeForwarded(self, receivedConnectedSIPMessage):
+        # TODO
+        pass
+
+    def createConnectedSIPMessageToSendForResponse(self, receivedConnectedSIPMessage, responseSendTransportConnection):
+        # TODO
+        pass
+
+    def removeViaForResponse(self, connectedSIPMessageToSend):
+        # TODO
+        pass
+
+    def rewriteRecordRouteForResponse(self, connectedSIPMessageToSend):
+        # TODO
+        pass
+
+    def determineTargetForResponse(self, connectedSIPMessageToSend):
+        # TODO
+        pass
+
+    def forwardResponseToTarget(self, connectedSIPMessageToSend):
         # TODO
         pass
