@@ -1,3 +1,6 @@
+import sys
+sys.path.append("../..")
+from bobstack.sipmessaging import StrongRandomStringServer
 import inspect
 from eventSourceMixin import EventSourceMixin
 from connectedSIPMessageFactory import ConnectedSIPMessageFactory
@@ -10,6 +13,7 @@ class SIPTransportConnection(EventSourceMixin):
         self.bindPort = bindPortInteger
         self.remoteAddress = remoteAddressString
         self.remotePort = remotePortInteger
+        self.id = StrongRandomStringServer.instance.next32Bits
         self.messageFactory = ConnectedSIPMessageFactory(self)
         self.messageFactory.whenEventDo('receivedValidConnectedRequest', self.receivedValidConnectedRequestEventHandler)
         self.messageFactory.whenEventDo('receivedValidConnectedResponse', self.receivedValidConnectedResponseEventHandler)

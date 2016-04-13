@@ -12,3 +12,13 @@ class SIPRequest(SIPMessage):
     @property
     def isRequest(self):
         return True
+
+    # TODO:  need to test
+    @property
+    def requestURI(self):
+        return self.startLine.requestURI
+
+    # TODO:  need to test
+    @property
+    def maxForwards(self):
+        return self.header.maxForwards

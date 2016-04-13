@@ -1,3 +1,6 @@
+import sys
+sys.path.append("../..")
+from bobstack.sipmessaging import SIPURI
 from sipEntity import SIPEntity
 from sipEntityExceptions import DropMessageSIPEntityException, DropMessageAndDropConnectionSIPEntityException, SendResponseSIPEntityException
 
@@ -25,7 +28,7 @@ class SIPStatelessProxy(SIPEntity):
         except DropMessageAndDropConnectionSIPEntityException:
             receivedConnectedSIPMessage.disconnect()
         except SendResponseSIPEntityException as ex:
-            self.sendErrorResponseForRequest(statusCodeInteger=ex.statusCode, reasonPhraseString=ex.reasonPhrase, descriptionString=ex.description)
+            self.sendErrorResponseForRequest(receivedConnectedSIPMessage, statusCodeInteger=ex.statusCode, reasonPhraseString=ex.reasonPhrase, descriptionString=ex.description)
 
     def receivedValidConnectedResponseEventHandler(self, receivedConnectedSIPMessage):
         '''
@@ -33,15 +36,22 @@ class SIPStatelessProxy(SIPEntity):
         notes toward the bottom of section 16.11, https://tools.ietf.org/html/rfc3261#section-16.11
         '''
         print "Stateless proxy response payload - " + str(receivedConnectedSIPMessage)
-        requestArrivalTransportConnectionID = self.transportConnectionIDForResponse(receivedConnectedSIPMessage)
-        responseSendTransportConnection = self.responseSendTransportConnectionForConnectionID(requestArrivalTransportConnectionID)
-        self.validateResponse(receivedConnectedSIPMessage)
-        if self.responseShouldBeForwarded(receivedConnectedSIPMessage):
-            connectedSIPMessageToSend = self.createConnectedSIPMessageToSendForResponse(receivedConnectedSIPMessage, responseSendTransportConnection)
-            self.removeViaForResponse(connectedSIPMessageToSend)
-            self.rewriteRecordRouteForResponse(connectedSIPMessageToSend)
-            self.determineTargetForResponse(connectedSIPMessageToSend)
-            self.forwardResponseToTarget(connectedSIPMessageToSend)
+        try:
+            requestArrivalTransportConnectionID = self.transportConnectionIDForResponse(receivedConnectedSIPMessage)
+            responseSendTransportConnection = self.responseSendTransportConnectionForConnectionID(requestArrivalTransportConnectionID)
+            self.validateResponse(receivedConnectedSIPMessage)
+            if self.responseShouldBeForwarded(receivedConnectedSIPMessage):
+                connectedSIPMessageToSend = self.createConnectedSIPMessageToSendForResponse(receivedConnectedSIPMessage, responseSendTransportConnection)
+                self.removeViaForResponse(connectedSIPMessageToSend)
+                self.rewriteRecordRouteForResponse(connectedSIPMessageToSend)
+                self.determineTargetForResponse(connectedSIPMessageToSend)
+                self.forwardResponseToTarget(connectedSIPMessageToSend)
+        except DropMessageSIPEntityException:
+            pass
+        except DropMessageAndDropConnectionSIPEntityException:
+            receivedConnectedSIPMessage.disconnect()
+        except SendResponseSIPEntityException as ex:
+            self.sendErrorResponseForResponse(receivedConnectedSIPMessage, statusCodeInteger=ex.statusCode, reasonPhraseString=ex.reasonPhrase, descriptionString=ex.description)
 
     def transportConnectionIDForRequest(self, receivedConnectedSIPMessage):
         '''
@@ -53,8 +63,7 @@ class SIPStatelessProxy(SIPEntity):
        information in the message to be able to forward the response down
        the same connection the request arrived on.
         '''
-        # TODO
-        pass
+        return receivedConnectedSIPMessage.connection.id
 
     def validateRequest(self, receivedConnectedSIPMessage):
         '''
@@ -69,11 +78,25 @@ class SIPStatelessProxy(SIPEntity):
              - Proxy-Require test - 420 (Bad Extension)
              - Proxy-Authorization check -
         '''
-        # TODO
-        pass
+        sipMessage = receivedConnectedSIPMessage.sipMessage
+        if sipMessage.isMalformed:
+            # TODO - do we need to drop the connection if malformed?  What does the RFC say about that?
+            raise DropMessageSIPEntityException(descriptionString='Received SIP message was malformed.')
+        # TODO - we instantiate a first-class SIPURI object here.  We probably want to do that in the start line object instead.
+        requestURI = SIPURI.newParsedFrom(sipMessage.requestURI)
+        if requestURI.scheme not in ['sip', 'sips']:
+            raise SendResponseSIPEntityException(statusCodeInteger=416, reasonPhraseString='Unsupported URI Scheme')
+        if sipMessage.maxForwards is not None:
+            if sipMessage.maxForwards <= 0:
+                raise SendResponseSIPEntityException(statusCodeInteger=483, reasonPhraseString='Too many hops')
+        # TODO - for now, skip the optional loop detection.
+        # TODO - for now, skip the Proxy-Require header field check.
+        # TODO - for now, we don't do authentication.  When we do, the authorization check will be here.
 
     def createConnectedSIPMessageToSendForRequest(self, receivedConnectedSIPMessage):
-        # TODO
+        # TODO - in progress
+        # We do a total copy of receivedConnectedSIPMessage
+        #
         pass
 
     def preprocessRoutingInformationForRequest(self, connectedSIPMessageToSend):
@@ -100,7 +123,7 @@ class SIPStatelessProxy(SIPEntity):
         # TODO
         pass
 
-    def sendErrorResponseForRequest(self, statusCodeInteger=500, reasonPhraseString='Server Error', descriptionString='An unknown server error occurred.'):
+    def sendErrorResponseForRequest(self, receivedConnectedSIPMessage, statusCodeInteger=500, reasonPhraseString='Server Error', descriptionString='An unknown server error occurred.'):
         # TODO: I believe we need to reliably send this response, including retransmission, etc.  For now, just send the damn thing.
         # TODO
         pass
@@ -140,3 +163,9 @@ class SIPStatelessProxy(SIPEntity):
     def forwardResponseToTarget(self, connectedSIPMessageToSend):
         # TODO
         pass
+
+    def sendErrorResponseForResponse(self, receivedConnectedSIPMessage, statusCodeInteger=500, reasonPhraseString='Server Error', descriptionString='An unknown server error occurred.'):
+        # TODO: I believe we need to reliably send this response, including retransmission, etc.  For now, just send the damn thing.
+        # TODO
+        pass
+

@@ -91,11 +91,13 @@ class TestSimulatedTransportConnection(TestCase):
         self.assertIs(self.connectedConnections[0], self.transport1.connections[0])
         self.assertEqual(self.bindAddress2, self.transport1.connections[0].remoteAddress)
         self.assertIsInstance(self.transport1.connections[0].bindPort, int)
+        self.assertIsInstance(self.transport1.connections[0].id, basestring)
         self.assertEqual(self.bindPort2, self.transport1.connections[0].remotePort)
         self.assertEqual(1, len(self.transport2.connections))
         self.assertEqual(0, len(self.transport3.connections))
         self.assertEqual(self.bindAddress1, self.transport2.connections[0].remoteAddress)
         self.assertIsInstance(self.transport2.connections[0].remotePort, int)
+        self.assertIsInstance(self.transport2.connections[0].id, basestring)
         self.assertEqual(self.bindPort2, self.transport2.connections[0].bindPort)
 
     def run_03_makeInboundConnection(self):
@@ -108,6 +110,7 @@ class TestSimulatedTransportConnection(TestCase):
         self.assertIs(self.connectedConnections[1], self.transport1.connections[1])
         self.assertEqual(self.bindAddress3, self.transport1.connections[1].remoteAddress)
         self.assertIsInstance(self.transport3.connections[0].bindPort, int)
+        self.assertIsInstance(self.transport3.connections[0].id, basestring)
         self.assertEqual(self.bindPort1, self.transport1.connections[0].bindPort)
         self.assertEqual(self.bindAddress1, self.transport3.connections[0].remoteAddress)
         self.assertIsInstance(self.transport1.connections[0].remotePort, int)

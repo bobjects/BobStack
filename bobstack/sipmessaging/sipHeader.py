@@ -28,6 +28,7 @@ class SIPHeader(object):
         self._unknownHeaderFields = None
         self._contentLengthHeaderField = None
         self._viaHeaderFields = None
+        self._maxForwardsHeaderField = None
         self._transactionHash = None
         self._dialogHash = None
         # TODO: need to add other header field attributes besides just content-length and via.
@@ -100,6 +101,18 @@ class SIPHeader(object):
     @property
     def fromHeaderField(self):
         return next((headerField for headerField in self.headerFields if headerField.isFrom), None)
+
+    # TODO:  need to test
+    @property
+    def maxForwards(self):
+         if self.maxForwardsHeaderField is not None:
+             return self.maxForwardsHeaderField.integerValue
+         return None
+
+    # TODO:  need to test
+    @property
+    def maxForwardsHeaderField(self):
+        return next((headerField for headerField in self.headerFields if headerField.isMaxForwards), None)
 
     @property
     def vias(self):
