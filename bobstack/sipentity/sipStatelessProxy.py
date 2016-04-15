@@ -1,6 +1,7 @@
 import sys
 sys.path.append("../..")
 from bobstack.sipmessaging import SIPURI
+from bobstack.siptransport import ConnectedSIPMessage
 from sipEntity import SIPEntity
 from sipEntityExceptions import DropMessageSIPEntityException, DropMessageAndDropConnectionSIPEntityException, SendResponseSIPEntityException
 
@@ -94,10 +95,9 @@ class SIPStatelessProxy(SIPEntity):
         # TODO - for now, we don't do authentication.  When we do, the authorization check will be here.
 
     def createConnectedSIPMessageToSendForRequest(self, receivedConnectedSIPMessage):
-        # TODO - in progress
-        # We do a total copy of receivedConnectedSIPMessage
-        #
-        pass
+        # We do a total copy of the sipMessage.  The connection will be replaced later.
+        sipMessage = receivedConnectedSIPMessage.sipMessage.__class__.newParsedFrom(receivedConnectedSIPMessage.rawString)
+        return ConnectedSIPMessage(receivedConnectedSIPMessage.connection, sipMessage)
 
     def preprocessRoutingInformationForRequest(self, connectedSIPMessageToSend):
         '''
