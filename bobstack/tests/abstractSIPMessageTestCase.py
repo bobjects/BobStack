@@ -80,6 +80,8 @@ class AbstractSIPMessageTestCase(TestCase):
                 'User-Agent: Example User Agent',
                 'Contact: <sip:invalid@200.25.3.150:5061;transport=tls>',
                 'Route: <sip:200.25.3.230:5061;transport=tls;lr>',
+                'Route: <sip:200.25.3.231:5061;transport=tls;lr>',
+                'Route: <sip:200.25.3.232:5061;transport=tls;lr>',
                 'Expires: 0',
                 'Accept: application/sdp,application/isup,application/dtmf,application/dtmf-relay,multipart/mixed',
                 'Accept-Encoding: x-nortel-short',
@@ -91,6 +93,8 @@ class AbstractSIPMessageTestCase(TestCase):
                 'Content-Type: application/sdp',
                 'Date: Sat, 01 Feb 2014 22:07:34 GMT',
                 'Record-Route: <sip:200.25.3.230:5061;transport=tls;lr>',
+                'Record-Route: <sip:200.25.3.231:5061;transport=tls;lr>',
+                'Record-Route: <sip:200.25.3.232:5061;transport=tls;lr>',
                 'Require: sdp-anat',
                 'Retry-After: 30',
                 'Server: Blargomatic 2.0',
@@ -127,6 +131,8 @@ class AbstractSIPMessageTestCase(TestCase):
                     'User-Agent: Example User Agent\r\n'
                     'Contact: <sip:invalid@200.25.3.150:5061;transport=tls>\r\n'
                     'Route: <sip:200.25.3.230:5061;transport=tls;lr>\r\n'
+                    'Route: <sip:200.25.3.231:5061;transport=tls;lr>\r\n'
+                    'Route: <sip:200.25.3.232:5061;transport=tls;lr>\r\n'
                     'Expires: 0\r\n'
                     'Accept: application/sdp,application/isup,application/dtmf,application/dtmf-relay,multipart/mixed\r\n'
                     'Accept-Encoding: x-nortel-short\r\n'
@@ -138,6 +144,8 @@ class AbstractSIPMessageTestCase(TestCase):
                     'Content-Type: application/sdp\r\n'
                     'Date: Sat, 01 Feb 2014 22:07:34 GMT\r\n'
                     'Record-Route: <sip:200.25.3.230:5061;transport=tls;lr>\r\n'
+                    'Record-Route: <sip:200.25.3.231:5061;transport=tls;lr>\r\n'
+                    'Record-Route: <sip:200.25.3.232:5061;transport=tls;lr>\r\n'
                     'Require: sdp-anat\r\n'
                     'Retry-After: 30\r\n'
                     'Server: Blargomatic 2.0\r\n'
@@ -177,6 +185,8 @@ class AbstractSIPMessageTestCase(TestCase):
             # ContactSIPHeaderField.newForAttributes(fieldValueString='<sip:invalid@200.25.3.150:5061;transport=tls>'),
             ContactSIPHeaderField.newForAttributes(displayName=None, sipURI=SIPURI.newParsedFrom('sip:invalid@200.25.3.150:5061;transport=tls')),
             RouteSIPHeaderField.newForAttributes(sipURI=SIPURI.newParsedFrom('sip:200.25.3.230:5061;transport=tls;lr')),
+            RouteSIPHeaderField.newForAttributes(sipURI=SIPURI.newParsedFrom('sip:200.25.3.231:5061;transport=tls;lr')),
+            RouteSIPHeaderField.newForAttributes(sipURI=SIPURI.newParsedFrom('sip:200.25.3.232:5061;transport=tls;lr')),
             ExpiresSIPHeaderField.newForAttributes(value=0),
             AcceptSIPHeaderField.newForAttributes(fieldValueString='application/sdp,application/isup,application/dtmf,application/dtmf-relay,multipart/mixed'),
             AcceptEncodingSIPHeaderField.newForAttributes(fieldValueString='x-nortel-short'),
@@ -188,6 +198,8 @@ class AbstractSIPMessageTestCase(TestCase):
             ContentTypeSIPHeaderField.newForAttributes(fieldValueString='application/sdp'),
             DateSIPHeaderField.newForAttributes(fieldValueString='Sat, 01 Feb 2014 22:07:34 GMT'),
             RecordRouteSIPHeaderField.newForAttributes(sipURI=SIPURI.newParsedFrom('sip:200.25.3.230:5061;transport=tls;lr')),
+            RecordRouteSIPHeaderField.newForAttributes(sipURI=SIPURI.newParsedFrom('sip:200.25.3.231:5061;transport=tls;lr')),
+            RecordRouteSIPHeaderField.newForAttributes(sipURI=SIPURI.newParsedFrom('sip:200.25.3.232:5061;transport=tls;lr')),
             RequireSIPHeaderField.newForAttributes(fieldValueString='sdp-anat'),
             RetryAfterSIPHeaderField.newForAttributes(value=30),
             ServerSIPHeaderField.newForAttributes(fieldValueString='Blargomatic 2.0'),
@@ -219,6 +231,8 @@ class AbstractSIPMessageTestCase(TestCase):
                 'User-Agent: Example User Agent',
                 'Contact: <sip:invalid@200.25.3.150:5061;transport=tls>',
                 'Route: <sip:200.25.3.230:5061;transport=tls;lr>',
+                'Route: <sip:200.25.3.231:5061;transport=tls;lr>',
+                'Route: <sip:200.25.3.232:5061;transport=tls;lr>',
                 'Expires: 0',
                 'Accept: application/sdp,application/isup,application/dtmf,application/dtmf-relay,multipart/mixed',
                 'Accept-Encoding: x-nortel-short',
@@ -230,6 +244,8 @@ class AbstractSIPMessageTestCase(TestCase):
                 'Content-Type: application/sdp',
                 'Date: Sat, 01 Feb 2014 22:07:34 GMT',
                 'Record-Route: <sip:200.25.3.230:5061;transport=tls;lr>',
+                'Record-Route: <sip:200.25.3.231:5061;transport=tls;lr>',
+                'Record-Route: <sip:200.25.3.232:5061;transport=tls;lr>',
                 'Require: sdp-anat',
                 'Retry-After: 30',
                 'Server: Blargomatic 2.0',
@@ -261,6 +277,8 @@ class AbstractSIPMessageTestCase(TestCase):
                 ('User-Agent', 'Example User Agent'),
                 ('Contact', '<sip:invalid@200.25.3.150:5061;transport=tls>'),
                 ('Route', '<sip:200.25.3.230:5061;transport=tls;lr>'),
+                ('Route', '<sip:200.25.3.231:5061;transport=tls;lr>'),
+                ('Route', '<sip:200.25.3.232:5061;transport=tls;lr>'),
                 ('Expires', 0),
                 ('Accept', 'application/sdp,application/isup,application/dtmf,application/dtmf-relay,multipart/mixed'),
                 ('Accept-Encoding', 'x-nortel-short'),
@@ -272,6 +290,8 @@ class AbstractSIPMessageTestCase(TestCase):
                 ('Content-Type', 'application/sdp'),
                 ('Date', 'Sat, 01 Feb 2014 22:07:34 GMT'),
                 ('Record-Route', '<sip:200.25.3.230:5061;transport=tls;lr>'),
+                ('Record-Route', '<sip:200.25.3.231:5061;transport=tls;lr>'),
+                ('Record-Route', '<sip:200.25.3.232:5061;transport=tls;lr>'),
                 ('Require', 'sdp-anat'),
                 ('Retry-After', '30'),
                 ('Server', 'Blargomatic 2.0'),
@@ -303,6 +323,8 @@ class AbstractSIPMessageTestCase(TestCase):
                 ('User-Agent', 'Example User Agent'),
                 ('Contact', '<sip:invalid@200.25.3.150:5061;transport=tls>'),
                 ('Route', '<sip:200.25.3.230:5061;transport=tls;lr>'),
+                ('Route', '<sip:200.25.3.231:5061;transport=tls;lr>'),
+                ('Route', '<sip:200.25.3.232:5061;transport=tls;lr>'),
                 ('Expires', 0),
                 ('Accept', 'application/sdp,application/isup,application/dtmf,application/dtmf-relay,multipart/mixed'),
                 ('Accept-Encoding', 'x-nortel-short'),
@@ -314,6 +336,8 @@ class AbstractSIPMessageTestCase(TestCase):
                 ('Content-Type', 'application/sdp'),
                 ('Date', 'Sat, 01 Feb 2014 22:07:34 GMT'),
                 ('Record-Route', '<sip:200.25.3.230:5061;transport=tls;lr>'),
+                ('Record-Route', '<sip:200.25.3.231:5061;transport=tls;lr>'),
+                ('Record-Route', '<sip:200.25.3.232:5061;transport=tls;lr>'),
                 ('Require', 'sdp-anat'),
                 ('Retry-After', '30'),
                 ('Server', 'Blargomatic 2.0'),
@@ -338,10 +362,29 @@ class AbstractSIPMessageTestCase(TestCase):
         self.assertEqual(11, aSIPMessage.header.contentLength)
         self.assertEqual(3, aSIPMessage.header.viaHeaderFields.__len__())
         self.assertEqual(3, aSIPMessage.header.vias.__len__())
+        self.assertEqual(3, aSIPMessage.vias.__len__())
+        self.assertEqual(3, aSIPMessage.header.routeHeaderFields.__len__())
+        self.assertEqual(3, aSIPMessage.header.routeURIs.__len__())
+        self.assertEqual(3, aSIPMessage.routeURIs.__len__())
+        self.assertEqual(3, aSIPMessage.header.recordRouteHeaderFields.__len__())
+        self.assertEqual(3, aSIPMessage.header.recordRouteURIs.__len__())
+        self.assertEqual(3, aSIPMessage.recordRouteURIs.__len__())
         # TODO: assert other headers besides just content-length and via.
         self.assertEqual('SIP/2.0/TLS 200.25.3.150;branch=z9hG4bK0ee8d3e272e31ca195299efc500', aSIPMessage.header.vias[0])
         self.assertEqual('SIP/2.0/TLS 200.25.3.250;branch=z9hG4bKfdkajhdiruyalkghjladksjf', aSIPMessage.header.vias[1])
         self.assertEqual('SIP/2.0/TLS 200.25.3.255;branch=z9hG4bKduyroiuryaludhgviukfhlasf', aSIPMessage.header.vias[2])
+        self.assertIsInstance(aSIPMessage.routeURIs[0], SIPURI)
+        self.assertEqual(aSIPMessage.routeURIs[0].host, '200.25.3.230')
+        self.assertIsInstance(aSIPMessage.routeURIs[1], SIPURI)
+        self.assertEqual(aSIPMessage.routeURIs[1].host, '200.25.3.231')
+        self.assertIsInstance(aSIPMessage.routeURIs[2], SIPURI)
+        self.assertEqual(aSIPMessage.routeURIs[2].host, '200.25.3.232')
+        self.assertIsInstance(aSIPMessage.recordRouteURIs[0], SIPURI)
+        self.assertEqual(aSIPMessage.recordRouteURIs[0].host, '200.25.3.230')
+        self.assertIsInstance(aSIPMessage.recordRouteURIs[1], SIPURI)
+        self.assertEqual(aSIPMessage.recordRouteURIs[1].host, '200.25.3.231')
+        self.assertIsInstance(aSIPMessage.recordRouteURIs[2], SIPURI)
+        self.assertEqual(aSIPMessage.recordRouteURIs[2].host, '200.25.3.232')
         self.assertEqual(4, aSIPMessage.header.unknownHeaderFields.__len__())
         self.assertEqual('Foo Content', aSIPMessage.content)
 

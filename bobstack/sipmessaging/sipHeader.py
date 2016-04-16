@@ -33,7 +33,6 @@ class SIPHeader(object):
         self._maxForwardsHeaderField = None
         self._transactionHash = None
         self._dialogHash = None
-        # TODO: need to add other header field attributes besides just content-length and via.
 
     def parseAttributesFromStringIO(self, stringioToParse):
         self._headerFields = SIPHeaderFieldFactory().allForStringIO(stringioToParse)
@@ -130,14 +129,12 @@ class SIPHeader(object):
             self._viaHeaderFields = [headerField for headerField in self.headerFields if headerField.isVia]
         return self._viaHeaderFields
 
-    # TODO: need to test
     @property
     def routeHeaderFields(self):
         if self._routeHeaderFields is None:
             self._routeHeaderFields = [headerField for headerField in self.headerFields if headerField.isRoute]
         return self._routeHeaderFields
 
-    # TODO: need to test
     @property
     def routeURIs(self):
         # TODO: this will not lazily initialize if necessary, right?
@@ -146,14 +143,12 @@ class SIPHeader(object):
         # return []
         return [x.sipURI for x in self.routeHeaderFields]
 
-    # TODO: need to test
     @property
     def recordRouteHeaderFields(self):
         if self._recordRouteHeaderFields is None:
             self._recordRouteHeaderFields = [headerField for headerField in self.headerFields if headerField.isRecordRoute]
         return self._recordRouteHeaderFields
 
-    # TODO: need to test
     @property
     def recordRouteURIs(self):
         # TODO: this will not lazily initialize if necessary, right?

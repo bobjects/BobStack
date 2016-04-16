@@ -8,10 +8,12 @@ import sys
 import settings
 import subprocess
 sys.path.append("../..")
+sys.path.append("..")
 from abstractSIPRequestFromFactoryTestCase import AbstractSIPRequestFromFactoryTestCase
 from abstractSIPResponseFromFactoryTestCase import AbstractSIPResponseFromFactoryTestCase
 from abstractMalformedSIPMessageFromFactoryTestCase import AbstractMalformedSIPMessageFromFactoryTestCase
 from bobstack.sipmessaging import SIPMessageFactory
+from sipmessaging import SIPURI
 
 
 class TestSIPMessageFactoryForSanitizedLogFile(TestCase):
@@ -368,6 +370,19 @@ class TestSIPMessageFactoryForSanitizedLogFile(TestCase):
         # self.assertIsNotNone(aSIPMessage.header.contentLengthHeaderField)
         self.assertIsInstance(aSIPMessage.header.contentLength, (int, long))
         self.assertIsInstance(aSIPMessage.header.unknownHeaderFields, list)
+        self.assertIsInstance(aSIPMessage.vias, list)
+        self.assertIsInstance(aSIPMessage.header.vias, list)
+        self.assertIsInstance(aSIPMessage.header.viaHeaderFields, list)
+        self.assertIsInstance(aSIPMessage.routeURIs, list)
+        self.assertIsInstance(aSIPMessage.header.routeURIs, list)
+        self.assertIsInstance(aSIPMessage.header.routeHeaderFields, list)
+        for u in aSIPMessage.routeURIs:
+            self.assertIsInstance(u, SIPURI)
+        self.assertIsInstance(aSIPMessage.recordRouteURIs, list)
+        self.assertIsInstance(aSIPMessage.header.recordRouteURIs, list)
+        self.assertIsInstance(aSIPMessage.header.recordRouteHeaderFields, list)
+        for u in aSIPMessage.recordRouteURIs:
+            self.assertIsInstance(u, SIPURI)
         # print aSIPMessage.startLine.rawString
         # print aSIPMessage.rawString
         self.assertIsInstance(aSIPMessage.isMalformed, bool)

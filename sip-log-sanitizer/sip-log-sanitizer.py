@@ -26,9 +26,14 @@ sanitizedMessageSeparatorRegex = re.compile("^__MESSAGESEPARATOR__")
 startLineRegexes = ["^SIP/2.0\s+([\d]+)+\s+(.+)\s*$", "^([^\s]+)\s+([^\s]+)\s+SIP/2.0\s*$"]
 startLineRegexes = [re.compile(s) for s in startLineRegexes]
 
-rawLogFileDirectoryPathNames = [ '../proprietary-test-data/big-lab-test-logs-raw', '../proprietary-test-data/cust-1-logs-raw' ]
+rawLogFileDirectoryPathNames = [ '../proprietary-test-data/big-lab-test-logs-raw',
+                                 '../proprietary-test-data/cust-1-logs-raw' ]
 # rawLogFileDirectoryPathNames = []
-pcapDirectoryPathNames = [ '../proprietary-test-data/cloud', '../proprietary-test-data/cust-2-logs-pcap', '../proprietary-test-data/from-bobstack-testbed' ]
+pcapDirectoryPathNames = [ '../proprietary-test-data/cloud',
+                           '../proprietary-test-data/big-lab-test-logs-pcap',
+                           '../proprietary-test-data/client-lab-test-logs-pcap',
+                           '../proprietary-test-data/cust-2-logs-pcap',
+                           '../proprietary-test-data/from-bobstack-testbed' ]
 # pcapDirectoryPathNames = [ '../proprietary-test-data/cloud' ]
 # pcapDirectoryPathNames = [ '../proprietary-test-data/cust-2-logs-pcap' ]
 # pcapDirectoryPathNames = [ '../proprietary-test-data/from-bobstack-testbed' ]
