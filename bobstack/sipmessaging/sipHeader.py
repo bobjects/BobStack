@@ -28,6 +28,8 @@ class SIPHeader(object):
         self._unknownHeaderFields = None
         self._contentLengthHeaderField = None
         self._viaHeaderFields = None
+        self._routeHeaderFields = None
+        self._recordRouteHeaderFields = None
         self._maxForwardsHeaderField = None
         self._transactionHash = None
         self._dialogHash = None
@@ -116,15 +118,49 @@ class SIPHeader(object):
 
     @property
     def vias(self):
-        if self._viaHeaderFields is not None:
-            return [x.fieldValueString for x in self._viaHeaderFields]
-        return []
+        # TODO: this will not lazily initialize if necessary, right?
+        # if self._viaHeaderFields is not None:
+        #     return [x.fieldValueString for x in self._viaHeaderFields]
+        # return []
+        return [x.fieldValueString for x in self.viaHeaderFields]
 
     @property
     def viaHeaderFields(self):
         if self._viaHeaderFields is None:
             self._viaHeaderFields = [headerField for headerField in self.headerFields if headerField.isVia]
         return self._viaHeaderFields
+
+    # TODO: need to test
+    @property
+    def routeHeaderFields(self):
+        if self._routeHeaderFields is None:
+            self._routeHeaderFields = [headerField for headerField in self.headerFields if headerField.isRoute]
+        return self._routeHeaderFields
+
+    # TODO: need to test
+    @property
+    def routeURIs(self):
+        # TODO: this will not lazily initialize if necessary, right?
+        # if self._routeHeaderFields is not None:
+        #     return [x.fieldValueString for x in self._routeHeaderFields]
+        # return []
+        return [x.sipURI for x in self.routeHeaderFields]
+
+    # TODO: need to test
+    @property
+    def recordRouteHeaderFields(self):
+        if self._recordRouteHeaderFields is None:
+            self._recordRouteHeaderFields = [headerField for headerField in self.headerFields if headerField.isRecordRoute]
+        return self._recordRouteHeaderFields
+
+    # TODO: need to test
+    @property
+    def recordRouteURIs(self):
+        # TODO: this will not lazily initialize if necessary, right?
+        # if self._recordRouteHeaderFields is not None:
+        #     return [x.fieldValueString for x in self._recordRouteHeaderFields]
+        # return []
+        return [x.sipURI for x in self.recordRouteHeaderFields]
 
     # TODO:  need to test
     def addHeaderFieldAfterHeaderFieldsOfSameClass(self, aHeaderField):
@@ -161,6 +197,11 @@ class SIPHeader(object):
             insertionIndex = toFromIndex
         headerFields.insert(max(0, insertionIndex), aHeaderField)
         self.headerFields = headerFields
+
+    # TODO: need to test
+    def removeFirstHeaderFieldOfClass(self, aClass):
+        # TODO
+        pass
 
     @property
     def knownHeaderFields(self):

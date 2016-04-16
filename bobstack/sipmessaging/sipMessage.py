@@ -98,6 +98,21 @@ class SIPMessage(object):
 
     # TODO:  need to test
     @property
+    def vias(self):
+        return self.header.vias
+
+    # TODO:  need to test
+    @property
+    def routeURIs(self):
+        return self.header.routeURIs
+
+    # TODO:  need to test
+    @property
+    def recordRouteURIs(self):
+        return self.header.recordRouteURIs
+
+    # TODO:  need to test
+    @property
     def transactionHash(self):
         return self.header.transactionHash
 

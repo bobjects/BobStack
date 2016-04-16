@@ -2,7 +2,8 @@
 
 class SIPEntity(object):
     def __init__(self):
-        self.homeDomain = None
+        # TODO: still need to test homeDomains.
+        self.homeDomains = []
         self._transports = []
 
     @property

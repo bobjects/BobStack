@@ -1,6 +1,8 @@
 import sys
 sys.path.append("../..")
 from bobstack.sipmessaging import SIPURI
+from bobstack.sipmessaging import RouteSIPHeaderField
+from bobstack.sipmessaging import RecordRouteSIPHeaderField
 from bobstack.siptransport import ConnectedSIPMessage
 from sipEntity import SIPEntity
 from sipEntityExceptions import DropMessageSIPEntityException, DropMessageAndDropConnectionSIPEntityException, SendResponseSIPEntityException
@@ -104,13 +106,24 @@ class SIPStatelessProxy(SIPEntity):
         https://tools.ietf.org/html/rfc3261#section-16.4
 
         '''
-        # TODO
-        pass
+        # TODO - for now, skip strict route stuff in the first paragraph of 16.4
+        sipMessage = connectedSIPMessageToSend.sipMessage
+        requestURI = SIPURI.newParsedFrom(sipMessage.requestURI)
+        maddr = requestURI.parameterNamed('maddr')
+        if maddr:
+            # TODO - for now, skip the maddr processing step.
+            pass
+        routeURIs = sipMessage.routeURIs
+        if routeURIs:
+            if self.sipURIMatchesUs(routeURIs[0]):
+                # TODO - remove first route header, because it matches us.
+                sipMessage.removeFirstHeaderFieldOfClass(RouteSIPHeaderField)
 
     def determineTargetForRequest(self, connectedSIPMessageToSend):
         '''
         https://tools.ietf.org/html/rfc3261#section-16.5
-
+        Special consideration for stateless proxies explained in section 16.11
+        - Choose only one target (not forking), based on time-invariant stuff.
         '''
         # TODO
         pass
@@ -122,6 +135,10 @@ class SIPStatelessProxy(SIPEntity):
         '''
         # TODO
         pass
+
+    def sipURIMatchesUs(self, aSIPURI):
+        # TODO - we will also need to verify match of transport protocol and port, right?
+        return aSIPURI.host in self.homeDomains
 
     def sendErrorResponseForRequest(self, receivedConnectedSIPMessage, statusCodeInteger=500, reasonPhraseString='Server Error', descriptionString='An unknown server error occurred.'):
         # TODO: I believe we need to reliably send this response, including retransmission, etc.  For now, just send the damn thing.
