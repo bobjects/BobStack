@@ -24,8 +24,8 @@ class SIPStatelessProxy(SIPEntity):
             self.validateRequest(receivedConnectedSIPMessage)
             connectedSIPMessageToSend = self.createConnectedSIPMessageToSendForRequest(receivedConnectedSIPMessage)
             self.preprocessRoutingInformationForRequest(connectedSIPMessageToSend)
-            self.determineTargetForRequest(connectedSIPMessageToSend)
-            self.forwardRequestToTarget(connectedSIPMessageToSend, transportIDForVia=requestArrivalTransportConnectionID)
+            targetURI = self.determineTargetForRequest(connectedSIPMessageToSend)
+            self.forwardRequestToTarget(connectedSIPMessageToSend, targetURI=targetURI, transportIDForVia=requestArrivalTransportConnectionID)
         except DropMessageSIPEntityException:
             pass
         except DropMessageAndDropConnectionSIPEntityException:
@@ -47,8 +47,8 @@ class SIPStatelessProxy(SIPEntity):
                 connectedSIPMessageToSend = self.createConnectedSIPMessageToSendForResponse(receivedConnectedSIPMessage, responseSendTransportConnection)
                 self.removeViaForResponse(connectedSIPMessageToSend)
                 self.rewriteRecordRouteForResponse(connectedSIPMessageToSend)
-                self.determineTargetForResponse(connectedSIPMessageToSend)
-                self.forwardResponseToTarget(connectedSIPMessageToSend)
+                targetURI = self.determineTargetForResponse(connectedSIPMessageToSend)
+                self.forwardResponseToTarget(connectedSIPMessageToSend, targetURI=targetURI)
         except DropMessageSIPEntityException:
             pass
         except DropMessageAndDropConnectionSIPEntityException:
@@ -125,10 +125,21 @@ class SIPStatelessProxy(SIPEntity):
         Special consideration for stateless proxies explained in section 16.11
         - Choose only one target (not forking), based on time-invariant stuff.
         '''
-        # TODO
-        pass
+        sipMessage = connectedSIPMessageToSend.sipMessage
+        requestURI = SIPURI.newParsedFrom(sipMessage.requestURI)
+        maddr = requestURI.parameterNamed('maddr')
+        if maddr:
+            return requestURI
+        if not self.sipURIMatchesUs(requestURI):
+            return requestURI
+        # TODO - we are responsible for this request.  We will have a registrar
+        # or location service, probably implemented using the Strategy pattern,
+        # but for now, let's just answer a 404.  We will
+        # implement that location service later.
+        raise SendResponseSIPEntityException(statusCodeInteger=404, reasonPhraseString='Not Found')
 
-    def forwardRequestToTarget(self, connectedSIPMessageToSend, transportIDForVia=None):
+
+    def forwardRequestToTarget(self, connectedSIPMessageToSend, targetURI=None, transportIDForVia=None):
         '''
         https://tools.ietf.org/html/rfc3261#section-16.6
 
@@ -177,7 +188,7 @@ class SIPStatelessProxy(SIPEntity):
         # TODO
         pass
 
-    def forwardResponseToTarget(self, connectedSIPMessageToSend):
+    def forwardResponseToTarget(self, connectedSIPMessageToSend, targetURI=None):
         # TODO
         pass
 
