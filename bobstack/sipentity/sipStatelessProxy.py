@@ -3,6 +3,8 @@ sys.path.append("../..")
 from bobstack.sipmessaging import SIPURI
 from bobstack.sipmessaging import RouteSIPHeaderField
 from bobstack.sipmessaging import RecordRouteSIPHeaderField
+from bobstack.sipmessaging import MaxForwardsSIPHeaderField
+from bobstack.sipmessaging import ServerSIPHeaderField
 from bobstack.siptransport import ConnectedSIPMessage
 from sipEntity import SIPEntity
 from sipEntityExceptions import DropMessageSIPEntityException, DropMessageAndDropConnectionSIPEntityException, SendResponseSIPEntityException
@@ -142,10 +144,44 @@ class SIPStatelessProxy(SIPEntity):
     def forwardRequestToTarget(self, connectedSIPMessageToSend, targetURI=None, transportIDForVia=None):
         '''
         https://tools.ietf.org/html/rfc3261#section-16.6
-
         '''
-        # TODO
-        pass
+        sipMessage = connectedSIPMessageToSend.sipMessage
+        # TODO: in progress
+        # 1. Copy request
+        #   (already copied it)
+        # 2.  Update the Request-URI
+        # TODO: need to remove any URI parameters that are not allowed in a Request URI.
+        # TODO: When we set an attribute on the start line, we may need to manually mark the sip message as dirty.
+        if targetURI:
+            sipMessage.startLine.requestURI = targetURI
+        # 3.  Update the Max-Forwards header field
+        if sipMessage.maxForwards is not None:
+            sipMessage.header.maxForwardsHeaderField.integerValue -= 1
+        else:
+            # TODO: inserting a header field - we should make a method that inserts it using an aesthetically-pleasing order
+            # relative to other header fields.  Each header field concrete subclass would have an integer sort attribute for that.
+            sipMessage.header.addHeaderField(MaxForwardsSIPHeaderField.newForIntegerValue(70))
+        # 4.  Optionally add a Record-route header field value
+        # TODO: is this the best way to get the URI host?
+        # TODO: are record-route header fields only used for INVITE?  Should we only do this if it's an INVITE?
+        # TODO: sip or sips scheme?  Should that be derived from the transport?  For now, hard-code to 'sip'
+        recordRouteURI = SIPURI.newForAttributes(host=self.transports[0].bindAddress, port=self.transports[0].bindPort, scheme='sip', parameterNamesAndValueStrings={'lr': None})
+        recordRouteHeaderField = RecordRouteSIPHeaderField.newForAttributes(recordRouteURI)
+        if transportIDForVia:
+            # TODO:  is this correct?  Do we want to put that state into this header or the Via?
+            recordRouteHeaderField.parameterNamedPut('bobstackTransportID', transportIDForVia)
+        sipMessage.header.addHeaderField(recordRouteHeaderField)
+        # 5.  Optionally add additional header fields
+        # TODO: make the server header field a user-settable parameter.
+        sipMessage.header.addHeaderField(ServerSIPHeaderField.newForValueString('BobStack'))
+        # 6.  Postprocess routing information
+        # 7.  Determine the next-hop address, port, and transport
+        # 8.  Add a Via header field value
+        # 9.  Add a Content-Length header field if necessary
+        # 10. Forward the new request
+        # 11. Set timer C
+
+
 
     def sipURIMatchesUs(self, aSIPURI):
         # TODO - we will also need to verify match of transport protocol and port, right?

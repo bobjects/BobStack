@@ -158,6 +158,10 @@ class SIPHeader(object):
         return [x.sipURI for x in self.recordRouteHeaderFields]
 
     # TODO:  need to test
+    def addHeaderField(self, aSIPHeaderField):
+        self.headerFields.append(aSIPHeaderField)
+
+    # TODO:  need to test
     def addHeaderFieldAfterHeaderFieldsOfSameClass(self, aHeaderField):
         headerFields = self.headerFields
         classIndex = -1

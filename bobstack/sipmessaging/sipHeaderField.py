@@ -33,6 +33,11 @@ class SIPHeaderField(object):
         answer.fieldValueString = fieldValueString
         return answer
 
+    # TODO: need to test
+    @classmethod
+    def newForValueString(cls, aString):
+        return cls.newForFieldNameAndValueString(cls.canonicalFieldName, aString)
+
     # noinspection PyNestedDecorators
     @classproperty
     @classmethod
