@@ -199,8 +199,10 @@ class SIPHeader(object):
 
     # TODO: need to test
     def removeFirstHeaderFieldOfClass(self, aClass):
-        # TODO
-        pass
+        for i, j in enumerate(self.headerFields):
+            if j.__class__ is aClass:
+                self.headerFields.pop(i)
+                return
 
     @property
     def knownHeaderFields(self):
@@ -290,6 +292,22 @@ class SIPHeader(object):
                 answer.update(callID)
                 self._dialogHash = answer.hexdigest()
         return self._dialogHash
+
+    # TODO:  need to test.
+    # TODO:  should cache this.
+    @property
+    def invariantBranchHash(self):
+        # TODO: we may need to extend this when we want to be resilient to loop and spiral detection
+        # See section 16.6 point 8 of RFC3261.
+        answer = sha1()
+        # It's OK if some of these are None.
+        answer.update(str(self.toTag))
+        answer.update(str(self.fromTag))
+        answer.update(str(self.callID))
+        answer.update(str(self.cSeq))
+        if self.vias:
+            answer.update(self.vias[0])
+        return answer.hexdigest()
 
     # TODO:  need to test.
     @property

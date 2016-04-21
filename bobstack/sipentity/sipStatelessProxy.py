@@ -1,6 +1,8 @@
 import sys
+from hashlib import sha1
 sys.path.append("../..")
 from bobstack.sipmessaging import SIPURI
+from bobstack.sipmessaging import ViaSIPHeaderField
 from bobstack.sipmessaging import RouteSIPHeaderField
 from bobstack.sipmessaging import RecordRouteSIPHeaderField
 from bobstack.sipmessaging import MaxForwardsSIPHeaderField
@@ -175,8 +177,28 @@ class SIPStatelessProxy(SIPEntity):
         # TODO: make the server header field a user-settable parameter.
         sipMessage.header.addHeaderField(ServerSIPHeaderField.newForValueString('BobStack'))
         # 6.  Postprocess routing information
+        routeURIs = sipMessage.header.routeURIs
+        if routeURIs:
+            if 'lr' not in routeURIs[0].parameterNames:
+                # TODO: When we set an attribute on the start line, we may need to manually mark the sip message as dirty.
+                sipMessage.header.addHeaderFieldAfterHeaderFieldsOfSameClass(RouteSIPHeaderField.newForAttributes(SIPURI.newParsedFrom(sipMessage.startLine.requestURI)))
+                sipMessage.startLine.requestURI = routeURIs[0].rawString
+                # TODO: Is the class actually the same object, considering that we're accessing it from a different directory?  Trap for young players.
+                sipMessage.header.removeFirstHeaderFieldOfClass(RouteSIPHeaderField)
+                uriToDetermineNextHop = sipMessage.requestURI
+            else:
+                uriToDetermineNextHop = routeURIs[0]
+        else:
+            uriToDetermineNextHop = sipMessage.requestURI
         # 7.  Determine the next-hop address, port, and transport
+        # TODO:  This is about determining the target set.
+        # TODO:  Gotta study RFC3263 (i.e. reference 4 of 3261)
         # 8.  Add a Via header field value
+        # TODO:  For now, don't do the loop / spiral detection stuff.
+        # TODO:  WE NEED TO USE THE TARGET SET ATTRIBUTES!  SEE "7." ABOVE!
+        newViaHeaderField = ViaSIPHeaderField.newForAttributes()
+        newViaHeaderField.generateInvariantBranchForSIPHeader(sipMessage.header)
+        sipMessage.header.addHeaderFieldBeforeHeaderFieldsOfSameClass(newViaHeaderField)
         # 9.  Add a Content-Length header field if necessary
         # 10. Forward the new request
         # 11. Set timer C

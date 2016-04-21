@@ -111,6 +111,11 @@ class SIPURI(object):
         self._parameterNamesAndValueStrings = aDictionary
         self.clearRawString()
 
+    # TODO: need to test.
+    @property
+    def parameterNames(self):
+        return self.parameterNamesAndValueStrings.keys()
+
     def parameterNamed(self, keyString):
         return self.parameterNamesAndValueStrings.get(keyString, None)
 
