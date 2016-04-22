@@ -193,6 +193,9 @@ class SIPStatelessProxy(SIPEntity):
         # 7.  Determine the next-hop address, port, and transport
         # TODO:  This is about determining the target set.
         # TODO:  Gotta study RFC3263 (i.e. reference 4 of 3261)
+        # RFC3263 is mainly about DNS SRV and NAPTR.  We don't actually want to deal with
+        # DNS related stuff now, just use our dotted IPs.  There is also discussion (section 4
+        # about choosing transport.
         # 8.  Add a Via header field value
         # TODO:  For now, don't do the loop / spiral detection stuff.
         # TODO:  WE NEED TO USE THE TARGET SET ATTRIBUTES!  SEE "7." ABOVE!
