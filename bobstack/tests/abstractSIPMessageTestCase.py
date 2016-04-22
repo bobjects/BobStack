@@ -369,6 +369,9 @@ class AbstractSIPMessageTestCase(TestCase):
         self.assertEqual(3, aSIPMessage.header.recordRouteHeaderFields.__len__())
         self.assertEqual(3, aSIPMessage.header.recordRouteURIs.__len__())
         self.assertEqual(3, aSIPMessage.recordRouteURIs.__len__())
+        self.assertIsInstance(aSIPMessage.transactionHash, basestring)
+        self.assertIsInstance(aSIPMessage.dialogHash, (basestring, type(None)))
+        self.assertIsInstance(aSIPMessage.header.invariantBranchHash, (basestring, type(None)))
         # TODO: assert other headers besides just content-length and via.
         self.assertEqual('SIP/2.0/TLS 200.25.3.150;branch=z9hG4bK0ee8d3e272e31ca195299efc500', aSIPMessage.header.vias[0])
         self.assertEqual('SIP/2.0/TLS 200.25.3.250;branch=z9hG4bKfdkajhdiruyalkghjladksjf', aSIPMessage.header.vias[1])

@@ -200,7 +200,10 @@ class SIPStatelessProxy(SIPEntity):
         newViaHeaderField.generateInvariantBranchForSIPHeader(sipMessage.header)
         sipMessage.header.addHeaderFieldBeforeHeaderFieldsOfSameClass(newViaHeaderField)
         # 9.  Add a Content-Length header field if necessary
+        # TODO: if the target transport is stream-oriented, e.g. TLS or TCP, and the message has no Content-Length: header field, add one.
+        # TODO: So we'll need to wait until step 7 is done, to know the transport.
         # 10. Forward the new request
+        # TODO: need to finish step 7 before we can actually send the request.
         # 11. Set timer C
 
 

@@ -31,6 +31,7 @@ class TestSIPMessageFactoryForSanitizedLogFile(TestCase):
         self.validKnownSIPMessageCount = 0
         self.validUnknownSIPMessageCount = 0
         self.transactionHashesAndSIPMessages = {}
+        self.invariantBranchHashesAndSIPMessages = {}
         self.dialogHashesAndSIPMessages = {}
 
     @unittest.skipIf(settings.skipLongTests, "Skipping long tests for now.\n")
@@ -76,6 +77,10 @@ class TestSIPMessageFactoryForSanitizedLogFile(TestCase):
                 self.appendStringToFileNamed(h + "\r\n", 'dialogs')
                 for startLine in l:
                     self.appendStringToFileNamed('    ' + startLine + "\r\n", 'dialogs')
+            for h, l in self.invariantBranchHashesAndSIPMessages.iteritems():
+                self.appendStringToFileNamed(h + "\r\n", 'invariantBranchHashes')
+                for startLine in l:
+                    self.appendStringToFileNamed('    ' + startLine + "\r\n", 'invariantBranchHashes')
             self.closeFiles()
             # self.closeFileNamed(self.malformedSIPMessagesPathName)
             # self.closeFileNamed(self.validSIPMessagesPathName)
@@ -138,6 +143,10 @@ class TestSIPMessageFactoryForSanitizedLogFile(TestCase):
             if aSIPMessage.transactionHash not in self.transactionHashesAndSIPMessages:
                 self.transactionHashesAndSIPMessages[aSIPMessage.transactionHash] = []
             self.transactionHashesAndSIPMessages[aSIPMessage.transactionHash].append(aSIPMessage.startLine.rawString)
+        if aSIPMessage.header.invariantBranchHash:
+            if aSIPMessage.header.invariantBranchHash not in self.invariantBranchHashesAndSIPMessages:
+                self.invariantBranchHashesAndSIPMessages[aSIPMessage.header.invariantBranchHash] = []
+            self.invariantBranchHashesAndSIPMessages[aSIPMessage.header.invariantBranchHash].append(aSIPMessage.startLine.rawString)
         if aSIPMessage.dialogHash:
             if aSIPMessage.dialogHash not in self.dialogHashesAndSIPMessages:
                 self.dialogHashesAndSIPMessages[aSIPMessage.dialogHash] = []

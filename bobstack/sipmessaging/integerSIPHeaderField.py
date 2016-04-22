@@ -16,7 +16,6 @@ class IntegerSIPHeaderField(SIPHeaderField):
     def newForFieldNameAndValueString(cls, fieldName="", fieldValueString="0"):
         return super(IntegerSIPHeaderField, cls).newForFieldNameAndValueString(fieldName, fieldValueString)
 
-    # TODO: Need to test
     @classmethod
     def newForIntegerValue(cls, anInteger):
         return cls.newForValueString(str(anInteger))

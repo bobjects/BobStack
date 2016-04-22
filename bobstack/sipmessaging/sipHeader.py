@@ -117,10 +117,6 @@ class SIPHeader(object):
 
     @property
     def vias(self):
-        # TODO: this will not lazily initialize if necessary, right?
-        # if self._viaHeaderFields is not None:
-        #     return [x.fieldValueString for x in self._viaHeaderFields]
-        # return []
         return [x.fieldValueString for x in self.viaHeaderFields]
 
     @property
@@ -137,10 +133,6 @@ class SIPHeader(object):
 
     @property
     def routeURIs(self):
-        # TODO: this will not lazily initialize if necessary, right?
-        # if self._routeHeaderFields is not None:
-        #     return [x.fieldValueString for x in self._routeHeaderFields]
-        # return []
         return [x.sipURI for x in self.routeHeaderFields]
 
     @property
@@ -151,10 +143,6 @@ class SIPHeader(object):
 
     @property
     def recordRouteURIs(self):
-        # TODO: this will not lazily initialize if necessary, right?
-        # if self._recordRouteHeaderFields is not None:
-        #     return [x.fieldValueString for x in self._recordRouteHeaderFields]
-        # return []
         return [x.sipURI for x in self.recordRouteHeaderFields]
 
     # TODO:  need to test
@@ -262,7 +250,6 @@ class SIPHeader(object):
                 stringio.close()
 
     # TODO: implement properties used here.
-    # TODO:  need to test.
     @property
     def transactionHash(self):
         # cseq + branch id on Via header (the last one, which is the via of the original request)
@@ -278,7 +265,6 @@ class SIPHeader(object):
                     self._transactionHash = answer.hexdigest()
         return self._transactionHash
 
-    # TODO:  need to test.
     @property
     def dialogHash(self):
         if not self._dialogHash:
@@ -293,7 +279,6 @@ class SIPHeader(object):
                 self._dialogHash = answer.hexdigest()
         return self._dialogHash
 
-    # TODO:  need to test.
     # TODO:  should cache this.
     @property
     def invariantBranchHash(self):

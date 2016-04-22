@@ -88,6 +88,8 @@ class TestContentLengthSipHeaderField(AbstractIntegerSIPHeaderFieldTestCase):
                 self.assertTrue(headerField.isContentLength)
                 headerField = self.sipHeaderFieldClassUnderTest.newForFieldNameAndValueString(fieldValueString=fieldValueString)
                 self.assertTrue(headerField.isContentLength)
+                headerField = self.sipHeaderFieldClassUnderTest.newForValueString(fieldValueString=fieldValueString)
+                self.assertTrue(headerField.isContentLength)
 
 
 class TestAcceptSipHeaderField(AbstractSIPHeaderFieldTestCase):
@@ -110,6 +112,8 @@ class TestAcceptSipHeaderField(AbstractSIPHeaderFieldTestCase):
         for fieldName in self.canonicalFieldNames:
             for fieldValueString in self.canonicalFieldValues:
                 headerField = self.sipHeaderFieldClassUnderTest.newForFieldNameAndValueString(fieldName=fieldName, fieldValueString=fieldValueString)
+                self.assertTrue(headerField.isAccept)
+                headerField = self.sipHeaderFieldClassUnderTest.newForValueString(fieldValueString=fieldValueString)
                 self.assertTrue(headerField.isAccept)
                 headerField = self.sipHeaderFieldClassUnderTest.newForAttributes(fieldValueString=fieldValueString)
                 self.assertTrue(headerField.isAccept)
@@ -136,6 +140,8 @@ class TestAcceptEncodingSipHeaderField(AbstractSIPHeaderFieldTestCase):
             for fieldValueString in self.canonicalFieldValues:
                 headerField = self.sipHeaderFieldClassUnderTest.newForFieldNameAndValueString(fieldName=fieldName, fieldValueString=fieldValueString)
                 self.assertTrue(headerField.isAcceptEncoding)
+                headerField = self.sipHeaderFieldClassUnderTest.newForValueString(fieldValueString=fieldValueString)
+                self.assertTrue(headerField.isAcceptEncoding)
                 headerField = self.sipHeaderFieldClassUnderTest.newForAttributes(fieldValueString=fieldValueString)
                 self.assertTrue(headerField.isAcceptEncoding)
 
@@ -160,6 +166,8 @@ class TestAcceptLanguageSipHeaderField(AbstractSIPHeaderFieldTestCase):
         for fieldName in self.canonicalFieldNames:
             for fieldValueString in self.canonicalFieldValues:
                 headerField = self.sipHeaderFieldClassUnderTest.newForFieldNameAndValueString(fieldName=fieldName, fieldValueString=fieldValueString)
+                self.assertTrue(headerField.isAcceptLanguage)
+                headerField = self.sipHeaderFieldClassUnderTest.newForValueString(fieldValueString=fieldValueString)
                 self.assertTrue(headerField.isAcceptLanguage)
                 headerField = self.sipHeaderFieldClassUnderTest.newForAttributes(fieldValueString=fieldValueString)
                 self.assertTrue(headerField.isAcceptLanguage)
@@ -186,6 +194,8 @@ class TestAllowSipHeaderField(AbstractSIPHeaderFieldTestCase):
             for fieldValueString in self.canonicalFieldValues:
                 headerField = self.sipHeaderFieldClassUnderTest.newForFieldNameAndValueString(fieldName=fieldName, fieldValueString=fieldValueString)
                 self.assertTrue(headerField.isAllow)
+                headerField = self.sipHeaderFieldClassUnderTest.newForValueString(fieldValueString=fieldValueString)
+                self.assertTrue(headerField.isAllow)
                 headerField = self.sipHeaderFieldClassUnderTest.newForAttributes(fieldValueString=fieldValueString)
                 self.assertTrue(headerField.isAllow)
 
@@ -210,6 +220,8 @@ class TestAuthorizationSipHeaderField(AbstractSIPHeaderFieldTestCase):
         for fieldName in self.canonicalFieldNames:
             for fieldValueString in self.canonicalFieldValues:
                 headerField = self.sipHeaderFieldClassUnderTest.newForFieldNameAndValueString(fieldName=fieldName, fieldValueString=fieldValueString)
+                self.assertTrue(headerField.isAuthorization)
+                headerField = self.sipHeaderFieldClassUnderTest.newForValueString(fieldValueString=fieldValueString)
                 self.assertTrue(headerField.isAuthorization)
                 headerField = self.sipHeaderFieldClassUnderTest.newForAttributes(fieldValueString=fieldValueString)
                 self.assertTrue(headerField.isAuthorization)
@@ -236,6 +248,8 @@ class TestCSeqSipHeaderField(AbstractSIPHeaderFieldTestCase):
             for fieldValueString in self.canonicalFieldValues:
                 headerField = self.sipHeaderFieldClassUnderTest.newForFieldNameAndValueString(fieldName=fieldName, fieldValueString=fieldValueString)
                 self.assertTrue(headerField.isCSeq)
+                headerField = self.sipHeaderFieldClassUnderTest.newForValueString(fieldValueString=fieldValueString)
+                self.assertTrue(headerField.isCSeq)
                 headerField = self.sipHeaderFieldClassUnderTest.newForAttributes(fieldValueString=fieldValueString)
                 self.assertTrue(headerField.isCSeq)
 
@@ -261,6 +275,8 @@ class TestCallIDSipHeaderField(AbstractSIPHeaderFieldTestCase):
             for fieldValueString in self.canonicalFieldValues:
                 headerField = self.sipHeaderFieldClassUnderTest.newForFieldNameAndValueString(fieldName=fieldName, fieldValueString=fieldValueString)
                 self.assertTrue(headerField.isCallID)
+                headerField = self.sipHeaderFieldClassUnderTest.newForValueString(fieldValueString=fieldValueString)
+                self.assertTrue(headerField.isCallID)
                 headerField = self.sipHeaderFieldClassUnderTest.newForAttributes(fieldValueString=fieldValueString)
                 self.assertTrue(headerField.isCallID)
 
@@ -285,6 +301,8 @@ class TestCallInfoSipHeaderField(AbstractSIPHeaderFieldTestCase):
         for fieldName in self.canonicalFieldNames:
             for fieldValueString in self.canonicalFieldValues:
                 headerField = self.sipHeaderFieldClassUnderTest.newForFieldNameAndValueString(fieldName=fieldName, fieldValueString=fieldValueString)
+                self.assertTrue(headerField.isCallInfo)
+                headerField = self.sipHeaderFieldClassUnderTest.newForValueString(fieldValueString=fieldValueString)
                 self.assertTrue(headerField.isCallInfo)
                 headerField = self.sipHeaderFieldClassUnderTest.newForAttributes(fieldValueString=fieldValueString)
                 self.assertTrue(headerField.isCallInfo)
@@ -506,6 +524,8 @@ class TestContentDispositionSipHeaderField(AbstractSIPHeaderFieldTestCase):
             for fieldValueString in self.canonicalFieldValues:
                 headerField = self.sipHeaderFieldClassUnderTest.newForFieldNameAndValueString(fieldName=fieldName, fieldValueString=fieldValueString)
                 self.assertTrue(headerField.isContentDisposition)
+                headerField = self.sipHeaderFieldClassUnderTest.newForValueString(fieldValueString=fieldValueString)
+                self.assertTrue(headerField.isContentDisposition)
                 headerField = self.sipHeaderFieldClassUnderTest.newForAttributes(fieldValueString=fieldValueString)
                 self.assertTrue(headerField.isContentDisposition)
 
@@ -530,6 +550,8 @@ class TestContentTypeSipHeaderField(AbstractSIPHeaderFieldTestCase):
         for fieldName in self.canonicalFieldNames:
             for fieldValueString in self.canonicalFieldValues:
                 headerField = self.sipHeaderFieldClassUnderTest.newForFieldNameAndValueString(fieldName=fieldName, fieldValueString=fieldValueString)
+                self.assertTrue(headerField.isContentType)
+                headerField = self.sipHeaderFieldClassUnderTest.newForValueString(fieldValueString=fieldValueString)
                 self.assertTrue(headerField.isContentType)
                 headerField = self.sipHeaderFieldClassUnderTest.newForAttributes(fieldValueString=fieldValueString)
                 self.assertTrue(headerField.isContentType)
@@ -556,6 +578,8 @@ class TestDateSipHeaderField(AbstractSIPHeaderFieldTestCase):
             for fieldValueString in self.canonicalFieldValues:
                 headerField = self.sipHeaderFieldClassUnderTest.newForFieldNameAndValueString(fieldName=fieldName, fieldValueString=fieldValueString)
                 self.assertTrue(headerField.isDate)
+                headerField = self.sipHeaderFieldClassUnderTest.newForValueString(fieldValueString=fieldValueString)
+                self.assertTrue(headerField.isDate)
                 headerField = self.sipHeaderFieldClassUnderTest.newForAttributes(fieldValueString=fieldValueString)
                 self.assertTrue(headerField.isDate)
 
@@ -580,6 +604,8 @@ class TestExpiresSipHeaderField(AbstractIntegerSIPHeaderFieldTestCase):
         for fieldName in self.canonicalFieldNames:
             for fieldValueString in self.canonicalFieldValues:
                 headerField = self.sipHeaderFieldClassUnderTest.newForFieldNameAndValueString(fieldName=fieldName, fieldValueString=fieldValueString)
+                self.assertTrue(headerField.isExpires)
+                headerField = self.sipHeaderFieldClassUnderTest.newForValueString(fieldValueString=fieldValueString)
                 self.assertTrue(headerField.isExpires)
                 headerField = self.sipHeaderFieldClassUnderTest.newForFieldNameAndValueString(fieldValueString=fieldValueString)
                 self.assertTrue(headerField.isExpires)
@@ -836,6 +862,8 @@ class TestMaxForwardsSipHeaderField(AbstractIntegerSIPHeaderFieldTestCase):
             for fieldValueString in self.canonicalFieldValues:
                 headerField = self.sipHeaderFieldClassUnderTest.newForFieldNameAndValueString(fieldName=fieldName, fieldValueString=fieldValueString)
                 self.assertTrue(headerField.isMaxForwards)
+                headerField = self.sipHeaderFieldClassUnderTest.newForValueString(fieldValueString=fieldValueString)
+                self.assertTrue(headerField.isMaxForwards)
                 headerField = self.sipHeaderFieldClassUnderTest.newForFieldNameAndValueString(fieldValueString=fieldValueString)
                 self.assertTrue(headerField.isMaxForwards)
 
@@ -923,6 +951,8 @@ class TestRequireSipHeaderField(AbstractSIPHeaderFieldTestCase):
             for fieldValueString in self.canonicalFieldValues:
                 headerField = self.sipHeaderFieldClassUnderTest.newForFieldNameAndValueString(fieldName=fieldName, fieldValueString=fieldValueString)
                 self.assertTrue(headerField.isRequire)
+                headerField = self.sipHeaderFieldClassUnderTest.newForValueString(fieldValueString=fieldValueString)
+                self.assertTrue(headerField.isRequire)
                 headerField = self.sipHeaderFieldClassUnderTest.newForAttributes(fieldValueString=fieldValueString)
                 self.assertTrue(headerField.isRequire)
 
@@ -947,6 +977,8 @@ class TestRetryAfterSipHeaderField(AbstractIntegerSIPHeaderFieldTestCase):
         for fieldName in self.canonicalFieldNames:
             for fieldValueString in self.canonicalFieldValues:
                 headerField = self.sipHeaderFieldClassUnderTest.newForFieldNameAndValueString(fieldName=fieldName, fieldValueString=fieldValueString)
+                self.assertTrue(headerField.isRetryAfter)
+                headerField = self.sipHeaderFieldClassUnderTest.newForValueString(fieldValueString=fieldValueString)
                 self.assertTrue(headerField.isRetryAfter)
                 headerField = self.sipHeaderFieldClassUnderTest.newForFieldNameAndValueString(fieldValueString=fieldValueString)
                 self.assertTrue(headerField.isRetryAfter)
@@ -1029,6 +1061,8 @@ class TestServerSipHeaderField(AbstractSIPHeaderFieldTestCase):
             for fieldValueString in self.canonicalFieldValues:
                 headerField = self.sipHeaderFieldClassUnderTest.newForFieldNameAndValueString(fieldName=fieldName, fieldValueString=fieldValueString)
                 self.assertTrue(headerField.isServer)
+                headerField = self.sipHeaderFieldClassUnderTest.newForValueString(fieldValueString=fieldValueString)
+                self.assertTrue(headerField.isServer)
                 headerField = self.sipHeaderFieldClassUnderTest.newForAttributes(fieldValueString=fieldValueString)
                 self.assertTrue(headerField.isServer)
 
@@ -1053,6 +1087,8 @@ class TestSessionExpiresSipHeaderField(AbstractIntegerSIPHeaderFieldTestCase):
         for fieldName in self.canonicalFieldNames:
             for fieldValueString in self.canonicalFieldValues:
                 headerField = self.sipHeaderFieldClassUnderTest.newForFieldNameAndValueString(fieldName=fieldName, fieldValueString=fieldValueString)
+                self.assertTrue(headerField.isSessionExpires)
+                headerField = self.sipHeaderFieldClassUnderTest.newForValueString(fieldValueString=fieldValueString)
                 self.assertTrue(headerField.isSessionExpires)
                 headerField = self.sipHeaderFieldClassUnderTest.newForFieldNameAndValueString(fieldValueString=fieldValueString)
                 self.assertTrue(headerField.isSessionExpires)
@@ -1079,6 +1115,8 @@ class TestSupportedSipHeaderField(AbstractSIPHeaderFieldTestCase):
             for fieldValueString in self.canonicalFieldValues:
                 headerField = self.sipHeaderFieldClassUnderTest.newForFieldNameAndValueString(fieldName=fieldName, fieldValueString=fieldValueString)
                 self.assertTrue(headerField.isSupported)
+                headerField = self.sipHeaderFieldClassUnderTest.newForValueString(fieldValueString=fieldValueString)
+                self.assertTrue(headerField.isSupported)
                 headerField = self.sipHeaderFieldClassUnderTest.newForAttributes(fieldValueString=fieldValueString)
                 self.assertTrue(headerField.isSupported)
 
@@ -1103,6 +1141,8 @@ class TestTimestampSipHeaderField(AbstractIntegerSIPHeaderFieldTestCase):
         for fieldName in self.canonicalFieldNames:
             for fieldValueString in self.canonicalFieldValues:
                 headerField = self.sipHeaderFieldClassUnderTest.newForFieldNameAndValueString(fieldName=fieldName, fieldValueString=fieldValueString)
+                self.assertTrue(headerField.isTimestamp)
+                headerField = self.sipHeaderFieldClassUnderTest.newForValueString(fieldValueString=fieldValueString)
                 self.assertTrue(headerField.isTimestamp)
                 headerField = self.sipHeaderFieldClassUnderTest.newForFieldNameAndValueString(fieldValueString=fieldValueString)
                 self.assertTrue(headerField.isTimestamp)
@@ -1359,6 +1399,8 @@ class TestUserAgentSipHeaderField(AbstractSIPHeaderFieldTestCase):
             for fieldValueString in self.canonicalFieldValues:
                 headerField = self.sipHeaderFieldClassUnderTest.newForFieldNameAndValueString(fieldName=fieldName, fieldValueString=fieldValueString)
                 self.assertTrue(headerField.isUserAgent)
+                headerField = self.sipHeaderFieldClassUnderTest.newForValueString(fieldValueString=fieldValueString)
+                self.assertTrue(headerField.isUserAgent)
                 headerField = self.sipHeaderFieldClassUnderTest.newForAttributes(fieldValueString=fieldValueString)
                 self.assertTrue(headerField.isUserAgent)
 
@@ -1384,6 +1426,8 @@ class TestWWWAuthenticateSipHeaderField(AbstractSIPHeaderFieldTestCase):
             for fieldValueString in self.canonicalFieldValues:
                 headerField = self.sipHeaderFieldClassUnderTest.newForFieldNameAndValueString(fieldName=fieldName, fieldValueString=fieldValueString)
                 self.assertTrue(headerField.isWWWAuthenticate)
+                headerField = self.sipHeaderFieldClassUnderTest.newForValueString(fieldValueString=fieldValueString)
+                self.assertTrue(headerField.isWWWAuthenticate)
                 headerField = self.sipHeaderFieldClassUnderTest.newForAttributes(fieldValueString=fieldValueString)
                 self.assertTrue(headerField.isWWWAuthenticate)
 
@@ -1408,6 +1452,8 @@ class TestWarningSipHeaderField(AbstractSIPHeaderFieldTestCase):
         for fieldName in self.canonicalFieldNames:
             for fieldValueString in self.canonicalFieldValues:
                 headerField = self.sipHeaderFieldClassUnderTest.newForFieldNameAndValueString(fieldName=fieldName, fieldValueString=fieldValueString)
+                self.assertTrue(headerField.isWarning)
+                headerField = self.sipHeaderFieldClassUnderTest.newForValueString(fieldValueString=fieldValueString)
                 self.assertTrue(headerField.isWarning)
                 headerField = self.sipHeaderFieldClassUnderTest.newForAttributes(fieldValueString=fieldValueString)
                 self.assertTrue(headerField.isWarning)

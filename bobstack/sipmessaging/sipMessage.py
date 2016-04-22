@@ -108,12 +108,10 @@ class SIPMessage(object):
     def recordRouteURIs(self):
         return self.header.recordRouteURIs
 
-    # TODO:  need to test
     @property
     def transactionHash(self):
         return self.header.transactionHash
 
-    # TODO:  need to test
     @property
     def dialogHash(self):
         return self.header.dialogHash
