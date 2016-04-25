@@ -165,6 +165,63 @@ class AbstractSIPMessageTestCase(TestCase):
                     'Content-Length: 11')  # This last one actually instantiates a ContentLengthSIPHeaderField.
         return answer.replace("SIPMETHODTOREPLACE", self.sipMethodString)
 
+    # TODO:  need to do this folding test.  Wrote the folded message, need to write the test.
+    @property
+    def oneBigHeaderStringWithFoldingForAssertion(self):
+        answer =   ('From: <sip:200.25.3.150:5061>;tag=0ee8d3e272e31c9195299efc500\r\n'
+                    'To: <sip:example.com:5061>\r\n'
+                    'Call-ID: 0ee8d3e272e31c9195299efc500\r\n'
+                    'CSeq: 6711 \r\n'
+                    '            SIPMETHODTOREPLACE\r\n'
+                    'Max-Forwards: 70\r\n'
+                    'Via: SIP/2.0/TLS 200.25.3.150;branch=z9hG4bK0ee8d3e272e31ca195299efc500\r\n'
+                    'Via:\r\n'
+                    '  SIP/2.0/TLS 200.25.3.250;branch=z9hG4bKfdkajhdiruyalkghjladksjf\r\n'
+                    'Via: SIP/2.0/TLS 200.25.3.255;branch=z9hG4bKduyroiuryaludhgviukfhlasf\r\n'
+                    'User-Agent:\r\n'
+                    ' Example User Agent\r\n'
+                    'Contact: <sip:invalid@200.25.3.150:5061;transport=tls>\r\n'
+                    'Route: <sip:200.25.3.230:5061;transport=tls;lr>\r\n'
+                    'Route: <sip:200.25.3.231:5061;transport=tls;lr>\r\n'
+                    'Route: <sip:200.25.3.232:5061;transport=tls;lr>\r\n'
+                    'Expires: 0\r\n'
+                    'Accept: application/sdp,application/isup,application/dtmf,application/dtmf-relay,multipart/mixed\r\n'
+                    'Accept-Encoding: x-nortel-short\r\n'
+                    'Accept-Language: en-us,fr-fr\r\n'
+                    'Allow:  ACK,BYE,CANCEL,INFO,INVITE,OPTIONS,REGISTER,SUBSCRIBE,UPDATE\r\n'
+                    'Authorization: Digest \r\n'
+                    '      username="3122221000",realm="SomeRealm",nonce="1111790769596",uri="sip:3122211004@example.com",response="9bf77d8238664fe08dafd4d2abb6f1cb",algorithm=MD5\r\n'
+                    'Call-Info: <https://lsc14pa.example.com:443/pa/direct/pictureServlet?user=3126805100@example.com>;Purpose=icon\r\n'
+                    'Content-Disposition: session;handling=required\r\n'
+                    'Content-Type: application/sdp\r\n'
+                    'Date: Sat, 01 Feb 2014 22:07:34 GMT\r\n'
+                    'Record-Route: <sip:200.25.3.230:5061;transport=tls;lr>\r\n'
+                    'Record-Route: <sip:200.25.3.231:5061;transport=tls;lr>\r\n'
+                    'Record-Route: <sip:200.25.3.232:5061;transport=tls;lr>\r\n'
+                    'Require: sdp-anat\r\n'
+                    'Retry-After: 30\r\n'
+                    'Server: Blargomatic 2.0\r\n'
+                    # TODO:  We will need to deal with the refresher parameter, i.e. we will need to
+                    # be able to specify parameter dictionaries to the newForAttributes method for
+                    # Integer header fields.  Maybe even more generically; for all SIP header fields.
+                    # 'Session-Expires: 1200;refresher=uac\r\n'
+                    'Session-Expires: 1200\r\n'
+                    'Supported: 100rel,histinfo,join,replaces,sdp-anat,timer\r\n'
+                    'Timestamp: 1392061773\r\n'
+                    'WWW-Authenticate:\r\n'
+                    '  Digest \r\n'
+                    ' algorithm=MD5,nonce="1111790769596",realm="SomeRealm"\r\n'
+                    'Warning: \r\n'
+                    ' 370 \r\n'
+                    '  200.21.3.10\r\n'
+                    ' "Insufficient Bandwidth"\r\n'
+                    'X-RTP-Stat:  PR=0;ER=0;PL=0;RB=0/0;DE=PCMU;EN=PCMU;JI=0;DL=0,0;IP=10.1.0.33:16384,132.52.127.200:20048\r\n'
+                    'x-channel:  ds/ds1-3/12;IP=132.52.127.16\r\n'
+                    'Referred-By: <sip:6006665100@example.com;user=phone> ; CorrelationID="0508817f84e7ce64745ef9753e2fbff4664321a4@200.23.3.240"\r\n'
+                    'Refer-To: <sip:6006665499;rfrid=28661859@example.com;user=phone?x-nt-resource-priority=YNBvf.2j00qao>\r\n'
+                    'Content-Length: 11')  # This last one actually instantiates a ContentLengthSIPHeaderField.
+        return answer.replace("SIPMETHODTOREPLACE", self.sipMethodString)
+
     @property
     def listOfHeaderFieldsForAssertion(self):
         return [
