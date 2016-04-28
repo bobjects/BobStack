@@ -1,4 +1,5 @@
 from abstractSIPRequestTestCase import AbstractSIPRequestTestCase
+import unittest
 import sys
 sys.path.append("..")
 from sipmessaging import UnknownSIPRequest
@@ -32,6 +33,11 @@ class TestUnknownSIPRequest(AbstractSIPRequestTestCase):
 
     def test_rendering_from_one_big_header_string(self):
         self.run_test_rendering_from_one_big_header_string()
+
+    # TODO - skipping for now.
+    @unittest.skip("temporarily skipping...")
+    def test_rendering_from_one_big_header_string_with_folding(self):
+        self.run_test_rendering_from_one_big_header_string_with_folding()
 
     def test_rendering_from_list_of_header_field_strings(self):
         self.run_test_rendering_from_list_of_header_field_strings()
@@ -77,6 +83,11 @@ class TestOPTIONSSIPRequest(AbstractSIPRequestTestCase):
     def test_rendering_from_one_big_header_string(self):
         self.run_test_rendering_from_one_big_header_string()
 
+    # TODO - skipping for now.
+    @unittest.skip("temporarily skipping...")
+    def test_rendering_from_one_big_header_string_with_folding(self):
+        self.run_test_rendering_from_one_big_header_string_with_folding()
+
     def test_rendering_from_list_of_header_field_strings(self):
         self.run_test_rendering_from_list_of_header_field_strings()
 
@@ -120,6 +131,11 @@ class TestACKSIPRequest(AbstractSIPRequestTestCase):
 
     def test_rendering_from_one_big_header_string(self):
         self.run_test_rendering_from_one_big_header_string()
+
+    # TODO - skipping for now.
+    @unittest.skip("temporarily skipping...")
+    def test_rendering_from_one_big_header_string_with_folding(self):
+        self.run_test_rendering_from_one_big_header_string_with_folding()
 
     def test_rendering_from_list_of_header_field_strings(self):
         self.run_test_rendering_from_list_of_header_field_strings()
@@ -165,6 +181,11 @@ class TestBYESIPRequest(AbstractSIPRequestTestCase):
     def test_rendering_from_one_big_header_string(self):
         self.run_test_rendering_from_one_big_header_string()
 
+    # TODO - skipping for now.
+    @unittest.skip("temporarily skipping...")
+    def test_rendering_from_one_big_header_string_with_folding(self):
+        self.run_test_rendering_from_one_big_header_string_with_folding()
+
     def test_rendering_from_list_of_header_field_strings(self):
         self.run_test_rendering_from_list_of_header_field_strings()
 
@@ -208,6 +229,11 @@ class TestCANCELSIPRequest(AbstractSIPRequestTestCase):
 
     def test_rendering_from_one_big_header_string(self):
         self.run_test_rendering_from_one_big_header_string()
+
+    # TODO - skipping for now.
+    @unittest.skip("temporarily skipping...")
+    def test_rendering_from_one_big_header_string_with_folding(self):
+        self.run_test_rendering_from_one_big_header_string_with_folding()
 
     def test_rendering_from_list_of_header_field_strings(self):
         self.run_test_rendering_from_list_of_header_field_strings()
@@ -253,6 +279,11 @@ class TestINFOSIPRequest(AbstractSIPRequestTestCase):
     def test_rendering_from_one_big_header_string(self):
         self.run_test_rendering_from_one_big_header_string()
 
+    # TODO - skipping for now.
+    @unittest.skip("temporarily skipping...")
+    def test_rendering_from_one_big_header_string_with_folding(self):
+        self.run_test_rendering_from_one_big_header_string_with_folding()
+
     def test_rendering_from_list_of_header_field_strings(self):
         self.run_test_rendering_from_list_of_header_field_strings()
 
@@ -296,6 +327,11 @@ class TestINVITESIPRequest(AbstractSIPRequestTestCase):
 
     def test_rendering_from_one_big_header_string(self):
         self.run_test_rendering_from_one_big_header_string()
+
+    # TODO - skipping for now.
+    @unittest.skip("temporarily skipping...")
+    def test_rendering_from_one_big_header_string_with_folding(self):
+        self.run_test_rendering_from_one_big_header_string_with_folding()
 
     def test_rendering_from_list_of_header_field_strings(self):
         self.run_test_rendering_from_list_of_header_field_strings()
@@ -341,6 +377,11 @@ class TestNOTIFYSIPRequest(AbstractSIPRequestTestCase):
     def test_rendering_from_one_big_header_string(self):
         self.run_test_rendering_from_one_big_header_string()
 
+    # TODO - skipping for now.
+    @unittest.skip("temporarily skipping...")
+    def test_rendering_from_one_big_header_string_with_folding(self):
+        self.run_test_rendering_from_one_big_header_string_with_folding()
+
     def test_rendering_from_list_of_header_field_strings(self):
         self.run_test_rendering_from_list_of_header_field_strings()
 
@@ -384,6 +425,11 @@ class TestREFERSIPRequest(AbstractSIPRequestTestCase):
 
     def test_rendering_from_one_big_header_string(self):
         self.run_test_rendering_from_one_big_header_string()
+
+    # TODO - skipping for now.
+    @unittest.skip("temporarily skipping...")
+    def test_rendering_from_one_big_header_string_with_folding(self):
+        self.run_test_rendering_from_one_big_header_string_with_folding()
 
     def test_rendering_from_list_of_header_field_strings(self):
         self.run_test_rendering_from_list_of_header_field_strings()
@@ -429,6 +475,11 @@ class TestREGISTERSIPRequest(AbstractSIPRequestTestCase):
     def test_rendering_from_one_big_header_string(self):
         self.run_test_rendering_from_one_big_header_string()
 
+    # TODO - skipping for now.
+    @unittest.skip("temporarily skipping...")
+    def test_rendering_from_one_big_header_string_with_folding(self):
+        self.run_test_rendering_from_one_big_header_string_with_folding()
+
     def test_rendering_from_list_of_header_field_strings(self):
         self.run_test_rendering_from_list_of_header_field_strings()
 
@@ -473,6 +524,11 @@ class TestSUBSCRIBESIPRequest(AbstractSIPRequestTestCase):
     def test_rendering_from_one_big_header_string(self):
         self.run_test_rendering_from_one_big_header_string()
 
+    # TODO - skipping for now.
+    @unittest.skip("temporarily skipping...")
+    def test_rendering_from_one_big_header_string_with_folding(self):
+        self.run_test_rendering_from_one_big_header_string_with_folding()
+
     def test_rendering_from_list_of_header_field_strings(self):
         self.run_test_rendering_from_list_of_header_field_strings()
 
@@ -516,6 +572,11 @@ class TestUPDATESIPRequest(AbstractSIPRequestTestCase):
 
     def test_rendering_from_one_big_header_string(self):
         self.run_test_rendering_from_one_big_header_string()
+
+    # TODO - skipping for now.
+    @unittest.skip("temporarily skipping...")
+    def test_rendering_from_one_big_header_string_with_folding(self):
+        self.run_test_rendering_from_one_big_header_string_with_folding()
 
     def test_rendering_from_list_of_header_field_strings(self):
         self.run_test_rendering_from_list_of_header_field_strings()

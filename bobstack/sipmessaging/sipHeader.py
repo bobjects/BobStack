@@ -35,6 +35,7 @@ class SIPHeader(object):
         self._dialogHash = None
 
     def parseAttributesFromStringIO(self, stringioToParse):
+        # TODO: don't forget to test folding in this factory method.  That's separate from the other technique.
         self._headerFields = SIPHeaderFieldFactory().allForStringIO(stringioToParse)
 
     def renderRawStringFromAttributes(self, stringio):
@@ -214,6 +215,7 @@ class SIPHeader(object):
     def isValid(self):
         return all(f.isValid for f in self.headerFields)
 
+    # TODO:  it would also be nice to make this object iterable and indexable.  E.g. someHeader[3] to get someHeader.headerFields[3]
     @property
     def headerFields(self):
         return self._headerFields

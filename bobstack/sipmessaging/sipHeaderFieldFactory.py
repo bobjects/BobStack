@@ -97,12 +97,13 @@ class SIPHeaderFieldFactory(object):
     }
 
     def allForStringIO(self, aStringIO):
-        answer = []
+        # TODO:  need to handle folding regex replacement here.
+        lineStrings = []
         lineString = aStringIO.readline().rstrip('\r\n')
         while lineString:
-            answer.append(self.nextForString(lineString))
+            lineStrings.append(lineString)
             lineString = aStringIO.readline().rstrip('\r\n')
-        return answer
+        return [self.nextForString(s) for s in lineStrings]
 
     def classForString(self, aString):
         try:

@@ -1,4 +1,5 @@
 from abstractSIPResponseTestCase import AbstractSIPResponseTestCase
+import unittest
 import sys
 sys.path.append("..")
 from sipmessaging import SIPResponse
@@ -25,6 +26,11 @@ class TestSIPResponse(AbstractSIPResponseTestCase):
 
     def test_rendering_from_one_big_header_string(self):
         self.run_test_rendering_from_one_big_header_string()
+
+    # TODO - skipping for now.
+    @unittest.skip("temporarily skipping...")
+    def test_rendering_from_one_big_header_string_with_folding(self):
+        self.run_test_rendering_from_one_big_header_string_with_folding()
 
     def test_rendering_from_list_of_header_field_strings(self):
         self.run_test_rendering_from_list_of_header_field_strings()

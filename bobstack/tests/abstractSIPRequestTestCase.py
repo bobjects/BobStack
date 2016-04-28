@@ -1,6 +1,6 @@
 from abstractSIPMessageTestCase import AbstractSIPMessageTestCase
 from sipmessaging import SIPHeader
-
+import unittest
 
 class AbstractSIPRequestTestCase(AbstractSIPMessageTestCase):
     @property
@@ -49,6 +49,13 @@ class AbstractSIPRequestTestCase(AbstractSIPMessageTestCase):
 
     def run_test_rendering_from_one_big_header_string(self):
         headerFields = self.oneBigHeaderStringForAssertion
+        request = self.sipMessageClassUnderTest.newForAttributes(sipMethod=self.sipMethodString, requestURI='sip:example.com', content='Foo Content', header=SIPHeader.newForAttributes(headerFields=headerFields))
+        self.runAssertionsForSIPMessage(request)
+
+    def run_test_rendering_from_one_big_header_string_with_folding(self):
+        headerFields = self.oneBigHeaderStringWithFoldingForAssertion
+        print headerFields
+        print 'FOO'
         request = self.sipMessageClassUnderTest.newForAttributes(sipMethod=self.sipMethodString, requestURI='sip:example.com', content='Foo Content', header=SIPHeader.newForAttributes(headerFields=headerFields))
         self.runAssertionsForSIPMessage(request)
 
