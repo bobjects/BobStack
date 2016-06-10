@@ -98,7 +98,6 @@ class ViaSIPHeaderField(SIPHeaderField):
     def generateBranch(self):
         self.branch = 'z9hG4bK-' + StrongRandomStringServer.instance.next32Bits + StrongRandomStringServer.instance.next32Bits + "-BobStack"
 
-    # TODO:  need to test
     def generateInvariantBranchForSIPHeader(self, aSIPHeader):
         self.branch = 'z9hG4bK-' + aSIPHeader.invariantBranchHash + "-BobStack"
 

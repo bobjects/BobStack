@@ -56,26 +56,26 @@ class SIPHeader(object):
             self._contentLengthHeaderField = next((headerField for headerField in self.headerFields if headerField.isContentLength), None)
         return self._contentLengthHeaderField
 
-    # TODO - cache and test
+    # TODO - cache
     @property
     def callID(self):
         if self.callIDHeaderField is not None:
             return self.callIDHeaderField.fieldValueString
         return None
 
-    # TODO - cache and test
+    # TODO - cache
     @property
     def callIDHeaderField(self):
         return next((headerField for headerField in self.headerFields if headerField.isCallID), None)
 
-    # TODO - cache and test
+    # TODO - cache
     @property
     def cSeq(self):
         if self.cSeqHeaderField is not None:
             return self.cSeqHeaderField.fieldValueString
         return None
 
-    # TODO - cache and test
+    # TODO - cache
     @property
     def cSeqHeaderField(self):
         return next((headerField for headerField in self.headerFields if headerField.isCSeq), None)
@@ -92,34 +92,36 @@ class SIPHeader(object):
     def toHeaderField(self):
         return next((headerField for headerField in self.headerFields if headerField.isTo), None)
 
-    # TODO - cache and test
+    # TODO - cache
     # @property
     # def from(self):
     #     if self.fromHeaderField is not None:
     #         return self.fromHeaderField.fieldValueString
     #     return None
 
-    # TODO - cache and test
+    # TODO - cache
     @property
     def fromHeaderField(self):
         return next((headerField for headerField in self.headerFields if headerField.isFrom), None)
 
-    # TODO:  need to test
+    # TODO - cache
     @property
     def maxForwards(self):
          if self.maxForwardsHeaderField is not None:
              return self.maxForwardsHeaderField.integerValue
          return None
 
-    # TODO:  need to test
+    # TODO - cache
     @property
     def maxForwardsHeaderField(self):
         return next((headerField for headerField in self.headerFields if headerField.isMaxForwards), None)
 
+    # TODO - cache
     @property
     def vias(self):
         return [x.fieldValueString for x in self.viaHeaderFields]
 
+    # TODO - cache
     @property
     def viaHeaderFields(self):
         if self._viaHeaderFields is None:
@@ -132,6 +134,7 @@ class SIPHeader(object):
             self._routeHeaderFields = [headerField for headerField in self.headerFields if headerField.isRoute]
         return self._routeHeaderFields
 
+    # TODO - cache
     @property
     def routeURIs(self):
         return [x.sipURI for x in self.routeHeaderFields]
@@ -142,6 +145,7 @@ class SIPHeader(object):
             self._recordRouteHeaderFields = [headerField for headerField in self.headerFields if headerField.isRecordRoute]
         return self._recordRouteHeaderFields
 
+    # TODO - cache
     @property
     def recordRouteURIs(self):
         return [x.sipURI for x in self.recordRouteHeaderFields]
@@ -296,14 +300,14 @@ class SIPHeader(object):
             answer.update(self.vias[0])
         return answer.hexdigest()
 
-    # TODO:  need to test.
+    # TODO: cache
     @property
     def toTag(self):
         toHeaderField = self.toHeaderField
         if toHeaderField:
             return toHeaderField.tag
 
-    # TODO
+    # TODO: cache
     @property
     def fromTag(self):
         fromHeaderField = self.fromHeaderField

@@ -151,6 +151,16 @@ class TestSIPMessageFactoryForSanitizedLogFile(TestCase):
             if aSIPMessage.dialogHash not in self.dialogHashesAndSIPMessages:
                 self.dialogHashesAndSIPMessages[aSIPMessage.dialogHash] = []
             self.dialogHashesAndSIPMessages[aSIPMessage.dialogHash].append(aSIPMessage.startLine.rawString)
+
+        # TODO:  log these to files?
+        self.assertIsInstance(aSIPMessage.header.callID, basestring)
+        self.assertIsInstance(aSIPMessage.header.cSeq, basestring)
+        self.assertIsInstance(aSIPMessage.header.toTag, (basestring, type(None)))
+        self.assertIsInstance(aSIPMessage.header.fromTag, basestring)
+        self.assertIsInstance(aSIPMessage.header.maxForwards, (int, type(None)))
+        self.assertIsInstance(aSIPMessage.header.routeURIs, list)
+        self.assertIsInstance(aSIPMessage.header.recordRouteURIs, list)
+
         for headerField in aSIPMessage.header.headerFields:
             if headerField.isAccept:
                 self.appendStringToFileNamed(headerField.rawString + '\r\n', 'acceptHeaderFields')

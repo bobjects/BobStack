@@ -429,6 +429,14 @@ class AbstractSIPMessageTestCase(TestCase):
         self.assertIsInstance(aSIPMessage.transactionHash, basestring)
         self.assertIsInstance(aSIPMessage.dialogHash, (basestring, type(None)))
         self.assertIsInstance(aSIPMessage.header.invariantBranchHash, (basestring, type(None)))
+        self.assertIsInstance(aSIPMessage.header.callID, basestring)
+        self.assertIsInstance(aSIPMessage.header.cSeq, basestring)
+        self.assertIsInstance(aSIPMessage.header.toTag, (basestring, type(None)))
+        self.assertIsInstance(aSIPMessage.header.fromTag, basestring)
+        self.assertIsInstance(aSIPMessage.header.maxForwards, int)
+        self.assertIsInstance(aSIPMessage.header.routeURIs, list)
+        self.assertIsInstance(aSIPMessage.header.recordRouteURIs, list)
+
         # TODO: assert other headers besides just content-length and via.
         self.assertEqual('SIP/2.0/TLS 200.25.3.150;branch=z9hG4bK0ee8d3e272e31ca195299efc500', aSIPMessage.header.vias[0])
         self.assertEqual('SIP/2.0/TLS 200.25.3.250;branch=z9hG4bKfdkajhdiruyalkghjladksjf', aSIPMessage.header.vias[1])
@@ -487,4 +495,7 @@ class AbstractSIPMessageTestCase(TestCase):
         self.assertTrue(aSIPMessage.header.headerFields[36].isUnknown)
         self.assertTrue(aSIPMessage.header.headerFields[37].isUnknown)
         self.assertTrue(aSIPMessage.header.headerFields[38].isContentLength)
+        for via in aSIPMessage.header.viaHeaderFields:
+            via.generateInvariantBranchForSIPHeader(aSIPMessage.header)
+            self.assertIsInstance(via.branch, basestring)
 

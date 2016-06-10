@@ -1585,6 +1585,7 @@ class TestViaSipHeaderField(AbstractSIPHeaderFieldTestCase):
         self.assertEqual(headerField.transport, 'UDP')
         self.assertEqual(headerField.host, '192.168.0.5')
         self.assertEqual(headerField.port, 5061)
+        self.assertIsInstance(headerField.branch, basestring)
 
     def test_branchGeneration(self):
         headerFieldString = 'Via: SIP/2.0/UDP 192.168.0.5:5061'
