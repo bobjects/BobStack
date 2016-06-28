@@ -153,10 +153,12 @@ class TestSIPMessageFactoryForSanitizedLogFile(TestCase):
             self.dialogHashesAndSIPMessages[aSIPMessage.dialogHash].append(aSIPMessage.startLine.rawString)
 
         # TODO:  log these to files?
+        print aSIPMessage.rawString
+        print ""
         self.assertIsInstance(aSIPMessage.header.callID, basestring)
         self.assertIsInstance(aSIPMessage.header.cSeq, basestring)
         self.assertIsInstance(aSIPMessage.header.toTag, (basestring, type(None)))
-        self.assertIsInstance(aSIPMessage.header.fromTag, basestring)
+        self.assertIsInstance(aSIPMessage.header.fromTag, (basestring, type(None)))
         self.assertIsInstance(aSIPMessage.header.maxForwards, (int, type(None)))
         self.assertIsInstance(aSIPMessage.header.routeURIs, list)
         self.assertIsInstance(aSIPMessage.header.recordRouteURIs, list)

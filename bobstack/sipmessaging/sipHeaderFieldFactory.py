@@ -2,6 +2,7 @@ try:
     from cStringIO import StringIO
 except ImportError:
     from StringIO import StringIO
+import re
 from concreteheaderfields import ContentLengthSIPHeaderField
 from concreteheaderfields import ViaSIPHeaderField
 from concreteheaderfields import AcceptSIPHeaderField
@@ -101,7 +102,11 @@ class SIPHeaderFieldFactory(object):
         lineStrings = []
         lineString = aStringIO.readline().rstrip('\r\n')
         while lineString:
-            lineStrings.append(lineString)
+            if lineString.startswith((' ', '\t')) and lineStrings:
+                # line folding!
+                lineStrings[-1] += lineString
+            else:
+                lineStrings.append(lineString)
             lineString = aStringIO.readline().rstrip('\r\n')
         return [self.nextForString(s) for s in lineStrings]
 

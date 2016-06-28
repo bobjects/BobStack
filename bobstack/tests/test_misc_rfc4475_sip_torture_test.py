@@ -55,7 +55,12 @@ class TestRFC4475SIPTortureTest(TestCase):
         message = SIPMessageFactory().nextForString(messageString)
         self.assertIsNotNone(message)
         self.assertIsInstance(message.isValid, bool)
-        # TODO
+        self.assertTrue(message.isValid)
+        self.assertEqual(len(message.header.headerFields), 14)
+        self.assertEqual('TO : sip:vivekg@chair-dnrc.example.com ;   tag    = 1918181833n', message.header.toHeaderField.rawString)
+        # TODO: To tag is not being parsed correctly?
+        # self.assertEqual('1918181833n', message.header.toTag)
+        # TODO - more.
 
     def testWideRangeOfValidCharacters(self):
         # https://tools.ietf.org/html/rfc4475#section-3.1.1.2
@@ -92,6 +97,8 @@ class TestRFC4475SIPTortureTest(TestCase):
         message = SIPMessageFactory().nextForString(messageString)
         self.assertIsNotNone(message)
         self.assertIsInstance(message.isValid, bool)
+        self.assertTrue(message.isValid)
+        self.assertEqual(len(message.header.headerFields), 9)
         # TODO
 
 
@@ -114,6 +121,8 @@ class TestRFC4475SIPTortureTest(TestCase):
         message = SIPMessageFactory().nextForString(messageString)
         self.assertIsNotNone(message)
         self.assertIsInstance(message.isValid, bool)
+        self.assertTrue(message.isValid)
+        self.assertEqual(len(message.header.headerFields), 9)
         # TODO
 
 
@@ -137,6 +146,8 @@ class TestRFC4475SIPTortureTest(TestCase):
         message = SIPMessageFactory().nextForString(messageString)
         self.assertIsNotNone(message)
         self.assertIsInstance(message.isValid, bool)
+        self.assertTrue(message.isValid)
+        self.assertEqual(len(message.header.headerFields), 10)
         # TODO
 
 
@@ -157,6 +168,8 @@ class TestRFC4475SIPTortureTest(TestCase):
         message = SIPMessageFactory().nextForString(messageString)
         self.assertIsNotNone(message)
         self.assertIsInstance(message.isValid, bool)
+        self.assertTrue(message.isValid)
+        self.assertEqual(len(message.header.headerFields), 7)
         # TODO
 
 
@@ -221,6 +234,9 @@ class TestRFC4475SIPTortureTest(TestCase):
         message = SIPMessageFactory().nextForString(messageString)
         self.assertIsNotNone(message)
         self.assertIsInstance(message.isValid, bool)
+        # TODO - should this be considered valid?
+        # self.assertTrue(message.isValid)
+        self.assertEqual(len(message.header.headerFields), 43)
         # TODO
 
 
@@ -262,6 +278,8 @@ class TestRFC4475SIPTortureTest(TestCase):
         message = SIPMessageFactory().nextForString(messageString)
         self.assertIsNotNone(message)
         self.assertIsInstance(message.isValid, bool)
+        self.assertFalse(message.isValid)
+        self.assertEqual(len(message.header.headerFields), 8)
         # TODO
 
 
@@ -285,6 +303,8 @@ class TestRFC4475SIPTortureTest(TestCase):
         message = SIPMessageFactory().nextForString(messageString)
         self.assertIsNotNone(message)
         self.assertIsInstance(message.isValid, bool)
+        self.assertTrue(message.isValid)
+        self.assertEqual(len(message.header.headerFields), 8)
         # TODO
 
 
@@ -310,6 +330,8 @@ class TestRFC4475SIPTortureTest(TestCase):
         message = SIPMessageFactory().nextForString(messageString)
         self.assertIsNotNone(message)
         self.assertIsInstance(message.isValid, bool)
+        self.assertTrue(message.isValid)
+        self.assertEqual(len(message.header.headerFields), 12)
         # TODO
 
 
@@ -346,6 +368,9 @@ class TestRFC4475SIPTortureTest(TestCase):
         message = SIPMessageFactory().nextForString(messageString)
         self.assertIsNotNone(message)
         self.assertIsInstance(message.isValid, bool)
+        # TODO - is this valid?
+        # self.assertTrue(message.isValid)
+        self.assertEqual(len(message.header.headerFields), 7)
         # TODO
 
 
@@ -376,6 +401,9 @@ class TestRFC4475SIPTortureTest(TestCase):
         message = SIPMessageFactory().nextForString(messageString)
         self.assertIsNotNone(message)
         self.assertIsInstance(message.isValid, bool)
+        # TODO - is this valid?
+        # self.assertTrue(message.isValid)
+        self.assertEqual(len(message.header.headerFields), 9)
         # TODO
 
 
@@ -406,6 +434,9 @@ class TestRFC4475SIPTortureTest(TestCase):
         message = SIPMessageFactory().nextForString(messageString)
         self.assertIsNotNone(message)
         self.assertIsInstance(message.isValid, bool)
+        # TODO - is this valid?
+        # self.assertTrue(message.isValid)
+        self.assertEqual(len(message.header.headerFields), 9)
         # TODO
 
 
@@ -436,6 +467,9 @@ class TestRFC4475SIPTortureTest(TestCase):
         message = SIPMessageFactory().nextForString(messageString)
         self.assertIsNotNone(message)
         self.assertIsInstance(message.isValid, bool)
+        # TODO - is this valid?
+        # self.assertTrue(message.isValid)
+        self.assertEqual(len(message.header.headerFields), 9)
         # TODO
 
 
@@ -459,6 +493,8 @@ class TestRFC4475SIPTortureTest(TestCase):
         message = SIPMessageFactory().nextForString(messageString)
         self.assertIsNotNone(message)
         self.assertIsInstance(message.isValid, bool)
+        self.assertTrue(message.isValid)
+        self.assertEqual(len(message.header.headerFields), 9)
         # TODO
 
 
@@ -480,6 +516,8 @@ class TestRFC4475SIPTortureTest(TestCase):
         message = SIPMessageFactory().nextForString(messageString)
         self.assertIsNotNone(message)
         self.assertIsInstance(message.isValid, bool)
+        self.assertTrue(message.isValid)
+        self.assertEqual(len(message.header.headerFields), 8)
         # TODO
 
 
@@ -510,6 +548,8 @@ class TestRFC4475SIPTortureTest(TestCase):
         message = SIPMessageFactory().nextForString(messageString)
         self.assertIsNotNone(message)
         self.assertIsInstance(message.isValid, bool)
+        self.assertTrue(message.isValid)
+        self.assertEqual(len(message.header.headerFields), 9)
         # TODO
 
 
@@ -540,6 +580,9 @@ class TestRFC4475SIPTortureTest(TestCase):
         message = SIPMessageFactory().nextForString(messageString)
         self.assertIsNotNone(message)
         self.assertIsInstance(message.isValid, bool)
+        # TODO - is this valid?
+        # self.assertTrue(message.isValid)
+        self.assertEqual(len(message.header.headerFields), 9)
         # TODO
 
 
@@ -570,6 +613,9 @@ class TestRFC4475SIPTortureTest(TestCase):
         message = SIPMessageFactory().nextForString(messageString)
         self.assertIsNotNone(message)
         self.assertIsInstance(message.isValid, bool)
+        # TODO - is this valid?
+        # self.assertTrue(message.isValid)
+        self.assertEqual(len(message.header.headerFields), 9)
         # TODO
 
 
@@ -600,6 +646,8 @@ class TestRFC4475SIPTortureTest(TestCase):
         message = SIPMessageFactory().nextForString(messageString)
         self.assertIsNotNone(message)
         self.assertIsInstance(message.isValid, bool)
+        self.assertTrue(message.isValid)
+        self.assertEqual(len(message.header.headerFields), 9)
         # TODO
 
 
@@ -621,6 +669,8 @@ class TestRFC4475SIPTortureTest(TestCase):
         message = SIPMessageFactory().nextForString(messageString)
         self.assertIsNotNone(message)
         self.assertIsInstance(message.isValid, bool)
+        self.assertTrue(message.isValid)
+        self.assertEqual(len(message.header.headerFields), 8)
         # TODO
 
 
@@ -651,6 +701,8 @@ class TestRFC4475SIPTortureTest(TestCase):
         message = SIPMessageFactory().nextForString(messageString)
         self.assertIsNotNone(message)
         self.assertIsInstance(message.isValid, bool)
+        self.assertTrue(message.isValid)
+        self.assertEqual(len(message.header.headerFields), 9)
         # TODO
 
 
@@ -682,6 +734,8 @@ class TestRFC4475SIPTortureTest(TestCase):
         message = SIPMessageFactory().nextForString(messageString)
         self.assertIsNotNone(message)
         self.assertIsInstance(message.isValid, bool)
+        self.assertTrue(message.isValid)
+        self.assertEqual(len(message.header.headerFields), 10)
         # TODO
 
 
@@ -703,6 +757,9 @@ class TestRFC4475SIPTortureTest(TestCase):
         message = SIPMessageFactory().nextForString(messageString)
         self.assertIsNotNone(message)
         self.assertIsInstance(message.isValid, bool)
+        # TODO - is this valid?
+        # self.assertTrue(message.isValid)
+        self.assertEqual(len(message.header.headerFields), 8)
         # TODO
 
 
@@ -724,6 +781,8 @@ class TestRFC4475SIPTortureTest(TestCase):
         message = SIPMessageFactory().nextForString(messageString)
         self.assertIsNotNone(message)
         self.assertIsInstance(message.isValid, bool)
+        self.assertTrue(message.isValid)
+        self.assertEqual(len(message.header.headerFields), 8)
         # TODO
 
 
@@ -744,6 +803,8 @@ class TestRFC4475SIPTortureTest(TestCase):
         message = SIPMessageFactory().nextForString(messageString)
         self.assertIsNotNone(message)
         self.assertIsInstance(message.isValid, bool)
+        self.assertTrue(message.isValid)
+        self.assertEqual(len(message.header.headerFields), 8)
         # TODO
 
 
@@ -764,6 +825,9 @@ class TestRFC4475SIPTortureTest(TestCase):
         message = SIPMessageFactory().nextForString(messageString)
         self.assertIsNotNone(message)
         self.assertIsInstance(message.isValid, bool)
+        # TODO - is this valid?
+        # self.assertTrue(message.isValid)
+        self.assertEqual(len(message.header.headerFields), 7)
         # TODO
 
 
@@ -784,6 +848,8 @@ class TestRFC4475SIPTortureTest(TestCase):
         message = SIPMessageFactory().nextForString(messageString)
         self.assertIsNotNone(message)
         self.assertIsInstance(message.isValid, bool)
+        self.assertTrue(message.isValid)
+        self.assertEqual(len(message.header.headerFields), 7)
         # TODO
 
 
@@ -812,6 +878,9 @@ class TestRFC4475SIPTortureTest(TestCase):
         message = SIPMessageFactory().nextForString(messageString)
         self.assertIsNotNone(message)
         self.assertIsInstance(message.isValid, bool)
+        # TODO - is this valid?
+        # self.assertTrue(message.isValid)
+        self.assertEqual(len(message.header.headerFields), 9)
         # TODO
 
 
@@ -832,6 +901,8 @@ class TestRFC4475SIPTortureTest(TestCase):
         message = SIPMessageFactory().nextForString(messageString)
         self.assertIsNotNone(message)
         self.assertIsInstance(message.isValid, bool)
+        self.assertTrue(message.isValid)
+        self.assertEqual(len(message.header.headerFields), 7)
         # TODO
 
 
@@ -853,6 +924,8 @@ class TestRFC4475SIPTortureTest(TestCase):
         message = SIPMessageFactory().nextForString(messageString)
         self.assertIsNotNone(message)
         self.assertIsInstance(message.isValid, bool)
+        self.assertTrue(message.isValid)
+        self.assertEqual(len(message.header.headerFields), 8)
         # TODO
 
 
@@ -878,6 +951,9 @@ class TestRFC4475SIPTortureTest(TestCase):
         message = SIPMessageFactory().nextForString(messageString)
         self.assertIsNotNone(message)
         self.assertIsInstance(message.isValid, bool)
+        # TODO - is this valid?
+        # self.assertTrue(message.isValid)
+        self.assertEqual(len(message.header.headerFields), 4)
         # TODO
 
 
@@ -898,6 +974,8 @@ class TestRFC4475SIPTortureTest(TestCase):
         message = SIPMessageFactory().nextForString(messageString)
         self.assertIsNotNone(message)
         self.assertIsInstance(message.isValid, bool)
+        self.assertTrue(message.isValid)
+        self.assertEqual(len(message.header.headerFields), 7)
         # TODO
 
 
@@ -918,6 +996,8 @@ class TestRFC4475SIPTortureTest(TestCase):
         message = SIPMessageFactory().nextForString(messageString)
         self.assertIsNotNone(message)
         self.assertIsInstance(message.isValid, bool)
+        self.assertTrue(message.isValid)
+        self.assertEqual(len(message.header.headerFields), 7)
         # TODO
 
 
@@ -939,6 +1019,8 @@ class TestRFC4475SIPTortureTest(TestCase):
         message = SIPMessageFactory().nextForString(messageString)
         self.assertIsNotNone(message)
         self.assertIsInstance(message.isValid, bool)
+        self.assertTrue(message.isValid)
+        self.assertEqual(len(message.header.headerFields), 8)
         # TODO
 
 
@@ -961,6 +1043,8 @@ class TestRFC4475SIPTortureTest(TestCase):
         message = SIPMessageFactory().nextForString(messageString)
         self.assertIsNotNone(message)
         self.assertIsInstance(message.isValid, bool)
+        self.assertTrue(message.isValid)
+        self.assertEqual(len(message.header.headerFields), 9)
         # TODO
 
 
@@ -986,6 +1070,8 @@ class TestRFC4475SIPTortureTest(TestCase):
         message = SIPMessageFactory().nextForString(messageString)
         self.assertIsNotNone(message)
         self.assertIsInstance(message.isValid, bool)
+        self.assertTrue(message.isValid)
+        self.assertEqual(len(message.header.headerFields), 9)
         # TODO
 
 
@@ -1007,6 +1093,8 @@ class TestRFC4475SIPTortureTest(TestCase):
         message = SIPMessageFactory().nextForString(messageString)
         self.assertIsNotNone(message)
         self.assertIsInstance(message.isValid, bool)
+        self.assertTrue(message.isValid)
+        self.assertEqual(len(message.header.headerFields), 8)
         # TODO
 
 
@@ -1044,6 +1132,9 @@ class TestRFC4475SIPTortureTest(TestCase):
         message = SIPMessageFactory().nextForString(messageString)
         self.assertIsNotNone(message)
         self.assertIsInstance(message.isValid, bool)
+        # TODO - is this valid?
+        # self.assertTrue(message.isValid)
+        self.assertEqual(len(message.header.headerFields), 15)
         # TODO
 
 
@@ -1068,6 +1159,9 @@ class TestRFC4475SIPTortureTest(TestCase):
         message = SIPMessageFactory().nextForString(messageString)
         self.assertIsNotNone(message)
         self.assertIsInstance(message.isValid, bool)
+        # TODO - is this valid?
+        # self.assertTrue(message.isValid)
+        self.assertEqual(len(message.header.headerFields), 9)
         # TODO
 
 
@@ -1098,6 +1192,8 @@ class TestRFC4475SIPTortureTest(TestCase):
         message = SIPMessageFactory().nextForString(messageString)
         self.assertIsNotNone(message)
         self.assertIsInstance(message.isValid, bool)
+        self.assertTrue(message.isValid)
+        self.assertEqual(len(message.header.headerFields), 9)
         # TODO
 
 
@@ -1118,6 +1214,8 @@ class TestRFC4475SIPTortureTest(TestCase):
         message = SIPMessageFactory().nextForString(messageString)
         self.assertIsNotNone(message)
         self.assertIsInstance(message.isValid, bool)
+        self.assertTrue(message.isValid)
+        self.assertEqual(len(message.header.headerFields), 7)
         # TODO
 
 
@@ -1139,6 +1237,8 @@ class TestRFC4475SIPTortureTest(TestCase):
         message = SIPMessageFactory().nextForString(messageString)
         self.assertIsNotNone(message)
         self.assertIsInstance(message.isValid, bool)
+        self.assertTrue(message.isValid)
+        self.assertEqual(len(message.header.headerFields), 8)
         # TODO
 
 
@@ -1160,6 +1260,8 @@ class TestRFC4475SIPTortureTest(TestCase):
         message = SIPMessageFactory().nextForString(messageString)
         self.assertIsNotNone(message)
         self.assertIsInstance(message.isValid, bool)
+        self.assertTrue(message.isValid)
+        self.assertEqual(len(message.header.headerFields), 8)
         # TODO
 
 
@@ -1181,6 +1283,8 @@ class TestRFC4475SIPTortureTest(TestCase):
         message = SIPMessageFactory().nextForString(messageString)
         self.assertIsNotNone(message)
         self.assertIsInstance(message.isValid, bool)
+        self.assertTrue(message.isValid)
+        self.assertEqual(len(message.header.headerFields), 8)
         # TODO
 
 
@@ -1212,6 +1316,8 @@ class TestRFC4475SIPTortureTest(TestCase):
         message = SIPMessageFactory().nextForString(messageString)
         self.assertIsNotNone(message)
         self.assertIsInstance(message.isValid, bool)
+        self.assertTrue(message.isValid)
+        self.assertEqual(len(message.header.headerFields), 10)
         # TODO
 
 
@@ -1238,4 +1344,7 @@ class TestRFC4475SIPTortureTest(TestCase):
         message = SIPMessageFactory().nextForString(messageString)
         self.assertIsNotNone(message)
         self.assertIsInstance(message.isValid, bool)
+        # TODO - is this valid?
+        # self.assertTrue(message.isValid)
+        self.assertEqual(len(message.header.headerFields), 7)
         # TODO
