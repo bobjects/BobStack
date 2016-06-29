@@ -153,13 +153,22 @@ class TestSIPMessageFactoryForSanitizedLogFile(TestCase):
             self.dialogHashesAndSIPMessages[aSIPMessage.dialogHash].append(aSIPMessage.startLine.rawString)
 
         # TODO:  log these to files?
-        print aSIPMessage.rawString
-        print ""
-        self.assertIsInstance(aSIPMessage.header.callID, basestring)
-        self.assertIsInstance(aSIPMessage.header.cSeq, basestring)
+#        print aSIPMessage.rawString
+#        print ""
+        if aSIPMessage.header.callIDHeaderField:
+            self.assertIsInstance(aSIPMessage.header.callID, basestring)
+        else:
+            self.assertIsInstance(aSIPMessage.header.callID, type(None))
+        if aSIPMessage.header.cSeqHeaderField:
+            self.assertIsInstance(aSIPMessage.header.cSeq, basestring)
+        else:
+            self.assertIsInstance(aSIPMessage.header.cSeq, type(None))
         self.assertIsInstance(aSIPMessage.header.toTag, (basestring, type(None)))
         self.assertIsInstance(aSIPMessage.header.fromTag, (basestring, type(None)))
-        self.assertIsInstance(aSIPMessage.header.maxForwards, (int, type(None)))
+        if aSIPMessage.header.maxForwardsHeaderField:
+            self.assertIsInstance(aSIPMessage.header.maxForwards, int)
+        else:
+            self.assertIsInstance(aSIPMessage.header.maxForwards, type(None))
         self.assertIsInstance(aSIPMessage.header.routeURIs, list)
         self.assertIsInstance(aSIPMessage.header.recordRouteURIs, list)
 

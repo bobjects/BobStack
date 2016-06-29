@@ -23,19 +23,31 @@ class SIPHeader(object):
         return answer
 
     def __init__(self):
+        self.initializeCache()
+
+    def initializeCache(self):
         self._headerFields = []
         self._knownHeaderFields = None
         self._unknownHeaderFields = None
         self._contentLengthHeaderField = None
+        self._toHeaderField = None
+        self._fromHeaderField = None
         self._viaHeaderFields = None
         self._routeHeaderFields = None
         self._recordRouteHeaderFields = None
         self._maxForwardsHeaderField = None
+        self._cSeqHeaderField = None
+        self._callIDHeaderField = None
         self._transactionHash = None
         self._dialogHash = None
 
+        self._invariantBranchHash = None
+        self._toTag = None
+        self._fromTag = None
+
     def parseAttributesFromStringIO(self, stringioToParse):
         # TODO: don't forget to test folding in this factory method.  That's separate from the other technique.
+        self.initializeCache()
         self._headerFields = SIPHeaderFieldFactory().allForStringIO(stringioToParse)
 
     def renderRawStringFromAttributes(self, stringio):
@@ -63,10 +75,11 @@ class SIPHeader(object):
             return self.callIDHeaderField.fieldValueString
         return None
 
-    # TODO - cache
     @property
     def callIDHeaderField(self):
-        return next((headerField for headerField in self.headerFields if headerField.isCallID), None)
+        if self._callIDHeaderField is None:
+            self._callIDHeaderField = next((headerField for headerField in self.headerFields if headerField.isCallID), None)
+        return self._callIDHeaderField
 
     # TODO - cache
     @property
@@ -75,10 +88,11 @@ class SIPHeader(object):
             return self.cSeqHeaderField.fieldValueString
         return None
 
-    # TODO - cache
     @property
     def cSeqHeaderField(self):
-        return next((headerField for headerField in self.headerFields if headerField.isCSeq), None)
+        if self._cSeqHeaderField is None:
+            self._cSeqHeaderField = next((headerField for headerField in self.headerFields if headerField.isCSeq), None)
+        return self._cSeqHeaderField
 
     # TODO - cache and test
     # @property
@@ -87,10 +101,12 @@ class SIPHeader(object):
     #         return self.toHeaderField.fieldValueString
     #     return None
 
-    # TODO - cache and test
+    # TODO - test
     @property
     def toHeaderField(self):
-        return next((headerField for headerField in self.headerFields if headerField.isTo), None)
+        if self._toHeaderField is None:
+            self._toHeaderField = next((headerField for headerField in self.headerFields if headerField.isTo), None)
+        return self._toHeaderField
 
     # TODO - cache
     # @property
@@ -99,10 +115,11 @@ class SIPHeader(object):
     #         return self.fromHeaderField.fieldValueString
     #     return None
 
-    # TODO - cache
     @property
     def fromHeaderField(self):
-        return next((headerField for headerField in self.headerFields if headerField.isFrom), None)
+        if self._fromHeaderField is None:
+            self._fromHeaderField = next((headerField for headerField in self.headerFields if headerField.isFrom), None)
+        return self._fromHeaderField
 
     # TODO - cache
     @property
@@ -111,17 +128,17 @@ class SIPHeader(object):
              return self.maxForwardsHeaderField.integerValue
          return None
 
-    # TODO - cache
     @property
     def maxForwardsHeaderField(self):
-        return next((headerField for headerField in self.headerFields if headerField.isMaxForwards), None)
+        if self._maxForwardsHeaderField is None:
+            self._maxForwardsHeaderField = next((headerField for headerField in self.headerFields if headerField.isMaxForwards), None)
+        return self._maxForwardsHeaderField
 
     # TODO - cache
     @property
     def vias(self):
         return [x.fieldValueString for x in self.viaHeaderFields]
 
-    # TODO - cache
     @property
     def viaHeaderFields(self):
         if self._viaHeaderFields is None:
@@ -215,6 +232,7 @@ class SIPHeader(object):
             self._unknownHeaderFields = [headerField for headerField in self.headerFields if headerField.isUnknown]
         return self._unknownHeaderFields
 
+    # TODO: cache
     @property
     def isValid(self):
         return all(f.isValid for f in self.headerFields)
@@ -226,6 +244,7 @@ class SIPHeader(object):
 
     @headerFields.setter
     def headerFields(self, aListOrString):
+        self.initializeCache()
         if not aListOrString:
             self._headerFields = []
         else:
@@ -285,32 +304,34 @@ class SIPHeader(object):
                 self._dialogHash = answer.hexdigest()
         return self._dialogHash
 
-    # TODO:  should cache this.
     @property
     def invariantBranchHash(self):
-        # TODO: we may need to extend this when we want to be resilient to loop and spiral detection
-        # See section 16.6 point 8 of RFC3261.
-        answer = sha1()
-        # It's OK if some of these are None.
-        answer.update(str(self.toTag))
-        answer.update(str(self.fromTag))
-        answer.update(str(self.callID))
-        answer.update(str(self.cSeq))
-        if self.vias:
-            answer.update(self.vias[0])
-        return answer.hexdigest()
+        if self._invariantBranchHash is None:
+            # TODO: we may need to extend this when we want to be resilient to loop and spiral detection
+            # See section 16.6 point 8 of RFC3261.
+            answer = sha1()
+            # It's OK if some of these are None.
+            answer.update(str(self.toTag))
+            answer.update(str(self.fromTag))
+            answer.update(str(self.callID))
+            answer.update(str(self.cSeq))
+            if self.vias:
+                answer.update(self.vias[0])
+            self._invariantBranchHash = answer.hexdigest()
+        return self._invariantBranchHash
 
-    # TODO: cache
     @property
     def toTag(self):
-        toHeaderField = self.toHeaderField
-        if toHeaderField:
-            return toHeaderField.tag
+        if self._toTag is None:
+            toHeaderField = self.toHeaderField
+            if toHeaderField:
+                self._toTag = toHeaderField.tag
+        return self._toTag
 
-    # TODO: cache
     @property
     def fromTag(self):
-        fromHeaderField = self.fromHeaderField
-        if fromHeaderField:
-            return fromHeaderField.tag
-
+        if self._fromTag is None:
+            fromHeaderField = self.fromHeaderField
+            if fromHeaderField:
+                self._fromTag = fromHeaderField.tag
+        return self._fromTag

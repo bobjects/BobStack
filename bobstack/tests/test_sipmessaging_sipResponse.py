@@ -28,7 +28,7 @@ class TestSIPResponse(AbstractSIPResponseTestCase):
         self.run_test_rendering_from_one_big_header_string()
 
     # TODO - skipping for now.
-    @unittest.skip("temporarily skipping...")
+    # @unittest.skip("temporarily skipping...")
     def test_rendering_from_one_big_header_string_with_folding(self):
         self.run_test_rendering_from_one_big_header_string_with_folding()
 
