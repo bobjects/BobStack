@@ -26,6 +26,12 @@ class IntegerSIPHeaderField(SIPHeaderField):
     def canonicalFieldName(cls):
         raise NotImplementedError('call to abstract method ' + inspect.stack()[0][3])
 
+    # noinspection PyNestedDecorators
+    @classproperty
+    @classmethod
+    def canonicalCompactFieldName(cls):
+        return None
+
     @property
     def integerValue(self):
         try:

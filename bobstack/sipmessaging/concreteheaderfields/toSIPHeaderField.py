@@ -28,6 +28,12 @@ class ToSIPHeaderField(SIPHeaderField):
     def canonicalFieldName(cls):
         return 'To'
 
+    # noinspection PyNestedDecorators
+    @classproperty
+    @classmethod
+    def canonicalCompactFieldName(cls):
+        return 't'
+
     @classmethod
     def newForAttributes(cls, tag=None, displayName=None, sipURI=None):
         answer = cls()

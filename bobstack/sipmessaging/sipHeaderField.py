@@ -33,6 +33,7 @@ class SIPHeaderField(object):
         answer.fieldValueString = fieldValueString
         return answer
 
+    # TODO:  make useCompactHeader keyword parameter.
     @classmethod
     def newForValueString(cls, fieldValueString):
         return cls.newForFieldNameAndValueString(cls.canonicalFieldName, fieldValueString)
@@ -42,6 +43,12 @@ class SIPHeaderField(object):
     @classmethod
     def canonicalFieldName(cls):
         raise NotImplementedError('call to abstract method ' + inspect.stack()[0][3])
+
+    # noinspection PyNestedDecorators
+    @classproperty
+    @classmethod
+    def canonicalCompactFieldName(cls):
+        return None
 
     def __init__(self):
         self._value = None
@@ -170,6 +177,7 @@ class SIPHeaderField(object):
             self._fieldName, self._fieldValueString = match.group(1, 2)
         self._fieldNameAndValueStringHasBeenSet = True
 
+    # Make useCompactHeader keyword parameter
     def renderFieldNameAndValueStringFromAttributes(self):
         self._fieldName = self.canonicalFieldName
         if self.parameterNamesAndValueStrings:
@@ -208,7 +216,10 @@ class SIPHeaderField(object):
         try:
             return cls._regexForMatchingFieldName
         except AttributeError:
-            cls._regexForMatchingFieldName = re.compile('^' + cls.canonicalFieldName + '$', re.I)
+            if cls.canonicalCompactFieldName:
+                cls._regexForMatchingFieldName = re.compile('^(' + cls.canonicalFieldName + '|' + cls.canonicalCompactFieldName + ')$', re.I)
+            else:
+                cls._regexForMatchingFieldName = re.compile('^' + cls.canonicalFieldName + '$', re.I)
             return cls._regexForMatchingFieldName
 
     # noinspection PyNestedDecorators
@@ -218,8 +229,10 @@ class SIPHeaderField(object):
         try:
             return cls._regexForMatching
         except AttributeError:
-            cls._regexForMatching = re.compile('^' + cls.canonicalFieldName + '\s*:', re.I)
-            # cls._regexForMatching = re.compile('^To\s*:', re.I)
+            if cls.canonicalCompactFieldName:
+                cls._regexForMatching = re.compile('^(' + cls.canonicalFieldName + '|'+ cls.canonicalCompactFieldName + ')\s*:', re.I)
+            else:
+                cls._regexForMatching = re.compile('^' + cls.canonicalFieldName + '\s*:', re.I)
             return cls._regexForMatching
 
     # noinspection PyNestedDecorators

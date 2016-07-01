@@ -17,6 +17,12 @@ class SupportedSIPHeaderField(SIPHeaderField):
     def canonicalFieldName(cls):
         return 'Supported'
 
+    # noinspection PyNestedDecorators
+    @classproperty
+    @classmethod
+    def canonicalCompactFieldName(cls):
+        return 'k'
+
     @classmethod
     def newForAttributes(cls, fieldName="Supported", fieldValueString=""):
         return cls.newForFieldNameAndValueString(fieldName=fieldName, fieldValueString=fieldValueString)

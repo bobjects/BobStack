@@ -17,6 +17,12 @@ class CallIDSIPHeaderField(SIPHeaderField):
     def canonicalFieldName(cls):
         return 'Call-ID'
 
+    # noinspection PyNestedDecorators
+    @classproperty
+    @classmethod
+    def canonicalCompactFieldName(cls):
+        return 'i'
+
     @classmethod
     def newForAttributes(cls, fieldName="Call-ID", fieldValueString=""):
         return cls.newForFieldNameAndValueString(fieldName=fieldName, fieldValueString=fieldValueString)

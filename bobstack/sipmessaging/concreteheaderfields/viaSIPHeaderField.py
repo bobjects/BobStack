@@ -24,6 +24,12 @@ class ViaSIPHeaderField(SIPHeaderField):
     def canonicalFieldName(cls):
         return 'Via'
 
+    # noinspection PyNestedDecorators
+    @classproperty
+    @classmethod
+    def canonicalCompactFieldName(cls):
+        return 'v'
+
     @classmethod
     def newForAttributes(cls, host='', port=None, transport=None, branch=None):
         answer = cls()

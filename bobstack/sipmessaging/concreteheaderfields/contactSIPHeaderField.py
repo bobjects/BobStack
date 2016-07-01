@@ -26,6 +26,12 @@ class ContactSIPHeaderField(SIPHeaderField):
     def canonicalFieldName(cls):
         return 'Contact'
 
+    # noinspection PyNestedDecorators
+    @classproperty
+    @classmethod
+    def canonicalCompactFieldName(cls):
+        return 'm'
+
     @classmethod
     def newForAttributes(cls, displayName=None, sipURI=None):
         answer = cls()

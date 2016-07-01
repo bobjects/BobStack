@@ -17,6 +17,12 @@ class ContentTypeSIPHeaderField(SIPHeaderField):
     def canonicalFieldName(cls):
         return 'Content-Type'
 
+    # noinspection PyNestedDecorators
+    @classproperty
+    @classmethod
+    def canonicalCompactFieldName(cls):
+        return 'c'
+
     @classmethod
     def newForAttributes(cls, fieldName="Content-Type", fieldValueString=""):
         return cls.newForFieldNameAndValueString(fieldName=fieldName, fieldValueString=fieldValueString)
