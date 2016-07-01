@@ -10,6 +10,11 @@ from bobstack.siptransport import SimulatedNetwork
 
 
 class TestRFC4475SIPTortureTest(TestCase):
+    @property
+    def weHaveImplementCompactHeaders(self):
+        # TODO:  Once we have implemented compact headers, change this to True.
+        return False
+
     def testShortTortuousINVITE(self):
         # https://tools.ietf.org/html/rfc4475#section-3.1.1.1
         # wsinv.dat
@@ -57,6 +62,23 @@ class TestRFC4475SIPTortureTest(TestCase):
         self.assertIsInstance(message.isValid, bool)
         self.assertTrue(message.isValid)
         self.assertEqual(len(message.header.headerFields), 14)
+        self.assertTrue(message.header.headerFields[0].isTo)
+        self.assertTrue(message.header.headerFields[1].isFrom)
+        self.assertTrue(message.header.headerFields[2].isMaxForwards)
+        self.assertTrue(message.header.headerFields[3].isCallID)
+        self.assertTrue(message.header.headerFields[4].isContentLength)
+        self.assertTrue(message.header.headerFields[5].isCSeq)
+        self.assertTrue(message.header.headerFields[6].isVia)
+        # TODO:  Subject header is unknown for now.
+        # self.assertTrue(message.header.headerFields[7].isSubject)
+        self.assertTrue(message.header.headerFields[7].isUnknown)
+        self.assertTrue(message.header.headerFields[8].isUnknown)
+        self.assertTrue(message.header.headerFields[9].isUnknown)
+        self.assertTrue(message.header.headerFields[10].isContentType)
+        self.assertTrue(message.header.headerFields[11].isRoute)
+        if self.weHaveImplementCompactHeaders:
+            self.assertTrue(message.header.headerFields[12].isVia)
+            self.assertTrue(message.header.headerFields[13].isContact)
         self.assertEqual('TO : sip:vivekg@chair-dnrc.example.com ;   tag    = 1918181833n', message.header.toHeaderField.rawString)
         # TODO: To tag is not being parsed correctly?
         # self.assertEqual('1918181833n', message.header.toTag)
@@ -67,7 +89,7 @@ class TestRFC4475SIPTortureTest(TestCase):
         # intmeth
         # Note:  this message string has weird characters.  Need to deal with that.
         pass
-        # TODO
+        # TODO - more.
 
     def testValidUseOfThePercentEscapingMechanism(self):
         # https://tools.ietf.org/html/rfc4475#section-3.1.1.3
@@ -99,7 +121,18 @@ class TestRFC4475SIPTortureTest(TestCase):
         self.assertIsInstance(message.isValid, bool)
         self.assertTrue(message.isValid)
         self.assertEqual(len(message.header.headerFields), 9)
-        # TODO
+        self.assertTrue(message.header.headerFields[0].isTo)
+        self.assertTrue(message.header.headerFields[1].isFrom)
+        self.assertTrue(message.header.headerFields[2].isMaxForwards)
+        if self.weHaveImplementCompactHeaders:
+            self.assertTrue(message.header.headerFields[3].isCallID)
+        self.assertTrue(message.header.headerFields[4].isCSeq)
+        self.assertTrue(message.header.headerFields[5].isVia)
+        if self.weHaveImplementCompactHeaders:
+            self.assertTrue(message.header.headerFields[6].isContentType)
+        self.assertTrue(message.header.headerFields[7].isContact)
+        self.assertTrue(message.header.headerFields[8].isContentLength)
+        # TODO - more.
 
 
     def testEscapedNullsInURIs(self):
@@ -123,7 +156,17 @@ class TestRFC4475SIPTortureTest(TestCase):
         self.assertIsInstance(message.isValid, bool)
         self.assertTrue(message.isValid)
         self.assertEqual(len(message.header.headerFields), 9)
-        # TODO
+        self.assertTrue(message.header.headerFields[0].isTo)
+        self.assertTrue(message.header.headerFields[1].isFrom)
+        self.assertTrue(message.header.headerFields[2].isMaxForwards)
+        self.assertTrue(message.header.headerFields[3].isCallID)
+        self.assertTrue(message.header.headerFields[4].isCSeq)
+        self.assertTrue(message.header.headerFields[5].isVia)
+        self.assertTrue(message.header.headerFields[6].isContact)
+        self.assertTrue(message.header.headerFields[7].isContact)
+        if self.weHaveImplementCompactHeaders:
+            self.assertTrue(message.header.headerFields[8].isContentLength)
+        # TODO - more.
 
 
     def testUseOfPercentWhenItIsNotAnEscape(self):
@@ -148,7 +191,19 @@ class TestRFC4475SIPTortureTest(TestCase):
         self.assertIsInstance(message.isValid, bool)
         self.assertTrue(message.isValid)
         self.assertEqual(len(message.header.headerFields), 10)
-        # TODO
+        self.assertTrue(message.header.headerFields[0].isTo)
+        self.assertTrue(message.header.headerFields[1].isFrom)
+        self.assertTrue(message.header.headerFields[2].isCallID)
+        self.assertTrue(message.header.headerFields[3].isVia)
+        self.assertTrue(message.header.headerFields[4].isCSeq)
+        self.assertTrue(message.header.headerFields[5].isMaxForwards)
+        self.assertTrue(message.header.headerFields[6].isContact)
+        # TODO:  Looks like we need to handle character escaping...
+        # self.assertTrue(message.header.headerFields[7].isContact)
+        self.assertTrue(message.header.headerFields[8].isContact)
+        if self.weHaveImplementCompactHeaders:
+            self.assertTrue(message.header.headerFields[9].isContentLength)
+        # TODO - more.
 
 
     def testMessageWithNoLWSBetweenDisplayNameAndAngleBracket(self):
@@ -170,7 +225,15 @@ class TestRFC4475SIPTortureTest(TestCase):
         self.assertIsInstance(message.isValid, bool)
         self.assertTrue(message.isValid)
         self.assertEqual(len(message.header.headerFields), 7)
-        # TODO
+        self.assertTrue(message.header.headerFields[0].isTo)
+        self.assertTrue(message.header.headerFields[1].isFrom)
+        self.assertTrue(message.header.headerFields[2].isMaxForwards)
+        self.assertTrue(message.header.headerFields[3].isCallID)
+        self.assertTrue(message.header.headerFields[4].isCSeq)
+        self.assertTrue(message.header.headerFields[5].isVia)
+        if self.weHaveImplementCompactHeaders:
+            self.assertTrue(message.header.headerFields[6].isContentLength)
+        # TODO - more.
 
 
     def testLongValuesInHeaderFields(self):
@@ -237,7 +300,54 @@ class TestRFC4475SIPTortureTest(TestCase):
         # TODO - should this be considered valid?
         # self.assertTrue(message.isValid)
         self.assertEqual(len(message.header.headerFields), 43)
-        # TODO
+        self.assertTrue(message.header.headerFields[0].isTo)
+        if self.weHaveImplementCompactHeaders:
+            self.assertTrue(message.header.headerFields[1].isFrom)
+        self.assertTrue(message.header.headerFields[2].isCallID)
+        self.assertTrue(message.header.headerFields[3].isCSeq)
+        self.assertTrue(message.header.headerFields[4].isUnknown)
+        self.assertTrue(message.header.headerFields[5].isVia)
+        if self.weHaveImplementCompactHeaders:
+            self.assertTrue(message.header.headerFields[6].isVia)
+            self.assertTrue(message.header.headerFields[7].isVia)
+        self.assertTrue(message.header.headerFields[8].isVia)
+        self.assertTrue(message.header.headerFields[9].isVia)
+        self.assertTrue(message.header.headerFields[10].isVia)
+        self.assertTrue(message.header.headerFields[11].isVia)
+        self.assertTrue(message.header.headerFields[12].isVia)
+        self.assertTrue(message.header.headerFields[13].isVia)
+        self.assertTrue(message.header.headerFields[14].isVia)
+        self.assertTrue(message.header.headerFields[15].isVia)
+        if self.weHaveImplementCompactHeaders:
+            self.assertTrue(message.header.headerFields[16].isVia)
+            self.assertTrue(message.header.headerFields[17].isVia)
+            self.assertTrue(message.header.headerFields[18].isVia)
+            self.assertTrue(message.header.headerFields[19].isVia)
+        self.assertTrue(message.header.headerFields[20].isVia)
+        self.assertTrue(message.header.headerFields[21].isVia)
+        self.assertTrue(message.header.headerFields[22].isVia)
+        self.assertTrue(message.header.headerFields[23].isVia)
+        self.assertTrue(message.header.headerFields[24].isVia)
+        self.assertTrue(message.header.headerFields[25].isVia)
+        self.assertTrue(message.header.headerFields[26].isVia)
+        self.assertTrue(message.header.headerFields[27].isVia)
+        self.assertTrue(message.header.headerFields[28].isVia)
+        self.assertTrue(message.header.headerFields[29].isVia)
+        self.assertTrue(message.header.headerFields[30].isVia)
+        self.assertTrue(message.header.headerFields[31].isVia)
+        self.assertTrue(message.header.headerFields[32].isVia)
+        self.assertTrue(message.header.headerFields[33].isVia)
+        self.assertTrue(message.header.headerFields[34].isVia)
+        self.assertTrue(message.header.headerFields[35].isVia)
+        self.assertTrue(message.header.headerFields[36].isVia)
+        self.assertTrue(message.header.headerFields[37].isVia)
+        self.assertTrue(message.header.headerFields[38].isVia)
+        self.assertTrue(message.header.headerFields[39].isMaxForwards)
+        self.assertTrue(message.header.headerFields[40].isContact)
+        self.assertTrue(message.header.headerFields[41].isContentType)
+        if self.weHaveImplementCompactHeaders:
+            self.assertTrue(message.header.headerFields[42].isContentLength)
+        # TODO - more.
 
 
     def testExtraTrailingOctetsInAUDPDatagram(self):
@@ -280,7 +390,16 @@ class TestRFC4475SIPTortureTest(TestCase):
         self.assertIsInstance(message.isValid, bool)
         self.assertFalse(message.isValid)
         self.assertEqual(len(message.header.headerFields), 8)
-        # TODO
+        self.assertTrue(message.header.headerFields[0].isTo)
+        self.assertTrue(message.header.headerFields[1].isFrom)
+        self.assertTrue(message.header.headerFields[2].isMaxForwards)
+        if self.weHaveImplementCompactHeaders:
+            self.assertTrue(message.header.headerFields[3].isCallID)
+        self.assertTrue(message.header.headerFields[4].isContact)
+        self.assertTrue(message.header.headerFields[5].isCSeq)
+        self.assertTrue(message.header.headerFields[6].isVia)
+        self.assertTrue(message.header.headerFields[7].isContentLength)
+        # TODO - more.
 
 
     def testSemicolonSeparatedParametersInURIUserPart(self):
@@ -305,7 +424,16 @@ class TestRFC4475SIPTortureTest(TestCase):
         self.assertIsInstance(message.isValid, bool)
         self.assertTrue(message.isValid)
         self.assertEqual(len(message.header.headerFields), 8)
-        # TODO
+        self.assertTrue(message.header.headerFields[0].isTo)
+        self.assertTrue(message.header.headerFields[1].isFrom)
+        self.assertTrue(message.header.headerFields[2].isMaxForwards)
+        self.assertTrue(message.header.headerFields[3].isCallID)
+        self.assertTrue(message.header.headerFields[4].isCSeq)
+        self.assertTrue(message.header.headerFields[5].isAccept)
+        self.assertTrue(message.header.headerFields[6].isVia)
+        if self.weHaveImplementCompactHeaders:
+            self.assertTrue(message.header.headerFields[7].isContentLength)
+        # TODO - more.
 
 
     def testVariedAndUnknownTransportTypes(self):
@@ -332,7 +460,20 @@ class TestRFC4475SIPTortureTest(TestCase):
         self.assertIsInstance(message.isValid, bool)
         self.assertTrue(message.isValid)
         self.assertEqual(len(message.header.headerFields), 12)
-        # TODO
+        self.assertTrue(message.header.headerFields[0].isTo)
+        self.assertTrue(message.header.headerFields[1].isFrom)
+        self.assertTrue(message.header.headerFields[2].isMaxForwards)
+        self.assertTrue(message.header.headerFields[3].isCallID)
+        self.assertTrue(message.header.headerFields[4].isAccept)
+        self.assertTrue(message.header.headerFields[5].isCSeq)
+        self.assertTrue(message.header.headerFields[6].isVia)
+        self.assertTrue(message.header.headerFields[7].isVia)
+        self.assertTrue(message.header.headerFields[8].isVia)
+        self.assertTrue(message.header.headerFields[9].isVia)
+        self.assertTrue(message.header.headerFields[10].isVia)
+        if self.weHaveImplementCompactHeaders:
+            self.assertTrue(message.header.headerFields[11].isContentLength)
+        # TODO - more.
 
 
     def testMultipartMIMEMessage(self):
@@ -340,7 +481,7 @@ class TestRFC4475SIPTortureTest(TestCase):
         # mpart01
         # Note:  this message string has weird characters.  Need to deal with that.
         pass
-        # TODO
+        # TODO - more.
 
 
     def testUnusualReasonPhrase(self):
@@ -348,7 +489,7 @@ class TestRFC4475SIPTortureTest(TestCase):
         # unreason
         # Note:  this message string has weird characters.  Need to deal with that.
         pass
-        # TODO
+        # TODO - more.
 
 
     def testEmptyReasonPhrase(self):
@@ -371,7 +512,14 @@ class TestRFC4475SIPTortureTest(TestCase):
         # TODO - is this valid?
         # self.assertTrue(message.isValid)
         self.assertEqual(len(message.header.headerFields), 7)
-        # TODO
+        self.assertTrue(message.header.headerFields[0].isVia)
+        self.assertTrue(message.header.headerFields[1].isCallID)
+        self.assertTrue(message.header.headerFields[2].isCSeq)
+        self.assertTrue(message.header.headerFields[3].isFrom)
+        self.assertTrue(message.header.headerFields[4].isTo)
+        self.assertTrue(message.header.headerFields[5].isContentLength)
+        self.assertTrue(message.header.headerFields[6].isContact)
+        # TODO - more.
 
 
     def testExtraneousHeaderFieldSeparators(self):
@@ -404,8 +552,16 @@ class TestRFC4475SIPTortureTest(TestCase):
         # TODO - is this valid?
         # self.assertTrue(message.isValid)
         self.assertEqual(len(message.header.headerFields), 9)
-        # TODO
-
+        self.assertTrue(message.header.headerFields[0].isTo)
+        self.assertTrue(message.header.headerFields[1].isFrom)
+        self.assertTrue(message.header.headerFields[2].isMaxForwards)
+        self.assertTrue(message.header.headerFields[3].isCallID)
+        self.assertTrue(message.header.headerFields[4].isCSeq)
+        self.assertTrue(message.header.headerFields[5].isVia)
+        self.assertTrue(message.header.headerFields[6].isContact)
+        self.assertTrue(message.header.headerFields[7].isContentLength)
+        self.assertTrue(message.header.headerFields[8].isContentType)
+        # TODO - more.
 
     def testContentLengthLargerThanMessage(self):
         # https://tools.ietf.org/html/rfc4475#section-3.1.2.2
@@ -437,8 +593,16 @@ class TestRFC4475SIPTortureTest(TestCase):
         # TODO - is this valid?
         # self.assertTrue(message.isValid)
         self.assertEqual(len(message.header.headerFields), 9)
-        # TODO
-
+        self.assertTrue(message.header.headerFields[0].isMaxForwards)
+        self.assertTrue(message.header.headerFields[1].isTo)
+        self.assertTrue(message.header.headerFields[2].isFrom)
+        self.assertTrue(message.header.headerFields[3].isContact)
+        self.assertTrue(message.header.headerFields[4].isCallID)
+        self.assertTrue(message.header.headerFields[5].isCSeq)
+        self.assertTrue(message.header.headerFields[6].isVia)
+        self.assertTrue(message.header.headerFields[7].isContentType)
+        self.assertTrue(message.header.headerFields[8].isContentLength)
+        # TODO - more.
 
     def testNegativeContentLength(self):
         # https://tools.ietf.org/html/rfc4475#section-3.1.2.3
@@ -470,8 +634,16 @@ class TestRFC4475SIPTortureTest(TestCase):
         # TODO - is this valid?
         # self.assertTrue(message.isValid)
         self.assertEqual(len(message.header.headerFields), 9)
-        # TODO
-
+        self.assertTrue(message.header.headerFields[0].isMaxForwards)
+        self.assertTrue(message.header.headerFields[1].isTo)
+        self.assertTrue(message.header.headerFields[2].isFrom)
+        self.assertTrue(message.header.headerFields[3].isCallID)
+        self.assertTrue(message.header.headerFields[4].isCSeq)
+        self.assertTrue(message.header.headerFields[5].isVia)
+        self.assertTrue(message.header.headerFields[6].isContact)
+        self.assertTrue(message.header.headerFields[7].isContentType)
+        self.assertTrue(message.header.headerFields[8].isContentLength)
+        # TODO - more.
 
     def testRequestScalarFieldsWithOverlargeValues(self):
         # https://tools.ietf.org/html/rfc4475#section-3.1.2.4
@@ -495,8 +667,16 @@ class TestRFC4475SIPTortureTest(TestCase):
         self.assertIsInstance(message.isValid, bool)
         self.assertTrue(message.isValid)
         self.assertEqual(len(message.header.headerFields), 9)
-        # TODO
-
+        self.assertTrue(message.header.headerFields[0].isVia)
+        self.assertTrue(message.header.headerFields[1].isTo)
+        self.assertTrue(message.header.headerFields[2].isFrom)
+        self.assertTrue(message.header.headerFields[3].isCSeq)
+        self.assertTrue(message.header.headerFields[4].isCallID)
+        self.assertTrue(message.header.headerFields[5].isMaxForwards)
+        self.assertTrue(message.header.headerFields[6].isExpires)
+        self.assertTrue(message.header.headerFields[7].isContact)
+        self.assertTrue(message.header.headerFields[8].isContentLength)
+        # TODO - more.
 
     def testResponseScalarFieldsWithOverlargeValues(self):
         # https://tools.ietf.org/html/rfc4475#section-3.1.2.5
@@ -518,8 +698,15 @@ class TestRFC4475SIPTortureTest(TestCase):
         self.assertIsInstance(message.isValid, bool)
         self.assertTrue(message.isValid)
         self.assertEqual(len(message.header.headerFields), 8)
-        # TODO
-
+        self.assertTrue(message.header.headerFields[0].isVia)
+        self.assertTrue(message.header.headerFields[1].isTo)
+        self.assertTrue(message.header.headerFields[2].isFrom)
+        self.assertTrue(message.header.headerFields[3].isCSeq)
+        self.assertTrue(message.header.headerFields[4].isCallID)
+        self.assertTrue(message.header.headerFields[5].isRetryAfter)
+        self.assertTrue(message.header.headerFields[6].isWarning)
+        self.assertTrue(message.header.headerFields[7].isContentLength)
+        # TODO - more.
 
     def testUnterminatedQuotedStringInDisplayName(self):
         # https://tools.ietf.org/html/rfc4475#section-3.1.2.6
@@ -550,8 +737,16 @@ class TestRFC4475SIPTortureTest(TestCase):
         self.assertIsInstance(message.isValid, bool)
         self.assertTrue(message.isValid)
         self.assertEqual(len(message.header.headerFields), 9)
-        # TODO
-
+        self.assertTrue(message.header.headerFields[0].isTo)
+        self.assertTrue(message.header.headerFields[1].isFrom)
+        self.assertTrue(message.header.headerFields[2].isMaxForwards)
+        self.assertTrue(message.header.headerFields[3].isCallID)
+        self.assertTrue(message.header.headerFields[4].isContact)
+        self.assertTrue(message.header.headerFields[5].isCSeq)
+        self.assertTrue(message.header.headerFields[6].isVia)
+        self.assertTrue(message.header.headerFields[7].isContentType)
+        self.assertTrue(message.header.headerFields[8].isContentLength)
+        # TODO - more.
 
     def testAngleBracketEnclosingRequestURI(self):
         # https://tools.ietf.org/html/rfc4475#section-3.1.2.7
@@ -583,8 +778,16 @@ class TestRFC4475SIPTortureTest(TestCase):
         # TODO - is this valid?
         # self.assertTrue(message.isValid)
         self.assertEqual(len(message.header.headerFields), 9)
-        # TODO
-
+        self.assertTrue(message.header.headerFields[0].isTo)
+        self.assertTrue(message.header.headerFields[1].isFrom)
+        self.assertTrue(message.header.headerFields[2].isMaxForwards)
+        self.assertTrue(message.header.headerFields[3].isCallID)
+        self.assertTrue(message.header.headerFields[4].isCSeq)
+        self.assertTrue(message.header.headerFields[5].isVia)
+        self.assertTrue(message.header.headerFields[6].isContact)
+        self.assertTrue(message.header.headerFields[7].isContentType)
+        self.assertTrue(message.header.headerFields[8].isContentLength)
+        # TODO - more.
 
     def testMalformedSIPRequestURIEmbeddedLWS(self):
         # https://tools.ietf.org/html/rfc4475#section-3.1.2.8
@@ -616,8 +819,16 @@ class TestRFC4475SIPTortureTest(TestCase):
         # TODO - is this valid?
         # self.assertTrue(message.isValid)
         self.assertEqual(len(message.header.headerFields), 9)
-        # TODO
-
+        self.assertTrue(message.header.headerFields[0].isTo)
+        self.assertTrue(message.header.headerFields[1].isFrom)
+        self.assertTrue(message.header.headerFields[2].isMaxForwards)
+        self.assertTrue(message.header.headerFields[3].isCallID)
+        self.assertTrue(message.header.headerFields[4].isCSeq)
+        self.assertTrue(message.header.headerFields[5].isVia)
+        self.assertTrue(message.header.headerFields[6].isContact)
+        self.assertTrue(message.header.headerFields[7].isContentType)
+        self.assertTrue(message.header.headerFields[8].isContentLength)
+        # TODO - more.
 
     def testMultipleSPSeparatingRequestLineElements(self):
         # https://tools.ietf.org/html/rfc4475#section-3.1.2.9
@@ -648,8 +859,16 @@ class TestRFC4475SIPTortureTest(TestCase):
         self.assertIsInstance(message.isValid, bool)
         self.assertTrue(message.isValid)
         self.assertEqual(len(message.header.headerFields), 9)
-        # TODO
-
+        self.assertTrue(message.header.headerFields[0].isMaxForwards)
+        self.assertTrue(message.header.headerFields[1].isTo)
+        self.assertTrue(message.header.headerFields[2].isFrom)
+        self.assertTrue(message.header.headerFields[3].isCallID)
+        self.assertTrue(message.header.headerFields[4].isCSeq)
+        self.assertTrue(message.header.headerFields[5].isVia)
+        self.assertTrue(message.header.headerFields[6].isContact)
+        self.assertTrue(message.header.headerFields[7].isContentType)
+        self.assertTrue(message.header.headerFields[8].isContentLength)
+        # TODO - more.
 
     def testSPCharactersAtEndOfRequestLine(self):
         # https://tools.ietf.org/html/rfc4475#section-3.1.2.10
@@ -671,8 +890,15 @@ class TestRFC4475SIPTortureTest(TestCase):
         self.assertIsInstance(message.isValid, bool)
         self.assertTrue(message.isValid)
         self.assertEqual(len(message.header.headerFields), 8)
-        # TODO
-
+        self.assertTrue(message.header.headerFields[0].isVia)
+        self.assertTrue(message.header.headerFields[1].isTo)
+        self.assertTrue(message.header.headerFields[2].isFrom)
+        self.assertTrue(message.header.headerFields[3].isCallID)
+        self.assertTrue(message.header.headerFields[4].isAccept)
+        self.assertTrue(message.header.headerFields[5].isCSeq)
+        self.assertTrue(message.header.headerFields[6].isMaxForwards)
+        self.assertTrue(message.header.headerFields[7].isContentLength)
+        # TODO - more.
 
     def testEscapedHeadersInSIPRequestURI(self):
         # https://tools.ietf.org/html/rfc4475#section-3.1.2.11
@@ -703,8 +929,16 @@ class TestRFC4475SIPTortureTest(TestCase):
         self.assertIsInstance(message.isValid, bool)
         self.assertTrue(message.isValid)
         self.assertEqual(len(message.header.headerFields), 9)
-        # TODO
-
+        self.assertTrue(message.header.headerFields[0].isTo)
+        self.assertTrue(message.header.headerFields[1].isFrom)
+        self.assertTrue(message.header.headerFields[2].isMaxForwards)
+        self.assertTrue(message.header.headerFields[3].isContact)
+        self.assertTrue(message.header.headerFields[4].isCallID)
+        self.assertTrue(message.header.headerFields[5].isCSeq)
+        self.assertTrue(message.header.headerFields[6].isVia)
+        self.assertTrue(message.header.headerFields[7].isContentType)
+        self.assertTrue(message.header.headerFields[8].isContentLength)
+        # TODO - more.
 
     def testInvalidTimezoneInDateHeaderField(self):
         # https://tools.ietf.org/html/rfc4475#section-3.1.2.12
@@ -736,8 +970,17 @@ class TestRFC4475SIPTortureTest(TestCase):
         self.assertIsInstance(message.isValid, bool)
         self.assertTrue(message.isValid)
         self.assertEqual(len(message.header.headerFields), 10)
-        # TODO
-
+        self.assertTrue(message.header.headerFields[0].isTo)
+        self.assertTrue(message.header.headerFields[1].isFrom)
+        self.assertTrue(message.header.headerFields[2].isMaxForwards)
+        self.assertTrue(message.header.headerFields[3].isCallID)
+        self.assertTrue(message.header.headerFields[4].isCSeq)
+        self.assertTrue(message.header.headerFields[5].isVia)
+        self.assertTrue(message.header.headerFields[6].isDate)
+        self.assertTrue(message.header.headerFields[7].isContact)
+        self.assertTrue(message.header.headerFields[8].isContentType)
+        self.assertTrue(message.header.headerFields[9].isContentLength)
+        # TODO - more.
 
     def testFailureToEncloseNameAddrURIInAngleBrackets(self):
         # https://tools.ietf.org/html/rfc4475#section-3.1.2.13
@@ -760,8 +1003,16 @@ class TestRFC4475SIPTortureTest(TestCase):
         # TODO - is this valid?
         # self.assertTrue(message.isValid)
         self.assertEqual(len(message.header.headerFields), 8)
-        # TODO
-
+        self.assertTrue(message.header.headerFields[0].isTo)
+        self.assertTrue(message.header.headerFields[1].isFrom)
+        self.assertTrue(message.header.headerFields[2].isMaxForwards)
+        self.assertTrue(message.header.headerFields[3].isCallID)
+        self.assertTrue(message.header.headerFields[4].isCSeq)
+        self.assertTrue(message.header.headerFields[5].isVia)
+        self.assertTrue(message.header.headerFields[6].isContact)
+        if self.weHaveImplementCompactHeaders:
+            self.assertTrue(message.header.headerFields[7].isContentLength)
+        # TODO - more.
 
     def testSpacesWithinAddrSpec(self):
         # https://tools.ietf.org/html/rfc4475#section-3.1.2.14
@@ -783,8 +1034,16 @@ class TestRFC4475SIPTortureTest(TestCase):
         self.assertIsInstance(message.isValid, bool)
         self.assertTrue(message.isValid)
         self.assertEqual(len(message.header.headerFields), 8)
-        # TODO
-
+        self.assertTrue(message.header.headerFields[0].isVia)
+        self.assertTrue(message.header.headerFields[1].isMaxForwards)
+        self.assertTrue(message.header.headerFields[2].isFrom)
+        self.assertTrue(message.header.headerFields[3].isTo)
+        self.assertTrue(message.header.headerFields[4].isCallID)
+        self.assertTrue(message.header.headerFields[5].isAccept)
+        self.assertTrue(message.header.headerFields[6].isCSeq)
+        if self.weHaveImplementCompactHeaders:
+            self.assertTrue(message.header.headerFields[7].isContentLength)
+        # TODO - more.
 
     def testNonTokenCharactersInDisplayName(self):
         # https://tools.ietf.org/html/rfc4475#section-3.1.2.15
@@ -805,8 +1064,16 @@ class TestRFC4475SIPTortureTest(TestCase):
         self.assertIsInstance(message.isValid, bool)
         self.assertTrue(message.isValid)
         self.assertEqual(len(message.header.headerFields), 8)
-        # TODO
-
+        self.assertTrue(message.header.headerFields[0].isVia)
+        self.assertTrue(message.header.headerFields[1].isMaxForwards)
+        self.assertTrue(message.header.headerFields[2].isFrom)
+        self.assertTrue(message.header.headerFields[3].isTo)
+        self.assertTrue(message.header.headerFields[4].isCallID)
+        self.assertTrue(message.header.headerFields[5].isAccept)
+        self.assertTrue(message.header.headerFields[6].isCSeq)
+        if self.weHaveImplementCompactHeaders:
+            self.assertTrue(message.header.headerFields[7].isContentLength)
+        # TODO - more.
 
     def testUnknownProtocolVersion(self):
         # https://tools.ietf.org/html/rfc4475#section-3.1.2.16
@@ -828,8 +1095,15 @@ class TestRFC4475SIPTortureTest(TestCase):
         # TODO - is this valid?
         # self.assertTrue(message.isValid)
         self.assertEqual(len(message.header.headerFields), 7)
-        # TODO
-
+        self.assertTrue(message.header.headerFields[0].isVia)
+        self.assertTrue(message.header.headerFields[1].isMaxForwards)
+        self.assertTrue(message.header.headerFields[2].isFrom)
+        self.assertTrue(message.header.headerFields[3].isTo)
+        self.assertTrue(message.header.headerFields[4].isCallID)
+        self.assertTrue(message.header.headerFields[5].isCSeq)
+        if self.weHaveImplementCompactHeaders:
+            self.assertTrue(message.header.headerFields[6].isContentLength)
+        # TODO - more.
 
     def testStartLineAndCSeqMethodMismatch(self):
         # https://tools.ietf.org/html/rfc4475#section-3.1.2.17
@@ -850,8 +1124,15 @@ class TestRFC4475SIPTortureTest(TestCase):
         self.assertIsInstance(message.isValid, bool)
         self.assertTrue(message.isValid)
         self.assertEqual(len(message.header.headerFields), 7)
-        # TODO
-
+        self.assertTrue(message.header.headerFields[0].isTo)
+        self.assertTrue(message.header.headerFields[1].isFrom)
+        self.assertTrue(message.header.headerFields[2].isMaxForwards)
+        self.assertTrue(message.header.headerFields[3].isCallID)
+        self.assertTrue(message.header.headerFields[4].isCSeq)
+        self.assertTrue(message.header.headerFields[5].isVia)
+        if self.weHaveImplementCompactHeaders:
+            self.assertTrue(message.header.headerFields[6].isContentLength)
+        # TODO - more.
 
     def testUnknownMethodWithCSeqMethodMismatch(self):
         # https://tools.ietf.org/html/rfc4475#section-3.1.2.18
@@ -881,8 +1162,17 @@ class TestRFC4475SIPTortureTest(TestCase):
         # TODO - is this valid?
         # self.assertTrue(message.isValid)
         self.assertEqual(len(message.header.headerFields), 9)
-        # TODO
-
+        self.assertTrue(message.header.headerFields[0].isTo)
+        self.assertTrue(message.header.headerFields[1].isFrom)
+        self.assertTrue(message.header.headerFields[2].isMaxForwards)
+        self.assertTrue(message.header.headerFields[3].isCallID)
+        self.assertTrue(message.header.headerFields[4].isCSeq)
+        self.assertTrue(message.header.headerFields[5].isContact)
+        self.assertTrue(message.header.headerFields[6].isVia)
+        self.assertTrue(message.header.headerFields[7].isContentType)
+        if self.weHaveImplementCompactHeaders:
+            self.assertTrue(message.header.headerFields[8].isContentLength)
+        # TODO - more.
 
     def testOverlargeResponseCode(self):
         # https://tools.ietf.org/html/rfc4475#section-3.1.2.19
@@ -903,8 +1193,14 @@ class TestRFC4475SIPTortureTest(TestCase):
         self.assertIsInstance(message.isValid, bool)
         self.assertTrue(message.isValid)
         self.assertEqual(len(message.header.headerFields), 7)
-        # TODO
-
+        self.assertTrue(message.header.headerFields[0].isVia)
+        self.assertTrue(message.header.headerFields[1].isCallID)
+        self.assertTrue(message.header.headerFields[2].isCSeq)
+        self.assertTrue(message.header.headerFields[3].isFrom)
+        self.assertTrue(message.header.headerFields[4].isTo)
+        self.assertTrue(message.header.headerFields[5].isContentLength)
+        self.assertTrue(message.header.headerFields[6].isContact)
+        # TODO - more.
 
     def testMissingTransactionIdentifier(self):
         # https://tools.ietf.org/html/rfc4475#section-3.2.1
@@ -926,8 +1222,16 @@ class TestRFC4475SIPTortureTest(TestCase):
         self.assertIsInstance(message.isValid, bool)
         self.assertTrue(message.isValid)
         self.assertEqual(len(message.header.headerFields), 8)
-        # TODO
-
+        self.assertTrue(message.header.headerFields[0].isTo)
+        self.assertTrue(message.header.headerFields[1].isFrom)
+        self.assertTrue(message.header.headerFields[2].isMaxForwards)
+        self.assertTrue(message.header.headerFields[3].isVia)
+        self.assertTrue(message.header.headerFields[4].isAccept)
+        self.assertTrue(message.header.headerFields[5].isCallID)
+        self.assertTrue(message.header.headerFields[6].isCSeq)
+        if self.weHaveImplementCompactHeaders:
+            self.assertTrue(message.header.headerFields[7].isContentLength)
+        # TODO - more.
 
     def testMissingRequiredHeaderFields(self):
         # https://tools.ietf.org/html/rfc4475#section-3.3.1
@@ -954,8 +1258,12 @@ class TestRFC4475SIPTortureTest(TestCase):
         # TODO - is this valid?
         # self.assertTrue(message.isValid)
         self.assertEqual(len(message.header.headerFields), 4)
-        # TODO
-
+        self.assertTrue(message.header.headerFields[0].isCSeq)
+        self.assertTrue(message.header.headerFields[1].isVia)
+        self.assertTrue(message.header.headerFields[2].isContentType)
+        if self.weHaveImplementCompactHeaders:
+            self.assertTrue(message.header.headerFields[3].isContentLength)
+        # TODO - more.
 
     def testRequestURIWithUnknownScheme(self):
         # https://tools.ietf.org/html/rfc4475#section-3.3.2
@@ -976,8 +1284,14 @@ class TestRFC4475SIPTortureTest(TestCase):
         self.assertIsInstance(message.isValid, bool)
         self.assertTrue(message.isValid)
         self.assertEqual(len(message.header.headerFields), 7)
-        # TODO
-
+        self.assertTrue(message.header.headerFields[0].isTo)
+        self.assertTrue(message.header.headerFields[1].isFrom)
+        self.assertTrue(message.header.headerFields[2].isMaxForwards)
+        self.assertTrue(message.header.headerFields[3].isCallID)
+        self.assertTrue(message.header.headerFields[4].isCSeq)
+        self.assertTrue(message.header.headerFields[5].isVia)
+        self.assertTrue(message.header.headerFields[6].isContentLength)
+        # TODO - more.
 
     def testRequestURIWithKnownButAtypicalScheme(self):
         # https://tools.ietf.org/html/rfc4475#section-3.3.3
@@ -998,8 +1312,14 @@ class TestRFC4475SIPTortureTest(TestCase):
         self.assertIsInstance(message.isValid, bool)
         self.assertTrue(message.isValid)
         self.assertEqual(len(message.header.headerFields), 7)
-        # TODO
-
+        self.assertTrue(message.header.headerFields[0].isTo)
+        self.assertTrue(message.header.headerFields[1].isFrom)
+        self.assertTrue(message.header.headerFields[2].isMaxForwards)
+        self.assertTrue(message.header.headerFields[3].isCallID)
+        self.assertTrue(message.header.headerFields[4].isCSeq)
+        self.assertTrue(message.header.headerFields[5].isVia)
+        self.assertTrue(message.header.headerFields[6].isContentLength)
+        # TODO - more.
 
     def testUnknownURISchemesInHeaderFields(self):
         # https://tools.ietf.org/html/rfc4475#section-3.3.4
@@ -1021,8 +1341,16 @@ class TestRFC4475SIPTortureTest(TestCase):
         self.assertIsInstance(message.isValid, bool)
         self.assertTrue(message.isValid)
         self.assertEqual(len(message.header.headerFields), 8)
-        # TODO
-
+        self.assertTrue(message.header.headerFields[0].isTo)
+        self.assertTrue(message.header.headerFields[1].isFrom)
+        self.assertTrue(message.header.headerFields[2].isCallID)
+        self.assertTrue(message.header.headerFields[3].isCSeq)
+        self.assertTrue(message.header.headerFields[4].isMaxForwards)
+        self.assertTrue(message.header.headerFields[5].isVia)
+        self.assertTrue(message.header.headerFields[6].isContact)
+        if self.weHaveImplementCompactHeaders:
+            self.assertTrue(message.header.headerFields[7].isContentLength)
+        # TODO - more.
 
     def testProxyRequireAndRequire(self):
         # https://tools.ietf.org/html/rfc4475#section-3.3.5
@@ -1045,8 +1373,17 @@ class TestRFC4475SIPTortureTest(TestCase):
         self.assertIsInstance(message.isValid, bool)
         self.assertTrue(message.isValid)
         self.assertEqual(len(message.header.headerFields), 9)
-        # TODO
-
+        self.assertTrue(message.header.headerFields[0].isTo)
+        self.assertTrue(message.header.headerFields[1].isFrom)
+        self.assertTrue(message.header.headerFields[2].isMaxForwards)
+        self.assertTrue(message.header.headerFields[3].isCallID)
+        self.assertTrue(message.header.headerFields[4].isRequire)
+        # TODO:  Proxy-Require not supported yet.
+        self.assertTrue(message.header.headerFields[5].isUnknown)
+        self.assertTrue(message.header.headerFields[6].isCSeq)
+        self.assertTrue(message.header.headerFields[7].isVia)
+        self.assertTrue(message.header.headerFields[8].isContentLength)
+        # TODO - more.
 
     def testUnknownContentType(self):
         # https://tools.ietf.org/html/rfc4475#section-3.3.6
@@ -1072,8 +1409,16 @@ class TestRFC4475SIPTortureTest(TestCase):
         self.assertIsInstance(message.isValid, bool)
         self.assertTrue(message.isValid)
         self.assertEqual(len(message.header.headerFields), 9)
-        # TODO
-
+        self.assertTrue(message.header.headerFields[0].isContact)
+        self.assertTrue(message.header.headerFields[1].isTo)
+        self.assertTrue(message.header.headerFields[2].isFrom)
+        self.assertTrue(message.header.headerFields[3].isMaxForwards)
+        self.assertTrue(message.header.headerFields[4].isCallID)
+        self.assertTrue(message.header.headerFields[5].isCSeq)
+        self.assertTrue(message.header.headerFields[6].isVia)
+        self.assertTrue(message.header.headerFields[7].isContentType)
+        self.assertTrue(message.header.headerFields[8].isContentLength)
+        # TODO - more.
 
     def testUnknownAuthorizationScheme(self):
         # https://tools.ietf.org/html/rfc4475#section-3.3.7
@@ -1095,8 +1440,16 @@ class TestRFC4475SIPTortureTest(TestCase):
         self.assertIsInstance(message.isValid, bool)
         self.assertTrue(message.isValid)
         self.assertEqual(len(message.header.headerFields), 8)
-        # TODO
-
+        self.assertTrue(message.header.headerFields[0].isTo)
+        self.assertTrue(message.header.headerFields[1].isFrom)
+        self.assertTrue(message.header.headerFields[2].isMaxForwards)
+        self.assertTrue(message.header.headerFields[3].isCallID)
+        self.assertTrue(message.header.headerFields[4].isCSeq)
+        self.assertTrue(message.header.headerFields[5].isVia)
+        self.assertTrue(message.header.headerFields[6].isAuthorization)
+        # TODO - must there be whitespace after colon?  If so, then Content-Length is invalid.  If not, we have a bug:
+        # self.assertTrue(message.header.headerFields[7].isContentLength)
+        # TODO - more.
 
     def testMultipleValuesInSingleValueRequiredFields(self):
         # https://tools.ietf.org/html/rfc4475#section-3.3.8
@@ -1135,8 +1488,23 @@ class TestRFC4475SIPTortureTest(TestCase):
         # TODO - is this valid?
         # self.assertTrue(message.isValid)
         self.assertEqual(len(message.header.headerFields), 15)
-        # TODO
-
+        self.assertTrue(message.header.headerFields[0].isContact)
+        self.assertTrue(message.header.headerFields[1].isVia)
+        self.assertTrue(message.header.headerFields[2].isMaxForwards)
+        self.assertTrue(message.header.headerFields[3].isCSeq)
+        self.assertTrue(message.header.headerFields[4].isCallID)
+        self.assertTrue(message.header.headerFields[5].isCSeq)
+        self.assertTrue(message.header.headerFields[6].isCallID)
+        self.assertTrue(message.header.headerFields[7].isFrom)
+        self.assertTrue(message.header.headerFields[8].isTo)
+        self.assertTrue(message.header.headerFields[9].isTo)
+        self.assertTrue(message.header.headerFields[10].isFrom)
+        self.assertTrue(message.header.headerFields[11].isContentType)
+        if self.weHaveImplementCompactHeaders:
+            self.assertTrue(message.header.headerFields[12].isContentLength)
+        self.assertTrue(message.header.headerFields[13].isContact)
+        self.assertTrue(message.header.headerFields[14].isMaxForwards)
+        # TODO - more.
 
     def testMultipleContentLengthValues(self):
         # https://tools.ietf.org/html/rfc4475#section-3.3.9
@@ -1162,8 +1530,16 @@ class TestRFC4475SIPTortureTest(TestCase):
         # TODO - is this valid?
         # self.assertTrue(message.isValid)
         self.assertEqual(len(message.header.headerFields), 9)
-        # TODO
-
+        self.assertTrue(message.header.headerFields[0].isVia)
+        self.assertTrue(message.header.headerFields[1].isTo)
+        self.assertTrue(message.header.headerFields[2].isFrom)
+        self.assertTrue(message.header.headerFields[3].isCallID)
+        self.assertTrue(message.header.headerFields[4].isCSeq)
+        self.assertTrue(message.header.headerFields[5].isContentLength)
+        self.assertTrue(message.header.headerFields[6].isMaxForwards)
+        self.assertTrue(message.header.headerFields[7].isContentLength)
+        self.assertTrue(message.header.headerFields[8].isContentType)
+        # TODO - more.
 
     def test200OKResponseWithBroadcastViaHeaderFieldValue(self):
         # https://tools.ietf.org/html/rfc4475#section-3.3.10
@@ -1194,8 +1570,16 @@ class TestRFC4475SIPTortureTest(TestCase):
         self.assertIsInstance(message.isValid, bool)
         self.assertTrue(message.isValid)
         self.assertEqual(len(message.header.headerFields), 9)
-        # TODO
-
+        self.assertTrue(message.header.headerFields[0].isVia)
+        self.assertTrue(message.header.headerFields[1].isVia)
+        self.assertTrue(message.header.headerFields[2].isCallID)
+        self.assertTrue(message.header.headerFields[3].isCSeq)
+        self.assertTrue(message.header.headerFields[4].isFrom)
+        self.assertTrue(message.header.headerFields[5].isTo)
+        self.assertTrue(message.header.headerFields[6].isContentLength)
+        self.assertTrue(message.header.headerFields[7].isContentType)
+        self.assertTrue(message.header.headerFields[8].isContact)
+        # TODO - more.
 
     def testMaxForwardsOfZero(self):
         # https://tools.ietf.org/html/rfc4475#section-3.3.11
@@ -1216,8 +1600,14 @@ class TestRFC4475SIPTortureTest(TestCase):
         self.assertIsInstance(message.isValid, bool)
         self.assertTrue(message.isValid)
         self.assertEqual(len(message.header.headerFields), 7)
-        # TODO
-
+        self.assertTrue(message.header.headerFields[0].isTo)
+        self.assertTrue(message.header.headerFields[1].isFrom)
+        self.assertTrue(message.header.headerFields[2].isCallID)
+        self.assertTrue(message.header.headerFields[3].isCSeq)
+        self.assertTrue(message.header.headerFields[4].isVia)
+        self.assertTrue(message.header.headerFields[5].isMaxForwards)
+        self.assertTrue(message.header.headerFields[6].isContentLength)
+        # TODO - more.
 
     def testREGISTERwithAContactHeaderParameter(self):
         # https://tools.ietf.org/html/rfc4475#section-3.3.12
@@ -1239,8 +1629,16 @@ class TestRFC4475SIPTortureTest(TestCase):
         self.assertIsInstance(message.isValid, bool)
         self.assertTrue(message.isValid)
         self.assertEqual(len(message.header.headerFields), 8)
-        # TODO
-
+        self.assertTrue(message.header.headerFields[0].isVia)
+        self.assertTrue(message.header.headerFields[1].isMaxForwards)
+        self.assertTrue(message.header.headerFields[2].isFrom)
+        self.assertTrue(message.header.headerFields[3].isTo)
+        self.assertTrue(message.header.headerFields[4].isCallID)
+        self.assertTrue(message.header.headerFields[5].isCSeq)
+        self.assertTrue(message.header.headerFields[6].isContact)
+        if self.weHaveImplementCompactHeaders:
+            self.assertTrue(message.header.headerFields[7].isContentLength)
+        # TODO - more.
 
     def testREGISTERWithAURLParameter(self):
         # https://tools.ietf.org/html/rfc4475#section-3.3.13
@@ -1262,8 +1660,16 @@ class TestRFC4475SIPTortureTest(TestCase):
         self.assertIsInstance(message.isValid, bool)
         self.assertTrue(message.isValid)
         self.assertEqual(len(message.header.headerFields), 8)
-        # TODO
-
+        self.assertTrue(message.header.headerFields[0].isVia)
+        self.assertTrue(message.header.headerFields[1].isMaxForwards)
+        self.assertTrue(message.header.headerFields[2].isFrom)
+        self.assertTrue(message.header.headerFields[3].isTo)
+        self.assertTrue(message.header.headerFields[4].isCallID)
+        self.assertTrue(message.header.headerFields[5].isCSeq)
+        self.assertTrue(message.header.headerFields[6].isContact)
+        if self.weHaveImplementCompactHeaders:
+            self.assertTrue(message.header.headerFields[7].isContentLength)
+        # TODO - more.
 
     def testREGISTERWithAURLEscapedHeader(self):
         # https://tools.ietf.org/html/rfc4475#section-3.3.14
@@ -1285,8 +1691,16 @@ class TestRFC4475SIPTortureTest(TestCase):
         self.assertIsInstance(message.isValid, bool)
         self.assertTrue(message.isValid)
         self.assertEqual(len(message.header.headerFields), 8)
-        # TODO
-
+        self.assertTrue(message.header.headerFields[0].isTo)
+        self.assertTrue(message.header.headerFields[1].isFrom)
+        self.assertTrue(message.header.headerFields[2].isMaxForwards)
+        self.assertTrue(message.header.headerFields[3].isCallID)
+        self.assertTrue(message.header.headerFields[4].isCSeq)
+        self.assertTrue(message.header.headerFields[5].isVia)
+        if self.weHaveImplementCompactHeaders:
+            self.assertTrue(message.header.headerFields[6].isContact)
+            self.assertTrue(message.header.headerFields[7].isContentLength)
+        # TODO - more.
 
     def testUnacceptableAcceptOffering(self):
         # https://tools.ietf.org/html/rfc4475#section-3.3.15
@@ -1318,8 +1732,17 @@ class TestRFC4475SIPTortureTest(TestCase):
         self.assertIsInstance(message.isValid, bool)
         self.assertTrue(message.isValid)
         self.assertEqual(len(message.header.headerFields), 10)
-        # TODO
-
+        self.assertTrue(message.header.headerFields[0].isTo)
+        self.assertTrue(message.header.headerFields[1].isContact)
+        self.assertTrue(message.header.headerFields[2].isFrom)
+        self.assertTrue(message.header.headerFields[3].isMaxForwards)
+        self.assertTrue(message.header.headerFields[4].isCallID)
+        self.assertTrue(message.header.headerFields[5].isAccept)
+        self.assertTrue(message.header.headerFields[6].isCSeq)
+        self.assertTrue(message.header.headerFields[7].isVia)
+        self.assertTrue(message.header.headerFields[8].isContentLength)
+        self.assertTrue(message.header.headerFields[9].isContentType)
+        # TODO - more.
 
     def testINVITEWithRFC2543Syntax(self):
         # https://tools.ietf.org/html/rfc4475#section-3.4.1
@@ -1347,4 +1770,11 @@ class TestRFC4475SIPTortureTest(TestCase):
         # TODO - is this valid?
         # self.assertTrue(message.isValid)
         self.assertEqual(len(message.header.headerFields), 7)
-        # TODO
+        self.assertTrue(message.header.headerFields[0].isVia)
+        self.assertTrue(message.header.headerFields[1].isFrom)
+        self.assertTrue(message.header.headerFields[2].isRecordRoute)
+        self.assertTrue(message.header.headerFields[3].isTo)
+        self.assertTrue(message.header.headerFields[4].isCallID)
+        self.assertTrue(message.header.headerFields[5].isCSeq)
+        self.assertTrue(message.header.headerFields[6].isContentType)
+        # TODO - more.

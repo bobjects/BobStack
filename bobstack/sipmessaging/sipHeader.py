@@ -40,6 +40,7 @@ class SIPHeader(object):
             stringio.write("\r\n")
         stringio.write("\r\n")
 
+    # TODO: cache
     @property
     def contentLength(self):
         if self.contentLengthHeaderField is not None:
