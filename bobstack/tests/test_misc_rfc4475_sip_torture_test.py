@@ -12,7 +12,6 @@ from bobstack.siptransport import SimulatedNetwork
 class TestRFC4475SIPTortureTest(TestCase):
     @property
     def weHaveImplementedCompactHeaders(self):
-        # TODO:  Once we have implemented compact headers, change this to True.
         return True
 
     def testShortTortuousINVITE(self):

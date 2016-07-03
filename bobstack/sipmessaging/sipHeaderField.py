@@ -6,37 +6,41 @@ import re
 import inspect
 from classproperty import classproperty
 
+# TODO:  we need to formally test compact headers, beyond what is already being done in the sip torture test.
+# TODO:  More to do, in other classes, to fully implement useCompactHeaders.
 
 class SIPHeaderField(object):
     regexForFindingParameterNamesAndValues = re.compile(";([^=;]+)=?([^;]+)?")
     regexForFindingValueUpToParameters = re.compile('([^;])')
 
     @classmethod
-    def newParsedFrom(cls, aString):
+    def newParsedFrom(cls, aString, useCompactHeaders=False):
         answer = cls()
+        answer.useCompactHeaders = useCompactHeaders
         answer.rawString = aString
         return answer
 
     @classmethod
-    def newForAttributes(cls, value='', parameterNamesAndValueStrings={}):
+    def newForAttributes(cls, value='', parameterNamesAndValueStrings={}, useCompactHeaders=False):
         # This will typically be overridden by classes that have interesting attributes.
         # return cls.newForFieldNameAndValueString(fieldName=fieldName, fieldValueString=fieldValueString)
         answer = cls()
+        answer.useCompactHeaders = useCompactHeaders
         answer.value = value
         answer.parameterNamesAndValueStrings = parameterNamesAndValueStrings
         return answer
 
     @classmethod
-    def newForFieldNameAndValueString(cls, fieldName="", fieldValueString=""):
+    def newForFieldNameAndValueString(cls, fieldName="", fieldValueString="", useCompactHeaders=False):
         answer = cls()
+        answer.useCompactHeaders = useCompactHeaders
         answer.fieldName = fieldName
         answer.fieldValueString = fieldValueString
         return answer
 
-    # TODO:  make useCompactHeader keyword parameter.
     @classmethod
-    def newForValueString(cls, fieldValueString):
-        return cls.newForFieldNameAndValueString(cls.canonicalFieldName, fieldValueString)
+    def newForValueString(cls, fieldValueString, useCompactHeaders=False):
+        return cls.newForFieldNameAndValueString(cls.canonicalFieldName, fieldValueString, useCompactHeaders)
 
     # noinspection PyNestedDecorators
     @classproperty
@@ -59,6 +63,7 @@ class SIPHeaderField(object):
         self._fieldName = None
         self._fieldNameAndValueStringHasBeenSet = None
         self._fieldValueString = None
+        self._useCompactHeaders = False
 
         self.clearRawString()
         self.clearFieldNameAndValueString()
@@ -76,6 +81,16 @@ class SIPHeaderField(object):
         self._rawStringHasBeenSet = True
         self.clearFieldNameAndValueString()
         self.clearAttributes()
+
+    @property
+    def useCompactHeaders(self):
+        return self._useCompactHeaders
+
+    @useCompactHeaders.setter
+    def useCompactHeaders(self, aBoolean):
+        self._useCompactHeaders = aBoolean
+        fieldValue = self.fieldValueString # render field values if not already rendered.
+        self.clearRawString()
 
     @property
     def fieldName(self):
@@ -177,9 +192,11 @@ class SIPHeaderField(object):
             self._fieldName, self._fieldValueString = match.group(1, 2)
         self._fieldNameAndValueStringHasBeenSet = True
 
-    # Make useCompactHeader keyword parameter
     def renderFieldNameAndValueStringFromAttributes(self):
-        self._fieldName = self.canonicalFieldName
+        if self.useCompactHeaders:
+            self._fieldName = self.canonicalCompactFieldName
+        else:
+            self._fieldName = self.canonicalFieldName
         if self.parameterNamesAndValueStrings:
             self._fieldValueString = str(self._value)
         else:

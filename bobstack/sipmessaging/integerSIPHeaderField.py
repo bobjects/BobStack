@@ -13,8 +13,8 @@ class IntegerSIPHeaderField(SIPHeaderField):
     regexForParsingInteger = re.compile('\s*(\d*)')
 
     @classmethod
-    def newForFieldNameAndValueString(cls, fieldName="", fieldValueString="0"):
-        return super(IntegerSIPHeaderField, cls).newForFieldNameAndValueString(fieldName, fieldValueString)
+    def newForFieldNameAndValueString(cls, fieldName="", fieldValueString="0", useCompactHeaders=False):
+        return super(IntegerSIPHeaderField, cls).newForFieldNameAndValueString(fieldName, fieldValueString, useCompactHeaders)
 
     @classmethod
     def newForIntegerValue(cls, anInteger):
