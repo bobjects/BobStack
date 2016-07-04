@@ -231,6 +231,58 @@ class TestSIPMessageFactoryForSanitizedLogFile(TestCase):
                 self.appendStringToFileNamed(headerField.rawString + '\r\n', 'warningHeaderFields')
             if headerField.isWWWAuthenticate:
                 self.appendStringToFileNamed(headerField.rawString + '\r\n', 'wwwAuthenticateHeaderFields')
+            if headerField.isSubject:
+                self.appendStringToFileNamed(headerField.rawString + '\r\n', 'subjectSIPHeaderField')
+            if headerField.isReferredBy:
+                self.appendStringToFileNamed(headerField.rawString + '\r\n', 'referredBySIPHeaderField')
+            if headerField.isReferTo:
+                self.appendStringToFileNamed(headerField.rawString + '\r\n', 'referToSIPHeaderField')
+            if headerField.isAllowEvents:
+                self.appendStringToFileNamed(headerField.rawString + '\r\n', 'allowEventsSIPHeaderField')
+            if headerField.isEvent:
+                self.appendStringToFileNamed(headerField.rawString + '\r\n', 'eventSIPHeaderField')
+            if headerField.isContentEncoding:
+                self.appendStringToFileNamed(headerField.rawString + '\r\n', 'contentEncodingSIPHeaderField')
+            if headerField.isRAck:
+                self.appendStringToFileNamed(headerField.rawString + '\r\n', 'rAckSIPHeaderField')
+            if headerField.isPCharge:
+                self.appendStringToFileNamed(headerField.rawString + '\r\n', 'pChargeSIPHeaderField')
+            if headerField.isReplyTo:
+                self.appendStringToFileNamed(headerField.rawString + '\r\n', 'replyToSIPHeaderField')
+            if headerField.isUnsupported:
+                self.appendStringToFileNamed(headerField.rawString + '\r\n', 'unsupportedSIPHeaderField')
+            if headerField.isPAssertedIdentity:
+                self.appendStringToFileNamed(headerField.rawString + '\r\n', 'pAssertedIdentitySIPHeaderField')
+            if headerField.isPPreferredIdentity:
+                self.appendStringToFileNamed(headerField.rawString + '\r\n', 'pPreferredIdentitySIPHeaderField')
+            if headerField.isRemotePartyID:
+                self.appendStringToFileNamed(headerField.rawString + '\r\n', 'remotePartyIDSIPHeaderField')
+            if headerField.isAlertInfo:
+                self.appendStringToFileNamed(headerField.rawString + '\r\n', 'alertInfoSIPHeaderField')
+            if headerField.isHistoryInfo:
+                self.appendStringToFileNamed(headerField.rawString + '\r\n', 'historyInfoSIPHeaderField')
+            if headerField.isPCalledPartyId:
+                self.appendStringToFileNamed(headerField.rawString + '\r\n', 'pCalledPartyIdSIPHeaderField')
+            if headerField.isPRTPStat:
+                self.appendStringToFileNamed(headerField.rawString + '\r\n', 'pRTPStatSIPHeaderField')
+            if headerField.isPrivacy:
+                self.appendStringToFileNamed(headerField.rawString + '\r\n', 'privacySIPHeaderField')
+            if headerField.isProxyAuthenticate:
+                self.appendStringToFileNamed(headerField.rawString + '\r\n', 'proxyAuthenticateSIPHeaderField')
+            if headerField.isProxyAuthorization:
+                self.appendStringToFileNamed(headerField.rawString + '\r\n', 'proxyAuthorizationSIPHeaderField')
+            if headerField.isProxyRequire:
+                self.appendStringToFileNamed(headerField.rawString + '\r\n', 'proxyRequireSIPHeaderField')
+            if headerField.isReason:
+                self.appendStringToFileNamed(headerField.rawString + '\r\n', 'reasonSIPHeaderField')
+            if headerField.isRecordSessionExpires:
+                self.appendStringToFileNamed(headerField.rawString + '\r\n', 'recordSessionExpiresSIPHeaderField')
+            if headerField.isReplaces:
+                self.appendStringToFileNamed(headerField.rawString + '\r\n', 'replacesSIPHeaderField')
+            if headerField.isSubscriptionState:
+                self.appendStringToFileNamed(headerField.rawString + '\r\n', 'subscriptionStateSIPHeaderField')
+            if headerField.isMinExpires:
+                self.appendStringToFileNamed(headerField.rawString + '\r\n', 'minExpiresSIPHeaderField')
             if headerField.isVia:
                 self.appendStringToFileNamed(headerField.rawString, 'viaHeaderFieldsAndAttributes')
                 self.appendStringToFileNamed('\r\n    host:  ' + str(headerField.host), 'viaHeaderFieldsAndAttributes')
@@ -392,6 +444,9 @@ class TestSIPMessageFactoryForSanitizedLogFile(TestCase):
         self.assertIsInstance(aSIPMessage.isINFORequest, bool)
         self.assertIsInstance(aSIPMessage.isINVITERequest, bool)
         self.assertIsInstance(aSIPMessage.isNOTIFYRequest, bool)
+        self.assertIsInstance(aSIPMessage.isPRACKRequest, bool)
+        self.assertIsInstance(aSIPMessage.isPUBLISHRequest, bool)
+        self.assertIsInstance(aSIPMessage.isMESSAGERequest, bool)
         self.assertIsInstance(aSIPMessage.isREFERRequest, bool)
         self.assertIsInstance(aSIPMessage.isREGISTERRequest, bool)
         self.assertIsInstance(aSIPMessage.isSUBSCRIBERequest, bool)
@@ -458,6 +513,9 @@ class TestSIPMessageFactoryForMalformedSIPRequest(AbstractMalformedSIPMessageFro
         self.assertFalse(aSIPRequest.isINFORequest)
         self.assertFalse(aSIPRequest.isINVITERequest)
         self.assertFalse(aSIPRequest.isNOTIFYRequest)
+        self.assertFalse(aSIPRequest.isPRACKRequest)
+        self.assertFalse(aSIPRequest.isPUBLISHRequest)
+        self.assertFalse(aSIPRequest.isMESSAGERequest)
         self.assertFalse(aSIPRequest.isOPTIONSRequest)
         self.assertFalse(aSIPRequest.isREFERRequest)
         self.assertFalse(aSIPRequest.isREGISTERRequest)
@@ -483,6 +541,9 @@ class TestSIPMessageFactoryForUnknownSIPRequest(AbstractSIPRequestFromFactoryTes
         self.assertFalse(aSIPRequest.isINFORequest)
         self.assertFalse(aSIPRequest.isINVITERequest)
         self.assertFalse(aSIPRequest.isNOTIFYRequest)
+        self.assertFalse(aSIPRequest.isPRACKRequest)
+        self.assertFalse(aSIPRequest.isPUBLISHRequest)
+        self.assertFalse(aSIPRequest.isMESSAGERequest)
         self.assertFalse(aSIPRequest.isOPTIONSRequest)
         self.assertFalse(aSIPRequest.isREFERRequest)
         self.assertFalse(aSIPRequest.isREGISTERRequest)
@@ -508,6 +569,9 @@ class TestSIPMessageFactoryForOPTIONSSIPRequest(AbstractSIPRequestFromFactoryTes
         self.assertFalse(aSIPRequest.isINFORequest)
         self.assertFalse(aSIPRequest.isINVITERequest)
         self.assertFalse(aSIPRequest.isNOTIFYRequest)
+        self.assertFalse(aSIPRequest.isPRACKRequest)
+        self.assertFalse(aSIPRequest.isPUBLISHRequest)
+        self.assertFalse(aSIPRequest.isMESSAGERequest)
         self.assertTrue(aSIPRequest.isOPTIONSRequest)
         self.assertFalse(aSIPRequest.isREFERRequest)
         self.assertFalse(aSIPRequest.isREGISTERRequest)
@@ -533,6 +597,9 @@ class TestSIPMessageFactoryForACKSIPRequest(AbstractSIPRequestFromFactoryTestCas
         self.assertFalse(aSIPRequest.isINFORequest)
         self.assertFalse(aSIPRequest.isINVITERequest)
         self.assertFalse(aSIPRequest.isNOTIFYRequest)
+        self.assertFalse(aSIPRequest.isPRACKRequest)
+        self.assertFalse(aSIPRequest.isPUBLISHRequest)
+        self.assertFalse(aSIPRequest.isMESSAGERequest)
         self.assertFalse(aSIPRequest.isOPTIONSRequest)
         self.assertFalse(aSIPRequest.isREFERRequest)
         self.assertFalse(aSIPRequest.isREGISTERRequest)
@@ -558,6 +625,9 @@ class TestSIPMessageFactoryForBYESIPRequest(AbstractSIPRequestFromFactoryTestCas
         self.assertFalse(aSIPRequest.isINFORequest)
         self.assertFalse(aSIPRequest.isINVITERequest)
         self.assertFalse(aSIPRequest.isNOTIFYRequest)
+        self.assertFalse(aSIPRequest.isPRACKRequest)
+        self.assertFalse(aSIPRequest.isPUBLISHRequest)
+        self.assertFalse(aSIPRequest.isMESSAGERequest)
         self.assertFalse(aSIPRequest.isOPTIONSRequest)
         self.assertFalse(aSIPRequest.isREFERRequest)
         self.assertFalse(aSIPRequest.isREGISTERRequest)
@@ -583,6 +653,9 @@ class TestSIPMessageFactoryForCANCELSIPRequest(AbstractSIPRequestFromFactoryTest
         self.assertFalse(aSIPRequest.isINFORequest)
         self.assertFalse(aSIPRequest.isINVITERequest)
         self.assertFalse(aSIPRequest.isNOTIFYRequest)
+        self.assertFalse(aSIPRequest.isPRACKRequest)
+        self.assertFalse(aSIPRequest.isPUBLISHRequest)
+        self.assertFalse(aSIPRequest.isMESSAGERequest)
         self.assertFalse(aSIPRequest.isOPTIONSRequest)
         self.assertFalse(aSIPRequest.isREFERRequest)
         self.assertFalse(aSIPRequest.isREGISTERRequest)
@@ -608,6 +681,9 @@ class TestSIPMessageFactoryForINFOSIPRequest(AbstractSIPRequestFromFactoryTestCa
         self.assertTrue(aSIPRequest.isINFORequest)
         self.assertFalse(aSIPRequest.isINVITERequest)
         self.assertFalse(aSIPRequest.isNOTIFYRequest)
+        self.assertFalse(aSIPRequest.isPRACKRequest)
+        self.assertFalse(aSIPRequest.isPUBLISHRequest)
+        self.assertFalse(aSIPRequest.isMESSAGERequest)
         self.assertFalse(aSIPRequest.isOPTIONSRequest)
         self.assertFalse(aSIPRequest.isREFERRequest)
         self.assertFalse(aSIPRequest.isREGISTERRequest)
@@ -633,6 +709,9 @@ class TestSIPMessageFactoryForINVITESIPRequest(AbstractSIPRequestFromFactoryTest
         self.assertFalse(aSIPRequest.isINFORequest)
         self.assertTrue(aSIPRequest.isINVITERequest)
         self.assertFalse(aSIPRequest.isNOTIFYRequest)
+        self.assertFalse(aSIPRequest.isPRACKRequest)
+        self.assertFalse(aSIPRequest.isPUBLISHRequest)
+        self.assertFalse(aSIPRequest.isMESSAGERequest)
         self.assertFalse(aSIPRequest.isOPTIONSRequest)
         self.assertFalse(aSIPRequest.isREFERRequest)
         self.assertFalse(aSIPRequest.isREGISTERRequest)
@@ -658,6 +737,93 @@ class TestSIPMessageFactoryForNOTIFYSIPRequest(AbstractSIPRequestFromFactoryTest
         self.assertFalse(aSIPRequest.isINFORequest)
         self.assertFalse(aSIPRequest.isINVITERequest)
         self.assertTrue(aSIPRequest.isNOTIFYRequest)
+        self.assertFalse(aSIPRequest.isPRACKRequest)
+        self.assertFalse(aSIPRequest.isPUBLISHRequest)
+        self.assertFalse(aSIPRequest.isMESSAGERequest)
+        self.assertFalse(aSIPRequest.isOPTIONSRequest)
+        self.assertFalse(aSIPRequest.isREFERRequest)
+        self.assertFalse(aSIPRequest.isREGISTERRequest)
+        self.assertFalse(aSIPRequest.isSUBSCRIBERequest)
+        self.assertFalse(aSIPRequest.isUPDATERequest)
+
+
+class TestSIPMessageFactoryForPRACKSIPRequest(AbstractSIPRequestFromFactoryTestCase):
+    @property
+    def sipMethodString(self):
+        return "PRACK"
+
+    def test_parsing(self):
+        self.run_test_parsing()
+
+    def runAssertionsForSIPMessage(self, aSIPRequest):
+        super(TestSIPMessageFactoryForPRACKSIPRequest, self).runAssertionsForSIPMessage(aSIPRequest)
+        self.assertTrue(aSIPRequest.isKnown)
+        self.assertFalse(aSIPRequest.isUnknown)
+        self.assertFalse(aSIPRequest.isACKRequest)
+        self.assertFalse(aSIPRequest.isBYERequest)
+        self.assertFalse(aSIPRequest.isCANCELRequest)
+        self.assertFalse(aSIPRequest.isINFORequest)
+        self.assertFalse(aSIPRequest.isINVITERequest)
+        self.assertFalse(aSIPRequest.isNOTIFYRequest)
+        self.assertTrue(aSIPRequest.isPRACKRequest)
+        self.assertFalse(aSIPRequest.isPUBLISHRequest)
+        self.assertFalse(aSIPRequest.isMESSAGERequest)
+        self.assertFalse(aSIPRequest.isOPTIONSRequest)
+        self.assertFalse(aSIPRequest.isREFERRequest)
+        self.assertFalse(aSIPRequest.isREGISTERRequest)
+        self.assertFalse(aSIPRequest.isSUBSCRIBERequest)
+        self.assertFalse(aSIPRequest.isUPDATERequest)
+
+
+class TestSIPMessageFactoryForPUBLISHSIPRequest(AbstractSIPRequestFromFactoryTestCase):
+    @property
+    def sipMethodString(self):
+        return "PUBLISH"
+
+    def test_parsing(self):
+        self.run_test_parsing()
+
+    def runAssertionsForSIPMessage(self, aSIPRequest):
+        super(TestSIPMessageFactoryForPUBLISHSIPRequest, self).runAssertionsForSIPMessage(aSIPRequest)
+        self.assertTrue(aSIPRequest.isKnown)
+        self.assertFalse(aSIPRequest.isUnknown)
+        self.assertFalse(aSIPRequest.isACKRequest)
+        self.assertFalse(aSIPRequest.isBYERequest)
+        self.assertFalse(aSIPRequest.isCANCELRequest)
+        self.assertFalse(aSIPRequest.isINFORequest)
+        self.assertFalse(aSIPRequest.isINVITERequest)
+        self.assertFalse(aSIPRequest.isNOTIFYRequest)
+        self.assertFalse(aSIPRequest.isPRACKRequest)
+        self.assertTrue(aSIPRequest.isPUBLISHRequest)
+        self.assertFalse(aSIPRequest.isMESSAGERequest)
+        self.assertFalse(aSIPRequest.isOPTIONSRequest)
+        self.assertFalse(aSIPRequest.isREFERRequest)
+        self.assertFalse(aSIPRequest.isREGISTERRequest)
+        self.assertFalse(aSIPRequest.isSUBSCRIBERequest)
+        self.assertFalse(aSIPRequest.isUPDATERequest)
+
+
+class TestSIPMessageFactoryForMESSAGESIPRequest(AbstractSIPRequestFromFactoryTestCase):
+    @property
+    def sipMethodString(self):
+        return "MESSAGE"
+
+    def test_parsing(self):
+        self.run_test_parsing()
+
+    def runAssertionsForSIPMessage(self, aSIPRequest):
+        super(TestSIPMessageFactoryForMESSAGESIPRequest, self).runAssertionsForSIPMessage(aSIPRequest)
+        self.assertTrue(aSIPRequest.isKnown)
+        self.assertFalse(aSIPRequest.isUnknown)
+        self.assertFalse(aSIPRequest.isACKRequest)
+        self.assertFalse(aSIPRequest.isBYERequest)
+        self.assertFalse(aSIPRequest.isCANCELRequest)
+        self.assertFalse(aSIPRequest.isINFORequest)
+        self.assertFalse(aSIPRequest.isINVITERequest)
+        self.assertFalse(aSIPRequest.isNOTIFYRequest)
+        self.assertFalse(aSIPRequest.isPRACKRequest)
+        self.assertFalse(aSIPRequest.isPUBLISHRequest)
+        self.assertTrue(aSIPRequest.isMESSAGERequest)
         self.assertFalse(aSIPRequest.isOPTIONSRequest)
         self.assertFalse(aSIPRequest.isREFERRequest)
         self.assertFalse(aSIPRequest.isREGISTERRequest)
@@ -683,6 +849,9 @@ class TestSIPMessageFactoryForREFERSIPRequest(AbstractSIPRequestFromFactoryTestC
         self.assertFalse(aSIPRequest.isINFORequest)
         self.assertFalse(aSIPRequest.isINVITERequest)
         self.assertFalse(aSIPRequest.isNOTIFYRequest)
+        self.assertFalse(aSIPRequest.isPRACKRequest)
+        self.assertFalse(aSIPRequest.isPUBLISHRequest)
+        self.assertFalse(aSIPRequest.isMESSAGERequest)
         self.assertFalse(aSIPRequest.isOPTIONSRequest)
         self.assertTrue(aSIPRequest.isREFERRequest)
         self.assertFalse(aSIPRequest.isREGISTERRequest)
@@ -708,6 +877,9 @@ class TestSIPMessageFactoryForREGISTERSIPRequest(AbstractSIPRequestFromFactoryTe
         self.assertFalse(aSIPRequest.isINFORequest)
         self.assertFalse(aSIPRequest.isINVITERequest)
         self.assertFalse(aSIPRequest.isNOTIFYRequest)
+        self.assertFalse(aSIPRequest.isPRACKRequest)
+        self.assertFalse(aSIPRequest.isPUBLISHRequest)
+        self.assertFalse(aSIPRequest.isMESSAGERequest)
         self.assertFalse(aSIPRequest.isOPTIONSRequest)
         self.assertFalse(aSIPRequest.isREFERRequest)
         self.assertTrue(aSIPRequest.isREGISTERRequest)
@@ -733,6 +905,9 @@ class TestSIPMessageFactoryForSUBSCRIBESIPRequest(AbstractSIPRequestFromFactoryT
         self.assertFalse(aSIPRequest.isINFORequest)
         self.assertFalse(aSIPRequest.isINVITERequest)
         self.assertFalse(aSIPRequest.isNOTIFYRequest)
+        self.assertFalse(aSIPRequest.isPRACKRequest)
+        self.assertFalse(aSIPRequest.isPUBLISHRequest)
+        self.assertFalse(aSIPRequest.isMESSAGERequest)
         self.assertFalse(aSIPRequest.isOPTIONSRequest)
         self.assertFalse(aSIPRequest.isREFERRequest)
         self.assertFalse(aSIPRequest.isREGISTERRequest)
@@ -758,6 +933,9 @@ class TestSIPMessageFactoryForUPDATESIPRequest(AbstractSIPRequestFromFactoryTest
         self.assertFalse(aSIPRequest.isINFORequest)
         self.assertFalse(aSIPRequest.isINVITERequest)
         self.assertFalse(aSIPRequest.isNOTIFYRequest)
+        self.assertFalse(aSIPRequest.isPRACKRequest)
+        self.assertFalse(aSIPRequest.isPUBLISHRequest)
+        self.assertFalse(aSIPRequest.isMESSAGERequest)
         self.assertFalse(aSIPRequest.isOPTIONSRequest)
         self.assertFalse(aSIPRequest.isREFERRequest)
         self.assertFalse(aSIPRequest.isREGISTERRequest)
@@ -787,6 +965,9 @@ class TestSIPMessageFactoryForSIPResponse(AbstractSIPResponseFromFactoryTestCase
         self.assertFalse(aSIPResponse.isINFORequest)
         self.assertFalse(aSIPResponse.isINVITERequest)
         self.assertFalse(aSIPResponse.isNOTIFYRequest)
+        self.assertFalse(aSIPResponse.isPRACKRequest)
+        self.assertFalse(aSIPResponse.isPUBLISHRequest)
+        self.assertFalse(aSIPResponse.isMESSAGERequest)
         self.assertFalse(aSIPResponse.isOPTIONSRequest)
         self.assertFalse(aSIPResponse.isREFERRequest)
         self.assertFalse(aSIPResponse.isREGISTERRequest)

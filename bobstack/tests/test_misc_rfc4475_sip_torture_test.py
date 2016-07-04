@@ -70,9 +70,7 @@ class TestRFC4475SIPTortureTest(TestCase):
         self.assertTrue(message.header.headerFields[4].isContentLength)
         self.assertTrue(message.header.headerFields[5].isCSeq)
         self.assertTrue(message.header.headerFields[6].isVia)
-        # TODO:  Subject header is unknown for now.
-        # self.assertTrue(message.header.headerFields[7].isSubject)
-        self.assertTrue(message.header.headerFields[7].isUnknown)
+        self.assertTrue(message.header.headerFields[7].isSubject)
         self.assertTrue(message.header.headerFields[8].isUnknown)
         self.assertTrue(message.header.headerFields[9].isUnknown)
         self.assertTrue(message.header.headerFields[10].isContentType)
@@ -1379,8 +1377,7 @@ class TestRFC4475SIPTortureTest(TestCase):
         self.assertTrue(message.header.headerFields[2].isMaxForwards)
         self.assertTrue(message.header.headerFields[3].isCallID)
         self.assertTrue(message.header.headerFields[4].isRequire)
-        # TODO:  Proxy-Require not supported yet.
-        self.assertTrue(message.header.headerFields[5].isUnknown)
+        self.assertTrue(message.header.headerFields[5].isProxyRequire)
         self.assertTrue(message.header.headerFields[6].isCSeq)
         self.assertTrue(message.header.headerFields[7].isVia)
         self.assertTrue(message.header.headerFields[8].isContentLength)

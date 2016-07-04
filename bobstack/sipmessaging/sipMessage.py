@@ -168,11 +168,23 @@ class SIPMessage(object):
         return False
 
     @property
+    def isMESSAGERequest(self):
+        return False
+
+    @property
     def isNOTIFYRequest(self):
         return False
 
     @property
     def isOPTIONSRequest(self):
+        return False
+
+    @property
+    def isPUBLISHRequest(self):
+        return False
+
+    @property
+    def isPRACKRequest(self):
         return False
 
     @property

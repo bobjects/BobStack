@@ -10,6 +10,9 @@ from concretesipmessages import CANCELSIPRequest
 from concretesipmessages import INFOSIPRequest
 from concretesipmessages import INVITESIPRequest
 from concretesipmessages import NOTIFYSIPRequest
+from concretesipmessages import PRACKSIPRequest
+from concretesipmessages import PUBLISHSIPRequest
+from concretesipmessages import MESSAGESIPRequest
 from concretesipmessages import OPTIONSSIPRequest
 from concretesipmessages import REFERSIPRequest
 from concretesipmessages import REGISTERSIPRequest
@@ -28,6 +31,9 @@ class SIPMessageFactory(EventSourceMixin):
         'INFO': INFOSIPRequest,
         'INVITE': INVITESIPRequest,
         'NOTIFY': NOTIFYSIPRequest,
+        'PRACK': PRACKSIPRequest,
+        'PUBLISH': PUBLISHSIPRequest,
+        'MESSAGE': MESSAGESIPRequest,
         'OPTIONS': OPTIONSSIPRequest,
         'REFER': REFERSIPRequest,
         'REGISTER': REGISTERSIPRequest,

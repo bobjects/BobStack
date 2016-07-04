@@ -1,4 +1,4 @@
-for method in ACK BYE CANCEL INFO INVITE NOTIFY REFER REGISTER SUBSCRIBE UPDATE
+for method in ACK BYE CANCEL INFO INVITE NOTIFY PRACK PUBLISH MESSAGE REFER REGISTER SUBSCRIBE UPDATE
 do
 	lowercase=`echo "$method" | perl -ne 'print lc'`
 	# filenameEnding=SIPRequest.py

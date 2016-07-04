@@ -422,3 +422,107 @@ class SIPHeaderField(object):
     def isWarning(self):
         return False
 
+    @property
+    def isSubject(self):
+        return False
+
+    @property
+    def isReferredBy(self):
+        return False
+
+    @property
+    def isReferTo(self):
+        return False
+
+    @property
+    def isAllowEvents(self):
+        return False
+
+    @property
+    def isEvent(self):
+        return False
+
+    @property
+    def isContentEncoding(self):
+        return False
+
+    @property
+    def isRAck(self):
+        return False
+
+    @property
+    def isPCharge(self):
+        return False
+
+    @property
+    def isReplyTo(self):
+        return False
+
+    @property
+    def isUnsupported(self):
+        return False
+
+    @property
+    def isPAssertedIdentity(self):
+        return False
+
+    @property
+    def isPPreferredIdentity(self):
+        return False
+
+    @property
+    def isRemotePartyID(self):
+        return False
+
+    @property
+    def isAlertInfo(self):
+        return False
+
+    @property
+    def isHistoryInfo(self):
+        return False
+
+    @property
+    def isPCalledPartyId(self):
+        return False
+
+    @property
+    def isPRTPStat(self):
+        return False
+
+    @property
+    def isPrivacy(self):
+        return False
+
+    @property
+    def isProxyAuthenticate(self):
+        return False
+
+    @property
+    def isProxyAuthorization(self):
+        return False
+
+    @property
+    def isProxyRequire(self):
+        return False
+
+    @property
+    def isReason(self):
+        return False
+
+    @property
+    def isRecordSessionExpires(self):
+        return False
+
+    @property
+    def isReplaces(self):
+        return False
+
+    @property
+    def isSubscriptionState(self):
+        return False
+
+    @property
+    def isMinExpires(self):
+        return False
+

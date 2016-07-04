@@ -1,4 +1,4 @@
-for method in ACK BYE CANCEL INFO INVITE NOTIFY OPTIONS REFER REGISTER SUBSCRIBE UPDATE
+for method in ACK BYE CANCEL INFO INVITE NOTIFY PRACK PUBLISH MESSAGE OPTIONS REFER REGISTER SUBSCRIBE UPDATE
 do
 	lowercase=`echo "$method" | perl -ne 'print lc'`
 	echo "        self.assertFalse(aSIPRequest.is$method""Request)"

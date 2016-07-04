@@ -33,6 +33,32 @@ from concreteheaderfields import ToSIPHeaderField
 from concreteheaderfields import UserAgentSIPHeaderField
 from concreteheaderfields import WWWAuthenticateSIPHeaderField
 from concreteheaderfields import WarningSIPHeaderField
+from concreteheaderfields import SubjectSIPHeaderField
+from concreteheaderfields import ReferredBySIPHeaderField
+from concreteheaderfields import ReferToSIPHeaderField
+from concreteheaderfields import AllowEventsSIPHeaderField
+from concreteheaderfields import EventSIPHeaderField
+from concreteheaderfields import ContentEncodingSIPHeaderField
+from concreteheaderfields import RAckSIPHeaderField
+from concreteheaderfields import PChargeSIPHeaderField
+from concreteheaderfields import ReplyToSIPHeaderField
+from concreteheaderfields import UnsupportedSIPHeaderField
+from concreteheaderfields import PAssertedIdentitySIPHeaderField
+from concreteheaderfields import PPreferredIdentitySIPHeaderField
+from concreteheaderfields import RemotePartyIDSIPHeaderField
+from concreteheaderfields import AlertInfoSIPHeaderField
+from concreteheaderfields import HistoryInfoSIPHeaderField
+from concreteheaderfields import PCalledPartyIdSIPHeaderField
+from concreteheaderfields import PRTPStatSIPHeaderField
+from concreteheaderfields import PrivacySIPHeaderField
+from concreteheaderfields import ProxyAuthenticateSIPHeaderField
+from concreteheaderfields import ProxyAuthorizationSIPHeaderField
+from concreteheaderfields import ProxyRequireSIPHeaderField
+from concreteheaderfields import ReasonSIPHeaderField
+from concreteheaderfields import RecordSessionExpiresSIPHeaderField
+from concreteheaderfields import ReplacesSIPHeaderField
+from concreteheaderfields import SubscriptionStateSIPHeaderField
+from concreteheaderfields import MinExpiresSIPHeaderField
 from unknownSIPHeaderField import UnknownSIPHeaderField
 
 
@@ -112,6 +138,70 @@ class SIPHeaderFieldFactory(object):
         'via:': ViaSIPHeaderField,
         'v': ViaSIPHeaderField,
         'v:': ViaSIPHeaderField,
+        'subject': SubjectSIPHeaderField,
+        'subject:': SubjectSIPHeaderField,
+        's': SubjectSIPHeaderField,
+        's:': SubjectSIPHeaderField,
+        'referred-by': ReferredBySIPHeaderField,
+        'referred-by:': ReferredBySIPHeaderField,
+        'b': ReferredBySIPHeaderField,
+        'b:': ReferredBySIPHeaderField,
+        'refer-to': ReferToSIPHeaderField,
+        'refer-to:': ReferToSIPHeaderField,
+        'r': ReferToSIPHeaderField,
+        'r:': ReferToSIPHeaderField,
+        'allow-events': AllowEventsSIPHeaderField,
+        'allow-events:': AllowEventsSIPHeaderField,
+        'u': AllowEventsSIPHeaderField,
+        'u:': AllowEventsSIPHeaderField,
+        'event': EventSIPHeaderField,
+        'event:': EventSIPHeaderField,
+        'o': EventSIPHeaderField,
+        'o:': EventSIPHeaderField,
+        'content-encoding': ContentEncodingSIPHeaderField,
+        'content-encoding:': ContentEncodingSIPHeaderField,
+        'e': ContentEncodingSIPHeaderField,
+        'e:': ContentEncodingSIPHeaderField,
+        'rack': RAckSIPHeaderField,
+        'rack:': RAckSIPHeaderField,
+        'p-charge': PChargeSIPHeaderField,
+        'p-charge:': PChargeSIPHeaderField,
+        'reply-to': ReplyToSIPHeaderField,
+        'reply-to:': ReplyToSIPHeaderField,
+        'unsupported': UnsupportedSIPHeaderField,
+        'unsupported:': UnsupportedSIPHeaderField,
+        'p-asserted-identity': PAssertedIdentitySIPHeaderField,
+        'p-asserted-identity:': PAssertedIdentitySIPHeaderField,
+        'p-preferred-identity': PPreferredIdentitySIPHeaderField,
+        'p-preferred-identity:': PPreferredIdentitySIPHeaderField,
+        'remote-party-id': RemotePartyIDSIPHeaderField,
+        'remote-party-id:': RemotePartyIDSIPHeaderField,
+        'alert-info': AlertInfoSIPHeaderField,
+        'alert-info:': AlertInfoSIPHeaderField,
+        'history-info': HistoryInfoSIPHeaderField,
+        'history-info:': HistoryInfoSIPHeaderField,
+        'p-called-party-id': PCalledPartyIdSIPHeaderField,
+        'p-called-party-id:': PCalledPartyIdSIPHeaderField,
+        'p-rtp-stat': PRTPStatSIPHeaderField,
+        'p-rtp-stat:': PRTPStatSIPHeaderField,
+        'privacy': PrivacySIPHeaderField,
+        'privacy:': PrivacySIPHeaderField,
+        'proxy-authenticate': ProxyAuthenticateSIPHeaderField,
+        'proxy-authenticate:': ProxyAuthenticateSIPHeaderField,
+        'proxy-authorization': ProxyAuthorizationSIPHeaderField,
+        'proxy-authorization:': ProxyAuthorizationSIPHeaderField,
+        'proxy-require': ProxyRequireSIPHeaderField,
+        'proxy-require:': ProxyRequireSIPHeaderField,
+        'reason': ReasonSIPHeaderField,
+        'reason:': ReasonSIPHeaderField,
+        'record-session-expires': RecordSessionExpiresSIPHeaderField,
+        'record-session-expires:': RecordSessionExpiresSIPHeaderField,
+        'replaces': ReplacesSIPHeaderField,
+        'replaces:': ReplacesSIPHeaderField,
+        'subscription-state': SubscriptionStateSIPHeaderField,
+        'subscription-state:': SubscriptionStateSIPHeaderField,
+        'min-expires': MinExpiresSIPHeaderField,
+        'min-expires:': MinExpiresSIPHeaderField,
     }
 
     # noinspection PyNestedDecorators

@@ -9,6 +9,9 @@ from sipmessaging import CANCELSIPRequest
 from sipmessaging import INFOSIPRequest
 from sipmessaging import INVITESIPRequest
 from sipmessaging import NOTIFYSIPRequest
+from sipmessaging import PRACKSIPRequest
+from sipmessaging import PUBLISHSIPRequest
+from sipmessaging import MESSAGESIPRequest
 from sipmessaging import OPTIONSSIPRequest
 from sipmessaging import REFERSIPRequest
 from sipmessaging import REGISTERSIPRequest
@@ -58,6 +61,9 @@ class TestUnknownSIPRequest(AbstractSIPRequestTestCase):
         self.assertFalse(aSIPRequest.isINFORequest)
         self.assertFalse(aSIPRequest.isINVITERequest)
         self.assertFalse(aSIPRequest.isNOTIFYRequest)
+        self.assertFalse(aSIPRequest.isPRACKRequest)
+        self.assertFalse(aSIPRequest.isPUBLISHRequest)
+        self.assertFalse(aSIPRequest.isMESSAGERequest)
         self.assertFalse(aSIPRequest.isOPTIONSRequest)
         self.assertFalse(aSIPRequest.isREFERRequest)
         self.assertFalse(aSIPRequest.isREGISTERRequest)
@@ -107,6 +113,9 @@ class TestOPTIONSSIPRequest(AbstractSIPRequestTestCase):
         self.assertFalse(aSIPRequest.isINFORequest)
         self.assertFalse(aSIPRequest.isINVITERequest)
         self.assertFalse(aSIPRequest.isNOTIFYRequest)
+        self.assertFalse(aSIPRequest.isPRACKRequest)
+        self.assertFalse(aSIPRequest.isPUBLISHRequest)
+        self.assertFalse(aSIPRequest.isMESSAGERequest)
         self.assertTrue(aSIPRequest.isOPTIONSRequest)
         self.assertFalse(aSIPRequest.isREFERRequest)
         self.assertFalse(aSIPRequest.isREGISTERRequest)
@@ -156,6 +165,9 @@ class TestACKSIPRequest(AbstractSIPRequestTestCase):
         self.assertFalse(aSIPRequest.isINFORequest)
         self.assertFalse(aSIPRequest.isINVITERequest)
         self.assertFalse(aSIPRequest.isNOTIFYRequest)
+        self.assertFalse(aSIPRequest.isPRACKRequest)
+        self.assertFalse(aSIPRequest.isPUBLISHRequest)
+        self.assertFalse(aSIPRequest.isMESSAGERequest)
         self.assertFalse(aSIPRequest.isOPTIONSRequest)
         self.assertFalse(aSIPRequest.isREFERRequest)
         self.assertFalse(aSIPRequest.isREGISTERRequest)
@@ -205,6 +217,9 @@ class TestBYESIPRequest(AbstractSIPRequestTestCase):
         self.assertFalse(aSIPRequest.isINFORequest)
         self.assertFalse(aSIPRequest.isINVITERequest)
         self.assertFalse(aSIPRequest.isNOTIFYRequest)
+        self.assertFalse(aSIPRequest.isPRACKRequest)
+        self.assertFalse(aSIPRequest.isPUBLISHRequest)
+        self.assertFalse(aSIPRequest.isMESSAGERequest)
         self.assertFalse(aSIPRequest.isOPTIONSRequest)
         self.assertFalse(aSIPRequest.isREFERRequest)
         self.assertFalse(aSIPRequest.isREGISTERRequest)
@@ -254,6 +269,9 @@ class TestCANCELSIPRequest(AbstractSIPRequestTestCase):
         self.assertFalse(aSIPRequest.isINFORequest)
         self.assertFalse(aSIPRequest.isINVITERequest)
         self.assertFalse(aSIPRequest.isNOTIFYRequest)
+        self.assertFalse(aSIPRequest.isPRACKRequest)
+        self.assertFalse(aSIPRequest.isPUBLISHRequest)
+        self.assertFalse(aSIPRequest.isMESSAGERequest)
         self.assertFalse(aSIPRequest.isOPTIONSRequest)
         self.assertFalse(aSIPRequest.isREFERRequest)
         self.assertFalse(aSIPRequest.isREGISTERRequest)
@@ -303,6 +321,9 @@ class TestINFOSIPRequest(AbstractSIPRequestTestCase):
         self.assertTrue(aSIPRequest.isINFORequest)
         self.assertFalse(aSIPRequest.isINVITERequest)
         self.assertFalse(aSIPRequest.isNOTIFYRequest)
+        self.assertFalse(aSIPRequest.isPRACKRequest)
+        self.assertFalse(aSIPRequest.isPUBLISHRequest)
+        self.assertFalse(aSIPRequest.isMESSAGERequest)
         self.assertFalse(aSIPRequest.isOPTIONSRequest)
         self.assertFalse(aSIPRequest.isREFERRequest)
         self.assertFalse(aSIPRequest.isREGISTERRequest)
@@ -352,6 +373,9 @@ class TestINVITESIPRequest(AbstractSIPRequestTestCase):
         self.assertFalse(aSIPRequest.isINFORequest)
         self.assertTrue(aSIPRequest.isINVITERequest)
         self.assertFalse(aSIPRequest.isNOTIFYRequest)
+        self.assertFalse(aSIPRequest.isPRACKRequest)
+        self.assertFalse(aSIPRequest.isPUBLISHRequest)
+        self.assertFalse(aSIPRequest.isMESSAGERequest)
         self.assertFalse(aSIPRequest.isOPTIONSRequest)
         self.assertFalse(aSIPRequest.isREFERRequest)
         self.assertFalse(aSIPRequest.isREGISTERRequest)
@@ -401,6 +425,165 @@ class TestNOTIFYSIPRequest(AbstractSIPRequestTestCase):
         self.assertFalse(aSIPRequest.isINFORequest)
         self.assertFalse(aSIPRequest.isINVITERequest)
         self.assertTrue(aSIPRequest.isNOTIFYRequest)
+        self.assertFalse(aSIPRequest.isPRACKRequest)
+        self.assertFalse(aSIPRequest.isPUBLISHRequest)
+        self.assertFalse(aSIPRequest.isMESSAGERequest)
+        self.assertFalse(aSIPRequest.isOPTIONSRequest)
+        self.assertFalse(aSIPRequest.isREFERRequest)
+        self.assertFalse(aSIPRequest.isREGISTERRequest)
+        self.assertFalse(aSIPRequest.isSUBSCRIBERequest)
+        self.assertFalse(aSIPRequest.isUPDATERequest)
+
+
+class TestPRACKSIPRequest(AbstractSIPRequestTestCase):
+    @property
+    def sipMethodString(self):
+        return "PRACK"
+
+    @property
+    def sipMessageClassUnderTest(self):
+        return PRACKSIPRequest
+
+    def test_parsing(self):
+        self.run_test_parsing()
+
+    def test_rendering_from_list_of_header_fields(self):
+        self.run_test_rendering_from_list_of_header_fields()
+
+    def test_rendering_from_one_big_header_string(self):
+        self.run_test_rendering_from_one_big_header_string()
+
+    # TODO - skipping for now.
+    # @unittest.skip("temporarily skipping...")
+    def test_rendering_from_one_big_header_string_with_folding(self):
+        self.run_test_rendering_from_one_big_header_string_with_folding()
+
+    def test_rendering_from_list_of_header_field_strings(self):
+        self.run_test_rendering_from_list_of_header_field_strings()
+
+    def test_rendering_from_list_of_field_names_and_values(self):
+        self.run_test_rendering_from_list_of_field_names_and_values()
+
+    def test_rendering_from_list_of_field_names_and_values_using_property_dict(self):
+        self.run_test_rendering_from_list_of_field_names_and_values_using_property_dict()
+
+    def runAssertionsForSIPMessage(self, aSIPRequest):
+        super(TestPRACKSIPRequest, self).runAssertionsForSIPMessage(aSIPRequest)
+        self.assertTrue(aSIPRequest.isKnown)
+        self.assertFalse(aSIPRequest.isUnknown)
+        self.assertFalse(aSIPRequest.isACKRequest)
+        self.assertFalse(aSIPRequest.isBYERequest)
+        self.assertFalse(aSIPRequest.isCANCELRequest)
+        self.assertFalse(aSIPRequest.isINFORequest)
+        self.assertFalse(aSIPRequest.isINVITERequest)
+        self.assertFalse(aSIPRequest.isNOTIFYRequest)
+        self.assertTrue(aSIPRequest.isPRACKRequest)
+        self.assertFalse(aSIPRequest.isPUBLISHRequest)
+        self.assertFalse(aSIPRequest.isMESSAGERequest)
+        self.assertFalse(aSIPRequest.isOPTIONSRequest)
+        self.assertFalse(aSIPRequest.isREFERRequest)
+        self.assertFalse(aSIPRequest.isREGISTERRequest)
+        self.assertFalse(aSIPRequest.isSUBSCRIBERequest)
+        self.assertFalse(aSIPRequest.isUPDATERequest)
+
+
+class TestPUBLISHSIPRequest(AbstractSIPRequestTestCase):
+    @property
+    def sipMethodString(self):
+        return "PUBLISH"
+
+    @property
+    def sipMessageClassUnderTest(self):
+        return PUBLISHSIPRequest
+
+    def test_parsing(self):
+        self.run_test_parsing()
+
+    def test_rendering_from_list_of_header_fields(self):
+        self.run_test_rendering_from_list_of_header_fields()
+
+    def test_rendering_from_one_big_header_string(self):
+        self.run_test_rendering_from_one_big_header_string()
+
+    # TODO - skipping for now.
+    # @unittest.skip("temporarily skipping...")
+    def test_rendering_from_one_big_header_string_with_folding(self):
+        self.run_test_rendering_from_one_big_header_string_with_folding()
+
+    def test_rendering_from_list_of_header_field_strings(self):
+        self.run_test_rendering_from_list_of_header_field_strings()
+
+    def test_rendering_from_list_of_field_names_and_values(self):
+        self.run_test_rendering_from_list_of_field_names_and_values()
+
+    def test_rendering_from_list_of_field_names_and_values_using_property_dict(self):
+        self.run_test_rendering_from_list_of_field_names_and_values_using_property_dict()
+
+    def runAssertionsForSIPMessage(self, aSIPRequest):
+        super(TestPUBLISHSIPRequest, self).runAssertionsForSIPMessage(aSIPRequest)
+        self.assertTrue(aSIPRequest.isKnown)
+        self.assertFalse(aSIPRequest.isUnknown)
+        self.assertFalse(aSIPRequest.isACKRequest)
+        self.assertFalse(aSIPRequest.isBYERequest)
+        self.assertFalse(aSIPRequest.isCANCELRequest)
+        self.assertFalse(aSIPRequest.isINFORequest)
+        self.assertFalse(aSIPRequest.isINVITERequest)
+        self.assertFalse(aSIPRequest.isNOTIFYRequest)
+        self.assertFalse(aSIPRequest.isPRACKRequest)
+        self.assertTrue(aSIPRequest.isPUBLISHRequest)
+        self.assertFalse(aSIPRequest.isMESSAGERequest)
+        self.assertFalse(aSIPRequest.isOPTIONSRequest)
+        self.assertFalse(aSIPRequest.isREFERRequest)
+        self.assertFalse(aSIPRequest.isREGISTERRequest)
+        self.assertFalse(aSIPRequest.isSUBSCRIBERequest)
+        self.assertFalse(aSIPRequest.isUPDATERequest)
+
+
+class TestMESSAGESIPRequest(AbstractSIPRequestTestCase):
+    @property
+    def sipMethodString(self):
+        return "MESSAGE"
+
+    @property
+    def sipMessageClassUnderTest(self):
+        return MESSAGESIPRequest
+
+    def test_parsing(self):
+        self.run_test_parsing()
+
+    def test_rendering_from_list_of_header_fields(self):
+        self.run_test_rendering_from_list_of_header_fields()
+
+    def test_rendering_from_one_big_header_string(self):
+        self.run_test_rendering_from_one_big_header_string()
+
+    # TODO - skipping for now.
+    # @unittest.skip("temporarily skipping...")
+    def test_rendering_from_one_big_header_string_with_folding(self):
+        self.run_test_rendering_from_one_big_header_string_with_folding()
+
+    def test_rendering_from_list_of_header_field_strings(self):
+        self.run_test_rendering_from_list_of_header_field_strings()
+
+    def test_rendering_from_list_of_field_names_and_values(self):
+        self.run_test_rendering_from_list_of_field_names_and_values()
+
+    def test_rendering_from_list_of_field_names_and_values_using_property_dict(self):
+        self.run_test_rendering_from_list_of_field_names_and_values_using_property_dict()
+
+    def runAssertionsForSIPMessage(self, aSIPRequest):
+        super(TestMESSAGESIPRequest, self).runAssertionsForSIPMessage(aSIPRequest)
+        self.assertTrue(aSIPRequest.isKnown)
+        self.assertFalse(aSIPRequest.isUnknown)
+        self.assertFalse(aSIPRequest.isACKRequest)
+        self.assertFalse(aSIPRequest.isBYERequest)
+        self.assertFalse(aSIPRequest.isCANCELRequest)
+        self.assertFalse(aSIPRequest.isINFORequest)
+        self.assertFalse(aSIPRequest.isINVITERequest)
+        self.assertFalse(aSIPRequest.isNOTIFYRequest)
+        self.assertFalse(aSIPRequest.isPRACKRequest)
+        self.assertFalse(aSIPRequest.isPUBLISHRequest)
+        self.assertTrue(aSIPRequest.isMESSAGERequest)
         self.assertFalse(aSIPRequest.isOPTIONSRequest)
         self.assertFalse(aSIPRequest.isREFERRequest)
         self.assertFalse(aSIPRequest.isREGISTERRequest)
@@ -450,6 +633,9 @@ class TestREFERSIPRequest(AbstractSIPRequestTestCase):
         self.assertFalse(aSIPRequest.isINFORequest)
         self.assertFalse(aSIPRequest.isINVITERequest)
         self.assertFalse(aSIPRequest.isNOTIFYRequest)
+        self.assertFalse(aSIPRequest.isPRACKRequest)
+        self.assertFalse(aSIPRequest.isPUBLISHRequest)
+        self.assertFalse(aSIPRequest.isMESSAGERequest)
         self.assertFalse(aSIPRequest.isOPTIONSRequest)
         self.assertTrue(aSIPRequest.isREFERRequest)
         self.assertFalse(aSIPRequest.isREGISTERRequest)
@@ -499,6 +685,9 @@ class TestREGISTERSIPRequest(AbstractSIPRequestTestCase):
         self.assertFalse(aSIPRequest.isINFORequest)
         self.assertFalse(aSIPRequest.isINVITERequest)
         self.assertFalse(aSIPRequest.isNOTIFYRequest)
+        self.assertFalse(aSIPRequest.isPRACKRequest)
+        self.assertFalse(aSIPRequest.isPUBLISHRequest)
+        self.assertFalse(aSIPRequest.isMESSAGERequest)
         self.assertFalse(aSIPRequest.isOPTIONSRequest)
         self.assertFalse(aSIPRequest.isREFERRequest)
         self.assertTrue(aSIPRequest.isREGISTERRequest)
@@ -548,6 +737,9 @@ class TestSUBSCRIBESIPRequest(AbstractSIPRequestTestCase):
         self.assertFalse(aSIPRequest.isINFORequest)
         self.assertFalse(aSIPRequest.isINVITERequest)
         self.assertFalse(aSIPRequest.isNOTIFYRequest)
+        self.assertFalse(aSIPRequest.isPRACKRequest)
+        self.assertFalse(aSIPRequest.isPUBLISHRequest)
+        self.assertFalse(aSIPRequest.isMESSAGERequest)
         self.assertFalse(aSIPRequest.isOPTIONSRequest)
         self.assertFalse(aSIPRequest.isREFERRequest)
         self.assertFalse(aSIPRequest.isREGISTERRequest)
@@ -597,6 +789,9 @@ class TestUPDATESIPRequest(AbstractSIPRequestTestCase):
         self.assertFalse(aSIPRequest.isINFORequest)
         self.assertFalse(aSIPRequest.isINVITERequest)
         self.assertFalse(aSIPRequest.isNOTIFYRequest)
+        self.assertFalse(aSIPRequest.isPRACKRequest)
+        self.assertFalse(aSIPRequest.isPUBLISHRequest)
+        self.assertFalse(aSIPRequest.isMESSAGERequest)
         self.assertFalse(aSIPRequest.isOPTIONSRequest)
         self.assertFalse(aSIPRequest.isREFERRequest)
         self.assertFalse(aSIPRequest.isREGISTERRequest)

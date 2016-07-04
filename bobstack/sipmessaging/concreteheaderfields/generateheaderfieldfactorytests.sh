@@ -32,7 +32,8 @@
 
 rm testForAllFactory.py
 
-for HYPHENATED in Accept Accept-Encoding Accept-Language Allow Authorization CSeq Call-ID Call-Info Contact Content-Disposition Content-Type Date Expires From Max-Forwards Record-Route Require Retry-After Route Server Session-Expires Supported Timestamp To User-Agent Via WWW-Authenticate Warning
+# for HYPHENATED in Accept Accept-Encoding Accept-Language Allow Authorization CSeq Call-ID Call-Info Contact Content-Disposition Content-Type Date Expires From Max-Forwards Record-Route Require Retry-After Route Server Session-Expires Supported Timestamp To User-Agent Via WWW-Authenticate Warning
+for HYPHENATED in Subject Referred-By Refer-To Allow-Events Event Content-Encoding RAck P-Charge Reply-To Unsupported P-Asserted-Identity P-Preferred-Identity Remote-Party-ID Alert-Info History-Info P-Called-Party-Id P-RTP-Stat Privacy Proxy-Authenticate Proxy-Authorization Proxy-Require Reason Record-Session-Expires Replaces Subscription-State Min-Expires
 do
 	NONHYPHENATED=`echo "$HYPHENATED" | sed  -e s/-//g`
 	CLASS=$NONHYPHENATED"SIPHeaderField"

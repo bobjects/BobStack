@@ -34,6 +34,32 @@ from sipmessaging import UserAgentSIPHeaderField
 from sipmessaging import ViaSIPHeaderField
 from sipmessaging import WWWAuthenticateSIPHeaderField
 from sipmessaging import WarningSIPHeaderField
+from sipmessaging import SubjectSIPHeaderField
+from sipmessaging import ReferredBySIPHeaderField
+from sipmessaging import ReferToSIPHeaderField
+from sipmessaging import AllowEventsSIPHeaderField
+from sipmessaging import EventSIPHeaderField
+from sipmessaging import ContentEncodingSIPHeaderField
+from sipmessaging import RAckSIPHeaderField
+from sipmessaging import PChargeSIPHeaderField
+from sipmessaging import ReplyToSIPHeaderField
+from sipmessaging import UnsupportedSIPHeaderField
+from sipmessaging import PAssertedIdentitySIPHeaderField
+from sipmessaging import PPreferredIdentitySIPHeaderField
+from sipmessaging import RemotePartyIDSIPHeaderField
+from sipmessaging import AlertInfoSIPHeaderField
+from sipmessaging import HistoryInfoSIPHeaderField
+from sipmessaging import PCalledPartyIdSIPHeaderField
+from sipmessaging import PRTPStatSIPHeaderField
+from sipmessaging import PrivacySIPHeaderField
+from sipmessaging import ProxyAuthenticateSIPHeaderField
+from sipmessaging import ProxyAuthorizationSIPHeaderField
+from sipmessaging import ProxyRequireSIPHeaderField
+from sipmessaging import ReasonSIPHeaderField
+from sipmessaging import RecordSessionExpiresSIPHeaderField
+from sipmessaging import ReplacesSIPHeaderField
+from sipmessaging import SubscriptionStateSIPHeaderField
+from sipmessaging import MinExpiresSIPHeaderField
 
 
 class TestUnknownSipHeaderField(TestCase):
@@ -1457,6 +1483,708 @@ class TestWarningSipHeaderField(AbstractSIPHeaderFieldTestCase):
                 self.assertTrue(headerField.isWarning)
                 headerField = self.sipHeaderFieldClassUnderTest.newForAttributes(fieldValueString=fieldValueString)
                 self.assertTrue(headerField.isWarning)
+
+
+class TestSubjectSIPHeaderField(AbstractSIPHeaderFieldTestCase):
+    @property
+    def canonicalFieldNames(self):
+        return['Subject', 'SUBJECT', 'subject']
+
+    @property
+    def sipHeaderFieldClassUnderTest(self):
+        return SubjectSIPHeaderField
+
+    def test_parsing(self):
+        self.basic_test_parsing()
+        for line in self.canonicalStrings:
+            headerField = self.sipHeaderFieldClassUnderTest.newParsedFrom(line)
+            self.assertTrue(headerField.isSubject, line)
+
+    def test_rendering(self):
+        self.basic_test_rendering()
+        for fieldName in self.canonicalFieldNames:
+            for fieldValueString in self.canonicalFieldValues:
+                headerField = self.sipHeaderFieldClassUnderTest.newForFieldNameAndValueString(fieldName=fieldName, fieldValueString=fieldValueString)
+                self.assertTrue(headerField.isSubject)
+                headerField = self.sipHeaderFieldClassUnderTest.newForValueString(fieldValueString=fieldValueString)
+                self.assertTrue(headerField.isSubject)
+                headerField = self.sipHeaderFieldClassUnderTest.newForAttributes(fieldValueString=fieldValueString)
+                self.assertTrue(headerField.isSubject)
+
+
+class TestReferredBySIPHeaderField(AbstractSIPHeaderFieldTestCase):
+    @property
+    def canonicalFieldNames(self):
+        return['Referred-By', 'REFERRED-BY', 'referred-by']
+
+    @property
+    def sipHeaderFieldClassUnderTest(self):
+        return ReferredBySIPHeaderField
+
+    def test_parsing(self):
+        self.basic_test_parsing()
+        for line in self.canonicalStrings:
+            headerField = self.sipHeaderFieldClassUnderTest.newParsedFrom(line)
+            self.assertTrue(headerField.isReferredBy, line)
+
+    def test_rendering(self):
+        self.basic_test_rendering()
+        for fieldName in self.canonicalFieldNames:
+            for fieldValueString in self.canonicalFieldValues:
+                headerField = self.sipHeaderFieldClassUnderTest.newForFieldNameAndValueString(fieldName=fieldName, fieldValueString=fieldValueString)
+                self.assertTrue(headerField.isReferredBy)
+                headerField = self.sipHeaderFieldClassUnderTest.newForValueString(fieldValueString=fieldValueString)
+                self.assertTrue(headerField.isReferredBy)
+                headerField = self.sipHeaderFieldClassUnderTest.newForAttributes(fieldValueString=fieldValueString)
+                self.assertTrue(headerField.isReferredBy)
+
+
+class TestReferToSIPHeaderField(AbstractSIPHeaderFieldTestCase):
+    @property
+    def canonicalFieldNames(self):
+        return['Refer-To', 'REFER-TO', 'refer-to']
+
+    @property
+    def sipHeaderFieldClassUnderTest(self):
+        return ReferToSIPHeaderField
+
+    def test_parsing(self):
+        self.basic_test_parsing()
+        for line in self.canonicalStrings:
+            headerField = self.sipHeaderFieldClassUnderTest.newParsedFrom(line)
+            self.assertTrue(headerField.isReferTo, line)
+
+    def test_rendering(self):
+        self.basic_test_rendering()
+        for fieldName in self.canonicalFieldNames:
+            for fieldValueString in self.canonicalFieldValues:
+                headerField = self.sipHeaderFieldClassUnderTest.newForFieldNameAndValueString(fieldName=fieldName, fieldValueString=fieldValueString)
+                self.assertTrue(headerField.isReferTo)
+                headerField = self.sipHeaderFieldClassUnderTest.newForValueString(fieldValueString=fieldValueString)
+                self.assertTrue(headerField.isReferTo)
+                headerField = self.sipHeaderFieldClassUnderTest.newForAttributes(fieldValueString=fieldValueString)
+                self.assertTrue(headerField.isReferTo)
+
+
+class TestAllowEventsSIPHeaderField(AbstractSIPHeaderFieldTestCase):
+    @property
+    def canonicalFieldNames(self):
+        return['Allow-Events', 'ALLOW-EVENTS', 'allow-events']
+
+    @property
+    def sipHeaderFieldClassUnderTest(self):
+        return AllowEventsSIPHeaderField
+
+    def test_parsing(self):
+        self.basic_test_parsing()
+        for line in self.canonicalStrings:
+            headerField = self.sipHeaderFieldClassUnderTest.newParsedFrom(line)
+            self.assertTrue(headerField.isAllowEvents, line)
+
+    def test_rendering(self):
+        self.basic_test_rendering()
+        for fieldName in self.canonicalFieldNames:
+            for fieldValueString in self.canonicalFieldValues:
+                headerField = self.sipHeaderFieldClassUnderTest.newForFieldNameAndValueString(fieldName=fieldName, fieldValueString=fieldValueString)
+                self.assertTrue(headerField.isAllowEvents)
+                headerField = self.sipHeaderFieldClassUnderTest.newForValueString(fieldValueString=fieldValueString)
+                self.assertTrue(headerField.isAllowEvents)
+                headerField = self.sipHeaderFieldClassUnderTest.newForAttributes(fieldValueString=fieldValueString)
+                self.assertTrue(headerField.isAllowEvents)
+
+
+class TestEventSIPHeaderField(AbstractSIPHeaderFieldTestCase):
+    @property
+    def canonicalFieldNames(self):
+        return['Event', 'EVENT', 'event']
+
+    @property
+    def sipHeaderFieldClassUnderTest(self):
+        return EventSIPHeaderField
+
+    def test_parsing(self):
+        self.basic_test_parsing()
+        for line in self.canonicalStrings:
+            headerField = self.sipHeaderFieldClassUnderTest.newParsedFrom(line)
+            self.assertTrue(headerField.isEvent, line)
+
+    def test_rendering(self):
+        self.basic_test_rendering()
+        for fieldName in self.canonicalFieldNames:
+            for fieldValueString in self.canonicalFieldValues:
+                headerField = self.sipHeaderFieldClassUnderTest.newForFieldNameAndValueString(fieldName=fieldName, fieldValueString=fieldValueString)
+                self.assertTrue(headerField.isEvent)
+                headerField = self.sipHeaderFieldClassUnderTest.newForValueString(fieldValueString=fieldValueString)
+                self.assertTrue(headerField.isEvent)
+                headerField = self.sipHeaderFieldClassUnderTest.newForAttributes(fieldValueString=fieldValueString)
+                self.assertTrue(headerField.isEvent)
+
+
+class TestContentEncodingSIPHeaderField(AbstractSIPHeaderFieldTestCase):
+    @property
+    def canonicalFieldNames(self):
+        return['Content-Encoding', 'CONTENT-ENCODING', 'content-encoding']
+
+    @property
+    def sipHeaderFieldClassUnderTest(self):
+        return ContentEncodingSIPHeaderField
+
+    def test_parsing(self):
+        self.basic_test_parsing()
+        for line in self.canonicalStrings:
+            headerField = self.sipHeaderFieldClassUnderTest.newParsedFrom(line)
+            self.assertTrue(headerField.isContentEncoding, line)
+
+    def test_rendering(self):
+        self.basic_test_rendering()
+        for fieldName in self.canonicalFieldNames:
+            for fieldValueString in self.canonicalFieldValues:
+                headerField = self.sipHeaderFieldClassUnderTest.newForFieldNameAndValueString(fieldName=fieldName, fieldValueString=fieldValueString)
+                self.assertTrue(headerField.isContentEncoding)
+                headerField = self.sipHeaderFieldClassUnderTest.newForValueString(fieldValueString=fieldValueString)
+                self.assertTrue(headerField.isContentEncoding)
+                headerField = self.sipHeaderFieldClassUnderTest.newForAttributes(fieldValueString=fieldValueString)
+                self.assertTrue(headerField.isContentEncoding)
+
+
+class TestRAckSIPHeaderField(AbstractSIPHeaderFieldTestCase):
+    @property
+    def canonicalFieldNames(self):
+        return['RAck', 'RACK', 'rack']
+
+    @property
+    def sipHeaderFieldClassUnderTest(self):
+        return RAckSIPHeaderField
+
+    def test_parsing(self):
+        self.basic_test_parsing()
+        for line in self.canonicalStrings:
+            headerField = self.sipHeaderFieldClassUnderTest.newParsedFrom(line)
+            self.assertTrue(headerField.isRAck, line)
+
+    def test_rendering(self):
+        self.basic_test_rendering()
+        for fieldName in self.canonicalFieldNames:
+            for fieldValueString in self.canonicalFieldValues:
+                headerField = self.sipHeaderFieldClassUnderTest.newForFieldNameAndValueString(fieldName=fieldName, fieldValueString=fieldValueString)
+                self.assertTrue(headerField.isRAck)
+                headerField = self.sipHeaderFieldClassUnderTest.newForValueString(fieldValueString=fieldValueString)
+                self.assertTrue(headerField.isRAck)
+                headerField = self.sipHeaderFieldClassUnderTest.newForAttributes(fieldValueString=fieldValueString)
+                self.assertTrue(headerField.isRAck)
+
+
+class TestPChargeSIPHeaderField(AbstractSIPHeaderFieldTestCase):
+    @property
+    def canonicalFieldNames(self):
+        return['P-Charge', 'P-CHARGE', 'p-charge']
+
+    @property
+    def sipHeaderFieldClassUnderTest(self):
+        return PChargeSIPHeaderField
+
+    def test_parsing(self):
+        self.basic_test_parsing()
+        for line in self.canonicalStrings:
+            headerField = self.sipHeaderFieldClassUnderTest.newParsedFrom(line)
+            self.assertTrue(headerField.isPCharge, line)
+
+    def test_rendering(self):
+        self.basic_test_rendering()
+        for fieldName in self.canonicalFieldNames:
+            for fieldValueString in self.canonicalFieldValues:
+                headerField = self.sipHeaderFieldClassUnderTest.newForFieldNameAndValueString(fieldName=fieldName, fieldValueString=fieldValueString)
+                self.assertTrue(headerField.isPCharge)
+                headerField = self.sipHeaderFieldClassUnderTest.newForValueString(fieldValueString=fieldValueString)
+                self.assertTrue(headerField.isPCharge)
+                headerField = self.sipHeaderFieldClassUnderTest.newForAttributes(fieldValueString=fieldValueString)
+                self.assertTrue(headerField.isPCharge)
+
+
+class TestReplyToSIPHeaderField(AbstractSIPHeaderFieldTestCase):
+    @property
+    def canonicalFieldNames(self):
+        return['Reply-To', 'REPLY-TO', 'reply-to']
+
+    @property
+    def sipHeaderFieldClassUnderTest(self):
+        return ReplyToSIPHeaderField
+
+    def test_parsing(self):
+        self.basic_test_parsing()
+        for line in self.canonicalStrings:
+            headerField = self.sipHeaderFieldClassUnderTest.newParsedFrom(line)
+            self.assertTrue(headerField.isReplyTo, line)
+
+    def test_rendering(self):
+        self.basic_test_rendering()
+        for fieldName in self.canonicalFieldNames:
+            for fieldValueString in self.canonicalFieldValues:
+                headerField = self.sipHeaderFieldClassUnderTest.newForFieldNameAndValueString(fieldName=fieldName, fieldValueString=fieldValueString)
+                self.assertTrue(headerField.isReplyTo)
+                headerField = self.sipHeaderFieldClassUnderTest.newForValueString(fieldValueString=fieldValueString)
+                self.assertTrue(headerField.isReplyTo)
+                headerField = self.sipHeaderFieldClassUnderTest.newForAttributes(fieldValueString=fieldValueString)
+                self.assertTrue(headerField.isReplyTo)
+
+
+class TestUnsupportedSIPHeaderField(AbstractSIPHeaderFieldTestCase):
+    @property
+    def canonicalFieldNames(self):
+        return['Unsupported', 'UNSUPPORTED', 'unsupported']
+
+    @property
+    def sipHeaderFieldClassUnderTest(self):
+        return UnsupportedSIPHeaderField
+
+    def test_parsing(self):
+        self.basic_test_parsing()
+        for line in self.canonicalStrings:
+            headerField = self.sipHeaderFieldClassUnderTest.newParsedFrom(line)
+            self.assertTrue(headerField.isUnsupported, line)
+
+    def test_rendering(self):
+        self.basic_test_rendering()
+        for fieldName in self.canonicalFieldNames:
+            for fieldValueString in self.canonicalFieldValues:
+                headerField = self.sipHeaderFieldClassUnderTest.newForFieldNameAndValueString(fieldName=fieldName, fieldValueString=fieldValueString)
+                self.assertTrue(headerField.isUnsupported)
+                headerField = self.sipHeaderFieldClassUnderTest.newForValueString(fieldValueString=fieldValueString)
+                self.assertTrue(headerField.isUnsupported)
+                headerField = self.sipHeaderFieldClassUnderTest.newForAttributes(fieldValueString=fieldValueString)
+                self.assertTrue(headerField.isUnsupported)
+
+
+class TestPAssertedIdentitySIPHeaderField(AbstractSIPHeaderFieldTestCase):
+    @property
+    def canonicalFieldNames(self):
+        return['P-Asserted-Identity', 'P-ASSERTED-IDENTITY', 'p-asserted-identity']
+
+    @property
+    def sipHeaderFieldClassUnderTest(self):
+        return PAssertedIdentitySIPHeaderField
+
+    def test_parsing(self):
+        self.basic_test_parsing()
+        for line in self.canonicalStrings:
+            headerField = self.sipHeaderFieldClassUnderTest.newParsedFrom(line)
+            self.assertTrue(headerField.isPAssertedIdentity, line)
+
+    def test_rendering(self):
+        self.basic_test_rendering()
+        for fieldName in self.canonicalFieldNames:
+            for fieldValueString in self.canonicalFieldValues:
+                headerField = self.sipHeaderFieldClassUnderTest.newForFieldNameAndValueString(fieldName=fieldName, fieldValueString=fieldValueString)
+                self.assertTrue(headerField.isPAssertedIdentity)
+                headerField = self.sipHeaderFieldClassUnderTest.newForValueString(fieldValueString=fieldValueString)
+                self.assertTrue(headerField.isPAssertedIdentity)
+                headerField = self.sipHeaderFieldClassUnderTest.newForAttributes(fieldValueString=fieldValueString)
+                self.assertTrue(headerField.isPAssertedIdentity)
+
+
+class TestPPreferredIdentitySIPHeaderField(AbstractSIPHeaderFieldTestCase):
+    @property
+    def canonicalFieldNames(self):
+        return['P-Preferred-Identity', 'P-PREFERRED-IDENTITY', 'p-preferred-identity']
+
+    @property
+    def sipHeaderFieldClassUnderTest(self):
+        return PPreferredIdentitySIPHeaderField
+
+    def test_parsing(self):
+        self.basic_test_parsing()
+        for line in self.canonicalStrings:
+            headerField = self.sipHeaderFieldClassUnderTest.newParsedFrom(line)
+            self.assertTrue(headerField.isPPreferredIdentity, line)
+
+    def test_rendering(self):
+        self.basic_test_rendering()
+        for fieldName in self.canonicalFieldNames:
+            for fieldValueString in self.canonicalFieldValues:
+                headerField = self.sipHeaderFieldClassUnderTest.newForFieldNameAndValueString(fieldName=fieldName, fieldValueString=fieldValueString)
+                self.assertTrue(headerField.isPPreferredIdentity)
+                headerField = self.sipHeaderFieldClassUnderTest.newForValueString(fieldValueString=fieldValueString)
+                self.assertTrue(headerField.isPPreferredIdentity)
+                headerField = self.sipHeaderFieldClassUnderTest.newForAttributes(fieldValueString=fieldValueString)
+                self.assertTrue(headerField.isPPreferredIdentity)
+
+
+class TestRemotePartyIDSIPHeaderField(AbstractSIPHeaderFieldTestCase):
+    @property
+    def canonicalFieldNames(self):
+        return['Remote-Party-ID', 'REMOTE-PARTY-ID', 'remote-party-id']
+
+    @property
+    def sipHeaderFieldClassUnderTest(self):
+        return RemotePartyIDSIPHeaderField
+
+    def test_parsing(self):
+        self.basic_test_parsing()
+        for line in self.canonicalStrings:
+            headerField = self.sipHeaderFieldClassUnderTest.newParsedFrom(line)
+            self.assertTrue(headerField.isRemotePartyID, line)
+
+    def test_rendering(self):
+        self.basic_test_rendering()
+        for fieldName in self.canonicalFieldNames:
+            for fieldValueString in self.canonicalFieldValues:
+                headerField = self.sipHeaderFieldClassUnderTest.newForFieldNameAndValueString(fieldName=fieldName, fieldValueString=fieldValueString)
+                self.assertTrue(headerField.isRemotePartyID)
+                headerField = self.sipHeaderFieldClassUnderTest.newForValueString(fieldValueString=fieldValueString)
+                self.assertTrue(headerField.isRemotePartyID)
+                headerField = self.sipHeaderFieldClassUnderTest.newForAttributes(fieldValueString=fieldValueString)
+                self.assertTrue(headerField.isRemotePartyID)
+
+
+class TestAlertInfoSIPHeaderField(AbstractSIPHeaderFieldTestCase):
+    @property
+    def canonicalFieldNames(self):
+        return['Alert-Info', 'ALERT-INFO', 'alert-info']
+
+    @property
+    def sipHeaderFieldClassUnderTest(self):
+        return AlertInfoSIPHeaderField
+
+    def test_parsing(self):
+        self.basic_test_parsing()
+        for line in self.canonicalStrings:
+            headerField = self.sipHeaderFieldClassUnderTest.newParsedFrom(line)
+            self.assertTrue(headerField.isAlertInfo, line)
+
+    def test_rendering(self):
+        self.basic_test_rendering()
+        for fieldName in self.canonicalFieldNames:
+            for fieldValueString in self.canonicalFieldValues:
+                headerField = self.sipHeaderFieldClassUnderTest.newForFieldNameAndValueString(fieldName=fieldName, fieldValueString=fieldValueString)
+                self.assertTrue(headerField.isAlertInfo)
+                headerField = self.sipHeaderFieldClassUnderTest.newForValueString(fieldValueString=fieldValueString)
+                self.assertTrue(headerField.isAlertInfo)
+                headerField = self.sipHeaderFieldClassUnderTest.newForAttributes(fieldValueString=fieldValueString)
+                self.assertTrue(headerField.isAlertInfo)
+
+
+class TestHistoryInfoSIPHeaderField(AbstractSIPHeaderFieldTestCase):
+    @property
+    def canonicalFieldNames(self):
+        return['History-Info', 'HISTORY-INFO', 'history-info']
+
+    @property
+    def sipHeaderFieldClassUnderTest(self):
+        return HistoryInfoSIPHeaderField
+
+    def test_parsing(self):
+        self.basic_test_parsing()
+        for line in self.canonicalStrings:
+            headerField = self.sipHeaderFieldClassUnderTest.newParsedFrom(line)
+            self.assertTrue(headerField.isHistoryInfo, line)
+
+    def test_rendering(self):
+        self.basic_test_rendering()
+        for fieldName in self.canonicalFieldNames:
+            for fieldValueString in self.canonicalFieldValues:
+                headerField = self.sipHeaderFieldClassUnderTest.newForFieldNameAndValueString(fieldName=fieldName, fieldValueString=fieldValueString)
+                self.assertTrue(headerField.isHistoryInfo)
+                headerField = self.sipHeaderFieldClassUnderTest.newForValueString(fieldValueString=fieldValueString)
+                self.assertTrue(headerField.isHistoryInfo)
+                headerField = self.sipHeaderFieldClassUnderTest.newForAttributes(fieldValueString=fieldValueString)
+                self.assertTrue(headerField.isHistoryInfo)
+
+
+class TestPCalledPartyIdSIPHeaderField(AbstractSIPHeaderFieldTestCase):
+    @property
+    def canonicalFieldNames(self):
+        return['P-Called-Party-Id', 'P-CALLED-PARTY-ID', 'p-called-party-id']
+
+    @property
+    def sipHeaderFieldClassUnderTest(self):
+        return PCalledPartyIdSIPHeaderField
+
+    def test_parsing(self):
+        self.basic_test_parsing()
+        for line in self.canonicalStrings:
+            headerField = self.sipHeaderFieldClassUnderTest.newParsedFrom(line)
+            self.assertTrue(headerField.isPCalledPartyId, line)
+
+    def test_rendering(self):
+        self.basic_test_rendering()
+        for fieldName in self.canonicalFieldNames:
+            for fieldValueString in self.canonicalFieldValues:
+                headerField = self.sipHeaderFieldClassUnderTest.newForFieldNameAndValueString(fieldName=fieldName, fieldValueString=fieldValueString)
+                self.assertTrue(headerField.isPCalledPartyId)
+                headerField = self.sipHeaderFieldClassUnderTest.newForValueString(fieldValueString=fieldValueString)
+                self.assertTrue(headerField.isPCalledPartyId)
+                headerField = self.sipHeaderFieldClassUnderTest.newForAttributes(fieldValueString=fieldValueString)
+                self.assertTrue(headerField.isPCalledPartyId)
+
+
+class TestPRTPStatSIPHeaderField(AbstractSIPHeaderFieldTestCase):
+    @property
+    def canonicalFieldNames(self):
+        return['P-RTP-Stat', 'P-RTP-STAT', 'p-rtp-stat']
+
+    @property
+    def sipHeaderFieldClassUnderTest(self):
+        return PRTPStatSIPHeaderField
+
+    def test_parsing(self):
+        self.basic_test_parsing()
+        for line in self.canonicalStrings:
+            headerField = self.sipHeaderFieldClassUnderTest.newParsedFrom(line)
+            self.assertTrue(headerField.isPRTPStat, line)
+
+    def test_rendering(self):
+        self.basic_test_rendering()
+        for fieldName in self.canonicalFieldNames:
+            for fieldValueString in self.canonicalFieldValues:
+                headerField = self.sipHeaderFieldClassUnderTest.newForFieldNameAndValueString(fieldName=fieldName, fieldValueString=fieldValueString)
+                self.assertTrue(headerField.isPRTPStat)
+                headerField = self.sipHeaderFieldClassUnderTest.newForValueString(fieldValueString=fieldValueString)
+                self.assertTrue(headerField.isPRTPStat)
+                headerField = self.sipHeaderFieldClassUnderTest.newForAttributes(fieldValueString=fieldValueString)
+                self.assertTrue(headerField.isPRTPStat)
+
+
+class TestPrivacySIPHeaderField(AbstractSIPHeaderFieldTestCase):
+    @property
+    def canonicalFieldNames(self):
+        return['Privacy', 'PRIVACY', 'privacy']
+
+    @property
+    def sipHeaderFieldClassUnderTest(self):
+        return PrivacySIPHeaderField
+
+    def test_parsing(self):
+        self.basic_test_parsing()
+        for line in self.canonicalStrings:
+            headerField = self.sipHeaderFieldClassUnderTest.newParsedFrom(line)
+            self.assertTrue(headerField.isPrivacy, line)
+
+    def test_rendering(self):
+        self.basic_test_rendering()
+        for fieldName in self.canonicalFieldNames:
+            for fieldValueString in self.canonicalFieldValues:
+                headerField = self.sipHeaderFieldClassUnderTest.newForFieldNameAndValueString(fieldName=fieldName, fieldValueString=fieldValueString)
+                self.assertTrue(headerField.isPrivacy)
+                headerField = self.sipHeaderFieldClassUnderTest.newForValueString(fieldValueString=fieldValueString)
+                self.assertTrue(headerField.isPrivacy)
+                headerField = self.sipHeaderFieldClassUnderTest.newForAttributes(fieldValueString=fieldValueString)
+                self.assertTrue(headerField.isPrivacy)
+
+
+class TestProxyAuthenticateSIPHeaderField(AbstractSIPHeaderFieldTestCase):
+    @property
+    def canonicalFieldNames(self):
+        return['Proxy-Authenticate', 'PROXY-AUTHENTICATE', 'proxy-authenticate']
+
+    @property
+    def sipHeaderFieldClassUnderTest(self):
+        return ProxyAuthenticateSIPHeaderField
+
+    def test_parsing(self):
+        self.basic_test_parsing()
+        for line in self.canonicalStrings:
+            headerField = self.sipHeaderFieldClassUnderTest.newParsedFrom(line)
+            self.assertTrue(headerField.isProxyAuthenticate, line)
+
+    def test_rendering(self):
+        self.basic_test_rendering()
+        for fieldName in self.canonicalFieldNames:
+            for fieldValueString in self.canonicalFieldValues:
+                headerField = self.sipHeaderFieldClassUnderTest.newForFieldNameAndValueString(fieldName=fieldName, fieldValueString=fieldValueString)
+                self.assertTrue(headerField.isProxyAuthenticate)
+                headerField = self.sipHeaderFieldClassUnderTest.newForValueString(fieldValueString=fieldValueString)
+                self.assertTrue(headerField.isProxyAuthenticate)
+                headerField = self.sipHeaderFieldClassUnderTest.newForAttributes(fieldValueString=fieldValueString)
+                self.assertTrue(headerField.isProxyAuthenticate)
+
+
+class TestProxyAuthorizationSIPHeaderField(AbstractSIPHeaderFieldTestCase):
+    @property
+    def canonicalFieldNames(self):
+        return['Proxy-Authorization', 'PROXY-AUTHORIZATION', 'proxy-authorization']
+
+    @property
+    def sipHeaderFieldClassUnderTest(self):
+        return ProxyAuthorizationSIPHeaderField
+
+    def test_parsing(self):
+        self.basic_test_parsing()
+        for line in self.canonicalStrings:
+            headerField = self.sipHeaderFieldClassUnderTest.newParsedFrom(line)
+            self.assertTrue(headerField.isProxyAuthorization, line)
+
+    def test_rendering(self):
+        self.basic_test_rendering()
+        for fieldName in self.canonicalFieldNames:
+            for fieldValueString in self.canonicalFieldValues:
+                headerField = self.sipHeaderFieldClassUnderTest.newForFieldNameAndValueString(fieldName=fieldName, fieldValueString=fieldValueString)
+                self.assertTrue(headerField.isProxyAuthorization)
+                headerField = self.sipHeaderFieldClassUnderTest.newForValueString(fieldValueString=fieldValueString)
+                self.assertTrue(headerField.isProxyAuthorization)
+                headerField = self.sipHeaderFieldClassUnderTest.newForAttributes(fieldValueString=fieldValueString)
+                self.assertTrue(headerField.isProxyAuthorization)
+
+
+class TestProxyRequireSIPHeaderField(AbstractSIPHeaderFieldTestCase):
+    @property
+    def canonicalFieldNames(self):
+        return['Proxy-Require', 'PROXY-REQUIRE', 'proxy-require']
+
+    @property
+    def sipHeaderFieldClassUnderTest(self):
+        return ProxyRequireSIPHeaderField
+
+    def test_parsing(self):
+        self.basic_test_parsing()
+        for line in self.canonicalStrings:
+            headerField = self.sipHeaderFieldClassUnderTest.newParsedFrom(line)
+            self.assertTrue(headerField.isProxyRequire, line)
+
+    def test_rendering(self):
+        self.basic_test_rendering()
+        for fieldName in self.canonicalFieldNames:
+            for fieldValueString in self.canonicalFieldValues:
+                headerField = self.sipHeaderFieldClassUnderTest.newForFieldNameAndValueString(fieldName=fieldName, fieldValueString=fieldValueString)
+                self.assertTrue(headerField.isProxyRequire)
+                headerField = self.sipHeaderFieldClassUnderTest.newForValueString(fieldValueString=fieldValueString)
+                self.assertTrue(headerField.isProxyRequire)
+                headerField = self.sipHeaderFieldClassUnderTest.newForAttributes(fieldValueString=fieldValueString)
+                self.assertTrue(headerField.isProxyRequire)
+
+
+class TestReasonSIPHeaderField(AbstractSIPHeaderFieldTestCase):
+    @property
+    def canonicalFieldNames(self):
+        return['Reason', 'REASON', 'reason']
+
+    @property
+    def sipHeaderFieldClassUnderTest(self):
+        return ReasonSIPHeaderField
+
+    def test_parsing(self):
+        self.basic_test_parsing()
+        for line in self.canonicalStrings:
+            headerField = self.sipHeaderFieldClassUnderTest.newParsedFrom(line)
+            self.assertTrue(headerField.isReason, line)
+
+    def test_rendering(self):
+        self.basic_test_rendering()
+        for fieldName in self.canonicalFieldNames:
+            for fieldValueString in self.canonicalFieldValues:
+                headerField = self.sipHeaderFieldClassUnderTest.newForFieldNameAndValueString(fieldName=fieldName, fieldValueString=fieldValueString)
+                self.assertTrue(headerField.isReason)
+                headerField = self.sipHeaderFieldClassUnderTest.newForValueString(fieldValueString=fieldValueString)
+                self.assertTrue(headerField.isReason)
+                headerField = self.sipHeaderFieldClassUnderTest.newForAttributes(fieldValueString=fieldValueString)
+                self.assertTrue(headerField.isReason)
+
+
+class TestRecordSessionExpiresSIPHeaderField(AbstractSIPHeaderFieldTestCase):
+    @property
+    def canonicalFieldNames(self):
+        return['Record-Session-Expires', 'RECORD-SESSION-EXPIRES', 'record-session-expires']
+
+    @property
+    def sipHeaderFieldClassUnderTest(self):
+        return RecordSessionExpiresSIPHeaderField
+
+    def test_parsing(self):
+        self.basic_test_parsing()
+        for line in self.canonicalStrings:
+            headerField = self.sipHeaderFieldClassUnderTest.newParsedFrom(line)
+            self.assertTrue(headerField.isRecordSessionExpires, line)
+
+    def test_rendering(self):
+        self.basic_test_rendering()
+        for fieldName in self.canonicalFieldNames:
+            for fieldValueString in self.canonicalFieldValues:
+                headerField = self.sipHeaderFieldClassUnderTest.newForFieldNameAndValueString(fieldName=fieldName, fieldValueString=fieldValueString)
+                self.assertTrue(headerField.isRecordSessionExpires)
+                headerField = self.sipHeaderFieldClassUnderTest.newForValueString(fieldValueString=fieldValueString)
+                self.assertTrue(headerField.isRecordSessionExpires)
+                headerField = self.sipHeaderFieldClassUnderTest.newForAttributes(fieldValueString=fieldValueString)
+                self.assertTrue(headerField.isRecordSessionExpires)
+
+
+class TestReplacesSIPHeaderField(AbstractSIPHeaderFieldTestCase):
+    @property
+    def canonicalFieldNames(self):
+        return['Replaces', 'REPLACES', 'replaces']
+
+    @property
+    def sipHeaderFieldClassUnderTest(self):
+        return ReplacesSIPHeaderField
+
+    def test_parsing(self):
+        self.basic_test_parsing()
+        for line in self.canonicalStrings:
+            headerField = self.sipHeaderFieldClassUnderTest.newParsedFrom(line)
+            self.assertTrue(headerField.isReplaces, line)
+
+    def test_rendering(self):
+        self.basic_test_rendering()
+        for fieldName in self.canonicalFieldNames:
+            for fieldValueString in self.canonicalFieldValues:
+                headerField = self.sipHeaderFieldClassUnderTest.newForFieldNameAndValueString(fieldName=fieldName, fieldValueString=fieldValueString)
+                self.assertTrue(headerField.isReplaces)
+                headerField = self.sipHeaderFieldClassUnderTest.newForValueString(fieldValueString=fieldValueString)
+                self.assertTrue(headerField.isReplaces)
+                headerField = self.sipHeaderFieldClassUnderTest.newForAttributes(fieldValueString=fieldValueString)
+                self.assertTrue(headerField.isReplaces)
+
+
+class TestSubscriptionStateSIPHeaderField(AbstractSIPHeaderFieldTestCase):
+    @property
+    def canonicalFieldNames(self):
+        return['Subscription-State', 'SUBSCRIPTION-STATE', 'subscription-state']
+
+    @property
+    def sipHeaderFieldClassUnderTest(self):
+        return SubscriptionStateSIPHeaderField
+
+    def test_parsing(self):
+        self.basic_test_parsing()
+        for line in self.canonicalStrings:
+            headerField = self.sipHeaderFieldClassUnderTest.newParsedFrom(line)
+            self.assertTrue(headerField.isSubscriptionState, line)
+
+    def test_rendering(self):
+        self.basic_test_rendering()
+        for fieldName in self.canonicalFieldNames:
+            for fieldValueString in self.canonicalFieldValues:
+                headerField = self.sipHeaderFieldClassUnderTest.newForFieldNameAndValueString(fieldName=fieldName, fieldValueString=fieldValueString)
+                self.assertTrue(headerField.isSubscriptionState)
+                headerField = self.sipHeaderFieldClassUnderTest.newForValueString(fieldValueString=fieldValueString)
+                self.assertTrue(headerField.isSubscriptionState)
+                headerField = self.sipHeaderFieldClassUnderTest.newForAttributes(fieldValueString=fieldValueString)
+                self.assertTrue(headerField.isSubscriptionState)
+
+
+class TestMinExpiresSIPHeaderField(AbstractSIPHeaderFieldTestCase):
+    @property
+    def canonicalFieldNames(self):
+        return['Min-Expires', 'MIN-EXPIRES', 'min-expires']
+
+    @property
+    def sipHeaderFieldClassUnderTest(self):
+        return MinExpiresSIPHeaderField
+
+    def test_parsing(self):
+        self.basic_test_parsing()
+        for line in self.canonicalStrings:
+            headerField = self.sipHeaderFieldClassUnderTest.newParsedFrom(line)
+            self.assertTrue(headerField.isMinExpires, line)
+
+    def test_rendering(self):
+        self.basic_test_rendering()
+        for fieldName in self.canonicalFieldNames:
+            for fieldValueString in self.canonicalFieldValues:
+                headerField = self.sipHeaderFieldClassUnderTest.newForFieldNameAndValueString(fieldName=fieldName, fieldValueString=fieldValueString)
+                self.assertTrue(headerField.isMinExpires)
+                headerField = self.sipHeaderFieldClassUnderTest.newForValueString(fieldValueString=fieldValueString)
+                self.assertTrue(headerField.isMinExpires)
+                headerField = self.sipHeaderFieldClassUnderTest.newForAttributes(fieldValueString=fieldValueString)
+                self.assertTrue(headerField.isMinExpires)
 
 
 class TestViaSipHeaderField(AbstractSIPHeaderFieldTestCase):
