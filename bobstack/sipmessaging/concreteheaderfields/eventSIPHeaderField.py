@@ -17,6 +17,12 @@ class EventSIPHeaderField(SIPHeaderField):
     def canonicalFieldName(cls):
         return 'Event'
 
+    # noinspection PyNestedDecorators
+    @classproperty
+    @classmethod
+    def canonicalCompactFieldName(cls):
+        return 'o'
+
     @classmethod
     def newForAttributes(cls, fieldName="Event", fieldValueString=""):
         return cls.newForFieldNameAndValueString(fieldName=fieldName, fieldValueString=fieldValueString)

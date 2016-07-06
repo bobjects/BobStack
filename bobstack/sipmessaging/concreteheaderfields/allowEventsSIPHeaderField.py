@@ -17,6 +17,12 @@ class AllowEventsSIPHeaderField(SIPHeaderField):
     def canonicalFieldName(cls):
         return 'Allow-Events'
 
+    # noinspection PyNestedDecorators
+    @classproperty
+    @classmethod
+    def canonicalCompactFieldName(cls):
+        return 'u'
+
     @classmethod
     def newForAttributes(cls, fieldName="Allow-Events", fieldValueString=""):
         return cls.newForFieldNameAndValueString(fieldName=fieldName, fieldValueString=fieldValueString)

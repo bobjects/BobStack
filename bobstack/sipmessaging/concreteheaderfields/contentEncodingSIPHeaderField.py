@@ -17,6 +17,12 @@ class ContentEncodingSIPHeaderField(SIPHeaderField):
     def canonicalFieldName(cls):
         return 'Content-Encoding'
 
+    # noinspection PyNestedDecorators
+    @classproperty
+    @classmethod
+    def canonicalCompactFieldName(cls):
+        return 'e'
+
     @classmethod
     def newForAttributes(cls, fieldName="Content-Encoding", fieldValueString=""):
         return cls.newForFieldNameAndValueString(fieldName=fieldName, fieldValueString=fieldValueString)

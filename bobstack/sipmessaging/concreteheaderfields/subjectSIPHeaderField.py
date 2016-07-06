@@ -17,6 +17,12 @@ class SubjectSIPHeaderField(SIPHeaderField):
     def canonicalFieldName(cls):
         return 'Subject'
 
+    # noinspection PyNestedDecorators
+    @classproperty
+    @classmethod
+    def canonicalCompactFieldName(cls):
+        return 's'
+
     @classmethod
     def newForAttributes(cls, fieldName="Subject", fieldValueString=""):
         return cls.newForFieldNameAndValueString(fieldName=fieldName, fieldValueString=fieldValueString)

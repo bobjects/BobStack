@@ -6,20 +6,20 @@ import sys
 sys.path.append("../../..")
 # from bobstack.sipmessaging import SIPHeaderField
 # from bobstack.sipmessaging import classproperty
-from sipmessaging import SIPHeaderField
+from sipmessaging import IntegerSIPHeaderField
 from sipmessaging import classproperty
 
 
-class RecordSessionExpiresSIPHeaderField(SIPHeaderField):
+class RecordSessionExpiresSIPHeaderField(IntegerSIPHeaderField):
     # noinspection PyNestedDecorators
     @classproperty
     @classmethod
     def canonicalFieldName(cls):
         return 'Record-Session-Expires'
 
-    @classmethod
-    def newForAttributes(cls, fieldName="Record-Session-Expires", fieldValueString=""):
-        return cls.newForFieldNameAndValueString(fieldName=fieldName, fieldValueString=fieldValueString)
+    # @classmethod
+    # def newForAttributes(cls, fieldName="Record-Session-Expires", fieldValueString=""):
+    #     return cls.newForFieldNameAndValueString(fieldName=fieldName, fieldValueString=fieldValueString)
 
     @property
     def isRecordSessionExpires(self):

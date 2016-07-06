@@ -408,10 +408,10 @@ class AbstractSIPMessageTestCase(TestCase):
             ProxyAuthorizationSIPHeaderField.newForAttributes(fieldValueString='Digest username="100",realm="209.105.255.124",nonce="7bebcf02-e01d-11e5-931d-83b175043a03",uri="sip:90011@209.105.255.124",response="63faaa2604cae36e9b38f2d5cd0abba4",cnonce="4b41f53e6f00c05",nc=00000001,qop="auth",algorithm=MD5'),
             ProxyRequireSIPHeaderField.newForAttributes(fieldValueString='foo'),
             ReasonSIPHeaderField.newForAttributes(fieldValueString='Q.850; cause=16; reason=Terminated'),
-            RecordSessionExpiresSIPHeaderField.newForAttributes(fieldValueString='1200;refresher=uac'),
+            RecordSessionExpiresSIPHeaderField.newForValueString(fieldValueString='1200;refresher=uac'),
             ReplacesSIPHeaderField.newForAttributes(fieldValueString='19cd9bf094ff5f0c1745ef975c1cf65d34beb908f@192.168.0.3;to-tag=29bd570-f0a1ec8-13c5-50029-aa872-7d78286-aa872;from-tag=7ca31b4791'),
             SubscriptionStateSIPHeaderField.newForAttributes(fieldValueString='active;reason=deactivated;expires=50'),
-            MinExpiresSIPHeaderField.newForAttributes(fieldValueString='1800'),
+            MinExpiresSIPHeaderField.newForAttributes(value=1800),
 
             ContentLengthSIPHeaderField.newForAttributes(value=11)]
 

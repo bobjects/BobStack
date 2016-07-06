@@ -17,6 +17,12 @@ class ReferToSIPHeaderField(SIPHeaderField):
     def canonicalFieldName(cls):
         return 'Refer-To'
 
+    # noinspection PyNestedDecorators
+    @classproperty
+    @classmethod
+    def canonicalCompactFieldName(cls):
+        return 'r'
+
     @classmethod
     def newForAttributes(cls, fieldName="Refer-To", fieldValueString=""):
         return cls.newForFieldNameAndValueString(fieldName=fieldName, fieldValueString=fieldValueString)

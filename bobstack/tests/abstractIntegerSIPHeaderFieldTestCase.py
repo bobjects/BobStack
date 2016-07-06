@@ -30,7 +30,7 @@ class AbstractIntegerSIPHeaderFieldTestCase(AbstractSIPHeaderFieldTestCase):
         super(AbstractIntegerSIPHeaderFieldTestCase, self).basic_test_parsing()
         for line in self.canonicalStrings:
             headerField = self.sipHeaderFieldClassUnderTest.newParsedFrom(line)
-            self.assertEqual(headerField.fieldName.lower(), self.canonicalFieldNames[0].lower())
+            self.assertTrue(headerField.fieldName.lower() in [name.lower() for name in self.canonicalFieldNames] + [name.lower() for name in self.canonicalCompactFieldNames])
             self.assertIsInstance(headerField.integerValue, (int, long))
             self.assertEqual(headerField.integerValue, int(self.canonicalFieldValues[0]))
             headerField.rawString = self.canonicalFieldNames[0] + ': 301'
@@ -40,10 +40,20 @@ class AbstractIntegerSIPHeaderFieldTestCase(AbstractSIPHeaderFieldTestCase):
             self.assertEqual(headerField.fieldName.lower(), self.canonicalFieldNames[0].lower())
             self.assertEqual(headerField.fieldValueString, "301")
             self.assertEqual(self.canonicalFieldNames[0] + ': 301', headerField.rawString)
+            if self.canonicalCompactFieldNames:
+                headerField.rawString = self.canonicalCompactFieldNames[0] + ': 301'
+                self.assertNotEqual(headerField.value, None)
+                self.assertIsInstance(headerField.parameterNamesAndValueStrings, dict)
+                self.assertEqual(301, headerField.integerValue)
+                self.assertEqual(headerField.fieldName.lower(), self.canonicalCompactFieldNames[0].lower())
+                self.assertEqual(headerField.fieldValueString, "301")
+                self.assertEqual(self.canonicalCompactFieldNames[0] + ': 301', headerField.rawString)
+
 
     def basic_test_rendering(self):
         # super(AbstractIntegerSIPHeaderFieldTestCase, self).basic_test_rendering()
         for fieldValueString in self.canonicalFieldValues:
+            # TODO:  we will extend this for rendering with compact header field names.
             headerField = self.sipHeaderFieldClassUnderTest.newForAttributes(value=300)
             self.assertTrue(headerField.isValid)
             self.assertTrue(headerField.isKnown)
