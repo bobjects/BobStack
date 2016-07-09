@@ -116,6 +116,7 @@ class SIPMessage(object):
     def dialogHash(self):
         return self.header.dialogHash
 
+    # TODO:  This is a hot method.  Should we cache?
     @property
     def isValid(self):
         if self.isMalformed:

@@ -1,1 +1,1 @@
-skipLongTests = False
+skipLongTests = True
