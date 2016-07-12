@@ -31,7 +31,7 @@ class SIPStatelessProxy(SIPEntity):
             targetURI = self.determineTargetForRequest(connectedSIPMessageToSend)
             self.forwardRequestToTarget(connectedSIPMessageToSend, targetURI=targetURI, transportIDForVia=requestArrivalTransportConnectionID)
         except DropMessageSIPEntityException:
-            pass
+            pass  # just let it drop.
         except DropMessageAndDropConnectionSIPEntityException:
             receivedConnectedSIPMessage.disconnect()
         except SendResponseSIPEntityException as ex:
@@ -98,7 +98,9 @@ class SIPStatelessProxy(SIPEntity):
                 raise SendResponseSIPEntityException(statusCodeInteger=483, reasonPhraseString='Too many hops')
         # TODO - for now, skip the optional loop detection.
         # TODO - for now, skip the Proxy-Require header field check.
+        #    We will flesh out Proxy-Require once we know for sure which features we handle.
         # TODO - for now, we don't do authentication.  When we do, the authorization check will be here.
+        # TODO - "If any of these checks fail, the element MUST behave as a user agent server (see Section 8.2) and respond with an error code."
 
     def createConnectedSIPMessageToSendForRequest(self, receivedConnectedSIPMessage):
         # We do a total copy of the sipMessage.  The connection will be replaced later.
