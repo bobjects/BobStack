@@ -123,6 +123,7 @@ class SIPStatelessProxy(SIPEntity):
         if routeURIs:
             if self.sipURIMatchesUs(routeURIs[0]):
                 # TODO - remove first route header, because it matches us.
+                # TODO - need to test that removeFirstHeaderFieldOfClass() works correctly.  Header field tests should be written for that.
                 sipMessage.removeFirstHeaderFieldOfClass(RouteSIPHeaderField)
 
     def determineTargetForRequest(self, connectedSIPMessageToSend):
@@ -140,14 +141,18 @@ class SIPStatelessProxy(SIPEntity):
             return requestURI
         # TODO - we are responsible for this request.  We will have a registrar
         # or location service, probably implemented using the Strategy pattern,
-        # but for now, let's just answer a 404.  We will
-        # implement that location service later.
+        # but for now, let's just make a degenerate behavior, by answering a 404.  We will
+        # implement that location service later.  Also allow other developers to write their
+        # own Strategy objects.
         raise SendResponseSIPEntityException(statusCodeInteger=404, reasonPhraseString='Not Found')
 
 
     def forwardRequestToTarget(self, connectedSIPMessageToSend, targetURI=None, transportIDForVia=None):
         '''
         https://tools.ietf.org/html/rfc3261#section-16.6
+        Special consideration for stateless proxies explained in section 16.11
+        - The unique branch id must be invariant for requests with identical headers.
+        - Item 10 will send the forwarded message directly to a transport, not transaction.
         '''
         sipMessage = connectedSIPMessageToSend.sipMessage
         # TODO: in progress
