@@ -165,6 +165,7 @@ class SIPStatelessProxy(SIPEntity):
             sipMessage.startLine.requestURI = targetURI
         # 3.  Update the Max-Forwards header field
         if sipMessage.maxForwards is not None:
+            # TODO:  When you use -= 1 on an integer sip header field's integerValue parameter, does that work?  Need to write a test.
             sipMessage.header.maxForwardsHeaderField.integerValue -= 1
         else:
             # TODO: inserting a header field - we should make a method that inserts it using an aesthetically-pleasing order
@@ -172,14 +173,16 @@ class SIPStatelessProxy(SIPEntity):
             sipMessage.header.addHeaderField(MaxForwardsSIPHeaderField.newForIntegerValue(70))
         # 4.  Optionally add a Record-route header field value
         # TODO: is this the best way to get the URI host?
-        # TODO: are record-route header fields only used for INVITE?  Should we only do this if it's an INVITE?
+        # Are record-route header fields only used for INVITE?  Should we only do this if it's an INVITE?
+        #    Answer:  No.  See RFC3261 16.6  point 4
         # TODO: sip or sips scheme?  Should that be derived from the transport?  For now, hard-code to 'sip'
         recordRouteURI = SIPURI.newForAttributes(host=self.transports[0].bindAddress, port=self.transports[0].bindPort, scheme='sip', parameterNamesAndValueStrings={'lr': None})
         recordRouteHeaderField = RecordRouteSIPHeaderField.newForAttributes(recordRouteURI)
         if transportIDForVia:
-            # TODO:  is this correct?  Do we want to put that state into this header or the Via?
+            # Do we want to put that state into this header or the Via?
+            #    Answer:  we want it here.  See RFC3261 16.6  point 4
             recordRouteHeaderField.parameterNamedPut('bobstackTransportID', transportIDForVia)
-        sipMessage.header.addHeaderField(recordRouteHeaderField)
+        sipMessage.header.addHeaderFieldBeforeHeaderFieldsOfSameClass(recordRouteHeaderField)
         # 5.  Optionally add additional header fields
         # TODO: make the server header field a user-settable parameter.
         sipMessage.header.addHeaderField(ServerSIPHeaderField.newForValueString('BobStack'))
@@ -203,9 +206,11 @@ class SIPStatelessProxy(SIPEntity):
         # RFC3263 is mainly about DNS SRV and NAPTR.  We don't actually want to deal with
         # DNS related stuff now, just use our dotted IPs.  There is also discussion (section 4
         # about choosing transport.
+        # TODO:  next: get the address and port, just using the dotted IP address for now.
         # 8.  Add a Via header field value
         # TODO:  For now, don't do the loop / spiral detection stuff.
         # TODO:  WE NEED TO USE THE TARGET SET ATTRIBUTES!  SEE "7." ABOVE!
+        # TODO:  next: Put our SIPURI into the new Via.
         newViaHeaderField = ViaSIPHeaderField.newForAttributes()
         newViaHeaderField.generateInvariantBranchForSIPHeader(sipMessage.header)
         sipMessage.header.addHeaderFieldBeforeHeaderFieldsOfSameClass(newViaHeaderField)
