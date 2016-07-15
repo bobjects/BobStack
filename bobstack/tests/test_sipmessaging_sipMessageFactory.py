@@ -140,17 +140,23 @@ class TestSIPMessageFactoryForSanitizedLogFile(TestCase):
         # print aSIPMessage.transactionHash
         # print aSIPMessage.dialogHash
         if aSIPMessage.transactionHash:
-            if aSIPMessage.transactionHash not in self.transactionHashesAndSIPMessages:
-                self.transactionHashesAndSIPMessages[aSIPMessage.transactionHash] = []
-            self.transactionHashesAndSIPMessages[aSIPMessage.transactionHash].append(aSIPMessage.startLine.rawString)
+            pass
+            # TODO:  running into memory issues on small VMs.  Are these dicts the culprit?
+            # if aSIPMessage.transactionHash not in self.transactionHashesAndSIPMessages:
+            #     self.transactionHashesAndSIPMessages[aSIPMessage.transactionHash] = []
+            # self.transactionHashesAndSIPMessages[aSIPMessage.transactionHash].append(aSIPMessage.startLine.rawString)
         if aSIPMessage.header.invariantBranchHash:
-            if aSIPMessage.header.invariantBranchHash not in self.invariantBranchHashesAndSIPMessages:
-                self.invariantBranchHashesAndSIPMessages[aSIPMessage.header.invariantBranchHash] = []
-            self.invariantBranchHashesAndSIPMessages[aSIPMessage.header.invariantBranchHash].append(aSIPMessage.startLine.rawString)
+            pass
+            # TODO:  running into memory issues on small VMs.  Are these dicts the culprit?
+            # if aSIPMessage.header.invariantBranchHash not in self.invariantBranchHashesAndSIPMessages:
+            #     self.invariantBranchHashesAndSIPMessages[aSIPMessage.header.invariantBranchHash] = []
+            # self.invariantBranchHashesAndSIPMessages[aSIPMessage.header.invariantBranchHash].append(aSIPMessage.startLine.rawString)
         if aSIPMessage.dialogHash:
-            if aSIPMessage.dialogHash not in self.dialogHashesAndSIPMessages:
-                self.dialogHashesAndSIPMessages[aSIPMessage.dialogHash] = []
-            self.dialogHashesAndSIPMessages[aSIPMessage.dialogHash].append(aSIPMessage.startLine.rawString)
+            pass
+            # TODO:  running into memory issues on small VMs.  Are these dicts the culprit?
+            # if aSIPMessage.dialogHash not in self.dialogHashesAndSIPMessages:
+            #     self.dialogHashesAndSIPMessages[aSIPMessage.dialogHash] = []
+            # self.dialogHashesAndSIPMessages[aSIPMessage.dialogHash].append(aSIPMessage.startLine.rawString)
 
         # TODO:  log these to files?
 #        print aSIPMessage.rawString

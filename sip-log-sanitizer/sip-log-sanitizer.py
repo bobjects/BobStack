@@ -80,11 +80,11 @@ def createInterim2File():
 def processInterimFile():
     print "processing interim file 2"
     with open(sanitizedFilePathName, "w") as sanitizedFile:
-        with open(interimFile1PathName, "r") as interimFile1:
+        with open(interimFile2PathName, "r") as interimFile2:
             currentlyInMessage = False
             currentMessageString = ''
             totalSIPMessages = 0
-            for line in interimFile1:
+            for line in interimFile2:
                 if currentlyInMessage:
                     if sanitizedMessageSeparatorRegex.match(line):
                         # some messages are two bytes too long, because of weirdness in our logging code!
@@ -109,6 +109,10 @@ def processInterimFile():
                         currentMessageString = ''
                         sanitizedFile.write(line)
             print str(totalSIPMessages) + " total SIP messages"
+
+def deleteInterimFiles():
+    os.remove(interimFile1PathName)
+    os.remove(interimFile2PathName)
 
 # @profile
 def processPCAPFiles():
@@ -136,4 +140,5 @@ if __name__ == '__main__':
     print timeit.timeit(createInterim1File, number=1)
     print timeit.timeit(createInterim2File, number=1)
     print timeit.timeit(processInterimFile, number=1)
+    deleteInterimFiles()
     print timeit.timeit(processPCAPFiles, number=1)
