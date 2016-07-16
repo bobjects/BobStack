@@ -38,6 +38,10 @@ class SIPMessage(object):
         self._rawString = aString
         self.clearAttributes()
 
+    @property
+    def body(self):
+        return self.content
+
     def clearRawString(self):
         self._rawString = None
 

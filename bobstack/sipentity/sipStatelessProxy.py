@@ -3,6 +3,7 @@ from hashlib import sha1
 sys.path.append("../..")
 from bobstack.sipmessaging import SIPURI
 from bobstack.sipmessaging import ViaSIPHeaderField
+from bobstack.sipmessaging import ContentLengthSIPHeaderField
 from bobstack.sipmessaging import RouteSIPHeaderField
 from bobstack.sipmessaging import RecordRouteSIPHeaderField
 from bobstack.sipmessaging import MaxForwardsSIPHeaderField
@@ -152,7 +153,7 @@ class SIPStatelessProxy(SIPEntity):
         https://tools.ietf.org/html/rfc3261#section-16.6
         Special consideration for stateless proxies explained in section 16.11
         - The unique branch id must be invariant for requests with identical headers.
-        - Item 10 will send the forwarded message directly to a transport, not transaction.
+        - Item 10 will send the forwarded message directly to a transportConnection, not transaction.
         '''
         sipMessage = connectedSIPMessageToSend.sipMessage
         # TODO: in progress
@@ -175,7 +176,7 @@ class SIPStatelessProxy(SIPEntity):
         # TODO: is this the best way to get the URI host?
         # Are record-route header fields only used for INVITE?  Should we only do this if it's an INVITE?
         #    Answer:  No.  See RFC3261 16.6  point 4
-        # TODO: sip or sips scheme?  Should that be derived from the transport?  For now, hard-code to 'sip'
+        # TODO: sip or sips scheme?  Should that be derived from the transportConnection?  For now, hard-code to 'sip'
         recordRouteURI = SIPURI.newForAttributes(host=self.transports[0].bindAddress, port=self.transports[0].bindPort, scheme='sip', parameterNamesAndValueStrings={'lr': None})
         recordRouteHeaderField = RecordRouteSIPHeaderField.newForAttributes(recordRouteURI)
         if transportIDForVia:
@@ -183,9 +184,11 @@ class SIPStatelessProxy(SIPEntity):
             #    Answer:  we want it here.  See RFC3261 16.6  point 4
             recordRouteHeaderField.parameterNamedPut('bobstackTransportID', transportIDForVia)
         sipMessage.header.addHeaderFieldBeforeHeaderFieldsOfSameClass(recordRouteHeaderField)
+
         # 5.  Optionally add additional header fields
         # TODO: make the server header field a user-settable parameter.
         sipMessage.header.addHeaderField(ServerSIPHeaderField.newForValueString('BobStack'))
+
         # 6.  Postprocess routing information
         routeURIs = sipMessage.header.routeURIs
         if routeURIs:
@@ -200,6 +203,32 @@ class SIPStatelessProxy(SIPEntity):
                 uriToDetermineNextHop = routeURIs[0]
         else:
             uriToDetermineNextHop = sipMessage.requestURI
+
+        # 7.  Determine the next-hop address, port, and transport
+        nextHopConnectedTransportConnection = self.connectedTransportConnectionForSIPURI(uriToDetermineNextHop)
+        if not nextHopConnectedTransportConnection:
+            # TODO:  we could not connect to the next-hop.  Return some error code.  Which error code and reason phrase?  400 and could not connect are NOT correct.
+            raise SendResponseSIPEntityException(statusCodeInteger=400, reasonPhraseString='Could not connect')
+
+        # 8.  Add a Via header field value
+        # TODO:  For now, don't do the loop / spiral detection stuff.
+        sipMessage.header.addHeaderFieldBeforeHeaderFieldsOfSameClass(self.newViaHeaderFieldForSIPMessage(sipMessage))
+
+        # 9.  Add a Content-Length header field if necessary
+        # TODO: if the target transport is stream-oriented, e.g. TLS or TCP, and the message has no Content-Length: header field, add one.
+        # TODO: So we'll need to wait until step 7 is done, to know the transport.
+        if not sipMessage.header.contentLengthHeaderField:
+            if nextHopConnectedTransportConnection.isStateful:
+                # TODO: if the target transport is stream-oriented, e.g. TLS or TCP, and the message has no Content-Length: header field, add one.
+                sipMessage.header.addHeaderField(self.newContentLengthHeaderFieldForSIPMessage(sipMessage))
+
+        # 10. Forward the new request
+        # TODO:  exception handling?
+        nextHopConnectedTransportConnection.sendMessage(sipMessage)
+
+        # 11. Set timer C - not applicable for stateless.  Huzzah!
+
+    def connectedTransportConnectionForSIPURI(self, aSIPURI):
         # 7.  Determine the next-hop address, port, and transport
         # TODO:  This is about determining the target set.
         # TODO:  Gotta study RFC3263 (i.e. reference 4 of 3261)
@@ -207,21 +236,44 @@ class SIPStatelessProxy(SIPEntity):
         # DNS related stuff now, just use our dotted IPs.  There is also discussion (section 4
         # about choosing transport.
         # TODO:  next: get the address and port, just using the dotted IP address for now.
-        # 8.  Add a Via header field value
-        # TODO:  For now, don't do the loop / spiral detection stuff.
+        # TODO:  because we are just assuming dotted IP addresses for right now, we just assume that host is the dotted IP address,
+        # and we do not attempt to resolve it using DNS, SRV, NAPTR, etc.
+        # TODO:  We also need to derive / create the next hop transport
+        nextHopAddress = aSIPURI.host
+        nextHopPort = aSIPURI.derivedPort
+        # TODO:  Not yet done.  We will return an existing protocol that matches the uri's host, port, and is appropriate
+        # for the uri's scheme.  If it doesn't exist, we will create a new one and connect it.  If connection fails, we will
+        # return None.
+        answer = None
+        return answer
+
+
+    def newViaHeaderFieldForSIPMessage(self, aSIPMessage):
         # TODO:  WE NEED TO USE THE TARGET SET ATTRIBUTES!  SEE "7." ABOVE!
-        # TODO:  next: Put our SIPURI into the new Via.
-        newViaHeaderField = ViaSIPHeaderField.newForAttributes()
-        newViaHeaderField.generateInvariantBranchForSIPHeader(sipMessage.header)
-        sipMessage.header.addHeaderFieldBeforeHeaderFieldsOfSameClass(newViaHeaderField)
-        # 9.  Add a Content-Length header field if necessary
-        # TODO: if the target transport is stream-oriented, e.g. TLS or TCP, and the message has no Content-Length: header field, add one.
-        # TODO: So we'll need to wait until step 7 is done, to know the transport.
-        # 10. Forward the new request
-        # TODO: need to finish step 7 before we can actually send the request.
-        # 11. Set timer C
+        # TODO:  Need to do transport string as well.
+        answer = ViaSIPHeaderField.newForAttributes()
+        answer.host = self.ourHost
+        answer.port = self.ourPort
+        answer.generateInvariantBranchForSIPHeader(aSIPMessage.header)
+        return answer
 
+    def newContentLengthHeaderFieldForSIPMessage(self, aSIPMessage):
+        return ContentLengthSIPHeaderField.newForIntegerValue(len(aSIPMessage.body))
 
+    @property
+    def ourHost(self):
+        # TODO: This is very simplistic for now.
+        try:
+            return self.homeDomains[0]
+        except IndexError:
+            return '127.0.0.1'
+
+    def ourPort(self):
+        # TODO: This is very simplistic for now.
+        try:
+            return self.transports[0].bindPort
+        except IndexError:
+            return 5060
 
     def sipURIMatchesUs(self, aSIPURI):
         # TODO - we will also need to verify match of transport protocol and port, right?

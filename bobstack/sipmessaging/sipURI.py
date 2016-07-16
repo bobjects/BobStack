@@ -66,6 +66,16 @@ class SIPURI(object):
         self.clearRawString()
 
     @property
+    def derivedPort(self):
+        if self.port is not None:
+            return self.port
+        else:
+            if self.scheme == 'sips':
+                return 5061
+            else:
+                return 5060
+
+    @property
     def port(self):
         if self._attributesMustBeParsed:
             self.parseAttributesFromRawString()
