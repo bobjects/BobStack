@@ -281,7 +281,6 @@ class SIPStatelessProxy(SIPEntity):
 
     def sendErrorResponseForRequest(self, receivedConnectedSIPMessage, statusCodeInteger=500, reasonPhraseString='Server Error', descriptionString='An unknown server error occurred.'):
         # TODO: I believe we need to reliably send this response, including retransmission, etc.  For now, just send the damn thing.
-        # TODO
         pass
 
     def transportConnectionIDForResponse(self, receivedConnectedSIPMessage):

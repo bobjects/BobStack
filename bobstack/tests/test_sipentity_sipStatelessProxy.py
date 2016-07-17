@@ -3,7 +3,7 @@ import unittest
 import sys
 sys.path.append("..")
 sys.path.append("../..")
-from bobstack.sipmessaging import SIPMessageFactory
+from bobstack.sipmessaging import SIPURI
 from bobstack.siptransport import SimulatedSIPTransport
 from bobstack.sipentity import SIPStatelessProxy
 from bobstack.siptransport import SimulatedNetwork
@@ -34,6 +34,8 @@ class TestStatelessProxy(TestCase):
         self.biloxi.transports[0].whenEventDo("receivedValidConnectedResponse", self.biloxiResponseEventHandler)
         self.bobTransport.whenEventDo("receivedValidConnectedRequest", self.bobRequestEventHandler)
         self.bobTransport.whenEventDo("receivedValidConnectedResponse", self.bobResponseEventHandler)
+        self.aliceTransport.bind()
+        self.bobTransport.bind()
         self.aliceTransport.connectToAddressAndPort(self.atlantaBindAddress, self.atlantaBindPort)
         # Let Biloxi connect to Bob.  Don't pre-connect Bob to Biloxi.
         # self.bobTransport.connectToAddressAndPort(self.biloxiBindAddress, self.biloxiBindPort)
@@ -71,6 +73,7 @@ class TestStatelessProxy(TestCase):
     def run_01_atlantaToBiloxi(self):
         self.aliceTransport.connections[0].sendString(self.aliceRequestString)
         self.assertEqual(0, len(self.aliceReceivedRequests))
+        # This will fail, once we actually send the 404 response.
         self.assertEqual(0, len(self.aliceReceivedResponses))
         self.assertEqual(1, len(self.atlantaReceivedRequests))
         self.assertEqual(0, len(self.atlantaReceivedResponses))
@@ -78,7 +81,17 @@ class TestStatelessProxy(TestCase):
         self.assertEqual(0, len(self.biloxiReceivedResponses))
         self.assertEqual(0, len(self.bobReceivedRequests))
         self.assertEqual(0, len(self.bobReceivedResponses))
-        self.assertEqual(self.aliceRequestString, self.atlantaReceivedRequests[0].rawString)
+        self.assertEqual(self.aliceBindAddress, self.atlantaReceivedRequests[0].connection.remoteAddress)
+        self.assertEqual(self.aliceBindPort, self.atlantaReceivedRequests[0].connection.remotePort)
+        self.assertEqual(self.atlantaBindAddress, self.atlantaReceivedRequests[0].connection.bindAddress)
+        self.assertEqual(self.atlantaBindPort, self.atlantaReceivedRequests[0].connection.bindPort)
+        atlantaReceivedRequest = self.atlantaReceivedRequests[0].sipMessage
+        rURI = SIPURI.newParsedFrom(atlantaReceivedRequest.startLine.requestURI)
+        self.assertEqual(self.aliceRequestString, atlantaReceivedRequest.rawString)
+        self.assertEqual('INVITE', atlantaReceivedRequest.startLine.sipMethod)
+        self.assertEqual(self.biloxiBindAddress, rURI.host)
+        self.assertEqual(1, len(atlantaReceivedRequest.vias))
+        self.assertEqual(self.aliceBindAddress, atlantaReceivedRequest.viaHeaderFields[0].host)
         # TODO:  Moar!!!
 
     def run_02_biloxiToAtlanta(self):

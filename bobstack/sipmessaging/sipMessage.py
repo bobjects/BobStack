@@ -105,6 +105,10 @@ class SIPMessage(object):
         return self.header.vias
 
     @property
+    def viaHeaderFields(self):
+        return self.header.viaHeaderFields
+
+    @property
     def routeURIs(self):
         return self.header.routeURIs
 
