@@ -160,8 +160,9 @@ class SIPHeader(object):
 
     # TODO:  need to test
     def addHeaderField(self, aSIPHeaderField):
-        self.headerFields.append(aSIPHeaderField)
-        self.initializeCache()
+        if aSIPHeaderField:
+            self.headerFields.append(aSIPHeaderField)
+            self.initializeCache()
 
     # TODO:  need to test
     def addHeaderFieldAfterHeaderFieldsOfSameClass(self, aHeaderField):

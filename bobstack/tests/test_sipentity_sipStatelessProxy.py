@@ -73,8 +73,7 @@ class TestStatelessProxy(TestCase):
     def run_01_atlantaToBiloxi(self):
         self.aliceTransport.connections[0].sendString(self.aliceRequestString)
         self.assertEqual(0, len(self.aliceReceivedRequests))
-        # This will fail, once we actually send the 404 response.
-        self.assertEqual(0, len(self.aliceReceivedResponses))
+        self.assertEqual(1, len(self.aliceReceivedResponses))
         self.assertEqual(1, len(self.atlantaReceivedRequests))
         self.assertEqual(0, len(self.atlantaReceivedResponses))
         self.assertEqual(0, len(self.biloxiReceivedRequests))
@@ -92,6 +91,13 @@ class TestStatelessProxy(TestCase):
         self.assertEqual(self.biloxiBindAddress, rURI.host)
         self.assertEqual(1, len(atlantaReceivedRequest.vias))
         self.assertEqual(self.aliceBindAddress, atlantaReceivedRequest.viaHeaderFields[0].host)
+        # TODO: This 404 nonsense is temporary.  Alice sends to a biloxi domain via atlanta, atlanta forwards her request to biloxi,
+        # Biloxi sees that it is responsible for the request, and for right now, just answers 404.
+
+        # TODO:  To fix immediately:  this is getting a 400 error, which means that Atlanta
+        # could not forward the request to Biloxi.  Why?
+        self.assertEqual(404, self.aliceReceivedResponses[0].sipMessage.startLine.statusCode)
+
         # TODO:  Moar!!!
 
     def run_02_biloxiToAtlanta(self):

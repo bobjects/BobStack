@@ -17,7 +17,10 @@ class SIPMessage(object):
     def _newForAttributes(cls, startLine=None, header=None, content=""):
         answer = cls()
         answer.startLine = startLine
-        answer.header = header
+        if header:
+            answer.header = header
+        else:
+            answer.header = SIPHeader.newForAttributes(headerFields=None)
         answer.content = content
         return answer
 

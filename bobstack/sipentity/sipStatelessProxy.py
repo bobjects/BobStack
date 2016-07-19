@@ -8,6 +8,7 @@ from bobstack.sipmessaging import RouteSIPHeaderField
 from bobstack.sipmessaging import RecordRouteSIPHeaderField
 from bobstack.sipmessaging import MaxForwardsSIPHeaderField
 from bobstack.sipmessaging import ServerSIPHeaderField
+from bobstack.sipmessaging import SIPResponse
 from bobstack.siptransport import ConnectedSIPMessage
 from sipEntity import SIPEntity
 from sipEntityExceptions import DropMessageSIPEntityException, DropMessageAndDropConnectionSIPEntityException, SendResponseSIPEntityException
@@ -244,6 +245,7 @@ class SIPStatelessProxy(SIPEntity):
         # TODO:  Not yet done.  We will return an existing protocol that matches the uri's host, port, and is appropriate
         # for the uri's scheme.  If it doesn't exist, we will create a new one and connect it.  If connection fails, we will
         # return None.
+        # TODO:  THIS IS NEXT!
         answer = None
         return answer
 
@@ -281,7 +283,16 @@ class SIPStatelessProxy(SIPEntity):
 
     def sendErrorResponseForRequest(self, receivedConnectedSIPMessage, statusCodeInteger=500, reasonPhraseString='Server Error', descriptionString='An unknown server error occurred.'):
         # TODO: I believe we need to reliably send this response, including retransmission, etc.  For now, just send the damn thing.
-        pass
+        # TODO: I am not confident that we are creating all necessary header fields, but I don't
+        # see RFC documentation of all that needs to be there.  Look harder.  There is plenty in
+        # section 16.7 about forwarding responses, but not creating responses.
+        sipRequestReplyingTo = receivedConnectedSIPMessage.sipMessage
+        connection = receivedConnectedSIPMessage.connection
+        sipResponse = SIPResponse.newForAttributes(statusCode=statusCodeInteger, reasonPhrase=reasonPhraseString)
+        sipResponse.header.addHeaderField(sipRequestReplyingTo.header.toHeaderField)
+        sipResponse.header.addHeaderField(sipRequestReplyingTo.header.fromHeaderField)
+        sipResponse.header.addHeaderField(ContentLengthSIPHeaderField.newForIntegerValue(0))
+        connection.sendMessage(sipResponse)
 
     def transportConnectionIDForResponse(self, receivedConnectedSIPMessage):
         # TODO
