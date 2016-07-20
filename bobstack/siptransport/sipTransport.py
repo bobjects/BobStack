@@ -28,6 +28,9 @@ class SIPTransport(EventSourceMixin):
     def connectToAddressAndPort(self, addressString, portInteger):
         raise NotImplementedError('call to abstract method ' + inspect.stack()[0][3])
 
+    def connectionWithAddressAndPort(self, addressString, portInteger):
+        return next((c for c in self.connections if c.remoteAddress == addressString and c.remotePort == portInteger), None)
+
     def subscribeToTransportConnectionEvents(self, aSIPTransportConnection):
         aSIPTransportConnection.whenEventDo('receivedValidConnectedRequest', self.receivedValidConnectedRequestEventHandler)
         aSIPTransportConnection.whenEventDo('receivedValidConnectedResponse', self.receivedValidConnectedResponseEventHandler)

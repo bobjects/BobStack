@@ -9,11 +9,13 @@ class SimulatedSIPTransport(SIPTransport):
         return 'SIM'
 
     def connectToAddressAndPort(self, addressString, portInteger):
+        # TODO: need to make (and test) exception handlers, not just events.
         connectedTransport = SimulatedNetwork.instance.boundTransportWithAddressAndPort(addressString, portInteger)
         if connectedTransport:
             if connectedTransport is not self:
-                self.basicConnectToAddressAndPort(addressString, portInteger)
+                answer = self.basicConnectToAddressAndPort(addressString, portInteger)
                 connectedTransport.basicConnectToAddressAndPort(self.bindAddress, self.bindPort)
+                return answer
             else:
                 self.triggerCouldNotMakeConnection(addressString, portInteger)
         else:
@@ -25,6 +27,7 @@ class SimulatedSIPTransport(SIPTransport):
         self.connections.append(connection)
         self.subscribeToTransportConnectionEvents(connection)
         self.triggerMadeConnection(connection)
+        return connection
 
     def bind(self):
         if SimulatedNetwork.instance.bindTransport(self):

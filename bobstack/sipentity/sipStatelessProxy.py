@@ -24,7 +24,8 @@ class SIPStatelessProxy(SIPEntity):
         super(SIPStatelessProxy, self).__init__()
 
     def receivedValidConnectedRequestEventHandler(self, receivedConnectedSIPMessage):
-        print "Stateless proxy request payload - " + str(receivedConnectedSIPMessage)
+        print "Stateless proxy " + str(self.transports[0].bindAddress) + " request payload...\n" + str(receivedConnectedSIPMessage)
+        print "Stateless proxy " + str(self.transports[0].bindAddress) + " request payload...\n" + str(receivedConnectedSIPMessage.sipMessage.rawString)
         try:
             requestArrivalTransportConnectionID = self.transportConnectionIDForRequest(receivedConnectedSIPMessage)
             self.validateRequest(receivedConnectedSIPMessage)
@@ -230,6 +231,8 @@ class SIPStatelessProxy(SIPEntity):
         # 11. Set timer C - not applicable for stateless.  Huzzah!
 
     def connectedTransportConnectionForSIPURI(self, aSIPURI):
+        if not self.transports:
+            return None
         # 7.  Determine the next-hop address, port, and transport
         # TODO:  This is about determining the target set.
         # TODO:  Gotta study RFC3263 (i.e. reference 4 of 3261)
@@ -245,9 +248,13 @@ class SIPStatelessProxy(SIPEntity):
         # TODO:  Not yet done.  We will return an existing protocol that matches the uri's host, port, and is appropriate
         # for the uri's scheme.  If it doesn't exist, we will create a new one and connect it.  If connection fails, we will
         # return None.
-        # TODO:  THIS IS NEXT!
-        answer = None
-        return answer
+        # TODO:  We also need to check that the transport is compatible with the URI's scheme.
+        existingConnection = self.transports[0].connectionWithAddressAndPort(nextHopAddress, nextHopPort)
+        if existingConnection:
+            return existingConnection
+        else:
+            # TODO:  Need to make (and test) exception handler in case the connection could not be made.
+            return self.transports[0].connectToAddressAndPort(nextHopAddress, nextHopPort)
 
 
     def newViaHeaderFieldForSIPMessage(self, aSIPMessage):

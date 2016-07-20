@@ -3,8 +3,14 @@
 class SIPEntity(object):
     def __init__(self):
         # TODO: still need to test homeDomains.
-        self.homeDomains = []
+        self._homeDomains = []
         self._transports = []
+
+    @property
+    def homeDomains(self):
+        # TODO: Is this correct?  We are deriving domains for each bind address, and letting the user add additional domains.
+        return [t.bindAddress for t in self.transports] + self._homeDomains
+
 
     @property
     def transports(self):
