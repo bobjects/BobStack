@@ -82,23 +82,10 @@ class TestSIPMessageFactoryForSanitizedLogFile(TestCase):
                 for startLine in l:
                     self.appendStringToFileNamed('    ' + startLine + "\r\n", 'invariantBranchHashes')
             self.closeFiles()
-            # self.closeFileNamed(self.malformedSIPMessagesPathName)
-            # self.closeFileNamed(self.validSIPMessagesPathName)
-            # self.closeFileNamed(self.invalidSIPMessagesPathName)
-            # self.closeFileNamed(self.validKnownSIPMessagesPathName)
-            # self.closeFileNamed(self.validUnknownSIPMessagesPathName)
-            # self.closeFileNamed(self.knownSIPStartLinesPathName)
-            # self.closeFileNamed(self.unknownSIPStartLinesPathName)
-            # self.closeFileNamed(self.knownSIPMethodsPathName)
-            # self.closeFileNamed(self.unknownSIPMethodsPathName)
-            # self.closeFileNamed(self.knownHeaderFieldsPathName)
-            # self.closeFileNamed(self.knownHeaderFieldNamesPathName)
-            # self.closeFileNamed(self.unknownHeaderFieldsPathName)
-            # self.closeFileNamed(self.unknownHeaderFieldNamesPathName)
-            # self.closeFileNamed(self.headerFieldParametersPathName)
-            print "de-duping..."
-            subprocess.call(['../../proprietary-test-data/analyzed/dedupelinefiles.sh'])
-            print "finished de-duping."
+            if settings.writeAnalyzedFiles:
+                print "de-duping..."
+                subprocess.call(['../../proprietary-test-data/analyzed/dedupelinefiles.sh'])
+                print "finished de-duping."
 
     def printSIPMessageCounts(self):
         print "malformed: " + str(self.malformedSIPMessageCount)
@@ -496,9 +483,10 @@ class TestSIPMessageFactoryForSanitizedLogFile(TestCase):
         self._fileNamesAndFiles[fileName] = open('../../proprietary-test-data/analyzed/' + fileName + ".txt", "w")
 
     def appendStringToFileNamed(self, aString, fileName):
-        if fileName not in self._fileNamesAndFiles:
-            self.createFileNamed(fileName)
-        self._fileNamesAndFiles[fileName].write(aString)
+        if settings.writeAnalyzedFiles:
+            if fileName not in self._fileNamesAndFiles:
+                self.createFileNamed(fileName)
+            self._fileNamesAndFiles[fileName].write(aString)
 
     def closeFiles(self):
         for fileName in self._fileNamesAndFiles.keys():

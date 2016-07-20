@@ -31,6 +31,9 @@ class SIPTransport(EventSourceMixin):
     def connectionWithAddressAndPort(self, addressString, portInteger):
         return next((c for c in self.connections if c.remoteAddress == addressString and c.remotePort == portInteger), None)
 
+    def connectionWithID(self, idString):
+        return next((c for c in self.connections if c.id == idString), None)
+
     def subscribeToTransportConnectionEvents(self, aSIPTransportConnection):
         aSIPTransportConnection.whenEventDo('receivedValidConnectedRequest', self.receivedValidConnectedRequestEventHandler)
         aSIPTransportConnection.whenEventDo('receivedValidConnectedResponse', self.receivedValidConnectedResponseEventHandler)
