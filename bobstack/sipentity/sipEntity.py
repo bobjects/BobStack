@@ -11,7 +11,6 @@ class SIPEntity(object):
         # TODO: Is this correct?  We are deriving domains for each bind address, and letting the user add additional domains.
         return [t.bindAddress for t in self.transports] + self._homeDomains
 
-
     @property
     def transports(self):
         return self._transports

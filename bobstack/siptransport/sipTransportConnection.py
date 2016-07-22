@@ -1,7 +1,7 @@
 import sys
 from hashlib import sha1
 sys.path.append("../..")
-from bobstack.sipmessaging import StrongRandomStringServer
+# from bobstack.sipmessaging import StrongRandomStringServer
 import inspect
 from eventSourceMixin import EventSourceMixin
 from connectedSIPMessageFactory import ConnectedSIPMessageFactory

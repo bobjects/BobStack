@@ -6,7 +6,6 @@ from unittest import TestCase
 import inspect
 import sys
 sys.path.append("..")
-from sipmessaging import UnknownSIPHeaderField
 from sipmessaging import SIPHeaderFieldFactory
 
 

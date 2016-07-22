@@ -1,7 +1,7 @@
 import inspect
 from abstractSIPMessageTestCase import AbstractSIPMessageTestCase
 from sipmessaging import SIPHeader
-import unittest
+
 
 class AbstractSIPResponseTestCase(AbstractSIPMessageTestCase):
     @property

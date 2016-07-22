@@ -5,7 +5,6 @@ except ImportError:
 import inspect
 import sys
 sys.path.append("..")
-from sipmessaging import UnknownSIPHeaderField
 from abstractSIPHeaderFieldTestCase import AbstractSIPHeaderFieldTestCase
 
 
@@ -48,7 +47,6 @@ class AbstractIntegerSIPHeaderFieldTestCase(AbstractSIPHeaderFieldTestCase):
                 self.assertEqual(headerField.fieldName.lower(), self.canonicalCompactFieldNames[0].lower())
                 self.assertEqual(headerField.fieldValueString, "301")
                 self.assertEqual(self.canonicalCompactFieldNames[0] + ': 301', headerField.rawString)
-
 
     def basic_test_rendering(self):
         # super(AbstractIntegerSIPHeaderFieldTestCase, self).basic_test_rendering()

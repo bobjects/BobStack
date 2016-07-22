@@ -9,6 +9,7 @@ from classproperty import classproperty
 # TODO:  we need to formally test compact headers, beyond what is already being done in the sip torture test.
 # TODO:  More to do, in other classes, to fully implement useCompactHeaders.
 
+
 class SIPHeaderField(object):
     regexForFindingParameterNamesAndValues = re.compile(";([^=;]+)=?([^;]+)?")
     regexForFindingValueUpToParameters = re.compile('([^;])')
@@ -21,13 +22,16 @@ class SIPHeaderField(object):
         return answer
 
     @classmethod
-    def newForAttributes(cls, value='', parameterNamesAndValueStrings={}, useCompactHeaders=False):
+    def newForAttributes(cls, value='', parameterNamesAndValueStrings=None, useCompactHeaders=False):
         # This will typically be overridden by classes that have interesting attributes.
         # return cls.newForFieldNameAndValueString(fieldName=fieldName, fieldValueString=fieldValueString)
         answer = cls()
         answer.useCompactHeaders = useCompactHeaders
         answer.value = value
-        answer.parameterNamesAndValueStrings = parameterNamesAndValueStrings
+        if parameterNamesAndValueStrings:
+            answer.parameterNamesAndValueStrings = parameterNamesAndValueStrings
+        else:
+            answer.parameterNamesAndValueStrings = {}
         return answer
 
     @classmethod
@@ -89,7 +93,8 @@ class SIPHeaderField(object):
     @useCompactHeaders.setter
     def useCompactHeaders(self, aBoolean):
         self._useCompactHeaders = aBoolean
-        fieldValue = self.fieldValueString # render field values if not already rendered.
+        # noinspection PyUnusedLocal
+        fieldValue = self.fieldValueString  # render field values if not already rendered.
         self.clearRawString()
 
     @property
@@ -247,7 +252,7 @@ class SIPHeaderField(object):
             return cls._regexForMatching
         except AttributeError:
             if cls.canonicalCompactFieldName:
-                cls._regexForMatching = re.compile('^(' + cls.canonicalFieldName + '|'+ cls.canonicalCompactFieldName + ')\s*:', re.I)
+                cls._regexForMatching = re.compile('^(' + cls.canonicalFieldName + '|' + cls.canonicalCompactFieldName + ')\s*:', re.I)
             else:
                 cls._regexForMatching = re.compile('^' + cls.canonicalFieldName + '\s*:', re.I)
             return cls._regexForMatching

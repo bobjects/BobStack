@@ -1,5 +1,4 @@
 from abstractSIPResponseTestCase import AbstractSIPResponseTestCase
-import unittest
 import sys
 sys.path.append("..")
 from sipmessaging import SIPResponse

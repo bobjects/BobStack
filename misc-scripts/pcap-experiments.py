@@ -9,7 +9,7 @@ ipcounter=0
 tcpcounter=0
 udpcounter=0
 
-filename='../open-test-data/from-wireshark-site/aaa.pcap'
+# filename='../open-test-data/from-wireshark-site/aaa.pcap'
 filename='../proprietary-test-data/cloud-resaved/2016.02.14.001.pcap'
 with open(filename, "r") as f:
     for ts, pkt in dpkt.pcap.Reader(f):

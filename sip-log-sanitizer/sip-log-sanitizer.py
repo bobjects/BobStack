@@ -17,8 +17,8 @@ interimFile2PathName = '../proprietary-test-data/sanitized/interim2.txt'
 sanitizedFilePathName = '../proprietary-test-data/sanitized/sanitized.txt'
 messageSeparator = "__MESSAGESEPARATOR__"
 rawFileMessageSeparatorRegexes = [ "^>>>>>>>>>>  [^>]*>>>>>>>>>>>",
-                                   "^>>>>>>>>>>  [^>]*>>>>>>>>>>", # for some reason, this is not catching 8 lines.
-                                   "^<<<<<<<<<<  [^<]*<<<<<<<<<<", # for some reason, this is not catching 32 lines.
+                                   "^>>>>>>>>>>  [^>]*>>>>>>>>>>",  # for some reason, this is not catching 8 lines.
+                                   "^<<<<<<<<<<  [^<]*<<<<<<<<<<",  # for some reason, this is not catching 32 lines.
                                    "^\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\* [^\*]*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*",
                                    "^##################################### [^#]*##########################" ]
 rawFileMessageSeparatorRegexes = [re.compile(s) for s in rawFileMessageSeparatorRegexes]
@@ -41,6 +41,7 @@ pcapDirectoryPathNames = [ '../proprietary-test-data/cloud',
 # pcapDirectoryPathNames = [ '../proprietary-test-data/cust-2-logs-pcap' ]
 # pcapDirectoryPathNames = [ '../proprietary-test-data/from-bobstack-testbed' ]
 
+
 def createInterim1File():
     print "creating interim file 1"
     with open(interimFile1PathName, "w") as interimFile1:
@@ -55,6 +56,7 @@ def createInterim1File():
                             line = messageSeparator + "\r\n"
                         interimFile1.write(line)
                     interimFile1.write("\r\n")
+
 
 def createInterim2File():
     print "creating interim file 2"
@@ -77,6 +79,7 @@ def createInterim2File():
                         interimFile2.write(line)
             print str(totalSIPMessages) + " total SIP messages"
 
+
 def processInterimFile():
     print "processing interim file 2"
     with open(sanitizedFilePathName, "w") as sanitizedFile:
@@ -94,7 +97,7 @@ def processInterimFile():
                         sipMessage = SIPMessageFactory().nextForString(currentMessageString)
                         truncateBytes = sipMessage.content.__len__() - sipMessage.header.contentLength
                         if truncateBytes == 2:
-                            currentMessageString = currentMessageString[:currentMessageString.__len__()-2]
+                            currentMessageString = currentMessageString[:currentMessageString.__len__() - 2]
 
                         sanitizedFile.write(currentMessageString)
                         sanitizedFile.write(line)
@@ -110,9 +113,11 @@ def processInterimFile():
                         sanitizedFile.write(line)
             print str(totalSIPMessages) + " total SIP messages"
 
+
 def deleteInterimFiles():
     os.remove(interimFile1PathName)
     os.remove(interimFile2PathName)
+
 
 # @profile
 def processPCAPFiles():
@@ -123,17 +128,16 @@ def processPCAPFiles():
                 print pcapFilePathName
                 with open(pcapFilePathName, "r") as pcapFile:
                     for ts, pkt in dpkt.pcap.Reader(pcapFile):
-                        eth=dpkt.ethernet.Ethernet(pkt)
+                        eth = dpkt.ethernet.Ethernet(pkt)
                         if eth.type!=dpkt.ethernet.ETH_TYPE_IP:
                             continue
-                        ip=eth.data
-                        if ( ip.p==dpkt.ip.IP_PROTO_UDP or ip.p==dpkt.ip.IP_PROTO_TCP ) and ip.data.dport in [5060, 5062, 5080]:
+                        ip = eth.data
+                        if (ip.p==dpkt.ip.IP_PROTO_UDP or ip.p==dpkt.ip.IP_PROTO_TCP) and ip.data.dport in [5060, 5062, 5080]:
                             data = ip.data.data
                             if data.__len__() > 2:
                                 if re.match('[^\s]+', data):  # Bria and some others periodically send CRLFCRLF by itself, presumably as a keepalive.  We don't want those.
                                     sanitizedFile.write(data)
                                     sanitizedFile.write(messageSeparator + "\r\n")
-
 
 
 if __name__ == '__main__':

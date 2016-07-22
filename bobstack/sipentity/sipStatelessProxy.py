@@ -1,5 +1,4 @@
 import sys
-from hashlib import sha1
 sys.path.append("../..")
 from bobstack.sipmessaging import SIPURI
 from bobstack.sipmessaging import ViaSIPHeaderField
@@ -149,7 +148,6 @@ class SIPStatelessProxy(SIPEntity):
         # own Strategy objects.
         raise SendResponseSIPEntityException(statusCodeInteger=404, reasonPhraseString='Not Found')
 
-
     def forwardRequestToTarget(self, connectedSIPMessageToSend, targetURI=None, transportIDForHeader=None):
         '''
         https://tools.ietf.org/html/rfc3261#section-16.6
@@ -255,7 +253,6 @@ class SIPStatelessProxy(SIPEntity):
         else:
             # TODO:  Need to make (and test) exception handler in case the connection could not be made.
             return self.transports[0].connectToAddressAndPort(nextHopAddress, nextHopPort)
-
 
     def newViaHeaderFieldForSIPMessage(self, aSIPMessage):
         # TODO:  WE NEED TO USE THE TARGET SET ATTRIBUTES!  SEE "7." ABOVE!

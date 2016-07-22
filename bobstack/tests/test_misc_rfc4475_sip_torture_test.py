@@ -1,5 +1,4 @@
 from unittest import TestCase
-import unittest
 import sys
 sys.path.append("..")
 sys.path.append("../..")
@@ -133,7 +132,6 @@ class TestRFC4475SIPTortureTest(TestCase):
         self.assertTrue(message.header.headerFields[8].isContentLength)
         # TODO - more.
 
-
     def testEscapedNullsInURIs(self):
         # https://tools.ietf.org/html/rfc4475#section-3.1.1.4
         # escnull
@@ -166,7 +164,6 @@ class TestRFC4475SIPTortureTest(TestCase):
         if self.weHaveImplementedCompactHeaders:
             self.assertTrue(message.header.headerFields[8].isContentLength)
         # TODO - more.
-
 
     def testUseOfPercentWhenItIsNotAnEscape(self):
         # https://tools.ietf.org/html/rfc4475#section-3.1.1.5
@@ -204,7 +201,6 @@ class TestRFC4475SIPTortureTest(TestCase):
             self.assertTrue(message.header.headerFields[9].isContentLength)
         # TODO - more.
 
-
     def testMessageWithNoLWSBetweenDisplayNameAndAngleBracket(self):
         # https://tools.ietf.org/html/rfc4475#section-3.1.1.6
         # lwsdisp
@@ -233,7 +229,6 @@ class TestRFC4475SIPTortureTest(TestCase):
         if self.weHaveImplementedCompactHeaders:
             self.assertTrue(message.header.headerFields[6].isContentLength)
         # TODO - more.
-
 
     def testLongValuesInHeaderFields(self):
         # https://tools.ietf.org/html/rfc4475#section-3.1.1.7
@@ -348,7 +343,6 @@ class TestRFC4475SIPTortureTest(TestCase):
             self.assertTrue(message.header.headerFields[42].isContentLength)
         # TODO - more.
 
-
     def testExtraTrailingOctetsInAUDPDatagram(self):
         # https://tools.ietf.org/html/rfc4475#section-3.1.1.8
         # dblreq
@@ -400,7 +394,6 @@ class TestRFC4475SIPTortureTest(TestCase):
         self.assertTrue(message.header.headerFields[7].isContentLength)
         # TODO - more.
 
-
     def testSemicolonSeparatedParametersInURIUserPart(self):
         # https://tools.ietf.org/html/rfc4475#section-3.1.1.9
         # semiuri
@@ -433,7 +426,6 @@ class TestRFC4475SIPTortureTest(TestCase):
         if self.weHaveImplementedCompactHeaders:
             self.assertTrue(message.header.headerFields[7].isContentLength)
         # TODO - more.
-
 
     def testVariedAndUnknownTransportTypes(self):
         # https://tools.ietf.org/html/rfc4475#section-3.1.1.10
@@ -474,7 +466,6 @@ class TestRFC4475SIPTortureTest(TestCase):
             self.assertTrue(message.header.headerFields[11].isContentLength)
         # TODO - more.
 
-
     def testMultipartMIMEMessage(self):
         # https://tools.ietf.org/html/rfc4475#section-3.1.1.11
         # mpart01
@@ -482,14 +473,12 @@ class TestRFC4475SIPTortureTest(TestCase):
         pass
         # TODO - more.
 
-
     def testUnusualReasonPhrase(self):
         # https://tools.ietf.org/html/rfc4475#section-3.1.1.12
         # unreason
         # Note:  this message string has weird characters.  Need to deal with that.
         pass
         # TODO - more.
-
 
     def testEmptyReasonPhrase(self):
         # https://tools.ietf.org/html/rfc4475#section-3.1.1.13
@@ -519,7 +508,6 @@ class TestRFC4475SIPTortureTest(TestCase):
         self.assertTrue(message.header.headerFields[5].isContentLength)
         self.assertTrue(message.header.headerFields[6].isContact)
         # TODO - more.
-
 
     def testExtraneousHeaderFieldSeparators(self):
         # https://tools.ietf.org/html/rfc4475#section-3.1.2.1

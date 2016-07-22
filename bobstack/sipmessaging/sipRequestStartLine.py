@@ -7,7 +7,7 @@ from sipStartLine import SIPStartLine
 from classproperty import classproperty
 
 
-#TODO: We need to make requestURI first class, not a string.  Do that soon, including changing a plethora of tests.
+# TODO: We need to make requestURI first class, not a string.  Do that soon, including changing a plethora of tests.
 
 class SIPRequestStartLine(SIPStartLine):
     @classmethod

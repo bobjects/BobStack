@@ -1,5 +1,4 @@
 from abstractSIPRequestTestCase import AbstractSIPRequestTestCase
-import unittest
 import sys
 sys.path.append("..")
 from sipmessaging import UnknownSIPRequest

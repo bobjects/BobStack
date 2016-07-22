@@ -1,2 +1,2 @@
-skipLongTests = True
+skipLongTests = False
 writeAnalyzedFiles = False

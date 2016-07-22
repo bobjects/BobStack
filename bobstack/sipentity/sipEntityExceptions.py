@@ -6,6 +6,7 @@ class DropMessageSIPEntityException(Exception):
     def __str__(self):
         return self.description
 
+
 class DropMessageAndDropConnectionSIPEntityException(Exception):
     def __init__(self, descriptionString='SIP Entity Exception - dropping message and connection'):
         self.description = descriptionString

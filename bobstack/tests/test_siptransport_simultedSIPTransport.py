@@ -1,5 +1,4 @@
 from unittest import TestCase
-import unittest
 import sys
 sys.path.append("../..")
 from bobstack.sipmessaging import SIPMessageFactory

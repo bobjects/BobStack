@@ -220,7 +220,6 @@ class SIPHeader(object):
             return [headerField for headerField in self.headerFields if headerField.isUnknown]
         return self.fromCache('unknownHeaderFields', _unknownHeaderFields)
 
-
     @property
     def isValid(self):
         def _isValid():
