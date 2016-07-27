@@ -45,9 +45,6 @@ class SIPStatelessProxy(SIPEntity):
         '''
         print "Stateless proxy " + str(self.transports[0].bindAddress) + " response payload...\n" + str(receivedConnectedSIPMessage.sipMessage.rawString)
         try:
-            # TODO - left off here.
-            return
-
             self.validateResponse(receivedConnectedSIPMessage)
             if self.responseShouldBeForwarded(receivedConnectedSIPMessage):
                 connectedSIPMessageToSend = self.createConnectedSIPMessageToSendForResponse(receivedConnectedSIPMessage)
@@ -311,35 +308,58 @@ class SIPStatelessProxy(SIPEntity):
         return None
 
     def validateResponse(self, receivedConnectedSIPMessage):
-        # TODO
-        raise Exception('not yet implemented')
+        # Stateless proxy response processing behavior is simple.
+        # We just check to see if we put in the first Via header,
+        # and if so, remove it.
+        # TODO:  Need to verify transport string as well.
+        try:
+            viaHF = receivedConnectedSIPMessage.sipMessage.viaHeaderFields[0]
+            if viaHF.host == self.ourHost and viaHF.port == self.ourPort:
+                return
+            else:
+                raise DropMessageSIPEntityException(descriptionString='Received SIP response was not meant for us.')
+        except IndexError:
+            raise DropMessageSIPEntityException(descriptionString='Received SIP response was not meant for us.')
 
     def responseShouldBeForwarded(self, receivedConnectedSIPMessage):
-        # TODO
-        raise Exception('not yet implemented')
+        # We remove the top Via, and forward to the second Via, if it exists.
+        try:
+            viaHF = receivedConnectedSIPMessage.sipMessage.viaHeaderFields[1]
+            return viaHF.host is not None and viaHF.port is not None
+        except IndexError:
+            return False
 
     def createConnectedSIPMessageToSendForResponse(self, receivedConnectedSIPMessage):
-        # TODO - in progress.
-        requestArrivalTransportConnectionID = self.transportConnectionIDFromResponse(receivedConnectedSIPMessage)
-        responseSendTransportConnectionFromID = self.responseSendTransportConnectionFromConnectionID(requestArrivalTransportConnectionID)
-        # TODO - if the connection can't be found for the ID, connect a new one.
-        raise Exception('not yet implemented')
+        # We do a total copy of the sipMessage.  The connection will be replaced later.
+        sipMessage = receivedConnectedSIPMessage.sipMessage.__class__.newParsedFrom(receivedConnectedSIPMessage.rawString)
+        return ConnectedSIPMessage(receivedConnectedSIPMessage.connection, sipMessage)
 
     def removeViaForResponse(self, connectedSIPMessageToSend):
-        # TODO
-        raise Exception('not yet implemented')
+        connectedSIPMessageToSend.sipMessage.header.removeFirstHeaderFieldOfClass(ViaSIPHeaderField)
 
     def rewriteRecordRouteForResponse(self, connectedSIPMessageToSend):
-        # TODO
-        raise Exception('not yet implemented')
+        # Not applicable for stateless proxies, I guess.
+        pass
 
     def determineTargetForResponse(self, connectedSIPMessageToSend):
-        # TODO
-        raise Exception('not yet implemented')
+        try:
+            viaHF = connectedSIPMessageToSend.sipMessage.viaHeaderFields[0]
+            return viaHF.asSIPURI
+        except IndexError:
+            raise DropMessageSIPEntityException(descriptionString='Received SIP response had no target Via header.')
 
     def forwardResponseToTarget(self, connectedSIPMessageToSend, targetURI=None):
-        # TODO
-        raise Exception('not yet implemented')
+        requestArrivalTransportConnectionID = self.transportConnectionIDFromResponse(connectedSIPMessageToSend)
+        # TODO:  For stateless proxies, do we want to derive the transport connection from the Route header like this:
+        # transportConnection = self.responseSendTransportConnectionFromConnectionID(requestArrivalTransportConnectionID)
+        # TODO:  Or from the targetURI like this:
+        transportConnection = self.connectedTransportConnectionForSIPURI(targetURI)
+        if not transportConnection:
+            # TODO:  we could not connect.  Just drop the response.
+            raise DropMessageSIPEntityException
+        # 10. Forward the new response
+        # TODO:  exception handling?
+        transportConnection.sendMessage(connectedSIPMessageToSend.sipMessage)
 
     def sendErrorResponseForResponse(self, receivedConnectedSIPMessage, statusCodeInteger=500, reasonPhraseString='Server Error', descriptionString='An unknown server error occurred.'):
         # TODO: I believe we need to reliably send this response, including retransmission, etc.  For now, just send the damn thing.

@@ -9,6 +9,7 @@ sys.path.append("../../..")
 # from bobstack.sipmessaging import classproperty
 # from bobstack.sipmessaging import StrongRandomStringServer
 from sipmessaging import SIPHeaderField
+from sipmessaging import SIPURI
 from sipmessaging import classproperty
 from sipmessaging import StrongRandomStringServer
 
@@ -92,6 +93,12 @@ class ViaSIPHeaderField(SIPHeaderField):
         self._attributeHasBeenSet = True
         self.clearRawString()
         self.clearFieldNameAndValueString()
+
+    # TODO:  write tests, maybe cache.
+    @property
+    def asSIPURI(self):
+        # Via contains the host, port, and transport portions in SIP URI form.  No user or scheme parts.
+        return SIPURI.newForAttributes(host=self.host, port=self.port, transport=self.transport)
 
     @property
     def branch(self):

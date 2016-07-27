@@ -95,7 +95,7 @@ class TestStatelessProxy(TestCase):
         # Biloxi sees that it is responsible for the request, and for right now, just answers 404.
         self.assertEqual(404, self.atlantaReceivedResponses[0].sipMessage.startLine.statusCode)
 
-        # TODO:  Once we implement reply processing, alice will get 404.
+        # TODO:  LEFT OFF HERE.  Alice is not receiving the 404 response.  Is Atlanta not sending it?  Debug that shiz.
         # self.assertEqual(404, self.aliceReceivedResponses[0].sipMessage.startLine.statusCode)
 
         # TODO:  Moar!!!
