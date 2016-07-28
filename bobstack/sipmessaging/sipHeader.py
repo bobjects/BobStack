@@ -164,13 +164,15 @@ class SIPHeader(object):
             self.headerFields.append(aSIPHeaderField)
             self.initializeCache()
 
-    # TODO:  need to test
+    # TODO:  need to test (partially tested)
     def addHeaderFieldAfterHeaderFieldsOfSameClass(self, aHeaderField):
         headerFields = self.headerFields
         classIndex = -1
         toFromIndex = -1
         for i, header in enumerate(headerFields):
-            if header.__class__ == aHeaderField.__class__:
+            # TODO: Really sorry, but when we pass the class in from a different module,
+            # the class is different.  Trap for young players.  We need to do better than this class name comparison.
+            if header.__class__.__name__ == aHeaderField.__class__.__name__:
                 classIndex = i
             if header.isTo:
                 toFromIndex = i
@@ -182,28 +184,33 @@ class SIPHeader(object):
         headerFields.insert(insertionIndex + 1, aHeaderField)
         self.headerFields = headerFields
 
-    # TODO:  need to test
+    # TODO:  need to test (partially tested)
     def addHeaderFieldBeforeHeaderFieldsOfSameClass(self, aHeaderField):
         headerFields = self.headerFields
         classIndex = -1
         toFromIndex = -1
         for i, header in enumerate(headerFields):
-            if header.__class__ == aHeaderField.__class__:
-                classIndex = i
+            # TODO: Really sorry, but when we pass the class in from a different module,
+            # the class is different.  Trap for young players.  We need to do better than this class name comparison.
+            if header.__class__.__name__ == aHeaderField.__class__.__name__:
+                if classIndex == -1:
+                    classIndex = i
             if header.isTo:
                 toFromIndex = i
             if header.isFrom:
                 toFromIndex = i
         insertionIndex = classIndex
         if insertionIndex == -1:
-            insertionIndex = toFromIndex
+            insertionIndex = toFromIndex + 1
         headerFields.insert(max(0, insertionIndex), aHeaderField)
         self.headerFields = headerFields
 
-    # TODO: need to test
+    # TODO: need to test (partially tested)
     def removeFirstHeaderFieldOfClass(self, aClass):
         for i, j in enumerate(self.headerFields):
-            if j.__class__ is aClass:
+            # TODO: Really sorry, but when we pass the class in from a different module,
+            # the class is different.  Trap for young players.  We need to do better than this class name comparison.
+            if j.__class__.__name__ is aClass.__name__:
                 self.headerFields.pop(i)
                 self.initializeCache()
                 return

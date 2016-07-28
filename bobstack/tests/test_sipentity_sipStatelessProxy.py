@@ -72,11 +72,10 @@ class TestStatelessProxy(TestCase):
     def run_01_atlantaToBiloxi(self):
         self.aliceTransport.connections[0].sendString(self.aliceRequestString)
         self.assertEqual(0, len(self.aliceReceivedRequests))
-        # TODO: Once we implement reply processing, this next line will be 1.
-        self.assertEqual(0, len(self.aliceReceivedResponses))
+        self.assertEqual(1, len(self.aliceReceivedResponses))
         self.assertEqual(1, len(self.atlantaReceivedRequests))
-        self.assertEqual(1, len(self.atlantaReceivedResponses))
         self.assertEqual(1, len(self.biloxiReceivedRequests))
+        self.assertEqual(1, len(self.atlantaReceivedResponses))
         self.assertEqual(0, len(self.biloxiReceivedResponses))
         self.assertEqual(0, len(self.bobReceivedRequests))
         self.assertEqual(0, len(self.bobReceivedResponses))
@@ -85,18 +84,21 @@ class TestStatelessProxy(TestCase):
         self.assertEqual(self.atlantaBindAddress, self.atlantaReceivedRequests[0].connection.bindAddress)
         self.assertEqual(self.atlantaBindPort, self.atlantaReceivedRequests[0].connection.bindPort)
         atlantaReceivedRequest = self.atlantaReceivedRequests[0].sipMessage
+        biloxiReceivedRequest = self.biloxiReceivedRequests[0].sipMessage
         rURI = SIPURI.newParsedFrom(atlantaReceivedRequest.startLine.requestURI)
         self.assertEqual(self.aliceRequestString, atlantaReceivedRequest.rawString)
         self.assertEqual('INVITE', atlantaReceivedRequest.startLine.sipMethod)
         self.assertEqual(self.biloxiBindAddress, rURI.host)
         self.assertEqual(1, len(atlantaReceivedRequest.vias))
+        self.assertEqual(self.aliceRequestString, atlantaReceivedRequest.rawString)
+        self.assertEqual(2, len(biloxiReceivedRequest.vias))
+        self.assertNotEqual(self.aliceRequestString, biloxiReceivedRequest.rawString)
+
         self.assertEqual(self.aliceBindAddress, atlantaReceivedRequest.viaHeaderFields[0].host)
         # TODO: This 404 nonsense is temporary.  Alice sends to a biloxi domain via atlanta, atlanta forwards her request to biloxi,
         # Biloxi sees that it is responsible for the request, and for right now, just answers 404.
         self.assertEqual(404, self.atlantaReceivedResponses[0].sipMessage.startLine.statusCode)
-
-        # TODO:  LEFT OFF HERE.  Alice is not receiving the 404 response.  Is Atlanta not sending it?  Debug that shiz.
-        # self.assertEqual(404, self.aliceReceivedResponses[0].sipMessage.startLine.statusCode)
+        self.assertEqual(404, self.aliceReceivedResponses[0].sipMessage.startLine.statusCode)
 
         # TODO:  Moar!!!
 
@@ -125,7 +127,9 @@ class TestStatelessProxy(TestCase):
 
     @property
     def aliceBindPort(self):
-        return 5060
+        # Note the port in the Via header field...
+        # return 5060
+        return 63354
 
     @property
     def bobBindAddress(self):

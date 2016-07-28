@@ -98,7 +98,8 @@ class ViaSIPHeaderField(SIPHeaderField):
     @property
     def asSIPURI(self):
         # Via contains the host, port, and transport portions in SIP URI form.  No user or scheme parts.
-        return SIPURI.newForAttributes(host=self.host, port=self.port, transport=self.transport)
+        # return SIPURI.newForAttributes(host=self.host, port=self.port, transport=self.transport)
+        return SIPURI.newForAttributes(host=self.host, port=self.port)
 
     @property
     def branch(self):

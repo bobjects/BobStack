@@ -124,6 +124,13 @@ class SIPStatelessProxy(SIPEntity):
                 # TODO - remove first route header, because it matches us.
                 # TODO - need to test that removeFirstHeaderFieldOfClass() works correctly.  Header field tests should be written for that.
                 sipMessage.removeFirstHeaderFieldOfClass(RouteSIPHeaderField)
+                # TODO:  This line is a work-around for a problem that we really
+                # need to address: when you hack a header or header field value, that
+                # does not clear the SIPMessage's rawString.  Fixing that is not trivial,
+                # considering that we observe good layering practices in the message - header - hf
+                # object complex.  We will probably need to use events for that.  Don't blow this
+                # off, but for now, just manually clear the rawString.
+                sipMessage.clearRawString()
 
     def determineTargetForRequest(self, connectedSIPMessageToSend):
         '''
@@ -160,7 +167,7 @@ class SIPStatelessProxy(SIPEntity):
         # TODO: need to remove any URI parameters that are not allowed in a Request URI.
         # TODO: When we set an attribute on the start line, we may need to manually mark the sip message as dirty.
         if targetURI:
-            sipMessage.startLine.requestURI = targetURI
+            sipMessage.startLine.requestURI = targetURI.rawString
         # 3.  Update the Max-Forwards header field
         if sipMessage.maxForwards is not None:
             # TODO:  When you use -= 1 on an integer sip header field's integerValue parameter, does that work?  Need to write a test.
@@ -194,12 +201,15 @@ class SIPStatelessProxy(SIPEntity):
                 sipMessage.header.addHeaderFieldAfterHeaderFieldsOfSameClass(RouteSIPHeaderField.newForAttributes(SIPURI.newParsedFrom(sipMessage.startLine.requestURI)))
                 sipMessage.startLine.requestURI = routeURIs[0].rawString
                 # TODO: Is the class actually the same object, considering that we're accessing it from a different directory?  Trap for young players.
+                # No, as a matter of fact, it is not the same object, and that's a problem.  We've worked around it over there,
+                # but we need to do better.
                 sipMessage.header.removeFirstHeaderFieldOfClass(RouteSIPHeaderField)
                 uriToDetermineNextHop = sipMessage.requestURI
             else:
                 uriToDetermineNextHop = routeURIs[0]
         else:
-            uriToDetermineNextHop = sipMessage.requestURI
+            # TODO: seriously, we need to make start lines use first-class SIPURIs.
+            uriToDetermineNextHop = SIPURI.newParsedFrom(sipMessage.requestURI)
 
         # 7.  Determine the next-hop address, port, and transport
         nextHopConnectedTransportConnection = self.connectedTransportConnectionForSIPURI(uriToDetermineNextHop)
@@ -218,6 +228,14 @@ class SIPStatelessProxy(SIPEntity):
             if nextHopConnectedTransportConnection.isStateful:
                 # TODO: if the target transport is stream-oriented, e.g. TLS or TCP, and the message has no Content-Length: header field, add one.
                 sipMessage.header.addHeaderField(self.newContentLengthHeaderFieldForSIPMessage(sipMessage))
+
+        # TODO:  This line is a work-around for a problem that we really
+        # need to address: when you hack a header or header field value, that
+        # does not clear the SIPMessage's rawString.  Fixing that is not trivial,
+        # considering that we observe good layering practices in the message - header - hf
+        # object complex.  We will probably need to use events for that.  Don't blow this
+        # off, but for now, just manually clear the rawString.
+        sipMessage.clearRawString()
 
         # 10. Forward the new request
         # TODO:  exception handling?
@@ -257,6 +275,7 @@ class SIPStatelessProxy(SIPEntity):
         answer = ViaSIPHeaderField.newForAttributes()
         answer.host = self.ourHost
         answer.port = self.ourPort
+        answer.transport = 'UDP'
         answer.generateInvariantBranchForSIPHeader(aSIPMessage.header)
         return answer
 
@@ -271,6 +290,7 @@ class SIPStatelessProxy(SIPEntity):
         except IndexError:
             return '127.0.0.1'
 
+    @property
     def ourPort(self):
         # TODO: This is very simplistic for now.
         try:
@@ -292,6 +312,8 @@ class SIPStatelessProxy(SIPEntity):
         sipResponse = SIPResponse.newForAttributes(statusCode=statusCodeInteger, reasonPhrase=reasonPhraseString)
         sipResponse.header.addHeaderField(sipRequestReplyingTo.header.toHeaderField)
         sipResponse.header.addHeaderField(sipRequestReplyingTo.header.fromHeaderField)
+        for hf in sipRequestReplyingTo.viaHeaderFields:
+            sipResponse.header.addHeaderField(hf)
         sipResponse.header.addHeaderField(ContentLengthSIPHeaderField.newForIntegerValue(0))
         connection.sendMessage(sipResponse)
 
@@ -336,6 +358,13 @@ class SIPStatelessProxy(SIPEntity):
 
     def removeViaForResponse(self, connectedSIPMessageToSend):
         connectedSIPMessageToSend.sipMessage.header.removeFirstHeaderFieldOfClass(ViaSIPHeaderField)
+        # TODO:  This line is a work-around for a problem that we really
+        # need to address: when you hack a header or header field value, that
+        # does not clear the SIPMessage's rawString.  Fixing that is not trivial,
+        # considering that we observe good layering practices in the message - header - hf
+        # object complex.  We will probably need to use events for that.  Don't blow this
+        # off, but for now, just manually clear the rawString.
+        connectedSIPMessageToSend.sipMessage.clearRawString()
 
     def rewriteRecordRouteForResponse(self, connectedSIPMessageToSend):
         # Not applicable for stateless proxies, I guess.

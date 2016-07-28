@@ -140,6 +140,10 @@ class SIPMessage(object):
         return True
 
     @property
+    def isInvalid(self):
+        return not self.isValid
+
+    @property
     def isUnknown(self):
         return not self.isKnown
 
