@@ -79,20 +79,40 @@ class TestStatelessProxy(TestCase):
         self.assertEqual(0, len(self.biloxiReceivedResponses))
         self.assertEqual(0, len(self.bobReceivedRequests))
         self.assertEqual(0, len(self.bobReceivedResponses))
+
         self.assertEqual(self.aliceBindAddress, self.atlantaReceivedRequests[0].connection.remoteAddress)
         self.assertEqual(self.aliceBindPort, self.atlantaReceivedRequests[0].connection.remotePort)
         self.assertEqual(self.atlantaBindAddress, self.atlantaReceivedRequests[0].connection.bindAddress)
         self.assertEqual(self.atlantaBindPort, self.atlantaReceivedRequests[0].connection.bindPort)
         atlantaReceivedRequest = self.atlantaReceivedRequests[0].sipMessage
-        biloxiReceivedRequest = self.biloxiReceivedRequests[0].sipMessage
         rURI = SIPURI.newParsedFrom(atlantaReceivedRequest.startLine.requestURI)
         self.assertEqual(self.aliceRequestString, atlantaReceivedRequest.rawString)
         self.assertEqual('INVITE', atlantaReceivedRequest.startLine.sipMethod)
         self.assertEqual(self.biloxiBindAddress, rURI.host)
         self.assertEqual(1, len(atlantaReceivedRequest.vias))
         self.assertEqual(self.aliceRequestString, atlantaReceivedRequest.rawString)
+
+        self.assertEqual(self.atlantaBindAddress, self.biloxiReceivedRequests[0].connection.remoteAddress)
+        self.assertEqual(self.atlantaBindPort, self.biloxiReceivedRequests[0].connection.remotePort)
+        self.assertEqual(self.biloxiBindAddress, self.biloxiReceivedRequests[0].connection.bindAddress)
+        self.assertEqual(self.biloxiBindPort, self.biloxiReceivedRequests[0].connection.bindPort)
+        biloxiReceivedRequest = self.biloxiReceivedRequests[0].sipMessage
+        self.assertEqual(atlantaReceivedRequest.startLine.requestURI, biloxiReceivedRequest.startLine.requestURI)
+        self.assertEqual('INVITE', biloxiReceivedRequest.startLine.sipMethod)
         self.assertEqual(2, len(biloxiReceivedRequest.vias))
         self.assertNotEqual(self.aliceRequestString, biloxiReceivedRequest.rawString)
+
+        self.assertEqual(self.biloxiBindAddress, self.atlantaReceivedResponses[0].connection.remoteAddress)
+        self.assertEqual(self.biloxiBindPort, self.atlantaReceivedResponses[0].connection.remotePort)
+        self.assertEqual(self.atlantaBindAddress, self.atlantaReceivedResponses[0].connection.bindAddress)
+        self.assertEqual(self.atlantaBindPort, self.atlantaReceivedResponses[0].connection.bindPort)
+        atlantaReceivedResponse = self.atlantaReceivedResponses[0].sipMessage
+
+        self.assertEqual(self.atlantaBindAddress, self.aliceReceivedResponses[0].connection.remoteAddress)
+        self.assertEqual(self.atlantaBindPort, self.aliceReceivedResponses[0].connection.remotePort)
+        self.assertEqual(self.aliceBindAddress, self.aliceReceivedResponses[0].connection.bindAddress)
+        self.assertEqual(self.aliceBindPort, self.aliceReceivedResponses[0].connection.bindPort)
+        aliceReceivedResponse = self.aliceReceivedResponses[0].sipMessage
 
         self.assertEqual(self.aliceBindAddress, atlantaReceivedRequest.viaHeaderFields[0].host)
         # TODO: This 404 nonsense is temporary.  Alice sends to a biloxi domain via atlanta, atlanta forwards her request to biloxi,
