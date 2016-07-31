@@ -46,6 +46,10 @@ class SIPHeaderField(object):
     def newForValueString(cls, fieldValueString, useCompactHeaders=False):
         return cls.newForFieldNameAndValueString(cls.canonicalFieldName, fieldValueString, useCompactHeaders)
 
+    @property
+    def deepCopy(self):
+        return self.__class__.newParsedFrom(self.rawString, useCompactHeaders=self.useCompactHeaders)
+
     # noinspection PyNestedDecorators
     @classproperty
     @classmethod

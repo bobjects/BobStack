@@ -31,6 +31,10 @@ class SIPMessage(object):
         self._rawString = None
 
     @property
+    def deepCopy(self):
+        return self.__class__.newParsedFrom(self.rawString)
+
+    @property
     def rawString(self):
         if self._rawString is None:
             self.renderRawStringFromAttributes()

@@ -107,6 +107,7 @@ class TestStatelessProxy(TestCase):
         self.assertEqual(self.atlantaBindAddress, self.atlantaReceivedResponses[0].connection.bindAddress)
         self.assertEqual(self.atlantaBindPort, self.atlantaReceivedResponses[0].connection.bindPort)
         atlantaReceivedResponse = self.atlantaReceivedResponses[0].sipMessage
+        self.assertIsNotNone(atlantaReceivedResponse.header.toTag)
 
         self.assertEqual(self.atlantaBindAddress, self.aliceReceivedResponses[0].connection.remoteAddress)
         self.assertEqual(self.atlantaBindPort, self.aliceReceivedResponses[0].connection.remotePort)

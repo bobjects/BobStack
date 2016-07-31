@@ -103,7 +103,7 @@ class SIPStatelessProxy(SIPEntity):
 
     def createConnectedSIPMessageToSendForRequest(self, receivedConnectedSIPMessage):
         # We do a total copy of the sipMessage.  The connection will be replaced later.
-        sipMessage = receivedConnectedSIPMessage.sipMessage.__class__.newParsedFrom(receivedConnectedSIPMessage.rawString)
+        sipMessage = receivedConnectedSIPMessage.sipMessage.deepCopy
         return ConnectedSIPMessage(receivedConnectedSIPMessage.connection, sipMessage)
 
     def preprocessRoutingInformationForRequest(self, connectedSIPMessageToSend):
@@ -304,17 +304,23 @@ class SIPStatelessProxy(SIPEntity):
 
     def sendErrorResponseForRequest(self, receivedConnectedSIPMessage, statusCodeInteger=500, reasonPhraseString='Server Error', descriptionString='An unknown server error occurred.'):
         # TODO: I believe we need to reliably send this response, including retransmission, etc.  For now, just send the damn thing.
-        # TODO: I am not confident that we are creating all necessary header fields, but I don't
-        # see RFC documentation of all that needs to be there.  Look harder.  There is plenty in
-        # section 16.7 about forwarding responses, but not creating responses.
+        # Response header fields to include in a response are documented in RFC3261 8.2.6
         sipRequestReplyingTo = receivedConnectedSIPMessage.sipMessage
         connection = receivedConnectedSIPMessage.connection
         sipResponse = SIPResponse.newForAttributes(statusCode=statusCodeInteger, reasonPhrase=reasonPhraseString)
-        sipResponse.header.addHeaderField(sipRequestReplyingTo.header.toHeaderField)
-        sipResponse.header.addHeaderField(sipRequestReplyingTo.header.fromHeaderField)
-        for hf in sipRequestReplyingTo.viaHeaderFields:
+        if sipRequestReplyingTo.header.toTag:
+            sipResponse.header.addHeaderField(sipRequestReplyingTo.header.toHeaderField)
+        else:
+            hf = sipRequestReplyingTo.header.toHeaderField.deepCopy
+            # TODO:  See RFC3261 section 8.2.7 last point - tag must be invariant for identical To headers.  So need to write a method to generate an invariant tag.
+            hf.generateTag()
             sipResponse.header.addHeaderField(hf)
+        sipResponse.header.addHeaderField(sipRequestReplyingTo.header.fromHeaderField)
+        sipResponse.header.addHeaderField(sipRequestReplyingTo.header.callIDHeaderField)
+        sipResponse.header.addHeaderField(sipRequestReplyingTo.header.cSeqHeaderField)
+        sipResponse.header.addHeaderFields(sipRequestReplyingTo.viaHeaderFields)
         sipResponse.header.addHeaderField(ContentLengthSIPHeaderField.newForIntegerValue(0))
+        sipResponse.clearRawString()
         connection.sendMessage(sipResponse)
 
     def transportConnectionIDFromResponse(self, receivedConnectedSIPMessage):
@@ -353,7 +359,7 @@ class SIPStatelessProxy(SIPEntity):
 
     def createConnectedSIPMessageToSendForResponse(self, receivedConnectedSIPMessage):
         # We do a total copy of the sipMessage.  The connection will be replaced later.
-        sipMessage = receivedConnectedSIPMessage.sipMessage.__class__.newParsedFrom(receivedConnectedSIPMessage.rawString)
+        sipMessage = receivedConnectedSIPMessage.sipMessage.deepCopy
         return ConnectedSIPMessage(receivedConnectedSIPMessage.connection, sipMessage)
 
     def removeViaForResponse(self, connectedSIPMessageToSend):

@@ -164,6 +164,11 @@ class SIPHeader(object):
             self.headerFields.append(aSIPHeaderField)
             self.initializeCache()
 
+    # TODO:  need to test
+    def addHeaderFields(self, aListOfSIPHeaderField):
+        for hf in aListOfSIPHeaderField:
+            self.addHeaderField(hf)
+
     # TODO:  need to test (partially tested)
     def addHeaderFieldAfterHeaderFieldsOfSameClass(self, aHeaderField):
         headerFields = self.headerFields
