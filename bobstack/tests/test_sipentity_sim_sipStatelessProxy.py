@@ -1,14 +1,14 @@
-from unittest import TestCase
 import sys
 sys.path.append("..")
 sys.path.append("../..")
+from abstractStatelessProxyTestCase import AbstractStatelessProxyTestCase
 from bobstack.sipmessaging import SIPURI
 from bobstack.siptransport import SimulatedSIPTransport
 from bobstack.sipentity import SIPStatelessProxy
 from bobstack.siptransport import SimulatedNetwork
 
 
-class TestStatelessProxy(TestCase):
+class TestStatelessProxyWithSimulatedTransport(AbstractStatelessProxyTestCase):
     def setUp(self):
         SimulatedNetwork.clear()
         self.aliceReceivedRequests = []
@@ -72,7 +72,7 @@ class TestStatelessProxy(TestCase):
     def run_01_atlantaToBiloxi(self):
         self.aliceTransport.connections[0].sendString(self.aliceRequestString)
         self.assertEqual(0, len(self.aliceReceivedRequests))
-        self.assertEqual(1, len(self.aliceReceivedResponses))
+        # self.assertEqual(1, len(self.aliceReceivedResponses))
         self.assertEqual(1, len(self.atlantaReceivedRequests))
         self.assertEqual(1, len(self.biloxiReceivedRequests))
         self.assertEqual(1, len(self.atlantaReceivedResponses))
@@ -91,6 +91,7 @@ class TestStatelessProxy(TestCase):
         self.assertEqual(self.biloxiBindAddress, rURI.host)
         self.assertEqual(1, len(atlantaReceivedRequest.vias))
         self.assertEqual(self.aliceRequestString, atlantaReceivedRequest.rawString)
+        self.assertIsNone(atlantaReceivedRequest.header.toTag)
 
         self.assertEqual(self.atlantaBindAddress, self.biloxiReceivedRequests[0].connection.remoteAddress)
         self.assertEqual(self.atlantaBindPort, self.biloxiReceivedRequests[0].connection.remotePort)
@@ -101,6 +102,7 @@ class TestStatelessProxy(TestCase):
         self.assertEqual('INVITE', biloxiReceivedRequest.startLine.sipMethod)
         self.assertEqual(2, len(biloxiReceivedRequest.vias))
         self.assertNotEqual(self.aliceRequestString, biloxiReceivedRequest.rawString)
+        self.assertIsNone(biloxiReceivedRequest.header.toTag)
 
         self.assertEqual(self.biloxiBindAddress, self.atlantaReceivedResponses[0].connection.remoteAddress)
         self.assertEqual(self.biloxiBindPort, self.atlantaReceivedResponses[0].connection.remotePort)
@@ -108,12 +110,15 @@ class TestStatelessProxy(TestCase):
         self.assertEqual(self.atlantaBindPort, self.atlantaReceivedResponses[0].connection.bindPort)
         atlantaReceivedResponse = self.atlantaReceivedResponses[0].sipMessage
         self.assertIsNotNone(atlantaReceivedResponse.header.toTag)
+        self.assertEqual(2, len(atlantaReceivedResponse.vias))
 
         self.assertEqual(self.atlantaBindAddress, self.aliceReceivedResponses[0].connection.remoteAddress)
         self.assertEqual(self.atlantaBindPort, self.aliceReceivedResponses[0].connection.remotePort)
         self.assertEqual(self.aliceBindAddress, self.aliceReceivedResponses[0].connection.bindAddress)
         self.assertEqual(self.aliceBindPort, self.aliceReceivedResponses[0].connection.bindPort)
         aliceReceivedResponse = self.aliceReceivedResponses[0].sipMessage
+        self.assertIsNotNone(aliceReceivedResponse.header.toTag)
+        self.assertEqual(1, len(aliceReceivedResponse.vias))
 
         self.assertEqual(self.aliceBindAddress, atlantaReceivedRequest.viaHeaderFields[0].host)
         # TODO: This 404 nonsense is temporary.  Alice sends to a biloxi domain via atlanta, atlanta forwards her request to biloxi,
@@ -127,24 +132,9 @@ class TestStatelessProxy(TestCase):
         pass
 
     @property
-    def atlantaBindAddress(self):
-        return '192.168.4.2'
-
-    @property
-    def atlantaBindPort(self):
-        return 5060
-
-    @property
-    def biloxiBindAddress(self):
-        return '192.168.4.3'
-
-    @property
-    def biloxiBindPort(self):
-        return 5060
-
-    @property
     def aliceBindAddress(self):
-        return '192.168.4.4'
+        # return '192.168.4.4'
+        return '127.0.0.2'
 
     @property
     def aliceBindPort(self):
@@ -153,8 +143,27 @@ class TestStatelessProxy(TestCase):
         return 63354
 
     @property
+    def atlantaBindAddress(self):
+        # return '192.168.4.2'
+        return '127.0.0.3'
+
+    @property
+    def atlantaBindPort(self):
+        return 5060
+
+    @property
+    def biloxiBindAddress(self):
+        # return '192.168.4.3'
+        return '127.0.0.4'
+
+    @property
+    def biloxiBindPort(self):
+        return 5060
+
+    @property
     def bobBindAddress(self):
-        return '192.168.4.5'
+        # return '192.168.4.5'
+        return '127.0.0.5'
 
     @property
     def bobBindPort(self):
@@ -165,26 +174,49 @@ class TestStatelessProxy(TestCase):
         # Bob's extension is 1002
         # atlanta == .2 / .97
         # biloxi == .3 / .96
-        # alice == .4 / .188
+        # alice == .2 / .188
         # bob == .5 / .204
-        messageString = ('INVITE sip:1002@192.168.4.3 SIP/2.0\r\n'
-                         'Via: SIP/2.0/UDP 192.168.4.4:63354;branch=z9hG4bK-524287-1---7a462a5d1b6fe13b;rport\r\n'
+        # messageString = ('INVITE sip:1002@192.168.4.3 SIP/2.0\r\n'
+        #                  'Via: SIP/2.0/UDP 192.168.4.4:63354;branch=z9hG4bK-524287-1---7a462a5d1b6fe13b;rport\r\n'
+        #                  'Max-Forwards: 70\r\n'
+        #                  'Contact: <sip:alice@192.168.4.4:63354;rinstance=d875ce4fd8f72441>\r\n'
+        #                  'To: <sip:1002@192.168.4.3>\r\n'
+        #                  'From: "Alice"<sip:alice@192.168.4.2>;tag=9980376d\r\n'
+        #                  'Call-ID: YjBhMDliMWMxNzQ4ZTc5Nzg1ZTcyYTExMWMzZDlhNmQ\r\n'
+        #                  'CSeq: 1 INVITE\r\n'
+        #                  'Allow: INVITE, ACK, CANCEL, BYE, REFER, INFO, NOTIFY, UPDATE, PRACK, MESSAGE, OPTIONS, SUBSCRIBE, OPTIONS\r\n'
+        #                  'Content-Type: application/sdp\r\n'
+        #                  'Supported: replaces, 100rel\r\n'
+        #                  'User-Agent: Bria iOS release 3.6.2 stamp 33024\r\n'
+        #                  'Content-Length: 185\r\n'
+        #                  '\r\n'
+        #                  'v=0\r\n'
+        #                  'o=- 1457365987528724 1 IN IP4 192.168.4.4\r\n'
+        #                  's=Cpc session\r\n'
+        #                  'c=IN IP4 192.168.4.4\r\n'
+        #                  't=0 0\r\n'
+        #                  'm=audio 60668 RTP/AVP 0 101\r\n'
+        #                  'a=rtpmap:101 telephone-event/8000\r\n'
+        #                  'a=fmtp:101 0-15\r\n'
+        #                  'a=sendrecv\r\n')
+        messageString = ('INVITE sip:1002@127.0.0.4 SIP/2.0\r\n'
+                         'Via: SIP/2.0/UDP 127.0.0.2:63354;branch=z9hG4bK-524287-1---7a462a5d1b6fe13b;rport\r\n'
                          'Max-Forwards: 70\r\n'
-                         'Contact: <sip:alice@192.168.4.4:63354;rinstance=d875ce4fd8f72441>\r\n'
-                         'To: <sip:1002@192.168.4.3>\r\n'
-                         'From: "Alice"<sip:alice@192.168.4.2>;tag=9980376d\r\n'
+                         'Contact: <sip:alice@127.0.0.2:63354;rinstance=d875ce4fd8f72441>\r\n'
+                         'To: <sip:1002@127.0.0.4>\r\n'
+                         'From: "Alice"<sip:alice@127.0.0.3>;tag=9980376d\r\n'
                          'Call-ID: YjBhMDliMWMxNzQ4ZTc5Nzg1ZTcyYTExMWMzZDlhNmQ\r\n'
                          'CSeq: 1 INVITE\r\n'
                          'Allow: INVITE, ACK, CANCEL, BYE, REFER, INFO, NOTIFY, UPDATE, PRACK, MESSAGE, OPTIONS, SUBSCRIBE, OPTIONS\r\n'
                          'Content-Type: application/sdp\r\n'
                          'Supported: replaces, 100rel\r\n'
                          'User-Agent: Bria iOS release 3.6.2 stamp 33024\r\n'
-                         'Content-Length: 185\r\n'
+                         'Content-Length: 181\r\n'
                          '\r\n'
                          'v=0\r\n'
-                         'o=- 1457365987528724 1 IN IP4 192.168.4.4\r\n'
+                         'o=- 1457365987528724 1 IN IP4 127.0.0.2\r\n'
                          's=Cpc session\r\n'
-                         'c=IN IP4 192.168.4.4\r\n'
+                         'c=IN IP4 127.0.0.2\r\n'
                          't=0 0\r\n'
                          'm=audio 60668 RTP/AVP 0 101\r\n'
                          'a=rtpmap:101 telephone-event/8000\r\n'
@@ -192,33 +224,52 @@ class TestStatelessProxy(TestCase):
                          'a=sendrecv\r\n')
         return messageString
 
-    @property
-    def aliceResponseString(self):
+    # @property
+    # def aliceResponseString(self):
         # TODO: need to fix up the addresses and transport type and stuff.
         # atlanta == .2 / .97
         # biloxi == .3 / .96
         # alice == .4 / .188
         # bob == .5 / .204
-        messageString = ('SIP/2.0 180 Ringing\r\n'
-                         'Via: SIP/2.0/UDP 192.168.4.2;branch=z9hG4bKeb83.c2fe646b6c2d21c6f9f113d37c474768.0\r\n'
-                         'Via: SIP/2.0/UDP 192.168.4.3:56731;received=192.168.4.4;branch=z9hG4bK-524287-1---e500d061e354193a;rport=56731\r\n'
-                         'Via: SIP/2.0/UDP 192.168.4.5;branch=z9hG4bKeb83.c2fe646b6c2d21c6f9f113d37c474768.0\r\n'
-                         'Record-Route: <sip:192.168.4.2;lr>\r\n'
-                         'Record-Route: <sip:192.168.4.3;lr>\r\n'
-                         'Require: 100rel\r\n'
-                         'Contact: <sip:1002@192.168.0.204:52909;rinstance=7caea32dab180286>\r\n'
-                         'To: "Bob"<sip:1002@192.168.0.96>;tag=52e9ef73\r\n'
-                         'From: "Alice"<sip:1001@192.168.0.96>;tag=2210ba44\r\n'
-                         'Call-ID: NTM5YzAxN2YwZGRhYTg2YjBkNDgyNWQyNTI3ZGNmNTE\r\n'
-                         'CSeq: 1 INVITE\r\n'
-                         'Allow: INVITE, ACK, CANCEL, BYE, REFER, INFO, NOTIFY, UPDATE, PRACK, MESSAGE, OPTIONS, SUBSCRIBE, OPTIONS\r\n'
-                         'Supported: replaces\r\n'
-                         'User-Agent: Bria iOS release 3.6.2 stamp 33024\r\n'
-                         'Allow-Events: talk, hold\r\n'
-                         'RSeq: 1\r\n'
-                         'Content-Length: 0\r\n'
-                         '\r\n')
-        return messageString
+        # messageString = ('SIP/2.0 180 Ringing\r\n'
+        #                  'Via: SIP/2.0/UDP 192.168.4.2;branch=z9hG4bKeb83.c2fe646b6c2d21c6f9f113d37c474768.0\r\n'
+        #                  'Via: SIP/2.0/UDP 192.168.4.3:56731;received=192.168.4.4;branch=z9hG4bK-524287-1---e500d061e354193a;rport=56731\r\n'
+        #                  'Via: SIP/2.0/UDP 192.168.4.5;branch=z9hG4bKeb83.c2fe646b6c2d21c6f9f113d37c474768.0\r\n'
+        #                  'Record-Route: <sip:192.168.4.2;lr>\r\n'
+        #                  'Record-Route: <sip:192.168.4.3;lr>\r\n'
+        #                  'Require: 100rel\r\n'
+        #                  'Contact: <sip:1002@192.168.0.204:52909;rinstance=7caea32dab180286>\r\n'
+        #                  'To: "Bob"<sip:1002@192.168.0.96>;tag=52e9ef73\r\n'
+        #                  'From: "Alice"<sip:1001@192.168.0.96>;tag=2210ba44\r\n'
+        #                  'Call-ID: NTM5YzAxN2YwZGRhYTg2YjBkNDgyNWQyNTI3ZGNmNTE\r\n'
+        #                  'CSeq: 1 INVITE\r\n'
+        #                  'Allow: INVITE, ACK, CANCEL, BYE, REFER, INFO, NOTIFY, UPDATE, PRACK, MESSAGE, OPTIONS, SUBSCRIBE, OPTIONS\r\n'
+        #                  'Supported: replaces\r\n'
+        #                  'User-Agent: Bria iOS release 3.6.2 stamp 33024\r\n'
+        #                  'Allow-Events: talk, hold\r\n'
+        #                  'RSeq: 1\r\n'
+        #                  'Content-Length: 0\r\n'
+        #                  '\r\n')
+        # messageString = ('SIP/2.0 180 Ringing\r\n'
+        #                  'Via: SIP/2.0/UDP 127.0.0.3;branch=z9hG4bKeb83.c2fe646b6c2d21c6f9f113d37c474768.0\r\n'
+        #                  'Via: SIP/2.0/UDP 127.0.0.4:56731;received=127.0.0.2;branch=z9hG4bK-524287-1---e500d061e354193a;rport=56731\r\n'
+        #                  'Via: SIP/2.0/UDP 127.0.0.5;branch=z9hG4bKeb83.c2fe646b6c2d21c6f9f113d37c474768.0\r\n'
+        #                  'Record-Route: <sip:127.0.0.3;lr>\r\n'
+        #                  'Record-Route: <sip:127.0.0.4;lr>\r\n'
+        #                  'Require: 100rel\r\n'
+        #                  'Contact: <sip:1002@192.168.0.204:52909;rinstance=7caea32dab180286>\r\n'
+        #                  'To: "Bob"<sip:1002@192.168.0.96>;tag=52e9ef73\r\n'
+        #                  'From: "Alice"<sip:1001@192.168.0.96>;tag=2210ba44\r\n'
+        #                  'Call-ID: NTM5YzAxN2YwZGRhYTg2YjBkNDgyNWQyNTI3ZGNmNTE\r\n'
+        #                  'CSeq: 1 INVITE\r\n'
+        #                  'Allow: INVITE, ACK, CANCEL, BYE, REFER, INFO, NOTIFY, UPDATE, PRACK, MESSAGE, OPTIONS, SUBSCRIBE, OPTIONS\r\n'
+        #                  'Supported: replaces\r\n'
+        #                  'User-Agent: Bria iOS release 3.6.2 stamp 33024\r\n'
+        #                  'Allow-Events: talk, hold\r\n'
+        #                  'RSeq: 1\r\n'
+        #                  'Content-Length: 0\r\n'
+        #                  '\r\n')
+        # return messageString
 
     @property
     def bobRequestString(self):
@@ -227,24 +278,47 @@ class TestStatelessProxy(TestCase):
         # biloxi == .3
         # alice == .4
         # bob == .5
-        messageString = ('INVITE sip:1001@192.168.4.2 SIP/2.0\r\n'
-                         'Via: SIP/2.0/UDP 192.168.4.5:63354;branch=z9hG4bK-524287-1---7a462a5d1b6fe13b;rport\r\n'
+        # messageString = ('INVITE sip:1001@192.168.4.2 SIP/2.0\r\n'
+        #                  'Via: SIP/2.0/UDP 192.168.4.5:63354;branch=z9hG4bK-524287-1---7a462a5d1b6fe13b;rport\r\n'
+        #                  'Max-Forwards: 70\r\n'
+        #                  'Contact: <sip:bob@192.168.4.3:63354;rinstance=d875ce4fd8f72441>\r\n'
+        #                  'To: <sip:1001@192.168.4.2>\r\n'
+        #                  'From: "Alice"<sip:alice@192.168.4.2>;tag=9980376d\r\n'
+        #                  'Call-ID: YjBhMDliMWMxNzQ4ZTc5Nzg1ZTcyYTExMWMzZDlhNmQ\r\n'
+        #                  'CSeq: 1 INVITE\r\n'
+        #                  'Allow: INVITE, ACK, CANCEL, BYE, REFER, INFO, NOTIFY, UPDATE, PRACK, MESSAGE, OPTIONS, SUBSCRIBE, OPTIONS\r\n'
+        #                  'Content-Type: application/sdp\r\n'
+        #                  'Supported: replaces, 100rel\r\n'
+        #                  'User-Agent: Bria iOS release 3.6.2 stamp 33024\r\n'
+        #                  'Content-Length: 185\r\n'
+        #                  '\r\n'
+        #                  'v=0\r\n'
+        #                  'o=- 1457365987528724 1 IN IP4 192.168.4.5\r\n'
+        #                  's=Cpc session\r\n'
+        #                  'c=IN IP4 192.168.4.5\r\n'
+        #                  't=0 0\r\n'
+        #                  'm=audio 60668 RTP/AVP 0 101\r\n'
+        #                  'a=rtpmap:101 telephone-event/8000\r\n'
+        #                  'a=fmtp:101 0-15\r\n'
+        #                  'a=sendrecv\r\n')
+        messageString = ('INVITE sip:1001@127.0.0.3 SIP/2.0\r\n'
+                         'Via: SIP/2.0/UDP 127.0.0.5:63354;branch=z9hG4bK-524287-1---7a462a5d1b6fe13b;rport\r\n'
                          'Max-Forwards: 70\r\n'
-                         'Contact: <sip:bob@192.168.4.3:63354;rinstance=d875ce4fd8f72441>\r\n'
-                         'To: <sip:1001@192.168.4.2>\r\n'
-                         'From: "Alice"<sip:alice@192.168.4.2>;tag=9980376d\r\n'
+                         'Contact: <sip:bob@127.0.0.4:63354;rinstance=d875ce4fd8f72441>\r\n'
+                         'To: <sip:1001@127.0.0.3>\r\n'
+                         'From: "Alice"<sip:alice@127.0.0.3>;tag=9980376d\r\n'
                          'Call-ID: YjBhMDliMWMxNzQ4ZTc5Nzg1ZTcyYTExMWMzZDlhNmQ\r\n'
                          'CSeq: 1 INVITE\r\n'
                          'Allow: INVITE, ACK, CANCEL, BYE, REFER, INFO, NOTIFY, UPDATE, PRACK, MESSAGE, OPTIONS, SUBSCRIBE, OPTIONS\r\n'
                          'Content-Type: application/sdp\r\n'
                          'Supported: replaces, 100rel\r\n'
                          'User-Agent: Bria iOS release 3.6.2 stamp 33024\r\n'
-                         'Content-Length: 185\r\n'
+                         'Content-Length: 181\r\n'
                          '\r\n'
                          'v=0\r\n'
-                         'o=- 1457365987528724 1 IN IP4 192.168.4.5\r\n'
+                         'o=- 1457365987528724 1 IN IP4 127.0.0.5\r\n'
                          's=Cpc session\r\n'
-                         'c=IN IP4 192.168.4.5\r\n'
+                         'c=IN IP4 127.0.0.5\r\n'
                          't=0 0\r\n'
                          'm=audio 60668 RTP/AVP 0 101\r\n'
                          'a=rtpmap:101 telephone-event/8000\r\n'
@@ -252,33 +326,52 @@ class TestStatelessProxy(TestCase):
                          'a=sendrecv\r\n')
         return messageString
 
-    @property
-    def bobResponseString(self):
+    # @property
+    # def bobResponseString(self):
         # TODO: need to fix up the addresses and transport type and stuff.
         # atlanta == .2 / .97
         # biloxi == .3 / .96
         # alice == .4 / .188
         # bob == .5 / .204
-        messageString = ('SIP/2.0 180 Ringing\r\n'
-                         'Via: SIP/2.0/UDP 192.168.4.3;branch=z9hG4bKeb83.c2fe646b6c2d21c6f9f113d37c474768.0\r\n'
-                         'Via: SIP/2.0/UDP 192.168.4.2:56731;received=192.168.4.4;branch=z9hG4bK-524287-1---e500d061e354193a;rport=56731\r\n'
-                         'Via: SIP/2.0/UDP 192.168.4.4;branch=z9hG4bKeb83.c2fe646b6c2d21c6f9f113d37c474768.0\r\n'
-                         'Record-Route: <sip:192.168.4.3;lr>\r\n'
-                         'Record-Route: <sip:192.168.4.2;lr>\r\n'
-                         'Require: 100rel\r\n'
-                         'Contact: <sip:1002@192.168.0.204:52909;rinstance=7caea32dab180286>\r\n'
-                         'To: "Bob"<sip:1002@192.168.0.96>;tag=52e9ef73\r\n'
-                         'From: "Alice"<sip:1001@192.168.0.96>;tag=2210ba44\r\n'
-                         'Call-ID: NTM5YzAxN2YwZGRhYTg2YjBkNDgyNWQyNTI3ZGNmNTE\r\n'
-                         'CSeq: 1 INVITE\r\n'
-                         'Allow: INVITE, ACK, CANCEL, BYE, REFER, INFO, NOTIFY, UPDATE, PRACK, MESSAGE, OPTIONS, SUBSCRIBE, OPTIONS\r\n'
-                         'Supported: replaces\r\n'
-                         'User-Agent: Bria iOS release 3.6.2 stamp 33024\r\n'
-                         'Allow-Events: talk, hold\r\n'
-                         'RSeq: 1\r\n'
-                         'Content-Length: 0\r\n'
-                         '\r\n')
-        return messageString
+        # messageString = ('SIP/2.0 180 Ringing\r\n'
+        #                  'Via: SIP/2.0/UDP 192.168.4.3;branch=z9hG4bKeb83.c2fe646b6c2d21c6f9f113d37c474768.0\r\n'
+        #                  'Via: SIP/2.0/UDP 192.168.4.2:56731;received=192.168.4.4;branch=z9hG4bK-524287-1---e500d061e354193a;rport=56731\r\n'
+        #                  'Via: SIP/2.0/UDP 192.168.4.4;branch=z9hG4bKeb83.c2fe646b6c2d21c6f9f113d37c474768.0\r\n'
+        #                  'Record-Route: <sip:192.168.4.3;lr>\r\n'
+        #                  'Record-Route: <sip:192.168.4.2;lr>\r\n'
+        #                  'Require: 100rel\r\n'
+        #                  'Contact: <sip:1002@192.168.0.204:52909;rinstance=7caea32dab180286>\r\n'
+        #                  'To: "Bob"<sip:1002@192.168.0.96>;tag=52e9ef73\r\n'
+        #                  'From: "Alice"<sip:1001@192.168.0.96>;tag=2210ba44\r\n'
+        #                  'Call-ID: NTM5YzAxN2YwZGRhYTg2YjBkNDgyNWQyNTI3ZGNmNTE\r\n'
+        #                  'CSeq: 1 INVITE\r\n'
+        #                  'Allow: INVITE, ACK, CANCEL, BYE, REFER, INFO, NOTIFY, UPDATE, PRACK, MESSAGE, OPTIONS, SUBSCRIBE, OPTIONS\r\n'
+        #                  'Supported: replaces\r\n'
+        #                  'User-Agent: Bria iOS release 3.6.2 stamp 33024\r\n'
+        #                  'Allow-Events: talk, hold\r\n'
+        #                  'RSeq: 1\r\n'
+        #                  'Content-Length: 0\r\n'
+        #                  '\r\n')
+        # messageString = ('SIP/2.0 180 Ringing\r\n'
+        #                  'Via: SIP/2.0/UDP 127.0.0.4;branch=z9hG4bKeb83.c2fe646b6c2d21c6f9f113d37c474768.0\r\n'
+        #                  'Via: SIP/2.0/UDP 127.0.0.3:56731;received=127.0.0.2;branch=z9hG4bK-524287-1---e500d061e354193a;rport=56731\r\n'
+        #                  'Via: SIP/2.0/UDP 127.0.0.2;branch=z9hG4bKeb83.c2fe646b6c2d21c6f9f113d37c474768.0\r\n'
+        #                  'Record-Route: <sip:127.0.0.4;lr>\r\n'
+        #                  'Record-Route: <sip:127.0.0.3;lr>\r\n'
+        #                  'Require: 100rel\r\n'
+        #                  'Contact: <sip:1002@192.168.0.204:52909;rinstance=7caea32dab180286>\r\n'
+        #                  'To: "Bob"<sip:1002@192.168.0.96>;tag=52e9ef73\r\n'
+        #                  'From: "Alice"<sip:1001@192.168.0.96>;tag=2210ba44\r\n'
+        #                  'Call-ID: NTM5YzAxN2YwZGRhYTg2YjBkNDgyNWQyNTI3ZGNmNTE\r\n'
+        #                  'CSeq: 1 INVITE\r\n'
+        #                  'Allow: INVITE, ACK, CANCEL, BYE, REFER, INFO, NOTIFY, UPDATE, PRACK, MESSAGE, OPTIONS, SUBSCRIBE, OPTIONS\r\n'
+        #                  'Supported: replaces\r\n'
+        #                  'User-Agent: Bria iOS release 3.6.2 stamp 33024\r\n'
+        #                  'Allow-Events: talk, hold\r\n'
+        #                  'RSeq: 1\r\n'
+        #                  'Content-Length: 0\r\n'
+        #                  '\r\n')
+        # return messageString
 
     def aliceRequestEventHandler(self, aConnectedSIPMessage):
         self.aliceReceivedRequests.append(aConnectedSIPMessage)
@@ -303,4 +396,16 @@ class TestStatelessProxy(TestCase):
 
     def bobResponseEventHandler(self, aConnectedSIPMessage):
         self.bobReceivedResponses.append(aConnectedSIPMessage)
+
+
+class TestStatelessProxyWithUDPTransport(AbstractStatelessProxyTestCase):
+    pass
+
+
+class TestStatelessProxyWithTCPTransport(AbstractStatelessProxyTestCase):
+    pass
+
+
+class TestStatelessProxyWithTLSTransport(AbstractStatelessProxyTestCase):
+    pass
 
