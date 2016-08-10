@@ -5,9 +5,10 @@ from bobstack.sipmessaging import SIPMessageFactory
 from bobstack.siptransport import SimulatedSIPTransport
 from bobstack.siptransport import SimulatedSIPTransportConnection
 from bobstack.siptransport import SimulatedNetwork
+from abstractTransportConnectionTestCase import AbstractTransportConnectionTestCase
 
 
-class TestSimulatedTransportConnection(TestCase):
+class TestSimulatedTransportConnection(AbstractTransportConnectionTestCase):
     def setUp(self):
         SimulatedNetwork.clear()
         self.hasBound = False
