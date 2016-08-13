@@ -3,5 +3,14 @@ from tlsSIPTransportConnection import TLSSIPTransportConnection
 
 
 class TLSSIPTransport(SIPTransport):
-    # TODO - need to implement!
-    pass
+    @property
+    def transportParameterName(self):
+        return 'TLS'
+
+    def connectToAddressAndPort(self, addressString, portInteger):
+        # TODO
+        pass
+
+    def bind(self):
+        # TODO
+        pass

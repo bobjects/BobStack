@@ -3,5 +3,14 @@ from tcpSIPTransportConnection import TCPSIPTransportConnection
 
 
 class TCPSIPTransport(SIPTransport):
-    # TODO - need to implement!
-    pass
+    @property
+    def transportParameterName(self):
+        return 'TCP'
+
+    def connectToAddressAndPort(self, addressString, portInteger):
+        # TODO
+        pass
+
+    def bind(self):
+        # TODO
+        pass
