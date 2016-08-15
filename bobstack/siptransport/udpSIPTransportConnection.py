@@ -2,5 +2,15 @@ from sipTransportConnection import SIPTransportConnection
 
 
 class UDPSIPTransportConnection(SIPTransportConnection):
-    # TODO - need to implement!
-    pass
+    @property
+    def isReliable(self):
+        return False
+
+    @property
+    def isStateful(self):
+        return False
+
+    def sendMessage(self, aSIPMessage):
+        # TODO
+        pass
+
