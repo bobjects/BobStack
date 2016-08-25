@@ -1,5 +1,6 @@
 from twisted.internet.protocol import DatagramProtocol
-from twisted.internet import reactor
+# from twisted.internet import reactor
+from twistedMultiService import TwistedMultiService
 
 class UDPSIPTwistedProtocol(DatagramProtocol):
     def __init__(self, aUDPSIPTransport):
@@ -7,8 +8,9 @@ class UDPSIPTwistedProtocol(DatagramProtocol):
 
     def bind(self):
         # TODO:  exception handling.  If someone is already listening on our bindPort and bindAddress, this will presumably give a runtime error.
-        reactor.listenUDP(self.sipTransport.bindPort, self, interface=self.sipTransport.bindAddress)
-        reactor.run()
+        # reactor.listenUDP(self.sipTransport.bindPort, self, interface=self.sipTransport.bindAddress)
+        # reactor.run()
+        TwistedMultiService.instance.registerTwistedUDPProtocol(self, self.sipTransport.bindPort, self.sipTransport.bindAddress)
         self.sipTransport.triggerBound()
         # self.sipTransport.triggerBindFailed()
 
