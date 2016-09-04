@@ -4,6 +4,9 @@ from twistedMultiService import TwistedMultiService
 
 class UDPSIPTwistedProtocol(DatagramProtocol):
     def __init__(self, aUDPSIPTransport):
+        # cannot user super - old style class.  Grrr...
+        # TODO:  Working on this - What is init protocol for DatagramProtocol?  Look at docs when we get to Internet.
+        DatagramProtocol.__init__(self)
         self.sipTransport = aUDPSIPTransport
 
     def bind(self):
