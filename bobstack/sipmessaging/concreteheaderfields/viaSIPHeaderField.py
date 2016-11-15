@@ -101,14 +101,6 @@ class ViaSIPHeaderField(SIPHeaderField):
         # return SIPURI.newForAttributes(host=self.host, port=self.port, transport=self.transport)
         return SIPURI.newForAttributes(host=self.host, port=self.port)
 
-    @property
-    def branch(self):
-        return self.parameterNamed('branch')
-
-    @branch.setter
-    def branch(self, aString):
-        self.parameterNamedPut('branch', aString)
-
     def generateBranch(self):
         self.branch = 'z9hG4bK-' + StrongRandomStringServer.instance.next32Bits + StrongRandomStringServer.instance.next32Bits + "-BobStack"
 
@@ -169,3 +161,107 @@ class ViaSIPHeaderField(SIPHeaderField):
     def isVia(self):
         return True
 
+    # http://www.iana.org/assignments/sip-parameters/sip-parameters.xhtml#sip-parameters-2
+    @property
+    def alias(self):
+        return self.parameterNamed('alias')
+
+    @alias.setter
+    def alias(self, aString):
+        self.parameterNamedPut('alias', aString)
+
+    @property
+    def branch(self):
+        return self.parameterNamed('branch')
+
+    @branch.setter
+    def branch(self, aString):
+        self.parameterNamedPut('branch', aString)
+
+    @property
+    def comp(self):
+        return self.parameterNamed('comp')
+
+    @comp.setter
+    def comp(self, aString):
+        self.parameterNamedPut('comp', aString)
+
+    @property
+    def keep(self):
+        return self.parameterNamed('keep')
+
+    @keep.setter
+    def keep(self, aString):
+        self.parameterNamedPut('keep', aString)
+
+    @property
+    def maddr(self):
+        return self.parameterNamed('maddr')
+
+    @maddr.setter
+    def maddr(self, aString):
+        self.parameterNamedPut('maddr', aString)
+
+    @property
+    def oc(self):
+        return self.parameterNamed('oc')
+
+    @oc.setter
+    def oc(self, aString):
+        self.parameterNamedPut('oc', aString)
+
+    @property
+    def oc_algo(self):
+        return self.parameterNamed('oc-algo')
+
+    @oc_algo.setter
+    def oc_algo(self, aString):
+        self.parameterNamedPut('oc-algo', aString)
+
+    @property
+    def oc_seq(self):
+        return self.parameterNamed('oc-seq')
+
+    @oc_seq.setter
+    def oc_seq(self, aString):
+        self.parameterNamedPut('oc-seq', aString)
+
+    @property
+    def oc_validity(self):
+        return self.parameterNamed('oc-validity')
+
+    @oc_validity.setter
+    def oc_validity(self, aString):
+        self.parameterNamedPut('oc-validity', aString)
+
+    @property
+    def received(self):
+        return self.parameterNamed('received')
+
+    @received.setter
+    def received(self, aString):
+        self.parameterNamedPut('received', aString)
+
+    @property
+    def rport(self):
+        return self.parameterNamed('rport')
+
+    @rport.setter
+    def rport(self, aString):
+        self.parameterNamedPut('rport', aString)
+
+    @property
+    def sigcomp_id(self):
+        return self.parameterNamed('sigcomp-id')
+
+    @sigcomp_id.setter
+    def sigcomp_id(self, aString):
+        self.parameterNamedPut('sigcomp-id', aString)
+
+    @property
+    def ttl(self):
+        return self.parameterNamed('ttl')
+
+    @ttl.setter
+    def ttl(self, aString):
+        self.parameterNamedPut('ttl', aString)

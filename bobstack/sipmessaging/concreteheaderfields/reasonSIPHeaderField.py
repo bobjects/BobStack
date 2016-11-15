@@ -25,3 +25,20 @@ class ReasonSIPHeaderField(SIPHeaderField):
     def isReason(self):
         return True
 
+    # http://www.iana.org/assignments/sip-parameters/sip-parameters.xhtml#sip-parameters-2
+    @property
+    def cause(self):
+        return self.parameterNamed('cause')
+
+    @cause.setter
+    def cause(self, aString):
+        self.parameterNamedPut('cause', aString)
+
+    @property
+    def text(self):
+        return self.parameterNamed('text')
+
+    @text.setter
+    def text(self, aString):
+        self.parameterNamedPut('text', aString)
+

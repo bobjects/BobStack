@@ -25,3 +25,12 @@ class ContentDispositionSIPHeaderField(SIPHeaderField):
     def isContentDisposition(self):
         return True
 
+    # http://www.iana.org/assignments/sip-parameters/sip-parameters.xhtml#sip-parameters-2
+    @property
+    def handling(self):
+        return self.parameterNamed('handling')
+
+    @handling.setter
+    def handling(self, aString):
+        self.parameterNamedPut('handling', aString)
+

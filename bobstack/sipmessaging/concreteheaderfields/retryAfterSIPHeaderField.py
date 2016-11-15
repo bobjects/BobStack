@@ -21,3 +21,12 @@ class RetryAfterSIPHeaderField(IntegerSIPHeaderField):
     def isRetryAfter(self):
         return True
 
+    # http://www.iana.org/assignments/sip-parameters/sip-parameters.xhtml#sip-parameters-2
+    @property
+    def duration(self):
+        return self.parameterNamed('duration')
+
+    @duration.setter
+    def duration(self, aString):
+        self.parameterNamedPut('duration', aString)
+

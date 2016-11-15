@@ -25,3 +25,12 @@ class AlertInfoSIPHeaderField(SIPHeaderField):
     def isAlertInfo(self):
         return True
 
+    # http://www.iana.org/assignments/sip-parameters/sip-parameters.xhtml#sip-parameters-2
+    @property
+    def appearance(self):
+        return self.parameterNamed('appearance')
+
+    @appearance.setter
+    def appearance(self, aString):
+        self.parameterNamedPut('appearance', aString)
+

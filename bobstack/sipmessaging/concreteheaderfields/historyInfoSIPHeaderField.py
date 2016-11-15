@@ -25,3 +25,27 @@ class HistoryInfoSIPHeaderField(SIPHeaderField):
     def isHistoryInfo(self):
         return True
 
+    # http://www.iana.org/assignments/sip-parameters/sip-parameters.xhtml#sip-parameters-2
+    @property
+    def mp(self):
+        return self.parameterNamed('mp')
+
+    @mp.setter
+    def mp(self, aString):
+        self.parameterNamedPut('mp', aString)
+
+    @property
+    def np(self):
+        return self.parameterNamed('np')
+
+    @np.setter
+    def np(self, aString):
+        self.parameterNamedPut('np', aString)
+
+    @property
+    def rc(self):
+        return self.parameterNamed('rc')
+
+    @rc.setter
+    def rc(self, aString):
+        self.parameterNamedPut('rc', aString)

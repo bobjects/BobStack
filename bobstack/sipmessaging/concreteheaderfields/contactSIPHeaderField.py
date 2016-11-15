@@ -139,3 +139,78 @@ class ContactSIPHeaderField(SIPHeaderField):
     def isContact(self):
         return True
 
+    # http://www.iana.org/assignments/sip-parameters/sip-parameters.xhtml#sip-parameters-2
+    @property
+    def expires(self):
+        return self.parameterNamed('expires')
+
+    @expires.setter
+    def expires(self, aString):
+        self.parameterNamedPut('expires', aString)
+
+    @property
+    def mp(self):
+        return self.parameterNamed('mp')
+
+    @mp.setter
+    def mp(self, aString):
+        self.parameterNamedPut('mp', aString)
+
+    @property
+    def np(self):
+        return self.parameterNamed('np')
+
+    @np.setter
+    def np(self, aString):
+        self.parameterNamedPut('np', aString)
+
+    @property
+    def pub_gruu(self):
+        return self.parameterNamed('pub-gruu')
+
+    @pub_gruu.setter
+    def pub_gruu(self, aString):
+        self.parameterNamedPut('pub-gruu', aString)
+
+    @property
+    def q(self):
+        return self.parameterNamed('q')
+
+    @q.setter
+    def q(self, aString):
+        self.parameterNamedPut('q', aString)
+
+    @property
+    def rc(self):
+        return self.parameterNamed('rc')
+
+    @rc.setter
+    def rc(self, aString):
+        self.parameterNamedPut('rc', aString)
+
+    @property
+    def reg_id(self):
+        return self.parameterNamed('reg-id')
+
+    @reg_id.setter
+    def reg_id(self, aString):
+        self.parameterNamedPut('reg-id', aString)
+
+    @property
+    def temp_gruu(self):
+        return self.parameterNamed('temp-gruu')
+
+    @temp_gruu.setter
+    def temp_gruu(self, aString):
+        self.parameterNamedPut('temp-gruu', aString)
+
+    @property
+    def temp_gruu_cookie(self):
+        return self.parameterNamed('temp-gruu-cookie')
+
+    @temp_gruu_cookie.setter
+    def temp_gruu_cookie(self, aString):
+        self.parameterNamedPut('temp-gruu-cookie', aString)
+
+
+

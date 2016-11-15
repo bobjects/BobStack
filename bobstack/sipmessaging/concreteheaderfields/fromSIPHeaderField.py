@@ -56,14 +56,6 @@ class FromSIPHeaderField(SIPHeaderField):
         return self._isValid
 
     @property
-    def tag(self):
-        return self.parameterNamed('tag')
-
-    @tag.setter
-    def tag(self, aString):
-        self.parameterNamedPut('tag', aString)
-
-    @property
     def displayName(self):
         if not self._attributeHasBeenSet:
             self.parseAttributesFromFieldValueString()
@@ -152,4 +144,13 @@ class FromSIPHeaderField(SIPHeaderField):
     @property
     def isFrom(self):
         return True
+
+    # http://www.iana.org/assignments/sip-parameters/sip-parameters.xhtml#sip-parameters-2
+    @property
+    def tag(self):
+        return self.parameterNamed('tag')
+
+    @tag.setter
+    def tag(self, aString):
+        self.parameterNamedPut('tag', aString)
 

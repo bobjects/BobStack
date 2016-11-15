@@ -25,3 +25,12 @@ class AcceptLanguageSIPHeaderField(SIPHeaderField):
     def isAcceptLanguage(self):
         return True
 
+    # http://www.iana.org/assignments/sip-parameters/sip-parameters.xhtml#sip-parameters-2
+    @property
+    def q(self):
+        return self.parameterNamed('q')
+
+    @q.setter
+    def q(self, aString):
+        self.parameterNamedPut('q', aString)
+
