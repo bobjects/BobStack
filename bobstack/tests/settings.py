@@ -1,2 +1,0 @@
-skipLongTests = True
-writeAnalyzedFiles = False

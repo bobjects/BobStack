@@ -118,6 +118,10 @@ class TestContentLengthSipHeaderField(AbstractIntegerSIPHeaderFieldTestCase):
                 headerField = self.sipHeaderFieldClassUnderTest.newForValueString(fieldValueString=fieldValueString)
                 self.assertTrue(headerField.isContentLength)
 
+    def testIANAStandardParameters(self):
+        # TODO
+        pass
+
 
 class TestAcceptSipHeaderField(AbstractSIPHeaderFieldTestCase):
     @property
@@ -145,6 +149,10 @@ class TestAcceptSipHeaderField(AbstractSIPHeaderFieldTestCase):
                 self.assertTrue(headerField.isAccept)
                 headerField = self.sipHeaderFieldClassUnderTest.newForAttributes(fieldValueString=fieldValueString)
                 self.assertTrue(headerField.isAccept)
+
+    def testIANAStandardParameters(self):
+        # TODO
+        pass
 
 
 class TestAcceptEncodingSipHeaderField(AbstractSIPHeaderFieldTestCase):
@@ -174,6 +182,10 @@ class TestAcceptEncodingSipHeaderField(AbstractSIPHeaderFieldTestCase):
                 headerField = self.sipHeaderFieldClassUnderTest.newForAttributes(fieldValueString=fieldValueString)
                 self.assertTrue(headerField.isAcceptEncoding)
 
+    def testIANAStandardParameters(self):
+        # TODO
+        pass
+
 
 class TestAcceptLanguageSipHeaderField(AbstractSIPHeaderFieldTestCase):
     @property
@@ -201,6 +213,10 @@ class TestAcceptLanguageSipHeaderField(AbstractSIPHeaderFieldTestCase):
                 self.assertTrue(headerField.isAcceptLanguage)
                 headerField = self.sipHeaderFieldClassUnderTest.newForAttributes(fieldValueString=fieldValueString)
                 self.assertTrue(headerField.isAcceptLanguage)
+
+    def testIANAStandardParameters(self):
+        # TODO
+        pass
 
 
 class TestAllowSipHeaderField(AbstractSIPHeaderFieldTestCase):
@@ -257,6 +273,10 @@ class TestAuthorizationSipHeaderField(AbstractSIPHeaderFieldTestCase):
                 self.assertTrue(headerField.isAuthorization)
                 headerField = self.sipHeaderFieldClassUnderTest.newForAttributes(fieldValueString=fieldValueString)
                 self.assertTrue(headerField.isAuthorization)
+
+    def testIANAStandardParameters(self):
+        # TODO
+        pass
 
 
 class TestCSeqSipHeaderField(AbstractSIPHeaderFieldTestCase):
@@ -341,6 +361,10 @@ class TestCallInfoSipHeaderField(AbstractSIPHeaderFieldTestCase):
                 self.assertTrue(headerField.isCallInfo)
                 headerField = self.sipHeaderFieldClassUnderTest.newForAttributes(fieldValueString=fieldValueString)
                 self.assertTrue(headerField.isCallInfo)
+
+    def testIANAStandardParameters(self):
+        # TODO
+        pass
 
 
 class TestContactSipHeaderField(AbstractSIPHeaderFieldTestCase):
@@ -537,6 +561,10 @@ class TestContactSipHeaderField(AbstractSIPHeaderFieldTestCase):
         self.assertEqual(headerField.sipURI.parameterNamesAndValueStrings, {'user': 'phone'})
         self.assertEqual(headerField.sipURI.user, '3122221000')
 
+    def testIANAStandardParameters(self):
+        # TODO
+        pass
+
 
 class TestContentDispositionSipHeaderField(AbstractSIPHeaderFieldTestCase):
     @property
@@ -564,6 +592,10 @@ class TestContentDispositionSipHeaderField(AbstractSIPHeaderFieldTestCase):
                 self.assertTrue(headerField.isContentDisposition)
                 headerField = self.sipHeaderFieldClassUnderTest.newForAttributes(fieldValueString=fieldValueString)
                 self.assertTrue(headerField.isContentDisposition)
+
+    def testIANAStandardParameters(self):
+        # TODO
+        pass
 
 
 class TestContentTypeSipHeaderField(AbstractSIPHeaderFieldTestCase):
@@ -879,6 +911,10 @@ class TestFromSipHeaderField(AbstractSIPHeaderFieldTestCase):
         self.assertIsInstance(headerField.tag, basestring)
         self.assertTrue('tag' in headerField.parameterNamesAndValueStrings)
 
+    def testIANAStandardParameters(self):
+        # TODO
+        pass
+
 
 class TestMaxForwardsSipHeaderField(AbstractIntegerSIPHeaderFieldTestCase):
     @property
@@ -1024,6 +1060,10 @@ class TestRetryAfterSipHeaderField(AbstractIntegerSIPHeaderFieldTestCase):
                 self.assertTrue(headerField.isRetryAfter)
                 headerField = self.sipHeaderFieldClassUnderTest.newForFieldNameAndValueString(fieldValueString=fieldValueString)
                 self.assertTrue(headerField.isRetryAfter)
+
+    def testIANAStandardParameters(self):
+        # TODO
+        pass
 
 
 class TestRouteSipHeaderField(AbstractSIPHeaderFieldTestCase):
@@ -1423,6 +1463,10 @@ class TestToSipHeaderField(AbstractSIPHeaderFieldTestCase):
         self.assertIsInstance(headerField.tag, basestring)
         self.assertTrue('tag' in headerField.parameterNamesAndValueStrings)
 
+    def testIANAStandardParameters(self):
+        # TODO
+        pass
+
 
 class TestUserAgentSipHeaderField(AbstractSIPHeaderFieldTestCase):
     @property
@@ -1478,6 +1522,10 @@ class TestWWWAuthenticateSipHeaderField(AbstractSIPHeaderFieldTestCase):
                 self.assertTrue(headerField.isWWWAuthenticate)
                 headerField = self.sipHeaderFieldClassUnderTest.newForAttributes(fieldValueString=fieldValueString)
                 self.assertTrue(headerField.isWWWAuthenticate)
+
+    def testIANAStandardParameters(self):
+        # TODO
+        pass
 
 
 class TestWarningSipHeaderField(AbstractSIPHeaderFieldTestCase):
@@ -1646,6 +1694,10 @@ class TestEventSIPHeaderField(AbstractSIPHeaderFieldTestCase):
                 self.assertTrue(headerField.isEvent)
                 headerField = self.sipHeaderFieldClassUnderTest.newForAttributes(fieldValueString=fieldValueString)
                 self.assertTrue(headerField.isEvent)
+
+    def testIANAStandardParameters(self):
+        # TODO
+        pass
 
 
 class TestContentEncodingSIPHeaderField(AbstractSIPHeaderFieldTestCase):
@@ -1899,6 +1951,10 @@ class TestAlertInfoSIPHeaderField(AbstractSIPHeaderFieldTestCase):
                 headerField = self.sipHeaderFieldClassUnderTest.newForAttributes(fieldValueString=fieldValueString)
                 self.assertTrue(headerField.isAlertInfo)
 
+    def testIANAStandardParameters(self):
+        # TODO
+        pass
+
 
 class TestHistoryInfoSIPHeaderField(AbstractSIPHeaderFieldTestCase):
     @property
@@ -1926,6 +1982,10 @@ class TestHistoryInfoSIPHeaderField(AbstractSIPHeaderFieldTestCase):
                 self.assertTrue(headerField.isHistoryInfo)
                 headerField = self.sipHeaderFieldClassUnderTest.newForAttributes(fieldValueString=fieldValueString)
                 self.assertTrue(headerField.isHistoryInfo)
+
+    def testIANAStandardParameters(self):
+        # TODO
+        pass
 
 
 class TestPCalledPartyIdSIPHeaderField(AbstractSIPHeaderFieldTestCase):
@@ -2039,6 +2099,10 @@ class TestProxyAuthenticateSIPHeaderField(AbstractSIPHeaderFieldTestCase):
                 headerField = self.sipHeaderFieldClassUnderTest.newForAttributes(fieldValueString=fieldValueString)
                 self.assertTrue(headerField.isProxyAuthenticate)
 
+    def testIANAStandardParameters(self):
+        # TODO
+        pass
+
 
 class TestProxyAuthorizationSIPHeaderField(AbstractSIPHeaderFieldTestCase):
     @property
@@ -2066,6 +2130,10 @@ class TestProxyAuthorizationSIPHeaderField(AbstractSIPHeaderFieldTestCase):
                 self.assertTrue(headerField.isProxyAuthorization)
                 headerField = self.sipHeaderFieldClassUnderTest.newForAttributes(fieldValueString=fieldValueString)
                 self.assertTrue(headerField.isProxyAuthorization)
+
+    def testIANAStandardParameters(self):
+        # TODO
+        pass
 
 
 class TestProxyRequireSIPHeaderField(AbstractSIPHeaderFieldTestCase):
@@ -2122,6 +2190,10 @@ class TestReasonSIPHeaderField(AbstractSIPHeaderFieldTestCase):
                 self.assertTrue(headerField.isReason)
                 headerField = self.sipHeaderFieldClassUnderTest.newForAttributes(fieldValueString=fieldValueString)
                 self.assertTrue(headerField.isReason)
+
+    def testIANAStandardParameters(self):
+        # TODO
+        pass
 
 
 class TestRecordSessionExpiresSIPHeaderField(AbstractIntegerSIPHeaderFieldTestCase):
@@ -2373,3 +2445,7 @@ class TestViaSipHeaderField(AbstractSIPHeaderFieldTestCase):
         headerField.generateBranch()
         self.assertIsInstance(headerField.branch, basestring)
         self.assertTrue('branch' in headerField.parameterNamesAndValueStrings)
+
+    def testIANAStandardParameters(self):
+        # TODO
+        pass

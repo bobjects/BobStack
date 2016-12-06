@@ -1,0 +1,37 @@
+logFileDicts = [
+    {
+        'rawLogFileDirectoryPathNames': [
+            '/Users/bob/bobstack/proprietary-test-data/big-lab-test-logs-raw',
+            '/Users/bob/bobstack/proprietary-test-data/cust-1-logs-raw',
+            '/Users/bob/bobstack/proprietary-test-data/cust-3-logs-raw'
+        ],
+        'pcapDirectoryPathNames': [
+            '/Users/bob/bobstack/proprietary-test-data/big-lab-test-logs-pcap',
+            '/Users/bob/bobstack/proprietary-test-data/cust-2-logs-pcap',
+            '/Users/bob/bobstack/proprietary-test-data/cust-4-logs-pcap',
+            '/Users/bob/bobstack/proprietary-test-data/from-bobstack-testbed'
+        ],
+        'freeswitchDirectoryPathNames': [
+        ],
+        'interimFile1PathName': '/Users/bob/bobstack/proprietary-test-data/sanitized/interim1.txt',
+        'interimFile2PathName': '/Users/bob/bobstack/proprietary-test-data/sanitized/interim2.txt',
+        'sanitizedFilePathName': '/Users/bob/bobstack/proprietary-test-data/sanitized/sanitized.txt',
+        'analyzedDirectoryPathName': '/Users/bob/bobstack/proprietary-test-data/analyzed'
+    },
+    {
+        'rawLogFileDirectoryPathNames': [
+            '/Volumes/Flashdrive/bobstack-test-data/big-lab-test-logs-raw'
+        ],
+        'pcapDirectoryPathNames': [
+            '/Volumes/Flashdrive/bobstack-test-data/cloud',
+            '/Volumes/Flashdrive/bobstack-test-data/client-lab-test-logs-pcap'
+        ],
+        'freeswitchDirectoryPathNames': [
+            '/Volumes/Flashdrive/bobstack-test-data/freeswitch-logs-with-sip-traces'
+        ],
+        'interimFile1PathName': '/Volumes/Flashdrive/bobstack-test-data/sanitized/interim1.txt',
+        'interimFile2PathName': '/Volumes/Flashdrive/bobstack-test-data/sanitized/interim2.txt',
+        'sanitizedFilePathName': '/Volumes/Flashdrive/bobstack-test-data/sanitized/sanitized.txt',
+        'analyzedDirectoryPathName': '/Volumes/Flashdrive/bobstack-test-data/analyzed'
+    }
+]
