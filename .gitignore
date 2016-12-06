@@ -2,6 +2,7 @@ proprietary-test-data/**
 **/.idea
 **/.DS_Store
 **/*.pyc
+**/testlogfilelocations.py
 push-to-github.sh
 **/*.~vsd
 rsync??.sh
