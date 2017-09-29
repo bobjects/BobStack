@@ -18,8 +18,8 @@ class HistoryInfoSIPHeaderField(SIPHeaderField):
         return 'History-Info'
 
     @classmethod
-    def newForAttributes(cls, fieldName="History-Info", fieldValueString=""):
-        return cls.newForFieldNameAndValueString(fieldName=fieldName, fieldValueString=fieldValueString)
+    def newForAttributes(cls, field_name="History-Info", field_value_string=""):
+        return cls.newForFieldNameAndValueString(field_name=field_name, field_value_string=field_value_string)
 
     @property
     def isHistoryInfo(self):
@@ -31,21 +31,21 @@ class HistoryInfoSIPHeaderField(SIPHeaderField):
         return self.parameterNamed('mp')
 
     @mp.setter
-    def mp(self, aString):
-        self.parameterNamedPut('mp', aString)
+    def mp(self, a_string):
+        self.parameterNamedPut('mp', a_string)
 
     @property
     def np(self):
         return self.parameterNamed('np')
 
     @np.setter
-    def np(self, aString):
-        self.parameterNamedPut('np', aString)
+    def np(self, a_string):
+        self.parameterNamedPut('np', a_string)
 
     @property
     def rc(self):
         return self.parameterNamed('rc')
 
     @rc.setter
-    def rc(self, aString):
-        self.parameterNamedPut('rc', aString)
+    def rc(self, a_string):
+        self.parameterNamedPut('rc', a_string)

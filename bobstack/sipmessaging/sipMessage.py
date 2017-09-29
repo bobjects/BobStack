@@ -8,19 +8,19 @@ from sipStartLineFactory import SIPStartLineFactory
 
 class SIPMessage(object):
     @classmethod
-    def newParsedFrom(cls, aString):
+    def newParsedFrom(cls, a_string):
         answer = cls()
-        answer.rawString = aString
+        answer.rawString = a_string
         return answer
 
     @classmethod
-    def _newForAttributes(cls, startLine=None, header=None, content=""):
+    def _newForAttributes(cls, start_line=None, header=None, content=""):
         answer = cls()
-        answer.startLine = startLine
+        answer.start_line = start_line
         if header:
             answer.header = header
         else:
-            answer.header = SIPHeader.newForAttributes(headerFields=None)
+            answer.header = SIPHeader.newForAttributes(header_fields=None)
         answer.content = content
         return answer
 
@@ -41,8 +41,8 @@ class SIPMessage(object):
         return self._rawString
 
     @rawString.setter
-    def rawString(self, aString):
-        self._rawString = aString
+    def rawString(self, a_string):
+        self._rawString = a_string
         self.clearAttributes()
 
     @property
@@ -59,11 +59,11 @@ class SIPMessage(object):
 
     def parseAttributesFromRawString(self):
         self._content = ""
-        stringIO = StringIO(self._rawString)
-        self._startLine = SIPStartLineFactory().nextForStringIO(stringIO)
-        self._header = SIPHeader.newParsedFrom(stringIO)
-        self._content = stringIO.read()
-        stringIO.close()
+        string_io = StringIO(self._rawString)
+        self._startLine = SIPStartLineFactory().nextForStringIO(string_io)
+        self._header = SIPHeader.newParsedFrom(string_io)
+        self._content = string_io.read()
+        string_io.close()
 
     def renderRawStringFromAttributes(self):
         stringio = StringIO()
@@ -75,14 +75,14 @@ class SIPMessage(object):
         stringio.close()
 
     @property
-    def startLine(self):
+    def start_line(self):
         if self._startLine is None:
             self.parseAttributesFromRawString()
         return self._startLine
 
-    @startLine.setter
-    def startLine(self, aSIPStartLine):
-        self._startLine = aSIPStartLine
+    @start_line.setter
+    def start_line(self, a_sip_start_line):
+        self._startLine = a_sip_start_line
         self.clearRawString()
 
     @property
@@ -92,8 +92,8 @@ class SIPMessage(object):
         return self._header
 
     @header.setter
-    def header(self, aSIPHeader):
-        self._header = aSIPHeader
+    def header(self, a_sip_header):
+        self._header = a_sip_header
         self.clearRawString()
 
     @property
@@ -103,8 +103,8 @@ class SIPMessage(object):
         return self._content
 
     @content.setter
-    def content(self, aString):
-        self._content = aString
+    def content(self, a_string):
+        self._content = a_string
         self.clearRawString()
 
     @property

@@ -7,14 +7,14 @@ from sipStartLine import SIPStartLine
 from classproperty import classproperty
 
 
-# TODO: We need to make requestURI first class, not a string.  Do that soon, including changing a plethora of tests.
+# TODO: We need to make request_uri first class, not a string.  Do that soon, including changing a plethora of tests.
 
 class SIPRequestStartLine(SIPStartLine):
     @classmethod
-    def newForAttributes(cls, sipMethod="", requestURI=""):
+    def newForAttributes(cls, sip_method="", request_uri=""):
         answer = cls()
-        answer.sipMethod = sipMethod
-        answer.requestURI = requestURI
+        answer.sip_method = sip_method
+        answer.request_uri = request_uri
         return answer
 
     def __init__(self):
@@ -23,25 +23,25 @@ class SIPRequestStartLine(SIPStartLine):
         self._requestURI = None
 
     @property
-    def sipMethod(self):
+    def sip_method(self):
         if self._sipMethod is None:
             self.parseAttributesFromRawString()
         return self._sipMethod
 
-    @sipMethod.setter
-    def sipMethod(self, aString):
-        self._sipMethod = aString
+    @sip_method.setter
+    def sip_method(self, a_string):
+        self._sipMethod = a_string
         self.clearRawString()
 
     @property
-    def requestURI(self):
+    def request_uri(self):
         if self._requestURI is None:
             self.parseAttributesFromRawString()
         return self._requestURI
 
-    @requestURI.setter
-    def requestURI(self, aString):
-        self._requestURI = aString
+    @request_uri.setter
+    def request_uri(self, a_string):
+        self._requestURI = a_string
         self.clearRawString()
 
     def clearAttributes(self):
@@ -81,8 +81,8 @@ class SIPRequestStartLine(SIPStartLine):
             return cls._regexForParsing
 
     @classmethod
-    def canMatchString(cls, aString):
-        return cls.regexForMatching.match(aString) is not None
+    def canMatchString(cls, a_string):
+        return cls.regexForMatching.match(a_string) is not None
 
     @property
     def isRequest(self):

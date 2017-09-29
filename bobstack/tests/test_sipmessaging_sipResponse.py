@@ -6,11 +6,11 @@ from sipmessaging import SIPResponse
 
 class TestSIPResponse(AbstractSIPResponseTestCase):
     @property
-    def statusCode(self):
+    def status_code(self):
         return 100
 
     @property
-    def reasonPhrase(self):
+    def reason_phrase(self):
         return "Trying"
 
     @property
@@ -40,21 +40,21 @@ class TestSIPResponse(AbstractSIPResponseTestCase):
     def test_rendering_from_list_of_field_names_and_values_using_property_dict(self):
         self.run_test_rendering_from_list_of_field_names_and_values_using_property_dict()
 
-    def runAssertionsForSIPMessage(self, aSIPResponse):
-        super(TestSIPResponse, self).runAssertionsForSIPMessage(aSIPResponse)
-        self.assertTrue(aSIPResponse.isKnown)
-        self.assertFalse(aSIPResponse.isUnknown)
-        self.assertFalse(aSIPResponse.isACKRequest)
-        self.assertFalse(aSIPResponse.isBYERequest)
-        self.assertFalse(aSIPResponse.isCANCELRequest)
-        self.assertFalse(aSIPResponse.isINFORequest)
-        self.assertFalse(aSIPResponse.isINVITERequest)
-        self.assertFalse(aSIPResponse.isNOTIFYRequest)
-        self.assertFalse(aSIPResponse.isNOTIFYRequest)
-        self.assertFalse(aSIPResponse.isPRACKRequest)
-        self.assertFalse(aSIPResponse.isPUBLISHRequest)
-        self.assertFalse(aSIPResponse.isMESSAGERequest)
-        self.assertFalse(aSIPResponse.isREFERRequest)
-        self.assertFalse(aSIPResponse.isREGISTERRequest)
-        self.assertFalse(aSIPResponse.isSUBSCRIBERequest)
-        self.assertFalse(aSIPResponse.isUPDATERequest)
+    def runAssertionsForSIPMessage(self, a_sip_response):
+        super(TestSIPResponse, self).runAssertionsForSIPMessage(a_sip_response)
+        self.assertTrue(a_sip_response.isKnown)
+        self.assertFalse(a_sip_response.isUnknown)
+        self.assertFalse(a_sip_response.isACKRequest)
+        self.assertFalse(a_sip_response.isBYERequest)
+        self.assertFalse(a_sip_response.isCANCELRequest)
+        self.assertFalse(a_sip_response.isINFORequest)
+        self.assertFalse(a_sip_response.isINVITERequest)
+        self.assertFalse(a_sip_response.isNOTIFYRequest)
+        self.assertFalse(a_sip_response.isNOTIFYRequest)
+        self.assertFalse(a_sip_response.isPRACKRequest)
+        self.assertFalse(a_sip_response.isPUBLISHRequest)
+        self.assertFalse(a_sip_response.isMESSAGERequest)
+        self.assertFalse(a_sip_response.isREFERRequest)
+        self.assertFalse(a_sip_response.isREGISTERRequest)
+        self.assertFalse(a_sip_response.isSUBSCRIBERequest)
+        self.assertFalse(a_sip_response.isUPDATERequest)

@@ -10,7 +10,7 @@ for directoryPath in directoryPaths:
         pyFilePathName = datFilePathName + ".py"
         with open(datFilePathName, "r") as datFile:
             with open(pyFilePathName, "w") as pyFile:
-                pyFile.write("        messageString = (\r\n")
+                pyFile.write("        message_string = (\r\n")
                 for line in datFile:
                     pyFile.write("            '")
                     pyFile.write(line.rstrip('\r\n'))

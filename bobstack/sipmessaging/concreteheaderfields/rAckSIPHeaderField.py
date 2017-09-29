@@ -18,8 +18,8 @@ class RAckSIPHeaderField(SIPHeaderField):
         return 'RAck'
 
     @classmethod
-    def newForAttributes(cls, fieldName="RAck", fieldValueString=""):
-        return cls.newForFieldNameAndValueString(fieldName=fieldName, fieldValueString=fieldValueString)
+    def newForAttributes(cls, field_name="RAck", field_value_string=""):
+        return cls.newForFieldNameAndValueString(field_name=field_name, field_value_string=field_value_string)
 
     @property
     def isRAck(self):

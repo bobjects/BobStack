@@ -228,26 +228,26 @@ class SIPHeaderFieldFactory(object):
             lineString = aStringIO.readline().rstrip('\r\n')
         return [self.nextForString(s) for s in lineStrings]
 
-    def classForString(self, aString):
+    def classForString(self, a_string):
         # This is invalid.  There can be no whitespace before the colon.
         # try:
-        #     return self.classForFieldName(aString.split()[0])
+        #     return self.classForFieldName(a_string.split()[0])
         # except IndexError:
         #     return UnknownSIPHeaderField
-        match = self.__class__.regexForGettingHeaderFieldName.match(aString)
+        match = self.__class__.regexForGettingHeaderFieldName.match(a_string)
         if match:
             return self.classForFieldName(match.group(1))
         else:
             return UnknownSIPHeaderField
 
-    def classForFieldName(self, aString):
-        return self.__class__.headerFieldNamesAndClasses.get(aString.lower(), UnknownSIPHeaderField)
+    def classForFieldName(self, a_string):
+        return self.__class__.headerFieldNamesAndClasses.get(a_string.lower(), UnknownSIPHeaderField)
 
-    def nextForString(self, aString):
-        return self.classForString(aString).newParsedFrom(aString)
+    def nextForString(self, a_string):
+        return self.classForString(a_string).newParsedFrom(a_string)
 
-    def nextForFieldName(self, aString):
-        return self.classForFieldName(aString).newForFieldNameAndValueString(fieldName=aString)
+    def nextForFieldName(self, a_string):
+        return self.classForFieldName(a_string).newForFieldNameAndValueString(field_name=a_string)
 
-    def nextForFieldNameAndFieldValue(self, fieldName, fieldValueString):
-        return self.classForFieldName(fieldName).newForFieldNameAndValueString(fieldName=fieldName, fieldValueString=fieldValueString)
+    def nextForFieldNameAndFieldValue(self, field_name, field_value_string):
+        return self.classForFieldName(field_name).newForFieldNameAndValueString(field_name=field_name, field_value_string=field_value_string)

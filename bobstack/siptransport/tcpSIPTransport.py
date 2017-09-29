@@ -7,7 +7,7 @@ class TCPSIPTransport(SIPTransport):
     def transportParameterName(self):
         return 'TCP'
 
-    def connectToAddressAndPort(self, addressString, portInteger):
+    def connectToAddressAndPort(self, address_string, port_integer):
         # TODO
         pass
 

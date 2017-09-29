@@ -16,7 +16,7 @@ class TestRFC4475SIPTortureTest(TestCase):
     def testShortTortuousINVITE(self):
         # https://tools.ietf.org/html/rfc4475#section-3.1.1.1
         # wsinv.dat
-        messageString = (
+        message_string = (
             'INVITE sip:vivekg@chair-dnrc.example.com;unknownparam SIP/2.0\r\n'
             'TO :\r\n'
             ' sip:vivekg@chair-dnrc.example.com ;   tag    = 1918181833n\r\n'
@@ -55,28 +55,28 @@ class TestRFC4475SIPTortureTest(TestCase):
             'm=video 3227 RTP/AVP 31\r\n'
             'a=rtpmap:31 LPC\r\n'
         )
-        message = SIPMessageFactory().nextForString(messageString)
+        message = SIPMessageFactory().nextForString(message_string)
         self.assertIsNotNone(message)
         self.assertIsInstance(message.isValid, bool)
         # is this valid?  It was considered valid before we implemented compact headers.
         # TODO: Looks like we're not parsing that Contact header well.
         # self.assertTrue(message.isValid)
-        self.assertEqual(len(message.header.headerFields), 14)
-        self.assertTrue(message.header.headerFields[0].isTo)
-        self.assertTrue(message.header.headerFields[1].isFrom)
-        self.assertTrue(message.header.headerFields[2].isMaxForwards)
-        self.assertTrue(message.header.headerFields[3].isCallID)
-        self.assertTrue(message.header.headerFields[4].isContentLength)
-        self.assertTrue(message.header.headerFields[5].isCSeq)
-        self.assertTrue(message.header.headerFields[6].isVia)
-        self.assertTrue(message.header.headerFields[7].isSubject)
-        self.assertTrue(message.header.headerFields[8].isUnknown)
-        self.assertTrue(message.header.headerFields[9].isUnknown)
-        self.assertTrue(message.header.headerFields[10].isContentType)
-        self.assertTrue(message.header.headerFields[11].isRoute)
+        self.assertEqual(len(message.header.header_fields), 14)
+        self.assertTrue(message.header.header_fields[0].isTo)
+        self.assertTrue(message.header.header_fields[1].isFrom)
+        self.assertTrue(message.header.header_fields[2].isMaxForwards)
+        self.assertTrue(message.header.header_fields[3].isCallID)
+        self.assertTrue(message.header.header_fields[4].isContentLength)
+        self.assertTrue(message.header.header_fields[5].isCSeq)
+        self.assertTrue(message.header.header_fields[6].isVia)
+        self.assertTrue(message.header.header_fields[7].isSubject)
+        self.assertTrue(message.header.header_fields[8].isUnknown)
+        self.assertTrue(message.header.header_fields[9].isUnknown)
+        self.assertTrue(message.header.header_fields[10].isContentType)
+        self.assertTrue(message.header.header_fields[11].isRoute)
         if self.weHaveImplementedCompactHeaders:
-            self.assertTrue(message.header.headerFields[12].isVia)
-            self.assertTrue(message.header.headerFields[13].isContact)
+            self.assertTrue(message.header.header_fields[12].isVia)
+            self.assertTrue(message.header.header_fields[13].isContact)
         self.assertEqual('TO : sip:vivekg@chair-dnrc.example.com ;   tag    = 1918181833n', message.header.toHeaderField.rawString)
         # TODO: To tag is not being parsed correctly?
         # self.assertEqual('1918181833n', message.header.toTag)
@@ -92,7 +92,7 @@ class TestRFC4475SIPTortureTest(TestCase):
     def testValidUseOfThePercentEscapingMechanism(self):
         # https://tools.ietf.org/html/rfc4475#section-3.1.1.3
         # esc01
-        messageString = (
+        message_string = (
             'INVITE sip:sips%3Auser%40example.com@example.net SIP/2.0\r\n'
             'To: sip:%75se%72@example.com\r\n'
             'From: <sip:I%20have%20spaces@example.net>;tag=938\r\n'
@@ -114,28 +114,28 @@ class TestRFC4475SIPTortureTest(TestCase):
             'm=video 3227 RTP/AVP 31\r\n'
             'a=rtpmap:31 LPC\r\n'
         )
-        message = SIPMessageFactory().nextForString(messageString)
+        message = SIPMessageFactory().nextForString(message_string)
         self.assertIsNotNone(message)
         self.assertIsInstance(message.isValid, bool)
         self.assertTrue(message.isValid)
-        self.assertEqual(len(message.header.headerFields), 9)
-        self.assertTrue(message.header.headerFields[0].isTo)
-        self.assertTrue(message.header.headerFields[1].isFrom)
-        self.assertTrue(message.header.headerFields[2].isMaxForwards)
+        self.assertEqual(len(message.header.header_fields), 9)
+        self.assertTrue(message.header.header_fields[0].isTo)
+        self.assertTrue(message.header.header_fields[1].isFrom)
+        self.assertTrue(message.header.header_fields[2].isMaxForwards)
         if self.weHaveImplementedCompactHeaders:
-            self.assertTrue(message.header.headerFields[3].isCallID)
-        self.assertTrue(message.header.headerFields[4].isCSeq)
-        self.assertTrue(message.header.headerFields[5].isVia)
+            self.assertTrue(message.header.header_fields[3].isCallID)
+        self.assertTrue(message.header.header_fields[4].isCSeq)
+        self.assertTrue(message.header.header_fields[5].isVia)
         if self.weHaveImplementedCompactHeaders:
-            self.assertTrue(message.header.headerFields[6].isContentType)
-        self.assertTrue(message.header.headerFields[7].isContact)
-        self.assertTrue(message.header.headerFields[8].isContentLength)
+            self.assertTrue(message.header.header_fields[6].isContentType)
+        self.assertTrue(message.header.header_fields[7].isContact)
+        self.assertTrue(message.header.header_fields[8].isContentLength)
         # TODO - more.
 
     def testEscapedNullsInURIs(self):
         # https://tools.ietf.org/html/rfc4475#section-3.1.1.4
         # escnull
-        messageString = (
+        message_string = (
             'REGISTER sip:example.com SIP/2.0\r\n'
             'To: sip:null-%00-null@example.com\r\n'
             'From: sip:null-%00-null@example.com;tag=839923423\r\n'
@@ -148,27 +148,27 @@ class TestRFC4475SIPTortureTest(TestCase):
             'L:0\r\n'
             '\r\n'
         )
-        message = SIPMessageFactory().nextForString(messageString)
+        message = SIPMessageFactory().nextForString(message_string)
         self.assertIsNotNone(message)
         self.assertIsInstance(message.isValid, bool)
         self.assertTrue(message.isValid)
-        self.assertEqual(len(message.header.headerFields), 9)
-        self.assertTrue(message.header.headerFields[0].isTo)
-        self.assertTrue(message.header.headerFields[1].isFrom)
-        self.assertTrue(message.header.headerFields[2].isMaxForwards)
-        self.assertTrue(message.header.headerFields[3].isCallID)
-        self.assertTrue(message.header.headerFields[4].isCSeq)
-        self.assertTrue(message.header.headerFields[5].isVia)
-        self.assertTrue(message.header.headerFields[6].isContact)
-        self.assertTrue(message.header.headerFields[7].isContact)
+        self.assertEqual(len(message.header.header_fields), 9)
+        self.assertTrue(message.header.header_fields[0].isTo)
+        self.assertTrue(message.header.header_fields[1].isFrom)
+        self.assertTrue(message.header.header_fields[2].isMaxForwards)
+        self.assertTrue(message.header.header_fields[3].isCallID)
+        self.assertTrue(message.header.header_fields[4].isCSeq)
+        self.assertTrue(message.header.header_fields[5].isVia)
+        self.assertTrue(message.header.header_fields[6].isContact)
+        self.assertTrue(message.header.header_fields[7].isContact)
         if self.weHaveImplementedCompactHeaders:
-            self.assertTrue(message.header.headerFields[8].isContentLength)
+            self.assertTrue(message.header.header_fields[8].isContentLength)
         # TODO - more.
 
     def testUseOfPercentWhenItIsNotAnEscape(self):
         # https://tools.ietf.org/html/rfc4475#section-3.1.1.5
         # esc02
-        messageString = (
+        message_string = (
             'RE%47IST%45R sip:registrar.example.com SIP/2.0\r\n'
             'To: "%Z%45" <sip:resource@example.com>\r\n'
             'From: "%Z%45" <sip:resource@example.com>;tag=f232jadfj23\r\n'
@@ -182,29 +182,29 @@ class TestRFC4475SIPTortureTest(TestCase):
             'l: 0\r\n'
             '\r\n'
         )
-        message = SIPMessageFactory().nextForString(messageString)
+        message = SIPMessageFactory().nextForString(message_string)
         self.assertIsNotNone(message)
         self.assertIsInstance(message.isValid, bool)
         self.assertTrue(message.isValid)
-        self.assertEqual(len(message.header.headerFields), 10)
-        self.assertTrue(message.header.headerFields[0].isTo)
-        self.assertTrue(message.header.headerFields[1].isFrom)
-        self.assertTrue(message.header.headerFields[2].isCallID)
-        self.assertTrue(message.header.headerFields[3].isVia)
-        self.assertTrue(message.header.headerFields[4].isCSeq)
-        self.assertTrue(message.header.headerFields[5].isMaxForwards)
-        self.assertTrue(message.header.headerFields[6].isContact)
+        self.assertEqual(len(message.header.header_fields), 10)
+        self.assertTrue(message.header.header_fields[0].isTo)
+        self.assertTrue(message.header.header_fields[1].isFrom)
+        self.assertTrue(message.header.header_fields[2].isCallID)
+        self.assertTrue(message.header.header_fields[3].isVia)
+        self.assertTrue(message.header.header_fields[4].isCSeq)
+        self.assertTrue(message.header.header_fields[5].isMaxForwards)
+        self.assertTrue(message.header.header_fields[6].isContact)
         # TODO:  Looks like we need to handle character escaping...
-        # self.assertTrue(message.header.headerFields[7].isContact)
-        self.assertTrue(message.header.headerFields[8].isContact)
+        # self.assertTrue(message.header.header_fields[7].isContact)
+        self.assertTrue(message.header.header_fields[8].isContact)
         if self.weHaveImplementedCompactHeaders:
-            self.assertTrue(message.header.headerFields[9].isContentLength)
+            self.assertTrue(message.header.header_fields[9].isContentLength)
         # TODO - more.
 
     def testMessageWithNoLWSBetweenDisplayNameAndAngleBracket(self):
         # https://tools.ietf.org/html/rfc4475#section-3.1.1.6
         # lwsdisp
-        messageString = (
+        message_string = (
             'OPTIONS sip:user@example.com SIP/2.0\r\n'
             'To: sip:user@example.com\r\n'
             'From: caller<sip:caller@example.com>;tag=323\r\n'
@@ -215,25 +215,25 @@ class TestRFC4475SIPTortureTest(TestCase):
             'l: 0\r\n'
             '\r\n'
         )
-        message = SIPMessageFactory().nextForString(messageString)
+        message = SIPMessageFactory().nextForString(message_string)
         self.assertIsNotNone(message)
         self.assertIsInstance(message.isValid, bool)
         self.assertTrue(message.isValid)
-        self.assertEqual(len(message.header.headerFields), 7)
-        self.assertTrue(message.header.headerFields[0].isTo)
-        self.assertTrue(message.header.headerFields[1].isFrom)
-        self.assertTrue(message.header.headerFields[2].isMaxForwards)
-        self.assertTrue(message.header.headerFields[3].isCallID)
-        self.assertTrue(message.header.headerFields[4].isCSeq)
-        self.assertTrue(message.header.headerFields[5].isVia)
+        self.assertEqual(len(message.header.header_fields), 7)
+        self.assertTrue(message.header.header_fields[0].isTo)
+        self.assertTrue(message.header.header_fields[1].isFrom)
+        self.assertTrue(message.header.header_fields[2].isMaxForwards)
+        self.assertTrue(message.header.header_fields[3].isCallID)
+        self.assertTrue(message.header.header_fields[4].isCSeq)
+        self.assertTrue(message.header.header_fields[5].isVia)
         if self.weHaveImplementedCompactHeaders:
-            self.assertTrue(message.header.headerFields[6].isContentLength)
+            self.assertTrue(message.header.header_fields[6].isContentLength)
         # TODO - more.
 
     def testLongValuesInHeaderFields(self):
         # https://tools.ietf.org/html/rfc4475#section-3.1.1.7
         # longreq
-        messageString = (
+        message_string = (
             'INVITE sip:user@example.com SIP/2.0\r\n'
             'To: "I have a user name of extremeextremeextremeextremeextremeextremeextremeextremeextremeextreme proportion"<sip:user@example.com:6000;unknownparam1=verylonglonglonglonglonglonglonglonglonglonglonglonglonglonglonglonglonglonglonglongvalue;longparamnamenamenamenamenamenamenamenamenamenamenamenamenamenamenamenamenamenamenamenamenamenamenamenamename=shortvalue;verylonglonglonglonglonglonglonglonglonglonglonglonglonglonglonglonglonglonglonglonglonglonglonglonglongParameterNameWithNoValue>\r\n'
             'F: sip:amazinglylongcallernameamazinglylongcallernameamazinglylongcallernameamazinglylongcallernameamazinglylongcallername@example.net;tag=12982982982982982982982982982982982982982982982982982982982982982982982982982982982982982982982982982982982982982982982982982982982982982982982982982982424;unknownheaderparamnamenamenamenamenamenamenamenamenamenamenamenamenamenamenamenamenamenamenamename=unknowheaderparamvaluevaluevaluevaluevaluevaluevaluevaluevaluevaluevaluevaluevaluevaluevalue;unknownValuelessparamnameparamnameparamnameparamnameparamnameparamnameparamnameparamnameparamnameparamname\r\n'
@@ -288,65 +288,65 @@ class TestRFC4475SIPTortureTest(TestCase):
             'm=video 3227 RTP/AVP 31\r\n'
             'a=rtpmap:31 LPC\r\n'
         )
-        message = SIPMessageFactory().nextForString(messageString)
+        message = SIPMessageFactory().nextForString(message_string)
         self.assertIsNotNone(message)
         self.assertIsInstance(message.isValid, bool)
         # TODO - should this be considered valid?
         # self.assertTrue(message.isValid)
-        self.assertEqual(len(message.header.headerFields), 43)
-        self.assertTrue(message.header.headerFields[0].isTo)
+        self.assertEqual(len(message.header.header_fields), 43)
+        self.assertTrue(message.header.header_fields[0].isTo)
         if self.weHaveImplementedCompactHeaders:
-            self.assertTrue(message.header.headerFields[1].isFrom)
-        self.assertTrue(message.header.headerFields[2].isCallID)
-        self.assertTrue(message.header.headerFields[3].isCSeq)
-        self.assertTrue(message.header.headerFields[4].isUnknown)
-        self.assertTrue(message.header.headerFields[5].isVia)
+            self.assertTrue(message.header.header_fields[1].isFrom)
+        self.assertTrue(message.header.header_fields[2].isCallID)
+        self.assertTrue(message.header.header_fields[3].isCSeq)
+        self.assertTrue(message.header.header_fields[4].isUnknown)
+        self.assertTrue(message.header.header_fields[5].isVia)
         if self.weHaveImplementedCompactHeaders:
-            self.assertTrue(message.header.headerFields[6].isVia)
-            self.assertTrue(message.header.headerFields[7].isVia)
-        self.assertTrue(message.header.headerFields[8].isVia)
-        self.assertTrue(message.header.headerFields[9].isVia)
-        self.assertTrue(message.header.headerFields[10].isVia)
-        self.assertTrue(message.header.headerFields[11].isVia)
-        self.assertTrue(message.header.headerFields[12].isVia)
-        self.assertTrue(message.header.headerFields[13].isVia)
-        self.assertTrue(message.header.headerFields[14].isVia)
-        self.assertTrue(message.header.headerFields[15].isVia)
+            self.assertTrue(message.header.header_fields[6].isVia)
+            self.assertTrue(message.header.header_fields[7].isVia)
+        self.assertTrue(message.header.header_fields[8].isVia)
+        self.assertTrue(message.header.header_fields[9].isVia)
+        self.assertTrue(message.header.header_fields[10].isVia)
+        self.assertTrue(message.header.header_fields[11].isVia)
+        self.assertTrue(message.header.header_fields[12].isVia)
+        self.assertTrue(message.header.header_fields[13].isVia)
+        self.assertTrue(message.header.header_fields[14].isVia)
+        self.assertTrue(message.header.header_fields[15].isVia)
         if self.weHaveImplementedCompactHeaders:
-            self.assertTrue(message.header.headerFields[16].isVia)
-            self.assertTrue(message.header.headerFields[17].isVia)
-            self.assertTrue(message.header.headerFields[18].isVia)
-            self.assertTrue(message.header.headerFields[19].isVia)
-        self.assertTrue(message.header.headerFields[20].isVia)
-        self.assertTrue(message.header.headerFields[21].isVia)
-        self.assertTrue(message.header.headerFields[22].isVia)
-        self.assertTrue(message.header.headerFields[23].isVia)
-        self.assertTrue(message.header.headerFields[24].isVia)
-        self.assertTrue(message.header.headerFields[25].isVia)
-        self.assertTrue(message.header.headerFields[26].isVia)
-        self.assertTrue(message.header.headerFields[27].isVia)
-        self.assertTrue(message.header.headerFields[28].isVia)
-        self.assertTrue(message.header.headerFields[29].isVia)
-        self.assertTrue(message.header.headerFields[30].isVia)
-        self.assertTrue(message.header.headerFields[31].isVia)
-        self.assertTrue(message.header.headerFields[32].isVia)
-        self.assertTrue(message.header.headerFields[33].isVia)
-        self.assertTrue(message.header.headerFields[34].isVia)
-        self.assertTrue(message.header.headerFields[35].isVia)
-        self.assertTrue(message.header.headerFields[36].isVia)
-        self.assertTrue(message.header.headerFields[37].isVia)
-        self.assertTrue(message.header.headerFields[38].isVia)
-        self.assertTrue(message.header.headerFields[39].isMaxForwards)
-        self.assertTrue(message.header.headerFields[40].isContact)
-        self.assertTrue(message.header.headerFields[41].isContentType)
+            self.assertTrue(message.header.header_fields[16].isVia)
+            self.assertTrue(message.header.header_fields[17].isVia)
+            self.assertTrue(message.header.header_fields[18].isVia)
+            self.assertTrue(message.header.header_fields[19].isVia)
+        self.assertTrue(message.header.header_fields[20].isVia)
+        self.assertTrue(message.header.header_fields[21].isVia)
+        self.assertTrue(message.header.header_fields[22].isVia)
+        self.assertTrue(message.header.header_fields[23].isVia)
+        self.assertTrue(message.header.header_fields[24].isVia)
+        self.assertTrue(message.header.header_fields[25].isVia)
+        self.assertTrue(message.header.header_fields[26].isVia)
+        self.assertTrue(message.header.header_fields[27].isVia)
+        self.assertTrue(message.header.header_fields[28].isVia)
+        self.assertTrue(message.header.header_fields[29].isVia)
+        self.assertTrue(message.header.header_fields[30].isVia)
+        self.assertTrue(message.header.header_fields[31].isVia)
+        self.assertTrue(message.header.header_fields[32].isVia)
+        self.assertTrue(message.header.header_fields[33].isVia)
+        self.assertTrue(message.header.header_fields[34].isVia)
+        self.assertTrue(message.header.header_fields[35].isVia)
+        self.assertTrue(message.header.header_fields[36].isVia)
+        self.assertTrue(message.header.header_fields[37].isVia)
+        self.assertTrue(message.header.header_fields[38].isVia)
+        self.assertTrue(message.header.header_fields[39].isMaxForwards)
+        self.assertTrue(message.header.header_fields[40].isContact)
+        self.assertTrue(message.header.header_fields[41].isContentType)
         if self.weHaveImplementedCompactHeaders:
-            self.assertTrue(message.header.headerFields[42].isContentLength)
+            self.assertTrue(message.header.header_fields[42].isContentLength)
         # TODO - more.
 
     def testExtraTrailingOctetsInAUDPDatagram(self):
         # https://tools.ietf.org/html/rfc4475#section-3.1.1.8
         # dblreq
-        messageString = (
+        message_string = (
             'REGISTER sip:example.com SIP/2.0\r\n'
             'To: sip:j.user@example.com\r\n'
             'From: sip:j.user@example.com;tag=43251j3j324\r\n'
@@ -378,26 +378,26 @@ class TestRFC4475SIPTortureTest(TestCase):
             'a=rtpmap:31 LPC\r\n'
             '\r\n'
         )
-        message = SIPMessageFactory().nextForString(messageString)
+        message = SIPMessageFactory().nextForString(message_string)
         self.assertIsNotNone(message)
         self.assertIsInstance(message.isValid, bool)
         self.assertFalse(message.isValid)
-        self.assertEqual(len(message.header.headerFields), 8)
-        self.assertTrue(message.header.headerFields[0].isTo)
-        self.assertTrue(message.header.headerFields[1].isFrom)
-        self.assertTrue(message.header.headerFields[2].isMaxForwards)
+        self.assertEqual(len(message.header.header_fields), 8)
+        self.assertTrue(message.header.header_fields[0].isTo)
+        self.assertTrue(message.header.header_fields[1].isFrom)
+        self.assertTrue(message.header.header_fields[2].isMaxForwards)
         if self.weHaveImplementedCompactHeaders:
-            self.assertTrue(message.header.headerFields[3].isCallID)
-        self.assertTrue(message.header.headerFields[4].isContact)
-        self.assertTrue(message.header.headerFields[5].isCSeq)
-        self.assertTrue(message.header.headerFields[6].isVia)
-        self.assertTrue(message.header.headerFields[7].isContentLength)
+            self.assertTrue(message.header.header_fields[3].isCallID)
+        self.assertTrue(message.header.header_fields[4].isContact)
+        self.assertTrue(message.header.header_fields[5].isCSeq)
+        self.assertTrue(message.header.header_fields[6].isVia)
+        self.assertTrue(message.header.header_fields[7].isContentLength)
         # TODO - more.
 
     def testSemicolonSeparatedParametersInURIUserPart(self):
         # https://tools.ietf.org/html/rfc4475#section-3.1.1.9
         # semiuri
-        messageString = (
+        message_string = (
             'OPTIONS sip:user;par=u%40example.net@example.com SIP/2.0\r\n'
             'To: sip:j_user@example.com\r\n'
             'From: sip:caller@example.org;tag=33242\r\n'
@@ -411,26 +411,26 @@ class TestRFC4475SIPTortureTest(TestCase):
             'l: 0\r\n'
             '\r\n'
         )
-        message = SIPMessageFactory().nextForString(messageString)
+        message = SIPMessageFactory().nextForString(message_string)
         self.assertIsNotNone(message)
         self.assertIsInstance(message.isValid, bool)
         self.assertTrue(message.isValid)
-        self.assertEqual(len(message.header.headerFields), 8)
-        self.assertTrue(message.header.headerFields[0].isTo)
-        self.assertTrue(message.header.headerFields[1].isFrom)
-        self.assertTrue(message.header.headerFields[2].isMaxForwards)
-        self.assertTrue(message.header.headerFields[3].isCallID)
-        self.assertTrue(message.header.headerFields[4].isCSeq)
-        self.assertTrue(message.header.headerFields[5].isAccept)
-        self.assertTrue(message.header.headerFields[6].isVia)
+        self.assertEqual(len(message.header.header_fields), 8)
+        self.assertTrue(message.header.header_fields[0].isTo)
+        self.assertTrue(message.header.header_fields[1].isFrom)
+        self.assertTrue(message.header.header_fields[2].isMaxForwards)
+        self.assertTrue(message.header.header_fields[3].isCallID)
+        self.assertTrue(message.header.header_fields[4].isCSeq)
+        self.assertTrue(message.header.header_fields[5].isAccept)
+        self.assertTrue(message.header.header_fields[6].isVia)
         if self.weHaveImplementedCompactHeaders:
-            self.assertTrue(message.header.headerFields[7].isContentLength)
+            self.assertTrue(message.header.header_fields[7].isContentLength)
         # TODO - more.
 
     def testVariedAndUnknownTransportTypes(self):
         # https://tools.ietf.org/html/rfc4475#section-3.1.1.10
         # transports
-        messageString = (
+        message_string = (
             'OPTIONS sip:user@example.com SIP/2.0\r\n'
             'To: sip:user@example.com\r\n'
             'From: <sip:caller@example.com>;tag=323\r\n'
@@ -446,24 +446,24 @@ class TestRFC4475SIPTortureTest(TestCase):
             'l: 0\r\n'
             '\r\n'
         )
-        message = SIPMessageFactory().nextForString(messageString)
+        message = SIPMessageFactory().nextForString(message_string)
         self.assertIsNotNone(message)
         self.assertIsInstance(message.isValid, bool)
         self.assertTrue(message.isValid)
-        self.assertEqual(len(message.header.headerFields), 12)
-        self.assertTrue(message.header.headerFields[0].isTo)
-        self.assertTrue(message.header.headerFields[1].isFrom)
-        self.assertTrue(message.header.headerFields[2].isMaxForwards)
-        self.assertTrue(message.header.headerFields[3].isCallID)
-        self.assertTrue(message.header.headerFields[4].isAccept)
-        self.assertTrue(message.header.headerFields[5].isCSeq)
-        self.assertTrue(message.header.headerFields[6].isVia)
-        self.assertTrue(message.header.headerFields[7].isVia)
-        self.assertTrue(message.header.headerFields[8].isVia)
-        self.assertTrue(message.header.headerFields[9].isVia)
-        self.assertTrue(message.header.headerFields[10].isVia)
+        self.assertEqual(len(message.header.header_fields), 12)
+        self.assertTrue(message.header.header_fields[0].isTo)
+        self.assertTrue(message.header.header_fields[1].isFrom)
+        self.assertTrue(message.header.header_fields[2].isMaxForwards)
+        self.assertTrue(message.header.header_fields[3].isCallID)
+        self.assertTrue(message.header.header_fields[4].isAccept)
+        self.assertTrue(message.header.header_fields[5].isCSeq)
+        self.assertTrue(message.header.header_fields[6].isVia)
+        self.assertTrue(message.header.header_fields[7].isVia)
+        self.assertTrue(message.header.header_fields[8].isVia)
+        self.assertTrue(message.header.header_fields[9].isVia)
+        self.assertTrue(message.header.header_fields[10].isVia)
         if self.weHaveImplementedCompactHeaders:
-            self.assertTrue(message.header.headerFields[11].isContentLength)
+            self.assertTrue(message.header.header_fields[11].isContentLength)
         # TODO - more.
 
     def testMultipartMIMEMessage(self):
@@ -483,7 +483,7 @@ class TestRFC4475SIPTortureTest(TestCase):
     def testEmptyReasonPhrase(self):
         # https://tools.ietf.org/html/rfc4475#section-3.1.1.13
         # noreason
-        messageString = (
+        message_string = (
             'SIP/2.0 100 \r\n'
             'Via: SIP/2.0/UDP 192.0.2.105;branch=z9hG4bK2398ndaoe\r\n'
             'Call-ID: noreason.asndj203insdf99223ndf\r\n'
@@ -494,25 +494,25 @@ class TestRFC4475SIPTortureTest(TestCase):
             'Contact: <sip:user@host105.example.com>\r\n'
             '\r\n'
         )
-        message = SIPMessageFactory().nextForString(messageString)
+        message = SIPMessageFactory().nextForString(message_string)
         self.assertIsNotNone(message)
         self.assertIsInstance(message.isValid, bool)
         # TODO - is this valid?
         # self.assertTrue(message.isValid)
-        self.assertEqual(len(message.header.headerFields), 7)
-        self.assertTrue(message.header.headerFields[0].isVia)
-        self.assertTrue(message.header.headerFields[1].isCallID)
-        self.assertTrue(message.header.headerFields[2].isCSeq)
-        self.assertTrue(message.header.headerFields[3].isFrom)
-        self.assertTrue(message.header.headerFields[4].isTo)
-        self.assertTrue(message.header.headerFields[5].isContentLength)
-        self.assertTrue(message.header.headerFields[6].isContact)
+        self.assertEqual(len(message.header.header_fields), 7)
+        self.assertTrue(message.header.header_fields[0].isVia)
+        self.assertTrue(message.header.header_fields[1].isCallID)
+        self.assertTrue(message.header.header_fields[2].isCSeq)
+        self.assertTrue(message.header.header_fields[3].isFrom)
+        self.assertTrue(message.header.header_fields[4].isTo)
+        self.assertTrue(message.header.header_fields[5].isContentLength)
+        self.assertTrue(message.header.header_fields[6].isContact)
         # TODO - more.
 
     def testExtraneousHeaderFieldSeparators(self):
         # https://tools.ietf.org/html/rfc4475#section-3.1.2.1
         # badinv01
-        messageString = (
+        message_string = (
             'INVITE sip:user@example.com SIP/2.0\r\n'
             'To: sip:j.user@example.com\r\n'
             'From: sip:caller@example.net;tag=134161461246\r\n'
@@ -533,27 +533,27 @@ class TestRFC4475SIPTortureTest(TestCase):
             'm=video 3227 RTP/AVP 31\r\n'
             'a=rtpmap:31 LPC\r\n'
         )
-        message = SIPMessageFactory().nextForString(messageString)
+        message = SIPMessageFactory().nextForString(message_string)
         self.assertIsNotNone(message)
         self.assertIsInstance(message.isValid, bool)
         # TODO - is this valid?
         # self.assertTrue(message.isValid)
-        self.assertEqual(len(message.header.headerFields), 9)
-        self.assertTrue(message.header.headerFields[0].isTo)
-        self.assertTrue(message.header.headerFields[1].isFrom)
-        self.assertTrue(message.header.headerFields[2].isMaxForwards)
-        self.assertTrue(message.header.headerFields[3].isCallID)
-        self.assertTrue(message.header.headerFields[4].isCSeq)
-        self.assertTrue(message.header.headerFields[5].isVia)
-        self.assertTrue(message.header.headerFields[6].isContact)
-        self.assertTrue(message.header.headerFields[7].isContentLength)
-        self.assertTrue(message.header.headerFields[8].isContentType)
+        self.assertEqual(len(message.header.header_fields), 9)
+        self.assertTrue(message.header.header_fields[0].isTo)
+        self.assertTrue(message.header.header_fields[1].isFrom)
+        self.assertTrue(message.header.header_fields[2].isMaxForwards)
+        self.assertTrue(message.header.header_fields[3].isCallID)
+        self.assertTrue(message.header.header_fields[4].isCSeq)
+        self.assertTrue(message.header.header_fields[5].isVia)
+        self.assertTrue(message.header.header_fields[6].isContact)
+        self.assertTrue(message.header.header_fields[7].isContentLength)
+        self.assertTrue(message.header.header_fields[8].isContentType)
         # TODO - more.
 
     def testContentLengthLargerThanMessage(self):
         # https://tools.ietf.org/html/rfc4475#section-3.1.2.2
         # clerr
-        messageString = (
+        message_string = (
             'INVITE sip:user@example.com SIP/2.0\r\n'
             'Max-Forwards: 80\r\n'
             'To: sip:j.user@example.com\r\n'
@@ -574,27 +574,27 @@ class TestRFC4475SIPTortureTest(TestCase):
             'm=video 3227 RTP/AVP 31\r\n'
             'a=rtpmap:31 LPC\r\n'
         )
-        message = SIPMessageFactory().nextForString(messageString)
+        message = SIPMessageFactory().nextForString(message_string)
         self.assertIsNotNone(message)
         self.assertIsInstance(message.isValid, bool)
         # TODO - is this valid?
         # self.assertTrue(message.isValid)
-        self.assertEqual(len(message.header.headerFields), 9)
-        self.assertTrue(message.header.headerFields[0].isMaxForwards)
-        self.assertTrue(message.header.headerFields[1].isTo)
-        self.assertTrue(message.header.headerFields[2].isFrom)
-        self.assertTrue(message.header.headerFields[3].isContact)
-        self.assertTrue(message.header.headerFields[4].isCallID)
-        self.assertTrue(message.header.headerFields[5].isCSeq)
-        self.assertTrue(message.header.headerFields[6].isVia)
-        self.assertTrue(message.header.headerFields[7].isContentType)
-        self.assertTrue(message.header.headerFields[8].isContentLength)
+        self.assertEqual(len(message.header.header_fields), 9)
+        self.assertTrue(message.header.header_fields[0].isMaxForwards)
+        self.assertTrue(message.header.header_fields[1].isTo)
+        self.assertTrue(message.header.header_fields[2].isFrom)
+        self.assertTrue(message.header.header_fields[3].isContact)
+        self.assertTrue(message.header.header_fields[4].isCallID)
+        self.assertTrue(message.header.header_fields[5].isCSeq)
+        self.assertTrue(message.header.header_fields[6].isVia)
+        self.assertTrue(message.header.header_fields[7].isContentType)
+        self.assertTrue(message.header.header_fields[8].isContentLength)
         # TODO - more.
 
     def testNegativeContentLength(self):
         # https://tools.ietf.org/html/rfc4475#section-3.1.2.3
         # ncl
-        messageString = (
+        message_string = (
             'INVITE sip:user@example.com SIP/2.0\r\n'
             'Max-Forwards: 254\r\n'
             'To: sip:j.user@example.com\r\n'
@@ -615,27 +615,27 @@ class TestRFC4475SIPTortureTest(TestCase):
             'm=video 3227 RTP/AVP 31\r\n'
             'a=rtpmap:31 LPC\r\n'
         )
-        message = SIPMessageFactory().nextForString(messageString)
+        message = SIPMessageFactory().nextForString(message_string)
         self.assertIsNotNone(message)
         self.assertIsInstance(message.isValid, bool)
         # TODO - is this valid?
         # self.assertTrue(message.isValid)
-        self.assertEqual(len(message.header.headerFields), 9)
-        self.assertTrue(message.header.headerFields[0].isMaxForwards)
-        self.assertTrue(message.header.headerFields[1].isTo)
-        self.assertTrue(message.header.headerFields[2].isFrom)
-        self.assertTrue(message.header.headerFields[3].isCallID)
-        self.assertTrue(message.header.headerFields[4].isCSeq)
-        self.assertTrue(message.header.headerFields[5].isVia)
-        self.assertTrue(message.header.headerFields[6].isContact)
-        self.assertTrue(message.header.headerFields[7].isContentType)
-        self.assertTrue(message.header.headerFields[8].isContentLength)
+        self.assertEqual(len(message.header.header_fields), 9)
+        self.assertTrue(message.header.header_fields[0].isMaxForwards)
+        self.assertTrue(message.header.header_fields[1].isTo)
+        self.assertTrue(message.header.header_fields[2].isFrom)
+        self.assertTrue(message.header.header_fields[3].isCallID)
+        self.assertTrue(message.header.header_fields[4].isCSeq)
+        self.assertTrue(message.header.header_fields[5].isVia)
+        self.assertTrue(message.header.header_fields[6].isContact)
+        self.assertTrue(message.header.header_fields[7].isContentType)
+        self.assertTrue(message.header.header_fields[8].isContentLength)
         # TODO - more.
 
     def testRequestScalarFieldsWithOverlargeValues(self):
         # https://tools.ietf.org/html/rfc4475#section-3.1.2.4
         # scalar02
-        messageString = (
+        message_string = (
             'REGISTER sip:example.com SIP/2.0\r\n'
             'Via: SIP/2.0/TCP host129.example.com;branch=z9hG4bK342sdfoi3\r\n'
             'To: <sip:user@example.com>\r\n'
@@ -649,26 +649,26 @@ class TestRFC4475SIPTortureTest(TestCase):
             'Content-Length: 0\r\n'
             '\r\n'
         )
-        message = SIPMessageFactory().nextForString(messageString)
+        message = SIPMessageFactory().nextForString(message_string)
         self.assertIsNotNone(message)
         self.assertIsInstance(message.isValid, bool)
         self.assertTrue(message.isValid)
-        self.assertEqual(len(message.header.headerFields), 9)
-        self.assertTrue(message.header.headerFields[0].isVia)
-        self.assertTrue(message.header.headerFields[1].isTo)
-        self.assertTrue(message.header.headerFields[2].isFrom)
-        self.assertTrue(message.header.headerFields[3].isCSeq)
-        self.assertTrue(message.header.headerFields[4].isCallID)
-        self.assertTrue(message.header.headerFields[5].isMaxForwards)
-        self.assertTrue(message.header.headerFields[6].isExpires)
-        self.assertTrue(message.header.headerFields[7].isContact)
-        self.assertTrue(message.header.headerFields[8].isContentLength)
+        self.assertEqual(len(message.header.header_fields), 9)
+        self.assertTrue(message.header.header_fields[0].isVia)
+        self.assertTrue(message.header.header_fields[1].isTo)
+        self.assertTrue(message.header.header_fields[2].isFrom)
+        self.assertTrue(message.header.header_fields[3].isCSeq)
+        self.assertTrue(message.header.header_fields[4].isCallID)
+        self.assertTrue(message.header.header_fields[5].isMaxForwards)
+        self.assertTrue(message.header.header_fields[6].isExpires)
+        self.assertTrue(message.header.header_fields[7].isContact)
+        self.assertTrue(message.header.header_fields[8].isContentLength)
         # TODO - more.
 
     def testResponseScalarFieldsWithOverlargeValues(self):
         # https://tools.ietf.org/html/rfc4475#section-3.1.2.5
         # scalarlg
-        messageString = (
+        message_string = (
             'SIP/2.0 503 Service Unavailable\r\n'
             'Via: SIP/2.0/TCP host129.example.com;branch=z9hG4bKzzxdiwo34sw;received=192.0.2.129\r\n'
             'To: <sip:user@example.com>\r\n'
@@ -680,25 +680,25 @@ class TestRFC4475SIPTortureTest(TestCase):
             'Content-Length: 0\r\n'
             '\r\n'
         )
-        message = SIPMessageFactory().nextForString(messageString)
+        message = SIPMessageFactory().nextForString(message_string)
         self.assertIsNotNone(message)
         self.assertIsInstance(message.isValid, bool)
         self.assertTrue(message.isValid)
-        self.assertEqual(len(message.header.headerFields), 8)
-        self.assertTrue(message.header.headerFields[0].isVia)
-        self.assertTrue(message.header.headerFields[1].isTo)
-        self.assertTrue(message.header.headerFields[2].isFrom)
-        self.assertTrue(message.header.headerFields[3].isCSeq)
-        self.assertTrue(message.header.headerFields[4].isCallID)
-        self.assertTrue(message.header.headerFields[5].isRetryAfter)
-        self.assertTrue(message.header.headerFields[6].isWarning)
-        self.assertTrue(message.header.headerFields[7].isContentLength)
+        self.assertEqual(len(message.header.header_fields), 8)
+        self.assertTrue(message.header.header_fields[0].isVia)
+        self.assertTrue(message.header.header_fields[1].isTo)
+        self.assertTrue(message.header.header_fields[2].isFrom)
+        self.assertTrue(message.header.header_fields[3].isCSeq)
+        self.assertTrue(message.header.header_fields[4].isCallID)
+        self.assertTrue(message.header.header_fields[5].isRetryAfter)
+        self.assertTrue(message.header.header_fields[6].isWarning)
+        self.assertTrue(message.header.header_fields[7].isContentLength)
         # TODO - more.
 
     def testUnterminatedQuotedStringInDisplayName(self):
         # https://tools.ietf.org/html/rfc4475#section-3.1.2.6
         # quotbal
-        messageString = (
+        message_string = (
             'INVITE sip:user@example.com SIP/2.0\r\n'
             'To: "Mr. J. User <sip:j.user@example.com>\r\n'
             'From: sip:caller@example.net;tag=93334\r\n'
@@ -719,26 +719,26 @@ class TestRFC4475SIPTortureTest(TestCase):
             'm=video 3227 RTP/AVP 31\r\n'
             'a=rtpmap:31 LPC\r\n'
         )
-        message = SIPMessageFactory().nextForString(messageString)
+        message = SIPMessageFactory().nextForString(message_string)
         self.assertIsNotNone(message)
         self.assertIsInstance(message.isValid, bool)
         self.assertTrue(message.isValid)
-        self.assertEqual(len(message.header.headerFields), 9)
-        self.assertTrue(message.header.headerFields[0].isTo)
-        self.assertTrue(message.header.headerFields[1].isFrom)
-        self.assertTrue(message.header.headerFields[2].isMaxForwards)
-        self.assertTrue(message.header.headerFields[3].isCallID)
-        self.assertTrue(message.header.headerFields[4].isContact)
-        self.assertTrue(message.header.headerFields[5].isCSeq)
-        self.assertTrue(message.header.headerFields[6].isVia)
-        self.assertTrue(message.header.headerFields[7].isContentType)
-        self.assertTrue(message.header.headerFields[8].isContentLength)
+        self.assertEqual(len(message.header.header_fields), 9)
+        self.assertTrue(message.header.header_fields[0].isTo)
+        self.assertTrue(message.header.header_fields[1].isFrom)
+        self.assertTrue(message.header.header_fields[2].isMaxForwards)
+        self.assertTrue(message.header.header_fields[3].isCallID)
+        self.assertTrue(message.header.header_fields[4].isContact)
+        self.assertTrue(message.header.header_fields[5].isCSeq)
+        self.assertTrue(message.header.header_fields[6].isVia)
+        self.assertTrue(message.header.header_fields[7].isContentType)
+        self.assertTrue(message.header.header_fields[8].isContentLength)
         # TODO - more.
 
     def testAngleBracketEnclosingRequestURI(self):
         # https://tools.ietf.org/html/rfc4475#section-3.1.2.7
         # ltgtruri
-        messageString = (
+        message_string = (
             'INVITE <sip:user@example.com> SIP/2.0\r\n'
             'To: sip:user@example.com\r\n'
             'From: sip:caller@example.net;tag=39291\r\n'
@@ -759,27 +759,27 @@ class TestRFC4475SIPTortureTest(TestCase):
             'm=video 3227 RTP/AVP 31\r\n'
             'a=rtpmap:31 LPC\r\n'
         )
-        message = SIPMessageFactory().nextForString(messageString)
+        message = SIPMessageFactory().nextForString(message_string)
         self.assertIsNotNone(message)
         self.assertIsInstance(message.isValid, bool)
         # TODO - is this valid?
         # self.assertTrue(message.isValid)
-        self.assertEqual(len(message.header.headerFields), 9)
-        self.assertTrue(message.header.headerFields[0].isTo)
-        self.assertTrue(message.header.headerFields[1].isFrom)
-        self.assertTrue(message.header.headerFields[2].isMaxForwards)
-        self.assertTrue(message.header.headerFields[3].isCallID)
-        self.assertTrue(message.header.headerFields[4].isCSeq)
-        self.assertTrue(message.header.headerFields[5].isVia)
-        self.assertTrue(message.header.headerFields[6].isContact)
-        self.assertTrue(message.header.headerFields[7].isContentType)
-        self.assertTrue(message.header.headerFields[8].isContentLength)
+        self.assertEqual(len(message.header.header_fields), 9)
+        self.assertTrue(message.header.header_fields[0].isTo)
+        self.assertTrue(message.header.header_fields[1].isFrom)
+        self.assertTrue(message.header.header_fields[2].isMaxForwards)
+        self.assertTrue(message.header.header_fields[3].isCallID)
+        self.assertTrue(message.header.header_fields[4].isCSeq)
+        self.assertTrue(message.header.header_fields[5].isVia)
+        self.assertTrue(message.header.header_fields[6].isContact)
+        self.assertTrue(message.header.header_fields[7].isContentType)
+        self.assertTrue(message.header.header_fields[8].isContentLength)
         # TODO - more.
 
     def testMalformedSIPRequestURIEmbeddedLWS(self):
         # https://tools.ietf.org/html/rfc4475#section-3.1.2.8
         # lwsruri
-        messageString = (
+        message_string = (
             'INVITE sip:user@example.com; lr SIP/2.0\r\n'
             'To: sip:user@example.com;tag=3xfe-9921883-z9f\r\n'
             'From: sip:caller@example.net;tag=231413434\r\n'
@@ -800,27 +800,27 @@ class TestRFC4475SIPTortureTest(TestCase):
             'm=video 3227 RTP/AVP 31\r\n'
             'a=rtpmap:31 LPC\r\n'
         )
-        message = SIPMessageFactory().nextForString(messageString)
+        message = SIPMessageFactory().nextForString(message_string)
         self.assertIsNotNone(message)
         self.assertIsInstance(message.isValid, bool)
         # TODO - is this valid?
         # self.assertTrue(message.isValid)
-        self.assertEqual(len(message.header.headerFields), 9)
-        self.assertTrue(message.header.headerFields[0].isTo)
-        self.assertTrue(message.header.headerFields[1].isFrom)
-        self.assertTrue(message.header.headerFields[2].isMaxForwards)
-        self.assertTrue(message.header.headerFields[3].isCallID)
-        self.assertTrue(message.header.headerFields[4].isCSeq)
-        self.assertTrue(message.header.headerFields[5].isVia)
-        self.assertTrue(message.header.headerFields[6].isContact)
-        self.assertTrue(message.header.headerFields[7].isContentType)
-        self.assertTrue(message.header.headerFields[8].isContentLength)
+        self.assertEqual(len(message.header.header_fields), 9)
+        self.assertTrue(message.header.header_fields[0].isTo)
+        self.assertTrue(message.header.header_fields[1].isFrom)
+        self.assertTrue(message.header.header_fields[2].isMaxForwards)
+        self.assertTrue(message.header.header_fields[3].isCallID)
+        self.assertTrue(message.header.header_fields[4].isCSeq)
+        self.assertTrue(message.header.header_fields[5].isVia)
+        self.assertTrue(message.header.header_fields[6].isContact)
+        self.assertTrue(message.header.header_fields[7].isContentType)
+        self.assertTrue(message.header.header_fields[8].isContentLength)
         # TODO - more.
 
     def testMultipleSPSeparatingRequestLineElements(self):
         # https://tools.ietf.org/html/rfc4475#section-3.1.2.9
         # lwsstart
-        messageString = (
+        message_string = (
             'INVITE  sip:user@example.com  SIP/2.0\r\n'
             'Max-Forwards: 8\r\n'
             'To: sip:user@example.com\r\n'
@@ -841,26 +841,26 @@ class TestRFC4475SIPTortureTest(TestCase):
             'm=video 3227 RTP/AVP 31\r\n'
             'a=rtpmap:31 LPC\r\n'
         )
-        message = SIPMessageFactory().nextForString(messageString)
+        message = SIPMessageFactory().nextForString(message_string)
         self.assertIsNotNone(message)
         self.assertIsInstance(message.isValid, bool)
         self.assertTrue(message.isValid)
-        self.assertEqual(len(message.header.headerFields), 9)
-        self.assertTrue(message.header.headerFields[0].isMaxForwards)
-        self.assertTrue(message.header.headerFields[1].isTo)
-        self.assertTrue(message.header.headerFields[2].isFrom)
-        self.assertTrue(message.header.headerFields[3].isCallID)
-        self.assertTrue(message.header.headerFields[4].isCSeq)
-        self.assertTrue(message.header.headerFields[5].isVia)
-        self.assertTrue(message.header.headerFields[6].isContact)
-        self.assertTrue(message.header.headerFields[7].isContentType)
-        self.assertTrue(message.header.headerFields[8].isContentLength)
+        self.assertEqual(len(message.header.header_fields), 9)
+        self.assertTrue(message.header.header_fields[0].isMaxForwards)
+        self.assertTrue(message.header.header_fields[1].isTo)
+        self.assertTrue(message.header.header_fields[2].isFrom)
+        self.assertTrue(message.header.header_fields[3].isCallID)
+        self.assertTrue(message.header.header_fields[4].isCSeq)
+        self.assertTrue(message.header.header_fields[5].isVia)
+        self.assertTrue(message.header.header_fields[6].isContact)
+        self.assertTrue(message.header.header_fields[7].isContentType)
+        self.assertTrue(message.header.header_fields[8].isContentLength)
         # TODO - more.
 
     def testSPCharactersAtEndOfRequestLine(self):
         # https://tools.ietf.org/html/rfc4475#section-3.1.2.10
         # trws
-        messageString = (
+        message_string = (
             'OPTIONS sip:remote-target@example.com SIP/2.0  \r\n'
             'Via: SIP/2.0/TCP host1.examle.com;branch=z9hG4bK299342093\r\n'
             'To: <sip:remote-target@example.com>\r\n'
@@ -872,25 +872,25 @@ class TestRFC4475SIPTortureTest(TestCase):
             'Content-Length: 0\r\n'
             '\r\n'
         )
-        message = SIPMessageFactory().nextForString(messageString)
+        message = SIPMessageFactory().nextForString(message_string)
         self.assertIsNotNone(message)
         self.assertIsInstance(message.isValid, bool)
         self.assertTrue(message.isValid)
-        self.assertEqual(len(message.header.headerFields), 8)
-        self.assertTrue(message.header.headerFields[0].isVia)
-        self.assertTrue(message.header.headerFields[1].isTo)
-        self.assertTrue(message.header.headerFields[2].isFrom)
-        self.assertTrue(message.header.headerFields[3].isCallID)
-        self.assertTrue(message.header.headerFields[4].isAccept)
-        self.assertTrue(message.header.headerFields[5].isCSeq)
-        self.assertTrue(message.header.headerFields[6].isMaxForwards)
-        self.assertTrue(message.header.headerFields[7].isContentLength)
+        self.assertEqual(len(message.header.header_fields), 8)
+        self.assertTrue(message.header.header_fields[0].isVia)
+        self.assertTrue(message.header.header_fields[1].isTo)
+        self.assertTrue(message.header.header_fields[2].isFrom)
+        self.assertTrue(message.header.header_fields[3].isCallID)
+        self.assertTrue(message.header.header_fields[4].isAccept)
+        self.assertTrue(message.header.header_fields[5].isCSeq)
+        self.assertTrue(message.header.header_fields[6].isMaxForwards)
+        self.assertTrue(message.header.header_fields[7].isContentLength)
         # TODO - more.
 
     def testEscapedHeadersInSIPRequestURI(self):
         # https://tools.ietf.org/html/rfc4475#section-3.1.2.11
         # escruri
-        messageString = (
+        message_string = (
             'INVITE sip:user@example.com?Route=%3Csip:example.com%3E SIP/2.0\r\n'
             'To: sip:user@example.com\r\n'
             'From: sip:caller@example.net;tag=341518\r\n'
@@ -911,26 +911,26 @@ class TestRFC4475SIPTortureTest(TestCase):
             'm=video 3227 RTP/AVP 31\r\n'
             'a=rtpmap:31 LPC\r\n'
         )
-        message = SIPMessageFactory().nextForString(messageString)
+        message = SIPMessageFactory().nextForString(message_string)
         self.assertIsNotNone(message)
         self.assertIsInstance(message.isValid, bool)
         self.assertTrue(message.isValid)
-        self.assertEqual(len(message.header.headerFields), 9)
-        self.assertTrue(message.header.headerFields[0].isTo)
-        self.assertTrue(message.header.headerFields[1].isFrom)
-        self.assertTrue(message.header.headerFields[2].isMaxForwards)
-        self.assertTrue(message.header.headerFields[3].isContact)
-        self.assertTrue(message.header.headerFields[4].isCallID)
-        self.assertTrue(message.header.headerFields[5].isCSeq)
-        self.assertTrue(message.header.headerFields[6].isVia)
-        self.assertTrue(message.header.headerFields[7].isContentType)
-        self.assertTrue(message.header.headerFields[8].isContentLength)
+        self.assertEqual(len(message.header.header_fields), 9)
+        self.assertTrue(message.header.header_fields[0].isTo)
+        self.assertTrue(message.header.header_fields[1].isFrom)
+        self.assertTrue(message.header.header_fields[2].isMaxForwards)
+        self.assertTrue(message.header.header_fields[3].isContact)
+        self.assertTrue(message.header.header_fields[4].isCallID)
+        self.assertTrue(message.header.header_fields[5].isCSeq)
+        self.assertTrue(message.header.header_fields[6].isVia)
+        self.assertTrue(message.header.header_fields[7].isContentType)
+        self.assertTrue(message.header.header_fields[8].isContentLength)
         # TODO - more.
 
     def testInvalidTimezoneInDateHeaderField(self):
         # https://tools.ietf.org/html/rfc4475#section-3.1.2.12
         # baddate
-        messageString = (
+        message_string = (
             'INVITE sip:user@example.com SIP/2.0\r\n'
             'To: sip:user@example.com\r\n'
             'From: sip:caller@example.net;tag=2234923\r\n'
@@ -952,27 +952,27 @@ class TestRFC4475SIPTortureTest(TestCase):
             'm=video 3227 RTP/AVP 31\r\n'
             'a=rtpmap:31 LPC\r\n'
         )
-        message = SIPMessageFactory().nextForString(messageString)
+        message = SIPMessageFactory().nextForString(message_string)
         self.assertIsNotNone(message)
         self.assertIsInstance(message.isValid, bool)
         self.assertTrue(message.isValid)
-        self.assertEqual(len(message.header.headerFields), 10)
-        self.assertTrue(message.header.headerFields[0].isTo)
-        self.assertTrue(message.header.headerFields[1].isFrom)
-        self.assertTrue(message.header.headerFields[2].isMaxForwards)
-        self.assertTrue(message.header.headerFields[3].isCallID)
-        self.assertTrue(message.header.headerFields[4].isCSeq)
-        self.assertTrue(message.header.headerFields[5].isVia)
-        self.assertTrue(message.header.headerFields[6].isDate)
-        self.assertTrue(message.header.headerFields[7].isContact)
-        self.assertTrue(message.header.headerFields[8].isContentType)
-        self.assertTrue(message.header.headerFields[9].isContentLength)
+        self.assertEqual(len(message.header.header_fields), 10)
+        self.assertTrue(message.header.header_fields[0].isTo)
+        self.assertTrue(message.header.header_fields[1].isFrom)
+        self.assertTrue(message.header.header_fields[2].isMaxForwards)
+        self.assertTrue(message.header.header_fields[3].isCallID)
+        self.assertTrue(message.header.header_fields[4].isCSeq)
+        self.assertTrue(message.header.header_fields[5].isVia)
+        self.assertTrue(message.header.header_fields[6].isDate)
+        self.assertTrue(message.header.header_fields[7].isContact)
+        self.assertTrue(message.header.header_fields[8].isContentType)
+        self.assertTrue(message.header.header_fields[9].isContentLength)
         # TODO - more.
 
     def testFailureToEncloseNameAddrURIInAngleBrackets(self):
         # https://tools.ietf.org/html/rfc4475#section-3.1.2.13
         # regbadct
-        messageString = (
+        message_string = (
             'REGISTER sip:example.com SIP/2.0\r\n'
             'To: sip:user@example.com\r\n'
             'From: sip:user@example.com;tag=998332\r\n'
@@ -984,27 +984,27 @@ class TestRFC4475SIPTortureTest(TestCase):
             'l: 0\r\n'
             '\r\n'
         )
-        message = SIPMessageFactory().nextForString(messageString)
+        message = SIPMessageFactory().nextForString(message_string)
         self.assertIsNotNone(message)
         self.assertIsInstance(message.isValid, bool)
         # TODO - is this valid?
         # self.assertTrue(message.isValid)
-        self.assertEqual(len(message.header.headerFields), 8)
-        self.assertTrue(message.header.headerFields[0].isTo)
-        self.assertTrue(message.header.headerFields[1].isFrom)
-        self.assertTrue(message.header.headerFields[2].isMaxForwards)
-        self.assertTrue(message.header.headerFields[3].isCallID)
-        self.assertTrue(message.header.headerFields[4].isCSeq)
-        self.assertTrue(message.header.headerFields[5].isVia)
-        self.assertTrue(message.header.headerFields[6].isContact)
+        self.assertEqual(len(message.header.header_fields), 8)
+        self.assertTrue(message.header.header_fields[0].isTo)
+        self.assertTrue(message.header.header_fields[1].isFrom)
+        self.assertTrue(message.header.header_fields[2].isMaxForwards)
+        self.assertTrue(message.header.header_fields[3].isCallID)
+        self.assertTrue(message.header.header_fields[4].isCSeq)
+        self.assertTrue(message.header.header_fields[5].isVia)
+        self.assertTrue(message.header.header_fields[6].isContact)
         if self.weHaveImplementedCompactHeaders:
-            self.assertTrue(message.header.headerFields[7].isContentLength)
+            self.assertTrue(message.header.header_fields[7].isContentLength)
         # TODO - more.
 
     def testSpacesWithinAddrSpec(self):
         # https://tools.ietf.org/html/rfc4475#section-3.1.2.14
         # badaspec
-        messageString = (
+        message_string = (
             'OPTIONS sip:user@example.org SIP/2.0\r\n'
             'Via: SIP/2.0/UDP host4.example.com:5060;branch=z9hG4bKkdju43234\r\n'
             'Max-Forwards: 70\r\n'
@@ -1016,26 +1016,26 @@ class TestRFC4475SIPTortureTest(TestCase):
             'l: 0\r\n'
             '\r\n'
         )
-        message = SIPMessageFactory().nextForString(messageString)
+        message = SIPMessageFactory().nextForString(message_string)
         self.assertIsNotNone(message)
         self.assertIsInstance(message.isValid, bool)
         self.assertTrue(message.isValid)
-        self.assertEqual(len(message.header.headerFields), 8)
-        self.assertTrue(message.header.headerFields[0].isVia)
-        self.assertTrue(message.header.headerFields[1].isMaxForwards)
-        self.assertTrue(message.header.headerFields[2].isFrom)
-        self.assertTrue(message.header.headerFields[3].isTo)
-        self.assertTrue(message.header.headerFields[4].isCallID)
-        self.assertTrue(message.header.headerFields[5].isAccept)
-        self.assertTrue(message.header.headerFields[6].isCSeq)
+        self.assertEqual(len(message.header.header_fields), 8)
+        self.assertTrue(message.header.header_fields[0].isVia)
+        self.assertTrue(message.header.header_fields[1].isMaxForwards)
+        self.assertTrue(message.header.header_fields[2].isFrom)
+        self.assertTrue(message.header.header_fields[3].isTo)
+        self.assertTrue(message.header.header_fields[4].isCallID)
+        self.assertTrue(message.header.header_fields[5].isAccept)
+        self.assertTrue(message.header.header_fields[6].isCSeq)
         if self.weHaveImplementedCompactHeaders:
-            self.assertTrue(message.header.headerFields[7].isContentLength)
+            self.assertTrue(message.header.header_fields[7].isContentLength)
         # TODO - more.
 
     def testNonTokenCharactersInDisplayName(self):
         # https://tools.ietf.org/html/rfc4475#section-3.1.2.15
         # baddn
-        messageString = (
+        message_string = (
             'OPTIONS sip:t.watson@example.org SIP/2.0\r\n'
             'Via:     SIP/2.0/UDP c.example.com:5060;branch=z9hG4bKkdjuw\r\n'
             'Max-Forwards:      70\r\n'
@@ -1046,26 +1046,26 @@ class TestRFC4475SIPTortureTest(TestCase):
             'CSeq:    3923239 OPTIONS\r\n'
             'l: 0\r\n'
         )
-        message = SIPMessageFactory().nextForString(messageString)
+        message = SIPMessageFactory().nextForString(message_string)
         self.assertIsNotNone(message)
         self.assertIsInstance(message.isValid, bool)
         self.assertTrue(message.isValid)
-        self.assertEqual(len(message.header.headerFields), 8)
-        self.assertTrue(message.header.headerFields[0].isVia)
-        self.assertTrue(message.header.headerFields[1].isMaxForwards)
-        self.assertTrue(message.header.headerFields[2].isFrom)
-        self.assertTrue(message.header.headerFields[3].isTo)
-        self.assertTrue(message.header.headerFields[4].isCallID)
-        self.assertTrue(message.header.headerFields[5].isAccept)
-        self.assertTrue(message.header.headerFields[6].isCSeq)
+        self.assertEqual(len(message.header.header_fields), 8)
+        self.assertTrue(message.header.header_fields[0].isVia)
+        self.assertTrue(message.header.header_fields[1].isMaxForwards)
+        self.assertTrue(message.header.header_fields[2].isFrom)
+        self.assertTrue(message.header.header_fields[3].isTo)
+        self.assertTrue(message.header.header_fields[4].isCallID)
+        self.assertTrue(message.header.header_fields[5].isAccept)
+        self.assertTrue(message.header.header_fields[6].isCSeq)
         if self.weHaveImplementedCompactHeaders:
-            self.assertTrue(message.header.headerFields[7].isContentLength)
+            self.assertTrue(message.header.header_fields[7].isContentLength)
         # TODO - more.
 
     def testUnknownProtocolVersion(self):
         # https://tools.ietf.org/html/rfc4475#section-3.1.2.16
         # badvers
-        messageString = (
+        message_string = (
             'OPTIONS sip:t.watson@example.org SIP/7.0\r\n'
             'Via:     SIP/7.0/UDP c.example.com;branch=z9hG4bKkdjuw\r\n'
             'Max-Forwards:     70\r\n'
@@ -1076,26 +1076,26 @@ class TestRFC4475SIPTortureTest(TestCase):
             'l: 0\r\n'
             '\r\n'
         )
-        message = SIPMessageFactory().nextForString(messageString)
+        message = SIPMessageFactory().nextForString(message_string)
         self.assertIsNotNone(message)
         self.assertIsInstance(message.isValid, bool)
         # TODO - is this valid?
         # self.assertTrue(message.isValid)
-        self.assertEqual(len(message.header.headerFields), 7)
-        self.assertTrue(message.header.headerFields[0].isVia)
-        self.assertTrue(message.header.headerFields[1].isMaxForwards)
-        self.assertTrue(message.header.headerFields[2].isFrom)
-        self.assertTrue(message.header.headerFields[3].isTo)
-        self.assertTrue(message.header.headerFields[4].isCallID)
-        self.assertTrue(message.header.headerFields[5].isCSeq)
+        self.assertEqual(len(message.header.header_fields), 7)
+        self.assertTrue(message.header.header_fields[0].isVia)
+        self.assertTrue(message.header.header_fields[1].isMaxForwards)
+        self.assertTrue(message.header.header_fields[2].isFrom)
+        self.assertTrue(message.header.header_fields[3].isTo)
+        self.assertTrue(message.header.header_fields[4].isCallID)
+        self.assertTrue(message.header.header_fields[5].isCSeq)
         if self.weHaveImplementedCompactHeaders:
-            self.assertTrue(message.header.headerFields[6].isContentLength)
+            self.assertTrue(message.header.header_fields[6].isContentLength)
         # TODO - more.
 
     def testStartLineAndCSeqMethodMismatch(self):
         # https://tools.ietf.org/html/rfc4475#section-3.1.2.17
         # mismatch01
-        messageString = (
+        message_string = (
             'OPTIONS sip:user@example.com SIP/2.0\r\n'
             'To: sip:j.user@example.com\r\n'
             'From: sip:caller@example.net;tag=34525\r\n'
@@ -1106,25 +1106,25 @@ class TestRFC4475SIPTortureTest(TestCase):
             'l: 0\r\n'
             '\r\n'
         )
-        message = SIPMessageFactory().nextForString(messageString)
+        message = SIPMessageFactory().nextForString(message_string)
         self.assertIsNotNone(message)
         self.assertIsInstance(message.isValid, bool)
         self.assertTrue(message.isValid)
-        self.assertEqual(len(message.header.headerFields), 7)
-        self.assertTrue(message.header.headerFields[0].isTo)
-        self.assertTrue(message.header.headerFields[1].isFrom)
-        self.assertTrue(message.header.headerFields[2].isMaxForwards)
-        self.assertTrue(message.header.headerFields[3].isCallID)
-        self.assertTrue(message.header.headerFields[4].isCSeq)
-        self.assertTrue(message.header.headerFields[5].isVia)
+        self.assertEqual(len(message.header.header_fields), 7)
+        self.assertTrue(message.header.header_fields[0].isTo)
+        self.assertTrue(message.header.header_fields[1].isFrom)
+        self.assertTrue(message.header.header_fields[2].isMaxForwards)
+        self.assertTrue(message.header.header_fields[3].isCallID)
+        self.assertTrue(message.header.header_fields[4].isCSeq)
+        self.assertTrue(message.header.header_fields[5].isVia)
         if self.weHaveImplementedCompactHeaders:
-            self.assertTrue(message.header.headerFields[6].isContentLength)
+            self.assertTrue(message.header.header_fields[6].isContentLength)
         # TODO - more.
 
     def testUnknownMethodWithCSeqMethodMismatch(self):
         # https://tools.ietf.org/html/rfc4475#section-3.1.2.18
         # mismatch02
-        messageString = (
+        message_string = (
             'NEWMETHOD sip:user@example.com SIP/2.0\r\n'
             'To: sip:j.user@example.com\r\n'
             'From: sip:caller@example.net;tag=34525\r\n'
@@ -1143,28 +1143,28 @@ class TestRFC4475SIPTortureTest(TestCase):
             'm=video 3227 RTP/AVP 31\r\n'
             'a=rtpmap:31 LPC\r\n'
         )
-        message = SIPMessageFactory().nextForString(messageString)
+        message = SIPMessageFactory().nextForString(message_string)
         self.assertIsNotNone(message)
         self.assertIsInstance(message.isValid, bool)
         # TODO - is this valid?
         # self.assertTrue(message.isValid)
-        self.assertEqual(len(message.header.headerFields), 9)
-        self.assertTrue(message.header.headerFields[0].isTo)
-        self.assertTrue(message.header.headerFields[1].isFrom)
-        self.assertTrue(message.header.headerFields[2].isMaxForwards)
-        self.assertTrue(message.header.headerFields[3].isCallID)
-        self.assertTrue(message.header.headerFields[4].isCSeq)
-        self.assertTrue(message.header.headerFields[5].isContact)
-        self.assertTrue(message.header.headerFields[6].isVia)
-        self.assertTrue(message.header.headerFields[7].isContentType)
+        self.assertEqual(len(message.header.header_fields), 9)
+        self.assertTrue(message.header.header_fields[0].isTo)
+        self.assertTrue(message.header.header_fields[1].isFrom)
+        self.assertTrue(message.header.header_fields[2].isMaxForwards)
+        self.assertTrue(message.header.header_fields[3].isCallID)
+        self.assertTrue(message.header.header_fields[4].isCSeq)
+        self.assertTrue(message.header.header_fields[5].isContact)
+        self.assertTrue(message.header.header_fields[6].isVia)
+        self.assertTrue(message.header.header_fields[7].isContentType)
         if self.weHaveImplementedCompactHeaders:
-            self.assertTrue(message.header.headerFields[8].isContentLength)
+            self.assertTrue(message.header.header_fields[8].isContentLength)
         # TODO - more.
 
     def testOverlargeResponseCode(self):
         # https://tools.ietf.org/html/rfc4475#section-3.1.2.19
         # bigcode
-        messageString = (
+        message_string = (
             'SIP/2.0 4294967301 better not break the receiver\r\n'
             'Via: SIP/2.0/UDP 192.0.2.105;branch=z9hG4bK2398ndaoe\r\n'
             'Call-ID: bigcode.asdof3uj203asdnf3429uasdhfas3ehjasdfas9i\r\n'
@@ -1175,24 +1175,24 @@ class TestRFC4475SIPTortureTest(TestCase):
             'Contact: <sip:user@host105.example.com>\r\n'
             '\r\n'
         )
-        message = SIPMessageFactory().nextForString(messageString)
+        message = SIPMessageFactory().nextForString(message_string)
         self.assertIsNotNone(message)
         self.assertIsInstance(message.isValid, bool)
         self.assertTrue(message.isValid)
-        self.assertEqual(len(message.header.headerFields), 7)
-        self.assertTrue(message.header.headerFields[0].isVia)
-        self.assertTrue(message.header.headerFields[1].isCallID)
-        self.assertTrue(message.header.headerFields[2].isCSeq)
-        self.assertTrue(message.header.headerFields[3].isFrom)
-        self.assertTrue(message.header.headerFields[4].isTo)
-        self.assertTrue(message.header.headerFields[5].isContentLength)
-        self.assertTrue(message.header.headerFields[6].isContact)
+        self.assertEqual(len(message.header.header_fields), 7)
+        self.assertTrue(message.header.header_fields[0].isVia)
+        self.assertTrue(message.header.header_fields[1].isCallID)
+        self.assertTrue(message.header.header_fields[2].isCSeq)
+        self.assertTrue(message.header.header_fields[3].isFrom)
+        self.assertTrue(message.header.header_fields[4].isTo)
+        self.assertTrue(message.header.header_fields[5].isContentLength)
+        self.assertTrue(message.header.header_fields[6].isContact)
         # TODO - more.
 
     def testMissingTransactionIdentifier(self):
         # https://tools.ietf.org/html/rfc4475#section-3.2.1
         # badbranch
-        messageString = (
+        message_string = (
             'OPTIONS sip:user@example.com SIP/2.0\r\n'
             'To: sip:user@example.com\r\n'
             'From: sip:caller@example.org;tag=33242\r\n'
@@ -1204,26 +1204,26 @@ class TestRFC4475SIPTortureTest(TestCase):
             'l: 0\r\n'
             '\r\n'
         )
-        message = SIPMessageFactory().nextForString(messageString)
+        message = SIPMessageFactory().nextForString(message_string)
         self.assertIsNotNone(message)
         self.assertIsInstance(message.isValid, bool)
         self.assertTrue(message.isValid)
-        self.assertEqual(len(message.header.headerFields), 8)
-        self.assertTrue(message.header.headerFields[0].isTo)
-        self.assertTrue(message.header.headerFields[1].isFrom)
-        self.assertTrue(message.header.headerFields[2].isMaxForwards)
-        self.assertTrue(message.header.headerFields[3].isVia)
-        self.assertTrue(message.header.headerFields[4].isAccept)
-        self.assertTrue(message.header.headerFields[5].isCallID)
-        self.assertTrue(message.header.headerFields[6].isCSeq)
+        self.assertEqual(len(message.header.header_fields), 8)
+        self.assertTrue(message.header.header_fields[0].isTo)
+        self.assertTrue(message.header.header_fields[1].isFrom)
+        self.assertTrue(message.header.header_fields[2].isMaxForwards)
+        self.assertTrue(message.header.header_fields[3].isVia)
+        self.assertTrue(message.header.header_fields[4].isAccept)
+        self.assertTrue(message.header.header_fields[5].isCallID)
+        self.assertTrue(message.header.header_fields[6].isCSeq)
         if self.weHaveImplementedCompactHeaders:
-            self.assertTrue(message.header.headerFields[7].isContentLength)
+            self.assertTrue(message.header.header_fields[7].isContentLength)
         # TODO - more.
 
     def testMissingRequiredHeaderFields(self):
         # https://tools.ietf.org/html/rfc4475#section-3.3.1
         # insuf
-        messageString = (
+        message_string = (
             'INVITE sip:user@example.com SIP/2.0\r\n'
             'CSeq: 193942 INVITE\r\n'
             'Via: SIP/2.0/UDP 192.0.2.95;branch=z9hG4bKkdj.insuf\r\n'
@@ -1239,23 +1239,23 @@ class TestRFC4475SIPTortureTest(TestCase):
             'm=video 3227 RTP/AVP 31\r\n'
             'a=rtpmap:31 LPC\r\n'
         )
-        message = SIPMessageFactory().nextForString(messageString)
+        message = SIPMessageFactory().nextForString(message_string)
         self.assertIsNotNone(message)
         self.assertIsInstance(message.isValid, bool)
         # TODO - is this valid?
         # self.assertTrue(message.isValid)
-        self.assertEqual(len(message.header.headerFields), 4)
-        self.assertTrue(message.header.headerFields[0].isCSeq)
-        self.assertTrue(message.header.headerFields[1].isVia)
-        self.assertTrue(message.header.headerFields[2].isContentType)
+        self.assertEqual(len(message.header.header_fields), 4)
+        self.assertTrue(message.header.header_fields[0].isCSeq)
+        self.assertTrue(message.header.header_fields[1].isVia)
+        self.assertTrue(message.header.header_fields[2].isContentType)
         if self.weHaveImplementedCompactHeaders:
-            self.assertTrue(message.header.headerFields[3].isContentLength)
+            self.assertTrue(message.header.header_fields[3].isContentLength)
         # TODO - more.
 
     def testRequestURIWithUnknownScheme(self):
         # https://tools.ietf.org/html/rfc4475#section-3.3.2
         # unkscm
-        messageString = (
+        message_string = (
             'OPTIONS nobodyKnowsThisScheme:totallyopaquecontent SIP/2.0\r\n'
             'To: sip:user@example.com\r\n'
             'From: sip:caller@example.net;tag=384\r\n'
@@ -1266,24 +1266,24 @@ class TestRFC4475SIPTortureTest(TestCase):
             'Content-Length: 0\r\n'
             '\r\n'
         )
-        message = SIPMessageFactory().nextForString(messageString)
+        message = SIPMessageFactory().nextForString(message_string)
         self.assertIsNotNone(message)
         self.assertIsInstance(message.isValid, bool)
         self.assertTrue(message.isValid)
-        self.assertEqual(len(message.header.headerFields), 7)
-        self.assertTrue(message.header.headerFields[0].isTo)
-        self.assertTrue(message.header.headerFields[1].isFrom)
-        self.assertTrue(message.header.headerFields[2].isMaxForwards)
-        self.assertTrue(message.header.headerFields[3].isCallID)
-        self.assertTrue(message.header.headerFields[4].isCSeq)
-        self.assertTrue(message.header.headerFields[5].isVia)
-        self.assertTrue(message.header.headerFields[6].isContentLength)
+        self.assertEqual(len(message.header.header_fields), 7)
+        self.assertTrue(message.header.header_fields[0].isTo)
+        self.assertTrue(message.header.header_fields[1].isFrom)
+        self.assertTrue(message.header.header_fields[2].isMaxForwards)
+        self.assertTrue(message.header.header_fields[3].isCallID)
+        self.assertTrue(message.header.header_fields[4].isCSeq)
+        self.assertTrue(message.header.header_fields[5].isVia)
+        self.assertTrue(message.header.header_fields[6].isContentLength)
         # TODO - more.
 
     def testRequestURIWithKnownButAtypicalScheme(self):
         # https://tools.ietf.org/html/rfc4475#section-3.3.3
         # novelsc
-        messageString = (
+        message_string = (
             'OPTIONS soap.beep://192.0.2.103:3002 SIP/2.0\r\n'
             'To: sip:user@example.com\r\n'
             'From: sip:caller@example.net;tag=384\r\n'
@@ -1294,24 +1294,24 @@ class TestRFC4475SIPTortureTest(TestCase):
             'Content-Length: 0\r\n'
             '\r\n'
         )
-        message = SIPMessageFactory().nextForString(messageString)
+        message = SIPMessageFactory().nextForString(message_string)
         self.assertIsNotNone(message)
         self.assertIsInstance(message.isValid, bool)
         self.assertTrue(message.isValid)
-        self.assertEqual(len(message.header.headerFields), 7)
-        self.assertTrue(message.header.headerFields[0].isTo)
-        self.assertTrue(message.header.headerFields[1].isFrom)
-        self.assertTrue(message.header.headerFields[2].isMaxForwards)
-        self.assertTrue(message.header.headerFields[3].isCallID)
-        self.assertTrue(message.header.headerFields[4].isCSeq)
-        self.assertTrue(message.header.headerFields[5].isVia)
-        self.assertTrue(message.header.headerFields[6].isContentLength)
+        self.assertEqual(len(message.header.header_fields), 7)
+        self.assertTrue(message.header.header_fields[0].isTo)
+        self.assertTrue(message.header.header_fields[1].isFrom)
+        self.assertTrue(message.header.header_fields[2].isMaxForwards)
+        self.assertTrue(message.header.header_fields[3].isCallID)
+        self.assertTrue(message.header.header_fields[4].isCSeq)
+        self.assertTrue(message.header.header_fields[5].isVia)
+        self.assertTrue(message.header.header_fields[6].isContentLength)
         # TODO - more.
 
     def testUnknownURISchemesInHeaderFields(self):
         # https://tools.ietf.org/html/rfc4475#section-3.3.4
         # unksm2
-        messageString = (
+        message_string = (
             'REGISTER sip:example.com SIP/2.0\r\n'
             'To: isbn:2983792873\r\n'
             'From: <http://www.example.com>;tag=3234233\r\n'
@@ -1323,26 +1323,26 @@ class TestRFC4475SIPTortureTest(TestCase):
             'l: 0\r\n'
             '\r\n'
         )
-        message = SIPMessageFactory().nextForString(messageString)
+        message = SIPMessageFactory().nextForString(message_string)
         self.assertIsNotNone(message)
         self.assertIsInstance(message.isValid, bool)
         self.assertTrue(message.isValid)
-        self.assertEqual(len(message.header.headerFields), 8)
-        self.assertTrue(message.header.headerFields[0].isTo)
-        self.assertTrue(message.header.headerFields[1].isFrom)
-        self.assertTrue(message.header.headerFields[2].isCallID)
-        self.assertTrue(message.header.headerFields[3].isCSeq)
-        self.assertTrue(message.header.headerFields[4].isMaxForwards)
-        self.assertTrue(message.header.headerFields[5].isVia)
-        self.assertTrue(message.header.headerFields[6].isContact)
+        self.assertEqual(len(message.header.header_fields), 8)
+        self.assertTrue(message.header.header_fields[0].isTo)
+        self.assertTrue(message.header.header_fields[1].isFrom)
+        self.assertTrue(message.header.header_fields[2].isCallID)
+        self.assertTrue(message.header.header_fields[3].isCSeq)
+        self.assertTrue(message.header.header_fields[4].isMaxForwards)
+        self.assertTrue(message.header.header_fields[5].isVia)
+        self.assertTrue(message.header.header_fields[6].isContact)
         if self.weHaveImplementedCompactHeaders:
-            self.assertTrue(message.header.headerFields[7].isContentLength)
+            self.assertTrue(message.header.header_fields[7].isContentLength)
         # TODO - more.
 
     def testProxyRequireAndRequire(self):
         # https://tools.ietf.org/html/rfc4475#section-3.3.5
         # bext01
-        messageString = (
+        message_string = (
             'OPTIONS sip:user@example.com SIP/2.0\r\n'
             'To: sip:j_user@example.com\r\n'
             'From: sip:caller@example.net;tag=242etr\r\n'
@@ -1355,26 +1355,26 @@ class TestRFC4475SIPTortureTest(TestCase):
             'Content-Length: 0\r\n'
             '\r\n'
         )
-        message = SIPMessageFactory().nextForString(messageString)
+        message = SIPMessageFactory().nextForString(message_string)
         self.assertIsNotNone(message)
         self.assertIsInstance(message.isValid, bool)
         self.assertTrue(message.isValid)
-        self.assertEqual(len(message.header.headerFields), 9)
-        self.assertTrue(message.header.headerFields[0].isTo)
-        self.assertTrue(message.header.headerFields[1].isFrom)
-        self.assertTrue(message.header.headerFields[2].isMaxForwards)
-        self.assertTrue(message.header.headerFields[3].isCallID)
-        self.assertTrue(message.header.headerFields[4].isRequire)
-        self.assertTrue(message.header.headerFields[5].isProxyRequire)
-        self.assertTrue(message.header.headerFields[6].isCSeq)
-        self.assertTrue(message.header.headerFields[7].isVia)
-        self.assertTrue(message.header.headerFields[8].isContentLength)
+        self.assertEqual(len(message.header.header_fields), 9)
+        self.assertTrue(message.header.header_fields[0].isTo)
+        self.assertTrue(message.header.header_fields[1].isFrom)
+        self.assertTrue(message.header.header_fields[2].isMaxForwards)
+        self.assertTrue(message.header.header_fields[3].isCallID)
+        self.assertTrue(message.header.header_fields[4].isRequire)
+        self.assertTrue(message.header.header_fields[5].isProxyRequire)
+        self.assertTrue(message.header.header_fields[6].isCSeq)
+        self.assertTrue(message.header.header_fields[7].isVia)
+        self.assertTrue(message.header.header_fields[8].isContentLength)
         # TODO - more.
 
     def testUnknownContentType(self):
         # https://tools.ietf.org/html/rfc4475#section-3.3.6
         # invut
-        messageString = (
+        message_string = (
             'INVITE sip:user@example.com SIP/2.0\r\n'
             'Contact: <sip:caller@host5.example.net>\r\n'
             'To: sip:j.user@example.com\r\n'
@@ -1390,26 +1390,26 @@ class TestRFC4475SIPTortureTest(TestCase):
             ' <pcmu port="443"/>\r\n'
             '</audio>\r\n'
         )
-        message = SIPMessageFactory().nextForString(messageString)
+        message = SIPMessageFactory().nextForString(message_string)
         self.assertIsNotNone(message)
         self.assertIsInstance(message.isValid, bool)
         self.assertTrue(message.isValid)
-        self.assertEqual(len(message.header.headerFields), 9)
-        self.assertTrue(message.header.headerFields[0].isContact)
-        self.assertTrue(message.header.headerFields[1].isTo)
-        self.assertTrue(message.header.headerFields[2].isFrom)
-        self.assertTrue(message.header.headerFields[3].isMaxForwards)
-        self.assertTrue(message.header.headerFields[4].isCallID)
-        self.assertTrue(message.header.headerFields[5].isCSeq)
-        self.assertTrue(message.header.headerFields[6].isVia)
-        self.assertTrue(message.header.headerFields[7].isContentType)
-        self.assertTrue(message.header.headerFields[8].isContentLength)
+        self.assertEqual(len(message.header.header_fields), 9)
+        self.assertTrue(message.header.header_fields[0].isContact)
+        self.assertTrue(message.header.header_fields[1].isTo)
+        self.assertTrue(message.header.header_fields[2].isFrom)
+        self.assertTrue(message.header.header_fields[3].isMaxForwards)
+        self.assertTrue(message.header.header_fields[4].isCallID)
+        self.assertTrue(message.header.header_fields[5].isCSeq)
+        self.assertTrue(message.header.header_fields[6].isVia)
+        self.assertTrue(message.header.header_fields[7].isContentType)
+        self.assertTrue(message.header.header_fields[8].isContentLength)
         # TODO - more.
 
     def testUnknownAuthorizationScheme(self):
         # https://tools.ietf.org/html/rfc4475#section-3.3.7
         # regaut01
-        messageString = (
+        message_string = (
             'REGISTER sip:example.com SIP/2.0\r\n'
             'To: sip:j.user@example.com\r\n'
             'From: sip:j.user@example.com;tag=87321hj23128\r\n'
@@ -1421,25 +1421,25 @@ class TestRFC4475SIPTortureTest(TestCase):
             'Content-Length:0\r\n'
             '\r\n'
         )
-        message = SIPMessageFactory().nextForString(messageString)
+        message = SIPMessageFactory().nextForString(message_string)
         self.assertIsNotNone(message)
         self.assertIsInstance(message.isValid, bool)
         self.assertTrue(message.isValid)
-        self.assertEqual(len(message.header.headerFields), 8)
-        self.assertTrue(message.header.headerFields[0].isTo)
-        self.assertTrue(message.header.headerFields[1].isFrom)
-        self.assertTrue(message.header.headerFields[2].isMaxForwards)
-        self.assertTrue(message.header.headerFields[3].isCallID)
-        self.assertTrue(message.header.headerFields[4].isCSeq)
-        self.assertTrue(message.header.headerFields[5].isVia)
-        self.assertTrue(message.header.headerFields[6].isAuthorization)
-        self.assertTrue(message.header.headerFields[7].isContentLength)
+        self.assertEqual(len(message.header.header_fields), 8)
+        self.assertTrue(message.header.header_fields[0].isTo)
+        self.assertTrue(message.header.header_fields[1].isFrom)
+        self.assertTrue(message.header.header_fields[2].isMaxForwards)
+        self.assertTrue(message.header.header_fields[3].isCallID)
+        self.assertTrue(message.header.header_fields[4].isCSeq)
+        self.assertTrue(message.header.header_fields[5].isVia)
+        self.assertTrue(message.header.header_fields[6].isAuthorization)
+        self.assertTrue(message.header.header_fields[7].isContentLength)
         # TODO - more.
 
     def testMultipleValuesInSingleValueRequiredFields(self):
         # https://tools.ietf.org/html/rfc4475#section-3.3.8
         # multi01
-        messageString = (
+        message_string = (
             'INVITE sip:user@company.com SIP/2.0\r\n'
             'Contact: <sip:caller@host25.example.net>\r\n'
             'Via: SIP/2.0/UDP 192.0.2.25;branch=z9hG4bKkdjuw\r\n'
@@ -1467,34 +1467,34 @@ class TestRFC4475SIPTortureTest(TestCase):
             'a=rtpmap:31 LPC\r\n'
             '\r\n'
         )
-        message = SIPMessageFactory().nextForString(messageString)
+        message = SIPMessageFactory().nextForString(message_string)
         self.assertIsNotNone(message)
         self.assertIsInstance(message.isValid, bool)
         # TODO - is this valid?
         # self.assertTrue(message.isValid)
-        self.assertEqual(len(message.header.headerFields), 15)
-        self.assertTrue(message.header.headerFields[0].isContact)
-        self.assertTrue(message.header.headerFields[1].isVia)
-        self.assertTrue(message.header.headerFields[2].isMaxForwards)
-        self.assertTrue(message.header.headerFields[3].isCSeq)
-        self.assertTrue(message.header.headerFields[4].isCallID)
-        self.assertTrue(message.header.headerFields[5].isCSeq)
-        self.assertTrue(message.header.headerFields[6].isCallID)
-        self.assertTrue(message.header.headerFields[7].isFrom)
-        self.assertTrue(message.header.headerFields[8].isTo)
-        self.assertTrue(message.header.headerFields[9].isTo)
-        self.assertTrue(message.header.headerFields[10].isFrom)
-        self.assertTrue(message.header.headerFields[11].isContentType)
+        self.assertEqual(len(message.header.header_fields), 15)
+        self.assertTrue(message.header.header_fields[0].isContact)
+        self.assertTrue(message.header.header_fields[1].isVia)
+        self.assertTrue(message.header.header_fields[2].isMaxForwards)
+        self.assertTrue(message.header.header_fields[3].isCSeq)
+        self.assertTrue(message.header.header_fields[4].isCallID)
+        self.assertTrue(message.header.header_fields[5].isCSeq)
+        self.assertTrue(message.header.header_fields[6].isCallID)
+        self.assertTrue(message.header.header_fields[7].isFrom)
+        self.assertTrue(message.header.header_fields[8].isTo)
+        self.assertTrue(message.header.header_fields[9].isTo)
+        self.assertTrue(message.header.header_fields[10].isFrom)
+        self.assertTrue(message.header.header_fields[11].isContentType)
         if self.weHaveImplementedCompactHeaders:
-            self.assertTrue(message.header.headerFields[12].isContentLength)
-        self.assertTrue(message.header.headerFields[13].isContact)
-        self.assertTrue(message.header.headerFields[14].isMaxForwards)
+            self.assertTrue(message.header.header_fields[12].isContentLength)
+        self.assertTrue(message.header.header_fields[13].isContact)
+        self.assertTrue(message.header.header_fields[14].isMaxForwards)
         # TODO - more.
 
     def testMultipleContentLengthValues(self):
         # https://tools.ietf.org/html/rfc4475#section-3.3.9
         # mcl01
-        messageString = (
+        message_string = (
             'OPTIONS sip:user@example.com SIP/2.0\r\n'
             'Via: SIP/2.0/UDP host5.example.net;branch=z9hG4bK293423\r\n'
             'To: sip:user@example.com\r\n'
@@ -1509,27 +1509,27 @@ class TestRFC4475SIPTortureTest(TestCase):
             "There's no way to know how many octets are supposed to be here.\r\n"
             '\r\n'
         )
-        message = SIPMessageFactory().nextForString(messageString)
+        message = SIPMessageFactory().nextForString(message_string)
         self.assertIsNotNone(message)
         self.assertIsInstance(message.isValid, bool)
         # TODO - is this valid?
         # self.assertTrue(message.isValid)
-        self.assertEqual(len(message.header.headerFields), 9)
-        self.assertTrue(message.header.headerFields[0].isVia)
-        self.assertTrue(message.header.headerFields[1].isTo)
-        self.assertTrue(message.header.headerFields[2].isFrom)
-        self.assertTrue(message.header.headerFields[3].isCallID)
-        self.assertTrue(message.header.headerFields[4].isCSeq)
-        self.assertTrue(message.header.headerFields[5].isContentLength)
-        self.assertTrue(message.header.headerFields[6].isMaxForwards)
-        self.assertTrue(message.header.headerFields[7].isContentLength)
-        self.assertTrue(message.header.headerFields[8].isContentType)
+        self.assertEqual(len(message.header.header_fields), 9)
+        self.assertTrue(message.header.header_fields[0].isVia)
+        self.assertTrue(message.header.header_fields[1].isTo)
+        self.assertTrue(message.header.header_fields[2].isFrom)
+        self.assertTrue(message.header.header_fields[3].isCallID)
+        self.assertTrue(message.header.header_fields[4].isCSeq)
+        self.assertTrue(message.header.header_fields[5].isContentLength)
+        self.assertTrue(message.header.header_fields[6].isMaxForwards)
+        self.assertTrue(message.header.header_fields[7].isContentLength)
+        self.assertTrue(message.header.header_fields[8].isContentType)
         # TODO - more.
 
     def test200OKResponseWithBroadcastViaHeaderFieldValue(self):
         # https://tools.ietf.org/html/rfc4475#section-3.3.10
         # bcast
-        messageString = (
+        message_string = (
             'SIP/2.0 200 OK\r\n'
             'Via: SIP/2.0/UDP 192.0.2.198;branch=z9hG4bK1324923\r\n'
             'Via: SIP/2.0/UDP 255.255.255.255;branch=z9hG4bK1saber23\r\n'
@@ -1550,26 +1550,26 @@ class TestRFC4475SIPTortureTest(TestCase):
             'm=video 3227 RTP/AVP 31\r\n'
             'a=rtpmap:31 LPC\r\n'
         )
-        message = SIPMessageFactory().nextForString(messageString)
+        message = SIPMessageFactory().nextForString(message_string)
         self.assertIsNotNone(message)
         self.assertIsInstance(message.isValid, bool)
         self.assertTrue(message.isValid)
-        self.assertEqual(len(message.header.headerFields), 9)
-        self.assertTrue(message.header.headerFields[0].isVia)
-        self.assertTrue(message.header.headerFields[1].isVia)
-        self.assertTrue(message.header.headerFields[2].isCallID)
-        self.assertTrue(message.header.headerFields[3].isCSeq)
-        self.assertTrue(message.header.headerFields[4].isFrom)
-        self.assertTrue(message.header.headerFields[5].isTo)
-        self.assertTrue(message.header.headerFields[6].isContentLength)
-        self.assertTrue(message.header.headerFields[7].isContentType)
-        self.assertTrue(message.header.headerFields[8].isContact)
+        self.assertEqual(len(message.header.header_fields), 9)
+        self.assertTrue(message.header.header_fields[0].isVia)
+        self.assertTrue(message.header.header_fields[1].isVia)
+        self.assertTrue(message.header.header_fields[2].isCallID)
+        self.assertTrue(message.header.header_fields[3].isCSeq)
+        self.assertTrue(message.header.header_fields[4].isFrom)
+        self.assertTrue(message.header.header_fields[5].isTo)
+        self.assertTrue(message.header.header_fields[6].isContentLength)
+        self.assertTrue(message.header.header_fields[7].isContentType)
+        self.assertTrue(message.header.header_fields[8].isContact)
         # TODO - more.
 
     def testMaxForwardsOfZero(self):
         # https://tools.ietf.org/html/rfc4475#section-3.3.11
         # zeromf
-        messageString = (
+        message_string = (
             'OPTIONS sip:user@example.com SIP/2.0\r\n'
             'To: sip:user@example.com\r\n'
             'From: sip:caller@example.net;tag=3ghsd41\r\n'
@@ -1580,24 +1580,24 @@ class TestRFC4475SIPTortureTest(TestCase):
             'Content-Length: 0\r\n'
             '\r\n'
         )
-        message = SIPMessageFactory().nextForString(messageString)
+        message = SIPMessageFactory().nextForString(message_string)
         self.assertIsNotNone(message)
         self.assertIsInstance(message.isValid, bool)
         self.assertTrue(message.isValid)
-        self.assertEqual(len(message.header.headerFields), 7)
-        self.assertTrue(message.header.headerFields[0].isTo)
-        self.assertTrue(message.header.headerFields[1].isFrom)
-        self.assertTrue(message.header.headerFields[2].isCallID)
-        self.assertTrue(message.header.headerFields[3].isCSeq)
-        self.assertTrue(message.header.headerFields[4].isVia)
-        self.assertTrue(message.header.headerFields[5].isMaxForwards)
-        self.assertTrue(message.header.headerFields[6].isContentLength)
+        self.assertEqual(len(message.header.header_fields), 7)
+        self.assertTrue(message.header.header_fields[0].isTo)
+        self.assertTrue(message.header.header_fields[1].isFrom)
+        self.assertTrue(message.header.header_fields[2].isCallID)
+        self.assertTrue(message.header.header_fields[3].isCSeq)
+        self.assertTrue(message.header.header_fields[4].isVia)
+        self.assertTrue(message.header.header_fields[5].isMaxForwards)
+        self.assertTrue(message.header.header_fields[6].isContentLength)
         # TODO - more.
 
     def testREGISTERwithAContactHeaderParameter(self):
         # https://tools.ietf.org/html/rfc4475#section-3.3.12
         # cparam01
-        messageString = (
+        message_string = (
             'REGISTER sip:example.com SIP/2.0\r\n'
             'Via: SIP/2.0/UDP saturn.example.com:5060;branch=z9hG4bKkdjuw\r\n'
             'Max-Forwards: 70\r\n'
@@ -1609,26 +1609,26 @@ class TestRFC4475SIPTortureTest(TestCase):
             'l: 0\r\n'
             '\r\n'
         )
-        message = SIPMessageFactory().nextForString(messageString)
+        message = SIPMessageFactory().nextForString(message_string)
         self.assertIsNotNone(message)
         self.assertIsInstance(message.isValid, bool)
         self.assertTrue(message.isValid)
-        self.assertEqual(len(message.header.headerFields), 8)
-        self.assertTrue(message.header.headerFields[0].isVia)
-        self.assertTrue(message.header.headerFields[1].isMaxForwards)
-        self.assertTrue(message.header.headerFields[2].isFrom)
-        self.assertTrue(message.header.headerFields[3].isTo)
-        self.assertTrue(message.header.headerFields[4].isCallID)
-        self.assertTrue(message.header.headerFields[5].isCSeq)
-        self.assertTrue(message.header.headerFields[6].isContact)
+        self.assertEqual(len(message.header.header_fields), 8)
+        self.assertTrue(message.header.header_fields[0].isVia)
+        self.assertTrue(message.header.header_fields[1].isMaxForwards)
+        self.assertTrue(message.header.header_fields[2].isFrom)
+        self.assertTrue(message.header.header_fields[3].isTo)
+        self.assertTrue(message.header.header_fields[4].isCallID)
+        self.assertTrue(message.header.header_fields[5].isCSeq)
+        self.assertTrue(message.header.header_fields[6].isContact)
         if self.weHaveImplementedCompactHeaders:
-            self.assertTrue(message.header.headerFields[7].isContentLength)
+            self.assertTrue(message.header.header_fields[7].isContentLength)
         # TODO - more.
 
     def testREGISTERWithAURLParameter(self):
         # https://tools.ietf.org/html/rfc4475#section-3.3.13
         # cparam02
-        messageString = (
+        message_string = (
             'REGISTER sip:example.com SIP/2.0\r\n'
             'Via: SIP/2.0/UDP saturn.example.com:5060;branch=z9hG4bKkdjuw\r\n'
             'Max-Forwards: 70\r\n'
@@ -1640,26 +1640,26 @@ class TestRFC4475SIPTortureTest(TestCase):
             'l: 0\r\n'
             '\r\n'
         )
-        message = SIPMessageFactory().nextForString(messageString)
+        message = SIPMessageFactory().nextForString(message_string)
         self.assertIsNotNone(message)
         self.assertIsInstance(message.isValid, bool)
         self.assertTrue(message.isValid)
-        self.assertEqual(len(message.header.headerFields), 8)
-        self.assertTrue(message.header.headerFields[0].isVia)
-        self.assertTrue(message.header.headerFields[1].isMaxForwards)
-        self.assertTrue(message.header.headerFields[2].isFrom)
-        self.assertTrue(message.header.headerFields[3].isTo)
-        self.assertTrue(message.header.headerFields[4].isCallID)
-        self.assertTrue(message.header.headerFields[5].isCSeq)
-        self.assertTrue(message.header.headerFields[6].isContact)
+        self.assertEqual(len(message.header.header_fields), 8)
+        self.assertTrue(message.header.header_fields[0].isVia)
+        self.assertTrue(message.header.header_fields[1].isMaxForwards)
+        self.assertTrue(message.header.header_fields[2].isFrom)
+        self.assertTrue(message.header.header_fields[3].isTo)
+        self.assertTrue(message.header.header_fields[4].isCallID)
+        self.assertTrue(message.header.header_fields[5].isCSeq)
+        self.assertTrue(message.header.header_fields[6].isContact)
         if self.weHaveImplementedCompactHeaders:
-            self.assertTrue(message.header.headerFields[7].isContentLength)
+            self.assertTrue(message.header.header_fields[7].isContentLength)
         # TODO - more.
 
     def testREGISTERWithAURLEscapedHeader(self):
         # https://tools.ietf.org/html/rfc4475#section-3.3.14
         # regescrt
-        messageString = (
+        message_string = (
             'REGISTER sip:example.com SIP/2.0\r\n'
             'To: sip:user@example.com\r\n'
             'From: sip:user@example.com;tag=8\r\n'
@@ -1671,28 +1671,28 @@ class TestRFC4475SIPTortureTest(TestCase):
             'L:0\r\n'
             '\r\n'
         )
-        message = SIPMessageFactory().nextForString(messageString)
+        message = SIPMessageFactory().nextForString(message_string)
         self.assertIsNotNone(message)
         self.assertIsInstance(message.isValid, bool)
         # is this valid?  It was considered valid before we implemented compact headers.
         # TODO: Looks like we need to handle % escaped strings in SIP URIs.
         # self.assertTrue(message.isValid)
-        self.assertEqual(len(message.header.headerFields), 8)
-        self.assertTrue(message.header.headerFields[0].isTo)
-        self.assertTrue(message.header.headerFields[1].isFrom)
-        self.assertTrue(message.header.headerFields[2].isMaxForwards)
-        self.assertTrue(message.header.headerFields[3].isCallID)
-        self.assertTrue(message.header.headerFields[4].isCSeq)
-        self.assertTrue(message.header.headerFields[5].isVia)
+        self.assertEqual(len(message.header.header_fields), 8)
+        self.assertTrue(message.header.header_fields[0].isTo)
+        self.assertTrue(message.header.header_fields[1].isFrom)
+        self.assertTrue(message.header.header_fields[2].isMaxForwards)
+        self.assertTrue(message.header.header_fields[3].isCallID)
+        self.assertTrue(message.header.header_fields[4].isCSeq)
+        self.assertTrue(message.header.header_fields[5].isVia)
         if self.weHaveImplementedCompactHeaders:
-            self.assertTrue(message.header.headerFields[6].isContact)
-            self.assertTrue(message.header.headerFields[7].isContentLength)
+            self.assertTrue(message.header.header_fields[6].isContact)
+            self.assertTrue(message.header.header_fields[7].isContentLength)
         # TODO - more.
 
     def testUnacceptableAcceptOffering(self):
         # https://tools.ietf.org/html/rfc4475#section-3.3.15
         # sdp01
-        messageString = (
+        message_string = (
             'INVITE sip:user@example.com SIP/2.0\r\n'
             'To: sip:j_user@example.com\r\n'
             'Contact: <sip:caller@host15.example.net>\r\n'
@@ -1714,27 +1714,27 @@ class TestRFC4475SIPTortureTest(TestCase):
             'm=video 3227 RTP/AVP 31\r\n'
             'a=rtpmap:31 LPC\r\n'
         )
-        message = SIPMessageFactory().nextForString(messageString)
+        message = SIPMessageFactory().nextForString(message_string)
         self.assertIsNotNone(message)
         self.assertIsInstance(message.isValid, bool)
         self.assertTrue(message.isValid)
-        self.assertEqual(len(message.header.headerFields), 10)
-        self.assertTrue(message.header.headerFields[0].isTo)
-        self.assertTrue(message.header.headerFields[1].isContact)
-        self.assertTrue(message.header.headerFields[2].isFrom)
-        self.assertTrue(message.header.headerFields[3].isMaxForwards)
-        self.assertTrue(message.header.headerFields[4].isCallID)
-        self.assertTrue(message.header.headerFields[5].isAccept)
-        self.assertTrue(message.header.headerFields[6].isCSeq)
-        self.assertTrue(message.header.headerFields[7].isVia)
-        self.assertTrue(message.header.headerFields[8].isContentLength)
-        self.assertTrue(message.header.headerFields[9].isContentType)
+        self.assertEqual(len(message.header.header_fields), 10)
+        self.assertTrue(message.header.header_fields[0].isTo)
+        self.assertTrue(message.header.header_fields[1].isContact)
+        self.assertTrue(message.header.header_fields[2].isFrom)
+        self.assertTrue(message.header.header_fields[3].isMaxForwards)
+        self.assertTrue(message.header.header_fields[4].isCallID)
+        self.assertTrue(message.header.header_fields[5].isAccept)
+        self.assertTrue(message.header.header_fields[6].isCSeq)
+        self.assertTrue(message.header.header_fields[7].isVia)
+        self.assertTrue(message.header.header_fields[8].isContentLength)
+        self.assertTrue(message.header.header_fields[9].isContentType)
         # TODO - more.
 
     def testINVITEWithRFC2543Syntax(self):
         # https://tools.ietf.org/html/rfc4475#section-3.4.1
         # inv2543
-        messageString = (
+        message_string = (
             'INVITE sip:UserB@example.com SIP/2.0\r\n'
             'Via: SIP/2.0/UDP iftgw.example.com\r\n'
             'From: <sip:+13035551111@ift.client.example.net;user=phone>\r\n'
@@ -1751,17 +1751,17 @@ class TestRFC4475SIPTortureTest(TestCase):
             't=0 0\r\n'
             'm=audio 49217 RTP/AVP 0\r\n'
         )
-        message = SIPMessageFactory().nextForString(messageString)
+        message = SIPMessageFactory().nextForString(message_string)
         self.assertIsNotNone(message)
         self.assertIsInstance(message.isValid, bool)
         # TODO - is this valid?
         # self.assertTrue(message.isValid)
-        self.assertEqual(len(message.header.headerFields), 7)
-        self.assertTrue(message.header.headerFields[0].isVia)
-        self.assertTrue(message.header.headerFields[1].isFrom)
-        self.assertTrue(message.header.headerFields[2].isRecordRoute)
-        self.assertTrue(message.header.headerFields[3].isTo)
-        self.assertTrue(message.header.headerFields[4].isCallID)
-        self.assertTrue(message.header.headerFields[5].isCSeq)
-        self.assertTrue(message.header.headerFields[6].isContentType)
+        self.assertEqual(len(message.header.header_fields), 7)
+        self.assertTrue(message.header.header_fields[0].isVia)
+        self.assertTrue(message.header.header_fields[1].isFrom)
+        self.assertTrue(message.header.header_fields[2].isRecordRoute)
+        self.assertTrue(message.header.header_fields[3].isTo)
+        self.assertTrue(message.header.header_fields[4].isCallID)
+        self.assertTrue(message.header.header_fields[5].isCSeq)
+        self.assertTrue(message.header.header_fields[6].isContentType)
         # TODO - more.

@@ -7,7 +7,7 @@ class TLSSIPTransport(SIPTransport):
     def transportParameterName(self):
         return 'TLS'
 
-    def connectToAddressAndPort(self, addressString, portInteger):
+    def connectToAddressAndPort(self, address_string, port_integer):
         # TODO
         pass
 

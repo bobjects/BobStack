@@ -15,9 +15,9 @@ class SIPURI(object):
     regexForURI = re.compile('(([^:]*):([^@;]*)@?([^;]*)?)')
 
     @classmethod
-    def newParsedFrom(cls, aString):
+    def newParsedFrom(cls, a_string):
         answer = cls()
-        answer.rawString = aString
+        answer.rawString = a_string
         return answer
 
     @classmethod
@@ -50,8 +50,8 @@ class SIPURI(object):
         return self._rawString
 
     @rawString.setter
-    def rawString(self, aString):
-        self._rawString = aString
+    def rawString(self, a_string):
+        self._rawString = a_string
         self.clearAttributes()
 
     @property
@@ -61,8 +61,8 @@ class SIPURI(object):
         return self._host
 
     @host.setter
-    def host(self, aString):
-        self._host = aString
+    def host(self, a_string):
+        self._host = a_string
         self.clearRawString()
 
     @property
@@ -82,8 +82,8 @@ class SIPURI(object):
         return self._port
 
     @port.setter
-    def port(self, anInteger):
-        self._port = anInteger
+    def port(self, an_integer):
+        self._port = an_integer
         self.clearRawString()
 
     @property
@@ -93,8 +93,8 @@ class SIPURI(object):
         return self._scheme
 
     @scheme.setter
-    def scheme(self, aString):
-        self._scheme = aString
+    def scheme(self, a_string):
+        self._scheme = a_string
         self.clearRawString()
 
     @property
@@ -104,8 +104,8 @@ class SIPURI(object):
         return self._user
 
     @user.setter
-    def user(self, aString):
-        self._user = aString
+    def user(self, a_string):
+        self._user = a_string
         self.clearRawString()
 
     @property
@@ -153,18 +153,18 @@ class SIPURI(object):
         # TODO - put in exception handler for malformed SIPURI, after we do some testing.
         self._parameterNamesAndValueStrings = dict(self.__class__.regexForFindingParameterNamesAndValues.findall(self._rawString))
         uriMatchGroups = self.__class__.regexForURI.match(self._rawString).groups()
-        # parsedAttributes['sipURI'] = uriMatchGroups[0]
+        # parsedAttributes['sip_uri'] = uriMatchGroups[0]
         self._scheme = uriMatchGroups[1]
         if uriMatchGroups[3]:
             self._user = uriMatchGroups[2]
-            hostPort = uriMatchGroups[3]
+            host_port = uriMatchGroups[3]
         else:
             self._user = None
-            hostPort = uriMatchGroups[2]
-        hostPortMatchGroups = self.__class__.regexForParsingHostPort.match(hostPort).groups()
-        self._host = hostPortMatchGroups[0]
-        if hostPortMatchGroups[1]:
-            self._port = int(hostPortMatchGroups[1])
+            host_port = uriMatchGroups[2]
+        host_port_match_groups = self.__class__.regexForParsingHostPort.match(host_port).groups()
+        self._host = host_port_match_groups[0]
+        if host_port_match_groups[1]:
+            self._port = int(host_port_match_groups[1])
 
     def renderRawStringFromAttributes(self):
         stringio = StringIO()

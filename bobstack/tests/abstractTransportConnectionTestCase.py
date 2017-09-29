@@ -37,7 +37,7 @@ class AbstractTransportConnectionTestCase(TestCase):
 
     @property
     def sampleRequest(self):
-        messageString = ('INVITE sip:3122221000@example.com:5061;user=phone;transport=TLS SIP/2.0\r\n'
+        message_string = ('INVITE sip:3122221000@example.com:5061;user=phone;transport=TLS SIP/2.0\r\n'
                          'From: <sip:200.25.3.150:5061>;tag=0ee8d3e272e31c9195299efc500\r\n'
                          'To: <sip:example.com:5061>\r\n'
                          'Call-ID: 0ee8d3e272e31c9195299efc500\r\n'
@@ -98,11 +98,11 @@ class AbstractTransportConnectionTestCase(TestCase):
                          'Subscription-State: active;reason=deactivated;expires=50\r\n'
                          'Min-Expires: 1800\r\n'
                          'Content-Length: 0')
-        return SIPMessageFactory().nextForString(messageString)
+        return SIPMessageFactory().nextForString(message_string)
 
     @property
     def sampleRequest2(self):
-        messageString = ('BYE sip:3122221000@example.com:5061;user=phone;transport=TLS SIP/2.0\r\n'
+        message_string = ('BYE sip:3122221000@example.com:5061;user=phone;transport=TLS SIP/2.0\r\n'
                          'From: <sip:200.25.3.150:5061>;tag=0ee8d3e272e31c9195299efc500\r\n'
                          'To: <sip:example.com:5061>\r\n'
                          'Call-ID: 0ee8d3e272e31c9195299efc500\r\n'
@@ -163,11 +163,11 @@ class AbstractTransportConnectionTestCase(TestCase):
                          'Subscription-State: active;reason=deactivated;expires=50\r\n'
                          'Min-Expires: 1800\r\n'
                          'Content-Length: 0')
-        return SIPMessageFactory().nextForString(messageString)
+        return SIPMessageFactory().nextForString(message_string)
 
     @property
     def sampleResponse(self):
-        messageString = ('SIP/2.0 200 OK\r\n'
+        message_string = ('SIP/2.0 200 OK\r\n'
                          'From: <sip:200.25.3.150:5061>;tag=0ee8d3e272e31c9195299efc500\r\n'
                          'To: <sip:example.com:5061>\r\n'
                          'Call-ID: 0ee8d3e272e31c9195299efc500\r\n'
@@ -228,11 +228,11 @@ class AbstractTransportConnectionTestCase(TestCase):
                          'Subscription-State: active;reason=deactivated;expires=50\r\n'
                          'Min-Expires: 1800\r\n'
                          'Content-Length: 0')
-        return SIPMessageFactory().nextForString(messageString)
+        return SIPMessageFactory().nextForString(message_string)
 
     @property
     def sampleResponse2(self):
-        messageString = ('SIP/2.0 180 Ringing\r\n'
+        message_string = ('SIP/2.0 180 Ringing\r\n'
                          'From: <sip:200.25.3.150:5061>;tag=0ee8d3e272e31c9195299efc500\r\n'
                          'To: <sip:example.com:5061>\r\n'
                          'Call-ID: 0ee8d3e272e31c9195299efc500\r\n'
@@ -293,6 +293,6 @@ class AbstractTransportConnectionTestCase(TestCase):
                          'Subscription-State: active;reason=deactivated;expires=50\r\n'
                          'Min-Expires: 1800\r\n'
                          'Content-Length: 0')
-        return SIPMessageFactory().nextForString(messageString)
+        return SIPMessageFactory().nextForString(message_string)
 
 

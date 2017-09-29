@@ -18,8 +18,8 @@ class ContentDispositionSIPHeaderField(SIPHeaderField):
         return 'Content-Disposition'
 
     @classmethod
-    def newForAttributes(cls, fieldName="Content-Disposition", fieldValueString=""):
-        return cls.newForFieldNameAndValueString(fieldName=fieldName, fieldValueString=fieldValueString)
+    def newForAttributes(cls, field_name="Content-Disposition", field_value_string=""):
+        return cls.newForFieldNameAndValueString(field_name=field_name, field_value_string=field_value_string)
 
     @property
     def isContentDisposition(self):
@@ -31,6 +31,6 @@ class ContentDispositionSIPHeaderField(SIPHeaderField):
         return self.parameterNamed('handling')
 
     @handling.setter
-    def handling(self, aString):
-        self.parameterNamedPut('handling', aString)
+    def handling(self, a_string):
+        self.parameterNamedPut('handling', a_string)
 

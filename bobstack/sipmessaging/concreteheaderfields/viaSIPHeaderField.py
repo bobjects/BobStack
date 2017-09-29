@@ -62,8 +62,8 @@ class ViaSIPHeaderField(SIPHeaderField):
         return self._host
 
     @host.setter
-    def host(self, aString):
-        self._host = aString
+    def host(self, a_string):
+        self._host = a_string
         self._attributeHasBeenSet = True
         self.clearRawString()
         self.clearFieldNameAndValueString()
@@ -75,8 +75,8 @@ class ViaSIPHeaderField(SIPHeaderField):
         return self._port
 
     @port.setter
-    def port(self, aString):
-        self._port = aString
+    def port(self, a_string):
+        self._port = a_string
         self._attributeHasBeenSet = True
         self.clearRawString()
         self.clearFieldNameAndValueString()
@@ -88,8 +88,8 @@ class ViaSIPHeaderField(SIPHeaderField):
         return self._transport
 
     @transport.setter
-    def transport(self, aString):
-        self._transport = aString
+    def transport(self, a_string):
+        self._transport = a_string
         self._attributeHasBeenSet = True
         self.clearRawString()
         self.clearFieldNameAndValueString()
@@ -104,8 +104,8 @@ class ViaSIPHeaderField(SIPHeaderField):
     def generateBranch(self):
         self.branch = 'z9hG4bK-' + StrongRandomStringServer.instance.next32Bits + StrongRandomStringServer.instance.next32Bits + "-BobStack"
 
-    def generateInvariantBranchForSIPHeader(self, aSIPHeader):
-        self.branch = 'z9hG4bK-' + aSIPHeader.invariantBranchHash + "-BobStack"
+    def generateInvariantBranchForSIPHeader(self, a_sip_header):
+        self.branch = 'z9hG4bK-' + a_sip_header.invariantBranchHash + "-BobStack"
 
     def clearAttributes(self):
         super(ViaSIPHeaderField, self).clearAttributes()
@@ -121,19 +121,19 @@ class ViaSIPHeaderField(SIPHeaderField):
         # noinspection PyBroadException
         try:
             super(ViaSIPHeaderField, self).parseAttributesFromFieldValueString()
-            match = self.__class__.regexForViaSpecificValue.match(self.fieldValueString)
+            match = self.__class__.regexForViaSpecificValue.match(self.field_value_string)
             if not match:
                 self._isValid = False
             else:
                 #  self._isValid = (match.group(1) == 'SIP/2.0')
-                sipVersion = match.group(1)
+                sip_version = match.group(1)
                 self._transport = match.group(2)
-                hostPort = match.group(3)
-                hostPortMatchGroups = self.__class__.regexForParsingHostPort.match(hostPort).groups()
-                self._host = hostPortMatchGroups[0]
-                if hostPortMatchGroups[1]:
-                    self._port = int(hostPortMatchGroups[1])
-                self._isValid = (sipVersion == '2.0')
+                host_port = match.group(3)
+                host_port_match_groups = self.__class__.regexForParsingHostPort.match(host_port).groups()
+                self._host = host_port_match_groups[0]
+                if host_port_match_groups[1]:
+                    self._port = int(host_port_match_groups[1])
+                self._isValid = (sip_version == '2.0')
             self._attributeHasBeenSet = True
             self._isValid = self._isValid and bool(self.branch)
         except Exception:
@@ -167,101 +167,101 @@ class ViaSIPHeaderField(SIPHeaderField):
         return self.parameterNamed('alias')
 
     @alias.setter
-    def alias(self, aString):
-        self.parameterNamedPut('alias', aString)
+    def alias(self, a_string):
+        self.parameterNamedPut('alias', a_string)
 
     @property
     def branch(self):
         return self.parameterNamed('branch')
 
     @branch.setter
-    def branch(self, aString):
-        self.parameterNamedPut('branch', aString)
+    def branch(self, a_string):
+        self.parameterNamedPut('branch', a_string)
 
     @property
     def comp(self):
         return self.parameterNamed('comp')
 
     @comp.setter
-    def comp(self, aString):
-        self.parameterNamedPut('comp', aString)
+    def comp(self, a_string):
+        self.parameterNamedPut('comp', a_string)
 
     @property
     def keep(self):
         return self.parameterNamed('keep')
 
     @keep.setter
-    def keep(self, aString):
-        self.parameterNamedPut('keep', aString)
+    def keep(self, a_string):
+        self.parameterNamedPut('keep', a_string)
 
     @property
     def maddr(self):
         return self.parameterNamed('maddr')
 
     @maddr.setter
-    def maddr(self, aString):
-        self.parameterNamedPut('maddr', aString)
+    def maddr(self, a_string):
+        self.parameterNamedPut('maddr', a_string)
 
     @property
     def oc(self):
         return self.parameterNamed('oc')
 
     @oc.setter
-    def oc(self, aString):
-        self.parameterNamedPut('oc', aString)
+    def oc(self, a_string):
+        self.parameterNamedPut('oc', a_string)
 
     @property
     def oc_algo(self):
         return self.parameterNamed('oc-algo')
 
     @oc_algo.setter
-    def oc_algo(self, aString):
-        self.parameterNamedPut('oc-algo', aString)
+    def oc_algo(self, a_string):
+        self.parameterNamedPut('oc-algo', a_string)
 
     @property
     def oc_seq(self):
         return self.parameterNamed('oc-seq')
 
     @oc_seq.setter
-    def oc_seq(self, aString):
-        self.parameterNamedPut('oc-seq', aString)
+    def oc_seq(self, a_string):
+        self.parameterNamedPut('oc-seq', a_string)
 
     @property
     def oc_validity(self):
         return self.parameterNamed('oc-validity')
 
     @oc_validity.setter
-    def oc_validity(self, aString):
-        self.parameterNamedPut('oc-validity', aString)
+    def oc_validity(self, a_string):
+        self.parameterNamedPut('oc-validity', a_string)
 
     @property
     def received(self):
         return self.parameterNamed('received')
 
     @received.setter
-    def received(self, aString):
-        self.parameterNamedPut('received', aString)
+    def received(self, a_string):
+        self.parameterNamedPut('received', a_string)
 
     @property
     def rport(self):
         return self.parameterNamed('rport')
 
     @rport.setter
-    def rport(self, aString):
-        self.parameterNamedPut('rport', aString)
+    def rport(self, a_string):
+        self.parameterNamedPut('rport', a_string)
 
     @property
     def sigcomp_id(self):
         return self.parameterNamed('sigcomp-id')
 
     @sigcomp_id.setter
-    def sigcomp_id(self, aString):
-        self.parameterNamedPut('sigcomp-id', aString)
+    def sigcomp_id(self, a_string):
+        self.parameterNamedPut('sigcomp-id', a_string)
 
     @property
     def ttl(self):
         return self.parameterNamed('ttl')
 
     @ttl.setter
-    def ttl(self, aString):
-        self.parameterNamedPut('ttl', aString)
+    def ttl(self, a_string):
+        self.parameterNamedPut('ttl', a_string)

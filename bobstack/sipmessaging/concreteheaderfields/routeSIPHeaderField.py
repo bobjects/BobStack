@@ -28,10 +28,10 @@ class RouteSIPHeaderField(SIPHeaderField):
 
     # noinspection PyMethodOverriding
     @classmethod
-    def newForAttributes(cls, sipURI=None):
+    def newForAttributes(cls, sip_uri=None):
         answer = cls()
-        answer.sipURI = sipURI
-        answer._isValid = (sipURI is not None)
+        answer.sip_uri = sip_uri
+        answer._isValid = (sip_uri is not None)
         return answer
 
     def __init__(self):
@@ -46,14 +46,14 @@ class RouteSIPHeaderField(SIPHeaderField):
         return self._isValid
 
     @property
-    def sipURI(self):
+    def sip_uri(self):
         if not self._attributeHasBeenSet:
             self.parseAttributesFromFieldValueString()
         return self._sipURI
 
-    @sipURI.setter
-    def sipURI(self, aSIPURI):
-        self._sipURI = aSIPURI
+    @sip_uri.setter
+    def sip_uri(self, a_sip_uri):
+        self._sipURI = a_sip_uri
         self._isValid = (self._sipURI is not None)
         self._attributeHasBeenSet = True
         self.clearRawString()
@@ -70,23 +70,23 @@ class RouteSIPHeaderField(SIPHeaderField):
 
         # noinspection PyBroadException
         try:
-            match = self.__class__.regexForAngleBracketForm.match(self.fieldValueString)
+            match = self.__class__.regexForAngleBracketForm.match(self.field_value_string)
             if match:
                 # URI uses angle brackets
-                uriAndParametersString = match.group(2)
-                self._sipURI = SIPURI.newParsedFrom(uriAndParametersString)
+                uri_and_parameter_string = match.group(2)
+                self._sipURI = SIPURI.newParsedFrom(uri_and_parameter_string)
                 # noinspection PyUnusedLocal
-                foo = self._sipURI.user  # We do this to make sure the sipURI gets parsed within our exception handler.
-                headerFieldParametersString = match.group(3)
+                foo = self._sipURI.user  # We do this to make sure the sip_uri gets parsed within our exception handler.
+                header_field_parameters_string = match.group(3)
             else:
-                # same logic as above, but work on sample, not uriAndParametersString.  This will be factored in the real solution.
-                uriAndHeaderFieldParametersMatchGroups = self.__class__.regexForNonAngleBracketForm.match(self.fieldValueString).groups()
-                uriString = uriAndHeaderFieldParametersMatchGroups[0]
-                self._sipURI = SIPURI.newParsedFrom(uriString)
+                # same logic as above, but work on sample, not uri_and_parameter_string.  This will be factored in the real solution.
+                uri_and_header_field_parameters_match_groups = self.__class__.regexForNonAngleBracketForm.match(self.field_value_string).groups()
+                uri_string = uri_and_header_field_parameters_match_groups[0]
+                self._sipURI = SIPURI.newParsedFrom(uri_string)
                 # noinspection PyUnusedLocal
-                foo = self._sipURI.user  # We do this to make sure the sipURI gets parsed within our exception handler.
-                headerFieldParametersString = uriAndHeaderFieldParametersMatchGroups[1]
-            self._parameterNamesAndValueStrings = dict(self.__class__.regexForFindingParameterNamesAndValues.findall(headerFieldParametersString))
+                foo = self._sipURI.user  # We do this to make sure the sip_uri gets parsed within our exception handler.
+                header_field_parameters_string = uri_and_header_field_parameters_match_groups[1]
+            self._parameterNamesAndValueStrings = dict(self.__class__.regexForFindingParameterNamesAndValues.findall(header_field_parameters_string))
             self._attributeHasBeenSet = True
         except Exception:
             self._isValid = False

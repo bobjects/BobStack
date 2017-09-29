@@ -12,7 +12,7 @@ class TestRFC5118SIPTortureTest(TestCase):
     def testValidSIPMessageWithAnIPv6Reference(self):
         # https://tools.ietf.org/html/rfc5118#section-4.1
         # ipv6-good.dat
-        messageString = (
+        message_string = (
             'REGISTER sip:[2001:db8::10] SIP/2.0\r\n'
             'To: sip:user@example.com\r\n'
             'From: sip:user@example.com;tag=81x2\r\n'
@@ -24,7 +24,7 @@ class TestRFC5118SIPTortureTest(TestCase):
             'Content-Length: 0\r\n'
             '\r\n'
         )
-        message = SIPMessageFactory().nextForString(messageString)
+        message = SIPMessageFactory().nextForString(message_string)
         self.assertIsNotNone(message)
         self.assertIsInstance(message.isValid, bool)
         # TODO
@@ -32,7 +32,7 @@ class TestRFC5118SIPTortureTest(TestCase):
     def testInvalidSIPMessageWithAnIPv6Reference(self):
         # https://tools.ietf.org/html/rfc5118#section-4.2
         # ipv6-bad.dat
-        messageString = (
+        message_string = (
             'REGISTER sip:2001:db8::10 SIP/2.0\r\n'
             'To: sip:user@example.com\r\n'
             'From: sip:user@example.com;tag=81x2\r\n'
@@ -44,7 +44,7 @@ class TestRFC5118SIPTortureTest(TestCase):
             'Content-Length: 0\r\n'
             '\r\n'
         )
-        message = SIPMessageFactory().nextForString(messageString)
+        message = SIPMessageFactory().nextForString(message_string)
         self.assertIsNotNone(message)
         self.assertIsInstance(message.isValid, bool)
         # TODO
@@ -52,7 +52,7 @@ class TestRFC5118SIPTortureTest(TestCase):
     def testPortAmbiguousInASIPURI(self):
         # https://tools.ietf.org/html/rfc5118#section-4.3
         # port-ambiguous.dat
-        messageString = (
+        message_string = (
             'REGISTER sip:[2001:db8::10:5070] SIP/2.0\r\n'
             'To: sip:user@example.com\r\n'
             'From: sip:user@example.com;tag=81x2\r\n'
@@ -64,7 +64,7 @@ class TestRFC5118SIPTortureTest(TestCase):
             'Content-Length: 0\r\n'
             '\r\n'
         )
-        message = SIPMessageFactory().nextForString(messageString)
+        message = SIPMessageFactory().nextForString(message_string)
         self.assertIsNotNone(message)
         self.assertIsInstance(message.isValid, bool)
         # TODO
@@ -72,7 +72,7 @@ class TestRFC5118SIPTortureTest(TestCase):
     def testPortUnambiguousInASIPURI(self):
         # https://tools.ietf.org/html/rfc5118#section-4.4
         # port-unambiguous.dat
-        messageString = (
+        message_string = (
             'REGISTER sip:[2001:db8::10]:5070 SIP/2.0\r\n'
             'To: sip:user@example.com\r\n'
             'From: sip:user@example.com;tag=81x2\r\n'
@@ -84,7 +84,7 @@ class TestRFC5118SIPTortureTest(TestCase):
             'Content-Length: 0\r\n'
             '\r\n'
         )
-        message = SIPMessageFactory().nextForString(messageString)
+        message = SIPMessageFactory().nextForString(message_string)
         self.assertIsNotNone(message)
         self.assertIsInstance(message.isValid, bool)
         # TODO
@@ -92,7 +92,7 @@ class TestRFC5118SIPTortureTest(TestCase):
     def testIPv6ReferenceDelimitersInViaHeader(self):
         # https://tools.ietf.org/html/rfc5118#section-4.5
         # via-received-param-with-delim.dat
-        messageString = (
+        message_string = (
             'BYE sip:[2001:db8::10] SIP/2.0\r\n'
             'To: sip:user@example.com;tag=bd76ya\r\n'
             'From: sip:user@example.com;tag=81x2\r\n'
@@ -103,7 +103,7 @@ class TestRFC5118SIPTortureTest(TestCase):
             'Content-Length: 0\r\n'
             '\r\n'
         )
-        message = SIPMessageFactory().nextForString(messageString)
+        message = SIPMessageFactory().nextForString(message_string)
         self.assertIsNotNone(message)
         self.assertIsInstance(message.isValid, bool)
         # TODO
@@ -111,7 +111,7 @@ class TestRFC5118SIPTortureTest(TestCase):
     def testIPv6ReferenceDelimitersInViaHeader2(self):
         # https://tools.ietf.org/html/rfc5118#section-4.5
         # via-received-param-no-delim.dat
-        messageString = (
+        message_string = (
             'OPTIONS sip:[2001:db8::10] SIP/2.0\r\n'
             'To: sip:user@example.com\r\n'
             'From: sip:user@example.com;tag=81x2\r\n'
@@ -123,7 +123,7 @@ class TestRFC5118SIPTortureTest(TestCase):
             'Content-Length: 0\r\n'
             '\r\n'
         )
-        message = SIPMessageFactory().nextForString(messageString)
+        message = SIPMessageFactory().nextForString(message_string)
         self.assertIsNotNone(message)
         self.assertIsInstance(message.isValid, bool)
         # TODO
@@ -131,7 +131,7 @@ class TestRFC5118SIPTortureTest(TestCase):
     def testSIPRequestWithIPv6AddressesInSDPBody(self):
         # https://tools.ietf.org/html/rfc5118#section-4.6
         # ipv6-in-sdp.dat
-        messageString = (
+        message_string = (
             'INVITE sip:user@[2001:db8::10] SIP/2.0\r\n'
             'To: sip:user@[2001:db8::10]\r\n'
             'From: sip:user@example.com;tag=81x2\r\n'
@@ -153,7 +153,7 @@ class TestRFC5118SIPTortureTest(TestCase):
             'm=video 6024 RTP/AVP 107\r\n'
             'a=rtpmap:107 H263-1998/90000\r\n'
         )
-        message = SIPMessageFactory().nextForString(messageString)
+        message = SIPMessageFactory().nextForString(message_string)
         self.assertIsNotNone(message)
         self.assertIsInstance(message.isValid, bool)
         # TODO
@@ -161,7 +161,7 @@ class TestRFC5118SIPTortureTest(TestCase):
     def testMultipleIPAddressesInSIPHeaders(self):
         # https://tools.ietf.org/html/rfc5118#section-4.7
         # mult-ip-in-header.dat
-        messageString = (
+        message_string = (
             'BYE sip:user@host.example.net SIP/2.0\r\n'
             'Via: SIP/2.0/UDP [2001:db8::9:1]:6050;branch=z9hG4bKas3-111\r\n'
             'Via: SIP/2.0/UDP 192.0.2.1;branch=z9hG4bKjhja8781hjuaij65144\r\n'
@@ -174,7 +174,7 @@ class TestRFC5118SIPTortureTest(TestCase):
             'Content-Length: 0\r\n'
             '\r\n'
         )
-        message = SIPMessageFactory().nextForString(messageString)
+        message = SIPMessageFactory().nextForString(message_string)
         self.assertIsNotNone(message)
         self.assertIsInstance(message.isValid, bool)
         # TODO
@@ -182,7 +182,7 @@ class TestRFC5118SIPTortureTest(TestCase):
     def testMultipleIPAddressesInSDP(self):
         # https://tools.ietf.org/html/rfc5118#section-4.8
         # mult-ip-in-sdp.dat
-        messageString = (
+        message_string = (
             'INVITE sip:user@[2001:db8::10] SIP/2.0\r\n'
             'To: sip:user@[2001:db8::10]\r\n'
             'From: sip:user@example.com;tag=81x2\r\n'
@@ -204,7 +204,7 @@ class TestRFC5118SIPTortureTest(TestCase):
             'c=IN IP6 2001:db8::1\r\n'
             'a=rtpmap:107 H263-1998/90000\r\n'
         )
-        message = SIPMessageFactory().nextForString(messageString)
+        message = SIPMessageFactory().nextForString(message_string)
         self.assertIsNotNone(message)
         self.assertIsInstance(message.isValid, bool)
         # TODO
@@ -212,7 +212,7 @@ class TestRFC5118SIPTortureTest(TestCase):
     def testIPv4MappedIPv6Addresses(self):
         # https://tools.ietf.org/html/rfc5118#section-4.9
         # ipv4-mapped-ipv6.dat
-        messageString = (
+        message_string = (
             'INVITE sip:user@example.com SIP/2.0\r\n'
             'To: sip:user@example.com\r\n'
             'From: sip:user@east.example.com;tag=81x2\r\n'
@@ -235,7 +235,7 @@ class TestRFC5118SIPTortureTest(TestCase):
             'm=video 6024 RTP/AVP 107\r\n'
             'a=rtpmap:107 H263-1998/90000\r\n'
         )
-        message = SIPMessageFactory().nextForString(messageString)
+        message = SIPMessageFactory().nextForString(message_string)
         self.assertIsNotNone(message)
         self.assertIsInstance(message.isValid, bool)
         # TODO
@@ -243,7 +243,7 @@ class TestRFC5118SIPTortureTest(TestCase):
     def testIPv6ReferenceBugInRFC3261ABNF(self):
         # https://tools.ietf.org/html/rfc5118#section-4.10
         # ipv6-bug-abnf-3-colons
-        messageString = (
+        message_string = (
             'OPTIONS sip:user@[2001:db8:::192.0.2.1] SIP/2.0\r\n'
             'To: sip:user@[2001:db8:::192.0.2.1]\r\n'
             'From: sip:user@example.com;tag=810x2\r\n'
@@ -253,7 +253,7 @@ class TestRFC5118SIPTortureTest(TestCase):
             'Max-Forwards: 70\r\n'
             'Content-Length: 0\r\n'
         )
-        message = SIPMessageFactory().nextForString(messageString)
+        message = SIPMessageFactory().nextForString(message_string)
         self.assertIsNotNone(message)
         self.assertIsInstance(message.isValid, bool)
         # TODO
@@ -261,7 +261,7 @@ class TestRFC5118SIPTortureTest(TestCase):
     def testIPv6ReferenceBugInRFC3261ABNF2(self):
         # https://tools.ietf.org/html/rfc5118#section-4.10
         # ipv6-correct-abnf-2-colons
-        messageString = (
+        message_string = (
             'OPTIONS sip:user@[2001:db8::192.0.2.1] SIP/2.0\r\n'
             'To: sip:user@[2001:db8::192.0.2.1]\r\n'
             'From: sip:user@example.com;tag=810x2\r\n'
@@ -271,7 +271,7 @@ class TestRFC5118SIPTortureTest(TestCase):
             'Max-Forwards: 70\r\n'
             'Content-Length: 0\r\n'
         )
-        message = SIPMessageFactory().nextForString(messageString)
+        message = SIPMessageFactory().nextForString(message_string)
         self.assertIsNotNone(message)
         self.assertIsInstance(message.isValid, bool)
         # TODO

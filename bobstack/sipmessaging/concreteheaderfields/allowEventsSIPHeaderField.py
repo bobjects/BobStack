@@ -24,8 +24,8 @@ class AllowEventsSIPHeaderField(SIPHeaderField):
         return 'u'
 
     @classmethod
-    def newForAttributes(cls, fieldName="Allow-Events", fieldValueString=""):
-        return cls.newForFieldNameAndValueString(fieldName=fieldName, fieldValueString=fieldValueString)
+    def newForAttributes(cls, field_name="Allow-Events", field_value_string=""):
+        return cls.newForFieldNameAndValueString(field_name=field_name, field_value_string=field_value_string)
 
     @property
     def isAllowEvents(self):

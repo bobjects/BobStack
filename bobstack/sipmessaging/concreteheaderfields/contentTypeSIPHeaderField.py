@@ -24,8 +24,8 @@ class ContentTypeSIPHeaderField(SIPHeaderField):
         return 'c'
 
     @classmethod
-    def newForAttributes(cls, fieldName="Content-Type", fieldValueString=""):
-        return cls.newForFieldNameAndValueString(fieldName=fieldName, fieldValueString=fieldValueString)
+    def newForAttributes(cls, field_name="Content-Type", field_value_string=""):
+        return cls.newForFieldNameAndValueString(field_name=field_name, field_value_string=field_value_string)
 
     @property
     def isContentType(self):

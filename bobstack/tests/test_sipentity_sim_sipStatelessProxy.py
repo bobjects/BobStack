@@ -20,9 +20,9 @@ class TestStatelessProxyWithSimulatedTransport(AbstractStatelessProxyTestCase):
         self.bobReceivedRequests = []
         self.bobReceivedResponses = []
         self.atlanta = SIPStatelessProxy()
-        self.atlanta.transports = [SimulatedSIPTransport(self.atlantaBindAddress, self.atlantaBindPort)]
+        self.atlanta.transports = [SimulatedSIPTransport(self.atlanta_bind_address, self.atlantaBindPort)]
         self.biloxi = SIPStatelessProxy()
-        self.biloxi.transports = [SimulatedSIPTransport(self.biloxiBindAddress, self.biloxiBindPort)]
+        self.biloxi.transports = [SimulatedSIPTransport(self.biloxi_bind_address, self.biloxiBindPort)]
         self.aliceTransport = SimulatedSIPTransport(self.aliceBindAddress, self.aliceBindPort)
         self.bobTransport = SimulatedSIPTransport(self.bobBindAddress, self.bobBindPort)
         self.aliceTransport.whenEventDo("receivedValidConnectedRequest", self.aliceRequestEventHandler)
@@ -35,9 +35,9 @@ class TestStatelessProxyWithSimulatedTransport(AbstractStatelessProxyTestCase):
         self.bobTransport.whenEventDo("receivedValidConnectedResponse", self.bobResponseEventHandler)
         self.aliceTransport.bind()
         self.bobTransport.bind()
-        self.aliceTransport.connectToAddressAndPort(self.atlantaBindAddress, self.atlantaBindPort)
+        self.aliceTransport.connectToAddressAndPort(self.atlanta_bind_address, self.atlantaBindPort)
         # Let Biloxi connect to Bob.  Don't pre-connect Bob to Biloxi.
-        # self.bobTransport.connectToAddressAndPort(self.biloxiBindAddress, self.biloxiBindPort)
+        # self.bobTransport.connectToAddressAndPort(self.biloxi_bind_address, self.biloxiBindPort)
         # TODO:  need to bind?
 
     def test(self):
@@ -50,16 +50,16 @@ class TestStatelessProxyWithSimulatedTransport(AbstractStatelessProxyTestCase):
         self.assertEqual(1, len(self.biloxi.transports))
         self.assertEqual(1, len(self.atlanta.transports[0].connections))
         self.assertEqual(0, len(self.biloxi.transports[0].connections))
-        self.assertEqual(self.atlantaBindAddress, self.atlanta.transports[0].bindAddress)
-        self.assertEqual(self.atlantaBindPort, self.atlanta.transports[0].bindPort)
-        self.assertEqual(self.atlantaBindAddress, self.atlanta.transports[0].connections[0].bindAddress)
-        self.assertEqual(self.atlantaBindPort, self.atlanta.transports[0].connections[0].bindPort)
-        self.assertEqual(self.atlantaBindAddress, self.aliceTransport.connections[0].remoteAddress)
+        self.assertEqual(self.atlanta_bind_address, self.atlanta.transports[0].bind_address)
+        self.assertEqual(self.atlantaBindPort, self.atlanta.transports[0].bind_port)
+        self.assertEqual(self.atlanta_bind_address, self.atlanta.transports[0].connections[0].bind_address)
+        self.assertEqual(self.atlantaBindPort, self.atlanta.transports[0].connections[0].bind_port)
+        self.assertEqual(self.atlanta_bind_address, self.aliceTransport.connections[0].remoteAddress)
         self.assertEqual(self.atlantaBindPort, self.aliceTransport.connections[0].remotePort)
         self.assertEqual(self.aliceBindAddress, self.atlanta.transports[0].connections[0].remoteAddress)
         self.assertEqual(self.aliceBindPort, self.atlanta.transports[0].connections[0].remotePort)
-        self.assertEqual(self.biloxiBindAddress, self.biloxi.transports[0].bindAddress)
-        self.assertEqual(self.biloxiBindPort, self.biloxi.transports[0].bindPort)
+        self.assertEqual(self.biloxi_bind_address, self.biloxi.transports[0].bind_address)
+        self.assertEqual(self.biloxiBindPort, self.biloxi.transports[0].bind_port)
         self.assertEqual(0, len(self.aliceReceivedRequests))
         self.assertEqual(0, len(self.aliceReceivedResponses))
         self.assertEqual(0, len(self.atlantaReceivedRequests))
@@ -82,49 +82,49 @@ class TestStatelessProxyWithSimulatedTransport(AbstractStatelessProxyTestCase):
 
         self.assertEqual(self.aliceBindAddress, self.atlantaReceivedRequests[0].connection.remoteAddress)
         self.assertEqual(self.aliceBindPort, self.atlantaReceivedRequests[0].connection.remotePort)
-        self.assertEqual(self.atlantaBindAddress, self.atlantaReceivedRequests[0].connection.bindAddress)
-        self.assertEqual(self.atlantaBindPort, self.atlantaReceivedRequests[0].connection.bindPort)
-        atlantaReceivedRequest = self.atlantaReceivedRequests[0].sipMessage
-        rURI = SIPURI.newParsedFrom(atlantaReceivedRequest.startLine.requestURI)
-        self.assertEqual(self.aliceRequestString, atlantaReceivedRequest.rawString)
-        self.assertEqual('INVITE', atlantaReceivedRequest.startLine.sipMethod)
-        self.assertEqual(self.biloxiBindAddress, rURI.host)
-        self.assertEqual(1, len(atlantaReceivedRequest.vias))
-        self.assertEqual(self.aliceRequestString, atlantaReceivedRequest.rawString)
-        self.assertIsNone(atlantaReceivedRequest.header.toTag)
+        self.assertEqual(self.atlanta_bind_address, self.atlantaReceivedRequests[0].connection.bind_address)
+        self.assertEqual(self.atlantaBindPort, self.atlantaReceivedRequests[0].connection.bind_port)
+        atlanta_received_request = self.atlantaReceivedRequests[0].sipMessage
+        ruri = SIPURI.newParsedFrom(atlanta_received_request.start_line.request_uri)
+        self.assertEqual(self.aliceRequestString, atlanta_received_request.rawString)
+        self.assertEqual('INVITE', atlanta_received_request.start_line.sip_method)
+        self.assertEqual(self.biloxi_bind_address, ruri.host)
+        self.assertEqual(1, len(atlanta_received_request.vias))
+        self.assertEqual(self.aliceRequestString, atlanta_received_request.rawString)
+        self.assertIsNone(atlanta_received_request.header.toTag)
 
-        self.assertEqual(self.atlantaBindAddress, self.biloxiReceivedRequests[0].connection.remoteAddress)
+        self.assertEqual(self.atlanta_bind_address, self.biloxiReceivedRequests[0].connection.remoteAddress)
         self.assertEqual(self.atlantaBindPort, self.biloxiReceivedRequests[0].connection.remotePort)
-        self.assertEqual(self.biloxiBindAddress, self.biloxiReceivedRequests[0].connection.bindAddress)
-        self.assertEqual(self.biloxiBindPort, self.biloxiReceivedRequests[0].connection.bindPort)
+        self.assertEqual(self.biloxi_bind_address, self.biloxiReceivedRequests[0].connection.bind_address)
+        self.assertEqual(self.biloxiBindPort, self.biloxiReceivedRequests[0].connection.bind_port)
         biloxiReceivedRequest = self.biloxiReceivedRequests[0].sipMessage
-        self.assertEqual(atlantaReceivedRequest.startLine.requestURI, biloxiReceivedRequest.startLine.requestURI)
-        self.assertEqual('INVITE', biloxiReceivedRequest.startLine.sipMethod)
+        self.assertEqual(atlanta_received_request.start_line.request_uri, biloxiReceivedRequest.start_line.request_uri)
+        self.assertEqual('INVITE', biloxiReceivedRequest.start_line.sip_method)
         self.assertEqual(2, len(biloxiReceivedRequest.vias))
         self.assertNotEqual(self.aliceRequestString, biloxiReceivedRequest.rawString)
         self.assertIsNone(biloxiReceivedRequest.header.toTag)
 
-        self.assertEqual(self.biloxiBindAddress, self.atlantaReceivedResponses[0].connection.remoteAddress)
+        self.assertEqual(self.biloxi_bind_address, self.atlantaReceivedResponses[0].connection.remoteAddress)
         self.assertEqual(self.biloxiBindPort, self.atlantaReceivedResponses[0].connection.remotePort)
-        self.assertEqual(self.atlantaBindAddress, self.atlantaReceivedResponses[0].connection.bindAddress)
-        self.assertEqual(self.atlantaBindPort, self.atlantaReceivedResponses[0].connection.bindPort)
+        self.assertEqual(self.atlanta_bind_address, self.atlantaReceivedResponses[0].connection.bind_address)
+        self.assertEqual(self.atlantaBindPort, self.atlantaReceivedResponses[0].connection.bind_port)
         atlantaReceivedResponse = self.atlantaReceivedResponses[0].sipMessage
         self.assertIsNotNone(atlantaReceivedResponse.header.toTag)
         self.assertEqual(2, len(atlantaReceivedResponse.vias))
 
-        self.assertEqual(self.atlantaBindAddress, self.aliceReceivedResponses[0].connection.remoteAddress)
+        self.assertEqual(self.atlanta_bind_address, self.aliceReceivedResponses[0].connection.remoteAddress)
         self.assertEqual(self.atlantaBindPort, self.aliceReceivedResponses[0].connection.remotePort)
-        self.assertEqual(self.aliceBindAddress, self.aliceReceivedResponses[0].connection.bindAddress)
-        self.assertEqual(self.aliceBindPort, self.aliceReceivedResponses[0].connection.bindPort)
+        self.assertEqual(self.aliceBindAddress, self.aliceReceivedResponses[0].connection.bind_address)
+        self.assertEqual(self.aliceBindPort, self.aliceReceivedResponses[0].connection.bind_port)
         aliceReceivedResponse = self.aliceReceivedResponses[0].sipMessage
         self.assertIsNotNone(aliceReceivedResponse.header.toTag)
         self.assertEqual(1, len(aliceReceivedResponse.vias))
 
-        self.assertEqual(self.aliceBindAddress, atlantaReceivedRequest.viaHeaderFields[0].host)
+        self.assertEqual(self.aliceBindAddress, atlanta_received_request.viaHeaderFields[0].host)
         # TODO: This 404 nonsense is temporary.  Alice sends to a biloxi domain via atlanta, atlanta forwards her request to biloxi,
         # Biloxi sees that it is responsible for the request, and for right now, just answers 404.
-        self.assertEqual(404, self.atlantaReceivedResponses[0].sipMessage.startLine.statusCode)
-        self.assertEqual(404, self.aliceReceivedResponses[0].sipMessage.startLine.statusCode)
+        self.assertEqual(404, self.atlantaReceivedResponses[0].sipMessage.start_line.status_code)
+        self.assertEqual(404, self.aliceReceivedResponses[0].sipMessage.start_line.status_code)
 
         # TODO:  Moar!!!
 
@@ -143,7 +143,7 @@ class TestStatelessProxyWithSimulatedTransport(AbstractStatelessProxyTestCase):
         return 63354
 
     @property
-    def atlantaBindAddress(self):
+    def atlanta_bind_address(self):
         # return '192.168.4.2'
         return '127.0.0.3'
 
@@ -152,7 +152,7 @@ class TestStatelessProxyWithSimulatedTransport(AbstractStatelessProxyTestCase):
         return 5060
 
     @property
-    def biloxiBindAddress(self):
+    def biloxi_bind_address(self):
         # return '192.168.4.3'
         return '127.0.0.4'
 
@@ -176,7 +176,7 @@ class TestStatelessProxyWithSimulatedTransport(AbstractStatelessProxyTestCase):
         # biloxi == .3 / .96
         # alice == .2 / .188
         # bob == .5 / .204
-        # messageString = ('INVITE sip:1002@192.168.4.3 SIP/2.0\r\n'
+        # message_string = ('INVITE sip:1002@192.168.4.3 SIP/2.0\r\n'
         #                  'Via: SIP/2.0/UDP 192.168.4.4:63354;branch=z9hG4bK-524287-1---7a462a5d1b6fe13b;rport\r\n'
         #                  'Max-Forwards: 70\r\n'
         #                  'Contact: <sip:alice@192.168.4.4:63354;rinstance=d875ce4fd8f72441>\r\n'
@@ -199,7 +199,7 @@ class TestStatelessProxyWithSimulatedTransport(AbstractStatelessProxyTestCase):
         #                  'a=rtpmap:101 telephone-event/8000\r\n'
         #                  'a=fmtp:101 0-15\r\n'
         #                  'a=sendrecv\r\n')
-        messageString = ('INVITE sip:1002@127.0.0.4 SIP/2.0\r\n'
+        message_string = ('INVITE sip:1002@127.0.0.4 SIP/2.0\r\n'
                          'Via: SIP/2.0/UDP 127.0.0.2:63354;branch=z9hG4bK-524287-1---7a462a5d1b6fe13b;rport\r\n'
                          'Max-Forwards: 70\r\n'
                          'Contact: <sip:alice@127.0.0.2:63354;rinstance=d875ce4fd8f72441>\r\n'
@@ -222,7 +222,7 @@ class TestStatelessProxyWithSimulatedTransport(AbstractStatelessProxyTestCase):
                          'a=rtpmap:101 telephone-event/8000\r\n'
                          'a=fmtp:101 0-15\r\n'
                          'a=sendrecv\r\n')
-        return messageString
+        return message_string
 
     # @property
     # def aliceResponseString(self):
@@ -231,7 +231,7 @@ class TestStatelessProxyWithSimulatedTransport(AbstractStatelessProxyTestCase):
         # biloxi == .3 / .96
         # alice == .4 / .188
         # bob == .5 / .204
-        # messageString = ('SIP/2.0 180 Ringing\r\n'
+        # message_string = ('SIP/2.0 180 Ringing\r\n'
         #                  'Via: SIP/2.0/UDP 192.168.4.2;branch=z9hG4bKeb83.c2fe646b6c2d21c6f9f113d37c474768.0\r\n'
         #                  'Via: SIP/2.0/UDP 192.168.4.3:56731;received=192.168.4.4;branch=z9hG4bK-524287-1---e500d061e354193a;rport=56731\r\n'
         #                  'Via: SIP/2.0/UDP 192.168.4.5;branch=z9hG4bKeb83.c2fe646b6c2d21c6f9f113d37c474768.0\r\n'
@@ -250,7 +250,7 @@ class TestStatelessProxyWithSimulatedTransport(AbstractStatelessProxyTestCase):
         #                  'RSeq: 1\r\n'
         #                  'Content-Length: 0\r\n'
         #                  '\r\n')
-        # messageString = ('SIP/2.0 180 Ringing\r\n'
+        # message_string = ('SIP/2.0 180 Ringing\r\n'
         #                  'Via: SIP/2.0/UDP 127.0.0.3;branch=z9hG4bKeb83.c2fe646b6c2d21c6f9f113d37c474768.0\r\n'
         #                  'Via: SIP/2.0/UDP 127.0.0.4:56731;received=127.0.0.2;branch=z9hG4bK-524287-1---e500d061e354193a;rport=56731\r\n'
         #                  'Via: SIP/2.0/UDP 127.0.0.5;branch=z9hG4bKeb83.c2fe646b6c2d21c6f9f113d37c474768.0\r\n'
@@ -269,7 +269,7 @@ class TestStatelessProxyWithSimulatedTransport(AbstractStatelessProxyTestCase):
         #                  'RSeq: 1\r\n'
         #                  'Content-Length: 0\r\n'
         #                  '\r\n')
-        # return messageString
+        # return message_string
 
     @property
     def bobRequestString(self):
@@ -278,7 +278,7 @@ class TestStatelessProxyWithSimulatedTransport(AbstractStatelessProxyTestCase):
         # biloxi == .3
         # alice == .4
         # bob == .5
-        # messageString = ('INVITE sip:1001@192.168.4.2 SIP/2.0\r\n'
+        # message_string = ('INVITE sip:1001@192.168.4.2 SIP/2.0\r\n'
         #                  'Via: SIP/2.0/UDP 192.168.4.5:63354;branch=z9hG4bK-524287-1---7a462a5d1b6fe13b;rport\r\n'
         #                  'Max-Forwards: 70\r\n'
         #                  'Contact: <sip:bob@192.168.4.3:63354;rinstance=d875ce4fd8f72441>\r\n'
@@ -301,7 +301,7 @@ class TestStatelessProxyWithSimulatedTransport(AbstractStatelessProxyTestCase):
         #                  'a=rtpmap:101 telephone-event/8000\r\n'
         #                  'a=fmtp:101 0-15\r\n'
         #                  'a=sendrecv\r\n')
-        messageString = ('INVITE sip:1001@127.0.0.3 SIP/2.0\r\n'
+        message_string = ('INVITE sip:1001@127.0.0.3 SIP/2.0\r\n'
                          'Via: SIP/2.0/UDP 127.0.0.5:63354;branch=z9hG4bK-524287-1---7a462a5d1b6fe13b;rport\r\n'
                          'Max-Forwards: 70\r\n'
                          'Contact: <sip:bob@127.0.0.4:63354;rinstance=d875ce4fd8f72441>\r\n'
@@ -324,7 +324,7 @@ class TestStatelessProxyWithSimulatedTransport(AbstractStatelessProxyTestCase):
                          'a=rtpmap:101 telephone-event/8000\r\n'
                          'a=fmtp:101 0-15\r\n'
                          'a=sendrecv\r\n')
-        return messageString
+        return message_string
 
     # @property
     # def bobResponseString(self):
@@ -333,7 +333,7 @@ class TestStatelessProxyWithSimulatedTransport(AbstractStatelessProxyTestCase):
         # biloxi == .3 / .96
         # alice == .4 / .188
         # bob == .5 / .204
-        # messageString = ('SIP/2.0 180 Ringing\r\n'
+        # message_string = ('SIP/2.0 180 Ringing\r\n'
         #                  'Via: SIP/2.0/UDP 192.168.4.3;branch=z9hG4bKeb83.c2fe646b6c2d21c6f9f113d37c474768.0\r\n'
         #                  'Via: SIP/2.0/UDP 192.168.4.2:56731;received=192.168.4.4;branch=z9hG4bK-524287-1---e500d061e354193a;rport=56731\r\n'
         #                  'Via: SIP/2.0/UDP 192.168.4.4;branch=z9hG4bKeb83.c2fe646b6c2d21c6f9f113d37c474768.0\r\n'
@@ -352,7 +352,7 @@ class TestStatelessProxyWithSimulatedTransport(AbstractStatelessProxyTestCase):
         #                  'RSeq: 1\r\n'
         #                  'Content-Length: 0\r\n'
         #                  '\r\n')
-        # messageString = ('SIP/2.0 180 Ringing\r\n'
+        # message_string = ('SIP/2.0 180 Ringing\r\n'
         #                  'Via: SIP/2.0/UDP 127.0.0.4;branch=z9hG4bKeb83.c2fe646b6c2d21c6f9f113d37c474768.0\r\n'
         #                  'Via: SIP/2.0/UDP 127.0.0.3:56731;received=127.0.0.2;branch=z9hG4bK-524287-1---e500d061e354193a;rport=56731\r\n'
         #                  'Via: SIP/2.0/UDP 127.0.0.2;branch=z9hG4bKeb83.c2fe646b6c2d21c6f9f113d37c474768.0\r\n'
@@ -371,31 +371,31 @@ class TestStatelessProxyWithSimulatedTransport(AbstractStatelessProxyTestCase):
         #                  'RSeq: 1\r\n'
         #                  'Content-Length: 0\r\n'
         #                  '\r\n')
-        # return messageString
+        # return message_string
 
-    def aliceRequestEventHandler(self, aConnectedSIPMessage):
-        self.aliceReceivedRequests.append(aConnectedSIPMessage)
+    def aliceRequestEventHandler(self, a_connected_aip_message):
+        self.aliceReceivedRequests.append(a_connected_aip_message)
 
-    def aliceResponseEventHandler(self, aConnectedSIPMessage):
-        self.aliceReceivedResponses.append(aConnectedSIPMessage)
+    def aliceResponseEventHandler(self, a_connected_aip_message):
+        self.aliceReceivedResponses.append(a_connected_aip_message)
 
-    def atlantaRequestEventHandler(self, aConnectedSIPMessage):
-        self.atlantaReceivedRequests.append(aConnectedSIPMessage)
+    def atlantaRequestEventHandler(self, a_connected_aip_message):
+        self.atlantaReceivedRequests.append(a_connected_aip_message)
 
-    def atlantaResponseEventHandler(self, aConnectedSIPMessage):
-        self.atlantaReceivedResponses.append(aConnectedSIPMessage)
+    def atlantaResponseEventHandler(self, a_connected_aip_message):
+        self.atlantaReceivedResponses.append(a_connected_aip_message)
 
-    def biloxiRequestEventHandler(self, aConnectedSIPMessage):
-        self.biloxiReceivedRequests.append(aConnectedSIPMessage)
+    def biloxiRequestEventHandler(self, a_connected_aip_message):
+        self.biloxiReceivedRequests.append(a_connected_aip_message)
 
-    def biloxiResponseEventHandler(self, aConnectedSIPMessage):
-        self.biloxiReceivedResponses.append(aConnectedSIPMessage)
+    def biloxiResponseEventHandler(self, a_connected_aip_message):
+        self.biloxiReceivedResponses.append(a_connected_aip_message)
 
-    def bobRequestEventHandler(self, aConnectedSIPMessage):
-        self.bobReceivedRequests.append(aConnectedSIPMessage)
+    def bobRequestEventHandler(self, a_connected_aip_message):
+        self.bobReceivedRequests.append(a_connected_aip_message)
 
-    def bobResponseEventHandler(self, aConnectedSIPMessage):
-        self.bobReceivedResponses.append(aConnectedSIPMessage)
+    def bobResponseEventHandler(self, a_connected_aip_message):
+        self.bobReceivedResponses.append(a_connected_aip_message)
 
 
 class TestStatelessProxyWithUDPTransport(AbstractStatelessProxyTestCase):

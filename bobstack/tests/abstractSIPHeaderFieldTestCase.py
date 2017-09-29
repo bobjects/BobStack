@@ -13,12 +13,12 @@ class AbstractSIPHeaderFieldTestCase(TestCase):
     @property
     def canonicalStrings(self):
         answer = []
-        for fieldName in self.canonicalFieldNames + self.canonicalCompactFieldNames:
-            for fieldValueString in self.canonicalFieldValues:
-                answer.append(fieldName + ": " + fieldValueString)
-                answer.append(fieldName + ":     " + fieldValueString)
-                answer.append(fieldName + "    : " + fieldValueString)
-                answer.append(fieldName + "    :     " + fieldValueString)
+        for field_name in self.canonicalFieldNames + self.canonicalCompactFieldNames:
+            for field_value_string in self.canonicalFieldValues:
+                answer.append(field_name + ": " + field_value_string)
+                answer.append(field_name + ":     " + field_value_string)
+                answer.append(field_name + "    : " + field_value_string)
+                answer.append(field_name + "    :     " + field_value_string)
         return answer
 
     @property
@@ -45,32 +45,32 @@ class AbstractSIPHeaderFieldTestCase(TestCase):
         for line in self.canonicalStrings:
             self.assertFalse(UnknownSIPHeaderField.canMatchString(line))
             self.assertTrue(self.sipHeaderFieldClassUnderTest.canMatchString(line))
-            headerField = self.sipHeaderFieldClassUnderTest.newParsedFrom(line)
+            header_field = self.sipHeaderFieldClassUnderTest.newParsedFrom(line)
             # print line
-            self.assertTrue(headerField.isValid)
-            self.assertTrue(headerField.isKnown)
-            self.assertEqual(headerField.rawString, line)
-            self.assertTrue(headerField.fieldName.lower() in [name.lower() for name in self.canonicalFieldNames] + [name.lower() for name in self.canonicalCompactFieldNames])
-            self.assertTrue(headerField.fieldValueString in self.canonicalFieldValues)
-            # self.assertNotEqual(headerField.value, None)
-            self.assertIsInstance(headerField.parameterNamesAndValueStrings, dict)
-            headerField.rawString = self.canonicalFieldNames[0] + ': blooey'
-            self.assertEqual("blooey", headerField.fieldValueString)
-            self.assertEqual(headerField.fieldName.lower(), self.canonicalFieldNames[0].lower())
-            self.assertEqual(self.canonicalFieldNames[0] + ': blooey', headerField.rawString)
+            self.assertTrue(header_field.isValid)
+            self.assertTrue(header_field.isKnown)
+            self.assertEqual(header_field.rawString, line)
+            self.assertTrue(header_field.field_name.lower() in [name.lower() for name in self.canonicalFieldNames] + [name.lower() for name in self.canonicalCompactFieldNames])
+            self.assertTrue(header_field.field_value_string in self.canonicalFieldValues)
+            # self.assertNotEqual(header_field.value, None)
+            self.assertIsInstance(header_field.parameterNamesAndValueStrings, dict)
+            header_field.rawString = self.canonicalFieldNames[0] + ': blooey'
+            self.assertEqual("blooey", header_field.field_value_string)
+            self.assertEqual(header_field.field_name.lower(), self.canonicalFieldNames[0].lower())
+            self.assertEqual(self.canonicalFieldNames[0] + ': blooey', header_field.rawString)
             if self.canonicalCompactFieldNames:
-                headerField.rawString = self.canonicalCompactFieldNames[0] + ': blooey'
-                self.assertEqual("blooey", headerField.fieldValueString)
-                self.assertEqual(headerField.fieldName.lower(), self.canonicalCompactFieldNames[0].lower())
-                self.assertEqual(self.canonicalCompactFieldNames[0] + ': blooey', headerField.rawString)
+                header_field.rawString = self.canonicalCompactFieldNames[0] + ': blooey'
+                self.assertEqual("blooey", header_field.field_value_string)
+                self.assertEqual(header_field.field_name.lower(), self.canonicalCompactFieldNames[0].lower())
+                self.assertEqual(self.canonicalCompactFieldNames[0] + ': blooey', header_field.rawString)
 
     def basic_test_rendering(self):
-        for fieldValueString in self.canonicalFieldValues:
+        for field_value_string in self.canonicalFieldValues:
             # TODO:  we will extend this when we implement rendering of compact headers.
-            headerField = self.sipHeaderFieldClassUnderTest.newForAttributes(fieldValueString=fieldValueString)
-            self.assertTrue(headerField.isValid)
-            self.assertTrue(headerField.isKnown)
-            self.assertEqual(headerField.rawString, self.canonicalFieldNames[0] + ': ' + fieldValueString)
-            headerField.fieldValueString = "blooey"
-            self.assertEqual("blooey", headerField.fieldValueString)
-            self.assertEqual(headerField.rawString, self.canonicalFieldNames[0] + ': blooey')
+            header_field = self.sipHeaderFieldClassUnderTest.newForAttributes(field_value_string=field_value_string)
+            self.assertTrue(header_field.isValid)
+            self.assertTrue(header_field.isKnown)
+            self.assertEqual(header_field.rawString, self.canonicalFieldNames[0] + ': ' + field_value_string)
+            header_field.field_value_string = "blooey"
+            self.assertEqual("blooey", header_field.field_value_string)
+            self.assertEqual(header_field.rawString, self.canonicalFieldNames[0] + ': blooey')

@@ -22,11 +22,11 @@ class TestMalformedSIPStartLine(TestCase):
         for line in self.canonicalStrings:
             self.assertFalse(SIPRequestStartLine.canMatchString(line))
             self.assertFalse(SIPResponseStartLine.canMatchString(line))
-            startLine = MalformedSIPStartLine.newParsedFrom(line)
-            self.assertFalse(startLine.isRequest)
-            self.assertFalse(startLine.isResponse)
-            self.assertTrue(startLine.isMalformed)
-            self.assertEqual(startLine.rawString, line)
+            start_line = MalformedSIPStartLine.newParsedFrom(line)
+            self.assertFalse(start_line.isRequest)
+            self.assertFalse(start_line.isResponse)
+            self.assertTrue(start_line.isMalformed)
+            self.assertEqual(start_line.rawString, line)
 
 
 class TestSIPResponseStartLine(TestCase):
@@ -40,32 +40,32 @@ class TestSIPResponseStartLine(TestCase):
         for line in self.canonicalStrings:
             self.assertFalse(SIPRequestStartLine.canMatchString(line))
             self.assertTrue(SIPResponseStartLine.canMatchString(line))
-            startLine = SIPResponseStartLine.newParsedFrom(line)
-            self.assertFalse(startLine.isRequest)
-            self.assertTrue(startLine.isResponse)
-            self.assertFalse(startLine.isMalformed)
-            self.assertEqual(startLine.rawString, line)
-            self.assertIsInstance(startLine.statusCode, (int, long))
-            self.assertIsInstance(startLine.reasonPhrase, basestring)
-            startLine.rawString = "SIP/2.0 200 OK"
-            self.assertEqual(200, startLine.statusCode)
-            self.assertEqual("OK", startLine.reasonPhrase)
-            self.assertEqual("SIP/2.0 200 OK", startLine.rawString)
-        self.assertEqual(100, SIPResponseStartLine.newParsedFrom(self.canonicalStrings[0]).statusCode)
-        self.assertEqual('Trying', SIPResponseStartLine.newParsedFrom(self.canonicalStrings[0]).reasonPhrase)
-        self.assertEqual(100, SIPResponseStartLine.newParsedFrom(self.canonicalStrings[1]).statusCode)
-        self.assertEqual('Trying and trying and trying', SIPResponseStartLine.newParsedFrom(self.canonicalStrings[1]).reasonPhrase)
+            start_line = SIPResponseStartLine.newParsedFrom(line)
+            self.assertFalse(start_line.isRequest)
+            self.assertTrue(start_line.isResponse)
+            self.assertFalse(start_line.isMalformed)
+            self.assertEqual(start_line.rawString, line)
+            self.assertIsInstance(start_line.status_code, (int, long))
+            self.assertIsInstance(start_line.reason_phrase, basestring)
+            start_line.rawString = "SIP/2.0 200 OK"
+            self.assertEqual(200, start_line.status_code)
+            self.assertEqual("OK", start_line.reason_phrase)
+            self.assertEqual("SIP/2.0 200 OK", start_line.rawString)
+        self.assertEqual(100, SIPResponseStartLine.newParsedFrom(self.canonicalStrings[0]).status_code)
+        self.assertEqual('Trying', SIPResponseStartLine.newParsedFrom(self.canonicalStrings[0]).reason_phrase)
+        self.assertEqual(100, SIPResponseStartLine.newParsedFrom(self.canonicalStrings[1]).status_code)
+        self.assertEqual('Trying and trying and trying', SIPResponseStartLine.newParsedFrom(self.canonicalStrings[1]).reason_phrase)
 
     def test_rendering(self):
-        startLine = SIPResponseStartLine.newForAttributes(statusCode=401, reasonPhrase="Not Authorized")
-        self.assertEqual(401, startLine.statusCode)
-        self.assertEqual("Not Authorized", startLine.reasonPhrase)
-        self.assertEqual("SIP/2.0 401 Not Authorized", startLine.rawString)
-        startLine.statusCode = 200
-        startLine.reasonPhrase = "OK"
-        self.assertEqual(200, startLine.statusCode)
-        self.assertEqual("OK", startLine.reasonPhrase)
-        self.assertEqual("SIP/2.0 200 OK", startLine.rawString)
+        start_line = SIPResponseStartLine.newForAttributes(status_code=401, reason_phrase="Not Authorized")
+        self.assertEqual(401, start_line.status_code)
+        self.assertEqual("Not Authorized", start_line.reason_phrase)
+        self.assertEqual("SIP/2.0 401 Not Authorized", start_line.rawString)
+        start_line.status_code = 200
+        start_line.reason_phrase = "OK"
+        self.assertEqual(200, start_line.status_code)
+        self.assertEqual("OK", start_line.reason_phrase)
+        self.assertEqual("SIP/2.0 200 OK", start_line.rawString)
 
 
 class TestSIPRequestStartLine(TestCase):
@@ -79,31 +79,31 @@ class TestSIPRequestStartLine(TestCase):
         for line in self.canonicalStrings:
             self.assertTrue(SIPRequestStartLine.canMatchString(line))
             self.assertFalse(SIPResponseStartLine.canMatchString(line))
-            startLine = SIPRequestStartLine.newParsedFrom(line)
-            self.assertTrue(startLine.isRequest)
-            self.assertFalse(startLine.isResponse)
-            self.assertFalse(startLine.isMalformed)
-            self.assertEqual(startLine.rawString, line)
-            self.assertIsInstance(startLine.sipMethod, basestring)
-            self.assertTrue(startLine.sipMethod.__len__() > 0)
-            self.assertIsInstance(startLine.requestURI, basestring)
-            self.assertTrue(startLine.requestURI.__len__() > 0)
-            startLine.rawString = "BYE sip:1115252@127.0.0.1:5060 SIP/2.0"
-            self.assertEqual("BYE", startLine.sipMethod)
-            self.assertEqual("sip:1115252@127.0.0.1:5060", startLine.requestURI)
-            self.assertEqual("BYE sip:1115252@127.0.0.1:5060 SIP/2.0", startLine.rawString)
-        self.assertEqual('INVITE', SIPRequestStartLine.newParsedFrom(self.canonicalStrings[0]).sipMethod)
-        self.assertEqual('sip:5551212@127.0.0.1:5060', SIPRequestStartLine.newParsedFrom(self.canonicalStrings[0]).requestURI)
-        self.assertEqual('INVITE', SIPRequestStartLine.newParsedFrom(self.canonicalStrings[1]).sipMethod)
-        self.assertEqual('sip:5551212@127.0.0.1:5060;transport=udp;user=phone;trusted;gw', SIPRequestStartLine.newParsedFrom(self.canonicalStrings[1]).requestURI)
+            start_line = SIPRequestStartLine.newParsedFrom(line)
+            self.assertTrue(start_line.isRequest)
+            self.assertFalse(start_line.isResponse)
+            self.assertFalse(start_line.isMalformed)
+            self.assertEqual(start_line.rawString, line)
+            self.assertIsInstance(start_line.sip_method, basestring)
+            self.assertTrue(start_line.sip_method.__len__() > 0)
+            self.assertIsInstance(start_line.request_uri, basestring)
+            self.assertTrue(start_line.request_uri.__len__() > 0)
+            start_line.rawString = "BYE sip:1115252@127.0.0.1:5060 SIP/2.0"
+            self.assertEqual("BYE", start_line.sip_method)
+            self.assertEqual("sip:1115252@127.0.0.1:5060", start_line.request_uri)
+            self.assertEqual("BYE sip:1115252@127.0.0.1:5060 SIP/2.0", start_line.rawString)
+        self.assertEqual('INVITE', SIPRequestStartLine.newParsedFrom(self.canonicalStrings[0]).sip_method)
+        self.assertEqual('sip:5551212@127.0.0.1:5060', SIPRequestStartLine.newParsedFrom(self.canonicalStrings[0]).request_uri)
+        self.assertEqual('INVITE', SIPRequestStartLine.newParsedFrom(self.canonicalStrings[1]).sip_method)
+        self.assertEqual('sip:5551212@127.0.0.1:5060;transport=udp;user=phone;trusted;gw', SIPRequestStartLine.newParsedFrom(self.canonicalStrings[1]).request_uri)
 
     def test_rendering(self):
-        startLine = SIPRequestStartLine.newForAttributes(sipMethod="INVITE", requestURI="sip:5551212@127.0.0.1:5060")
-        self.assertEqual("INVITE", startLine.sipMethod)
-        self.assertEqual("sip:5551212@127.0.0.1:5060", startLine.requestURI)
-        self.assertEqual("INVITE sip:5551212@127.0.0.1:5060 SIP/2.0", startLine.rawString)
-        startLine.sipMethod = "BYE"
-        startLine.requestURI = "sip:1115252@127.0.0.1:5060"
-        self.assertEqual("BYE", startLine.sipMethod)
-        self.assertEqual("sip:1115252@127.0.0.1:5060", startLine.requestURI)
-        self.assertEqual("BYE sip:1115252@127.0.0.1:5060 SIP/2.0", startLine.rawString)
+        start_line = SIPRequestStartLine.newForAttributes(sip_method="INVITE", request_uri="sip:5551212@127.0.0.1:5060")
+        self.assertEqual("INVITE", start_line.sip_method)
+        self.assertEqual("sip:5551212@127.0.0.1:5060", start_line.request_uri)
+        self.assertEqual("INVITE sip:5551212@127.0.0.1:5060 SIP/2.0", start_line.rawString)
+        start_line.sip_method = "BYE"
+        start_line.request_uri = "sip:1115252@127.0.0.1:5060"
+        self.assertEqual("BYE", start_line.sip_method)
+        self.assertEqual("sip:1115252@127.0.0.1:5060", start_line.request_uri)
+        self.assertEqual("BYE sip:1115252@127.0.0.1:5060 SIP/2.0", start_line.rawString)

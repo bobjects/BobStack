@@ -6,9 +6,9 @@ from connectedSIPMessage import ConnectedSIPMessage
 
 
 class ConnectedSIPMessageFactory(EventSourceMixin):
-    def __init__(self, aSIPTransportConnection):
+    def __init__(self, a_sip_transport_connection):
         EventSourceMixin.__init__(self)
-        self.connection = aSIPTransportConnection
+        self.connection = a_sip_transport_connection
         self.sipMessageFactory = SIPMessageFactory()
         self.subscribeToSIPMessageFactoryEvents()
 
@@ -16,19 +16,19 @@ class ConnectedSIPMessageFactory(EventSourceMixin):
         self.sipMessageFactory.whenEventDo("validSIPRequest", self.receivedValidSIPRequestEventHandler)
         self.sipMessageFactory.whenEventDo("validSIPResponse", self.receivedValidSIPResponseEventHandler)
 
-    def nextForString(self, aString):
-        self.sipMessageFactory.nextForString(aString)
+    def nextForString(self, a_string):
+        self.sipMessageFactory.nextForString(a_string)
 
-    def receivedValidSIPRequestEventHandler(self, aSIPRequest):
-        self.triggerReceivedValidConnectedRequest(ConnectedSIPMessage(self.connection, aSIPRequest))
+    def receivedValidSIPRequestEventHandler(self, a_sip_request):
+        self.triggerReceivedValidConnectedRequest(ConnectedSIPMessage(self.connection, a_sip_request))
 
-    def triggerReceivedValidConnectedRequest(self, aConectedSIPMessage):
-        print "receivedValidConnectedRequest event - " + str(aConectedSIPMessage)
-        self.triggerEvent("receivedValidConnectedRequest", aConectedSIPMessage)
+    def triggerReceivedValidConnectedRequest(self, a_conected_sip_message):
+        print "receivedValidConnectedRequest event - " + str(a_conected_sip_message)
+        self.triggerEvent("receivedValidConnectedRequest", a_conected_sip_message)
 
-    def receivedValidSIPResponseEventHandler(self, aSIPResponse):
-        self.triggerReceivedValidConnectedResponse(ConnectedSIPMessage(self.connection, aSIPResponse))
+    def receivedValidSIPResponseEventHandler(self, a_sip_response):
+        self.triggerReceivedValidConnectedResponse(ConnectedSIPMessage(self.connection, a_sip_response))
 
-    def triggerReceivedValidConnectedResponse(self, aConectedSIPMessage):
-        print "receivedValidConnectedResponse event - " + str(aConectedSIPMessage)
-        self.triggerEvent("receivedValidConnectedResponse", aConectedSIPMessage)
+    def triggerReceivedValidConnectedResponse(self, a_conected_sip_message):
+        print "receivedValidConnectedResponse event - " + str(a_conected_sip_message)
+        self.triggerEvent("receivedValidConnectedResponse", a_conected_sip_message)

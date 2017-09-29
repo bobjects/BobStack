@@ -50,22 +50,22 @@ class TestTCPTransportConnection(AbstractTransportConnectionTestCase):
         self.assertEqual(0, len(self.receivedResponses))
         self.assertTrue(self.transport1.isReliable)
         self.assertEqual('TCP', self.transport1.transportParameterName)
-        self.assertEqual(self.bindAddress1, self.transport1.bindAddress)
-        self.assertEqual(self.bindPort1, self.transport1.bindPort)
+        self.assertEqual(self.bindAddress1, self.transport1.bind_address)
+        self.assertEqual(self.bindPort1, self.transport1.bind_port)
         self.assertFalse(self.hasBound)
         self.assertFalse(self.bindHasFailed)
         self.assertIsInstance(self.transport2, TCPSIPTransport)
         self.assertEqual(0, len(self.transport2.connections))
         self.assertTrue(self.transport2.isReliable)
         self.assertEqual('TCP', self.transport2.transportParameterName)
-        self.assertEqual(self.bindAddress2, self.transport2.bindAddress)
-        self.assertEqual(self.bindPort2, self.transport2.bindPort)
+        self.assertEqual(self.bindAddress2, self.transport2.bind_address)
+        self.assertEqual(self.bindPort2, self.transport2.bind_port)
         self.assertIsInstance(self.transport3, TCPSIPTransport)
         self.assertEqual(0, len(self.transport3.connections))
         self.assertTrue(self.transport3.isReliable)
         self.assertEqual('TCP', self.transport3.transportParameterName)
-        self.assertEqual(self.bindAddress3, self.transport3.bindAddress)
-        self.assertEqual(self.bindPort3, self.transport3.bindPort)
+        self.assertEqual(self.bindAddress3, self.transport3.bind_address)
+        self.assertEqual(self.bindPort3, self.transport3.bind_port)
         # self.assertEqual(0, len(SimulatedNetwork.instance.boundTransports))
 
     def run_01_bind(self):
@@ -93,7 +93,7 @@ class TestTCPTransportConnection(AbstractTransportConnectionTestCase):
         self.assertEqual(1, len(self.connectedConnections))
         self.assertIs(self.connectedConnections[0], self.transport1.connections[0])
         self.assertEqual(self.bindAddress2, self.transport1.connections[0].remoteAddress)
-        self.assertIsInstance(self.transport1.connections[0].bindPort, int)
+        self.assertIsInstance(self.transport1.connections[0].bind_port, int)
         self.assertIsInstance(self.transport1.connections[0].id, basestring)
         self.assertEqual(self.bindPort2, self.transport1.connections[0].remotePort)
         self.assertEqual(1, len(self.transport2.connections))
@@ -101,7 +101,7 @@ class TestTCPTransportConnection(AbstractTransportConnectionTestCase):
         self.assertEqual(self.bindAddress1, self.transport2.connections[0].remoteAddress)
         self.assertIsInstance(self.transport2.connections[0].remotePort, int)
         self.assertIsInstance(self.transport2.connections[0].id, basestring)
-        self.assertEqual(self.bindPort2, self.transport2.connections[0].bindPort)
+        self.assertEqual(self.bindPort2, self.transport2.connections[0].bind_port)
 
     def run_03_makeInboundConnection(self):
         # Connect transport3 to transport1
@@ -112,9 +112,9 @@ class TestTCPTransportConnection(AbstractTransportConnectionTestCase):
         self.assertEqual(2, len(self.connectedConnections))
         self.assertIs(self.connectedConnections[1], self.transport1.connections[1])
         self.assertEqual(self.bindAddress3, self.transport1.connections[1].remoteAddress)
-        self.assertIsInstance(self.transport3.connections[0].bindPort, int)
+        self.assertIsInstance(self.transport3.connections[0].bind_port, int)
         self.assertIsInstance(self.transport3.connections[0].id, basestring)
-        self.assertEqual(self.bindPort1, self.transport1.connections[0].bindPort)
+        self.assertEqual(self.bindPort1, self.transport1.connections[0].bind_port)
         self.assertEqual(self.bindAddress1, self.transport3.connections[0].remoteAddress)
         self.assertIsInstance(self.transport1.connections[0].remotePort, int)
         self.assertEqual(self.bindPort1, self.transport3.connections[0].remotePort)
@@ -184,22 +184,22 @@ class TestTCPTransportConnection(AbstractTransportConnectionTestCase):
     def bindFailedEventHandler(self):
         self.bindHasFailed = True
 
-    def madeConnectionEventHandler(self, aTCPSIPTransportConnection):
-        self.connectedConnections.append(aTCPSIPTransportConnection)
+    def madeConnectionEventHandler(self, a_tcp_sip_transport_connection):
+        self.connectedConnections.append(a_tcp_sip_transport_connection)
 
-    def couldNotMakeConnectionEventHandler(self, bindAddressAndPort):
-        addressAndPort = bindAddressAndPort
+    def couldNotMakeConnectionEventHandler(self, bind_address_and_port):
+        addressAndPort = bind_address_and_port
         self.notConnectedAddressesAndPorts.append(addressAndPort)
 
-    def lostConnectionEventHandler(self, aTCPSIPTransportConnection):
-        if aTCPSIPTransportConnection in self.connectedConnections:
-            self.connectedConnections.remove(aTCPSIPTransportConnection)
+    def lostConnectionEventHandler(self, a_tcp_sip_transport_connection):
+        if a_tcp_sip_transport_connection in self.connectedConnections:
+            self.connectedConnections.remove(a_tcp_sip_transport_connection)
 
-    def receivedValidConnectedRequestEventHandler(self, aConnectedSIPMessage):
+    def receivedValidConnectedRequestEventHandler(self, a_connected_aip_message):
         print "receivedValidConnectedRequestEventHandler"
-        self.receivedRequests.append(aConnectedSIPMessage)
+        self.receivedRequests.append(a_connected_aip_message)
 
-    def receivedValidConnectedResponseEventHandler(self, aConnectedSIPMessage):
+    def receivedValidConnectedResponseEventHandler(self, a_connected_aip_message):
         print "receivedValidConnectedResponseEventHandler"
-        self.receivedResponses.append(aConnectedSIPMessage)
+        self.receivedResponses.append(a_connected_aip_message)
 

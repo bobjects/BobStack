@@ -27,6 +27,6 @@ class RetryAfterSIPHeaderField(IntegerSIPHeaderField):
         return self.parameterNamed('duration')
 
     @duration.setter
-    def duration(self, aString):
-        self.parameterNamedPut('duration', aString)
+    def duration(self, a_string):
+        self.parameterNamedPut('duration', a_string)
 

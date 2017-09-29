@@ -22,8 +22,8 @@ class TwistedMultiService(Singleton):
         self.multiService = service.MultiService()
         self.multiService.setServiceParent(self.application)
 
-    def registerTwistedUDPProtocol(self, aDatagramProtocol, bindPortInteger, bindAddressString):
-        internet.UDPServer(bindPortInteger, aDatagramProtocol, bindAddressString).setServiceParent(self.multiService)
+    def registerTwistedUDPProtocol(self, a_datagram_protocol, bind_port_integer, bind_address_string):
+        internet.UDPServer(bind_port_integer, a_datagram_protocol, bind_address_string).setServiceParent(self.multiService)
         # TODO:  Do we need to start the service?
 
 

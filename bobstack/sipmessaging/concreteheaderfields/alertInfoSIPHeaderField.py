@@ -18,8 +18,8 @@ class AlertInfoSIPHeaderField(SIPHeaderField):
         return 'Alert-Info'
 
     @classmethod
-    def newForAttributes(cls, fieldName="Alert-Info", fieldValueString=""):
-        return cls.newForFieldNameAndValueString(fieldName=fieldName, fieldValueString=fieldValueString)
+    def newForAttributes(cls, field_name="Alert-Info", field_value_string=""):
+        return cls.newForFieldNameAndValueString(field_name=field_name, field_value_string=field_value_string)
 
     @property
     def isAlertInfo(self):
@@ -31,6 +31,6 @@ class AlertInfoSIPHeaderField(SIPHeaderField):
         return self.parameterNamed('appearance')
 
     @appearance.setter
-    def appearance(self, aString):
-        self.parameterNamedPut('appearance', aString)
+    def appearance(self, a_string):
+        self.parameterNamedPut('appearance', a_string)
 

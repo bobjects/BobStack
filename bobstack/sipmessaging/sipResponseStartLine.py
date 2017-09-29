@@ -9,10 +9,10 @@ from classproperty import classproperty
 
 class SIPResponseStartLine(SIPStartLine):
     @classmethod
-    def newForAttributes(cls, statusCode="", reasonPhrase=""):
+    def newForAttributes(cls, status_code="", reason_phrase=""):
         answer = cls()
-        answer.statusCode = statusCode
-        answer.reasonPhrase = reasonPhrase
+        answer.status_code = status_code
+        answer.reason_phrase = reason_phrase
         return answer
 
     def __init__(self):
@@ -21,25 +21,25 @@ class SIPResponseStartLine(SIPStartLine):
         self._reasonPhrase = None
 
     @property
-    def statusCode(self):
+    def status_code(self):
         if self._statusCode is None:
             self.parseAttributesFromRawString()
         return self._statusCode
 
-    @statusCode.setter
-    def statusCode(self, aString):
-        self._statusCode = aString
+    @status_code.setter
+    def status_code(self, a_string):
+        self._statusCode = a_string
         self.clearRawString()
 
     @property
-    def reasonPhrase(self):
+    def reason_phrase(self):
         if self._reasonPhrase is None:
             self.parseAttributesFromRawString()
         return self._reasonPhrase
 
-    @reasonPhrase.setter
-    def reasonPhrase(self, aString):
-        self._reasonPhrase = aString
+    @reason_phrase.setter
+    def reason_phrase(self, a_string):
+        self._reasonPhrase = a_string
         self.clearRawString()
 
     def clearAttributes(self):
@@ -80,8 +80,8 @@ class SIPResponseStartLine(SIPStartLine):
             return cls._regexForParsing
 
     @classmethod
-    def canMatchString(cls, aString):
-        return cls.regexForMatching.match(aString) is not None
+    def canMatchString(cls, a_string):
+        return cls.regexForMatching.match(a_string) is not None
 
     @property
     def isResponse(self):
@@ -91,7 +91,7 @@ class SIPResponseStartLine(SIPStartLine):
     @property
     def isProvisional(self):
         # True if 1xx
-        return self.statusCode.startsWith('1')
+        return self.status_code.startsWith('1')
 
     # TODO:  need to test.
     @property

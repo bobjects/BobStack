@@ -18,8 +18,8 @@ class ReasonSIPHeaderField(SIPHeaderField):
         return 'Reason'
 
     @classmethod
-    def newForAttributes(cls, fieldName="Reason", fieldValueString=""):
-        return cls.newForFieldNameAndValueString(fieldName=fieldName, fieldValueString=fieldValueString)
+    def newForAttributes(cls, field_name="Reason", field_value_string=""):
+        return cls.newForFieldNameAndValueString(field_name=field_name, field_value_string=field_value_string)
 
     @property
     def isReason(self):
@@ -31,14 +31,14 @@ class ReasonSIPHeaderField(SIPHeaderField):
         return self.parameterNamed('cause')
 
     @cause.setter
-    def cause(self, aString):
-        self.parameterNamedPut('cause', aString)
+    def cause(self, a_string):
+        self.parameterNamedPut('cause', a_string)
 
     @property
     def text(self):
         return self.parameterNamed('text')
 
     @text.setter
-    def text(self, aString):
-        self.parameterNamedPut('text', aString)
+    def text(self, a_string):
+        self.parameterNamedPut('text', a_string)
 

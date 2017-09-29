@@ -7,7 +7,7 @@ import inspect
 from classproperty import classproperty
 
 # TODO:  we need to formally test compact headers, beyond what is already being done in the sip torture test.
-# TODO:  More to do, in other classes, to fully implement useCompactHeaders.
+# TODO:  More to do, in other classes, to fully implement use_compact_headers.
 
 
 class SIPHeaderField(object):
@@ -15,18 +15,18 @@ class SIPHeaderField(object):
     regexForFindingValueUpToParameters = re.compile('([^;])')
 
     @classmethod
-    def newParsedFrom(cls, aString, useCompactHeaders=False):
+    def newParsedFrom(cls, a_string, use_compact_headers=False):
         answer = cls()
-        answer.useCompactHeaders = useCompactHeaders
-        answer.rawString = aString
+        answer.use_compact_headers = use_compact_headers
+        answer.rawString = a_string
         return answer
 
     @classmethod
-    def newForAttributes(cls, value='', parameterNamesAndValueStrings=None, useCompactHeaders=False):
+    def newForAttributes(cls, value='', parameterNamesAndValueStrings=None, use_compact_headers=False):
         # This will typically be overridden by classes that have interesting attributes.
-        # return cls.newForFieldNameAndValueString(fieldName=fieldName, fieldValueString=fieldValueString)
+        # return cls.newForFieldNameAndValueString(field_name=field_name, field_value_string=field_value_string)
         answer = cls()
-        answer.useCompactHeaders = useCompactHeaders
+        answer.use_compact_headers = use_compact_headers
         answer.value = value
         if parameterNamesAndValueStrings:
             answer.parameterNamesAndValueStrings = parameterNamesAndValueStrings
@@ -35,20 +35,20 @@ class SIPHeaderField(object):
         return answer
 
     @classmethod
-    def newForFieldNameAndValueString(cls, fieldName="", fieldValueString="", useCompactHeaders=False):
+    def newForFieldNameAndValueString(cls, field_name="", field_value_string="", use_compact_headers=False):
         answer = cls()
-        answer.useCompactHeaders = useCompactHeaders
-        answer.fieldName = fieldName
-        answer.fieldValueString = fieldValueString
+        answer.use_compact_headers = use_compact_headers
+        answer.field_name = field_name
+        answer.field_value_string = field_value_string
         return answer
 
     @classmethod
-    def newForValueString(cls, fieldValueString, useCompactHeaders=False):
-        return cls.newForFieldNameAndValueString(cls.canonicalFieldName, fieldValueString, useCompactHeaders)
+    def newForValueString(cls, field_value_string, use_compact_headers=False):
+        return cls.newForFieldNameAndValueString(cls.canonicalFieldName, field_value_string, use_compact_headers)
 
     @property
     def deepCopy(self):
-        return self.__class__.newParsedFrom(self.rawString, useCompactHeaders=self.useCompactHeaders)
+        return self.__class__.newParsedFrom(self.rawString, use_compact_headers=self.use_compact_headers)
 
     # noinspection PyNestedDecorators
     @classproperty
@@ -84,25 +84,25 @@ class SIPHeaderField(object):
         return self._rawString
 
     @rawString.setter
-    def rawString(self, aString):
-        self._rawString = aString
+    def rawString(self, a_string):
+        self._rawString = a_string
         self._rawStringHasBeenSet = True
         self.clearFieldNameAndValueString()
         self.clearAttributes()
 
     @property
-    def useCompactHeaders(self):
+    def use_compact_headers(self):
         return self._useCompactHeaders
 
-    @useCompactHeaders.setter
-    def useCompactHeaders(self, aBoolean):
+    @use_compact_headers.setter
+    def use_compact_headers(self, aBoolean):
         self._useCompactHeaders = aBoolean
         # noinspection PyUnusedLocal
-        fieldValue = self.fieldValueString  # render field values if not already rendered.
+        fieldValue = self.field_value_string  # render field values if not already rendered.
         self.clearRawString()
 
     @property
-    def fieldName(self):
+    def field_name(self):
         if not self._fieldNameAndValueStringHasBeenSet:
             if self._attributeHasBeenSet:
                 self.renderFieldNameAndValueStringFromAttributes()
@@ -110,15 +110,15 @@ class SIPHeaderField(object):
                 self.parseFieldNameAndValueStringFromRawString()
         return self._fieldName
 
-    @fieldName.setter
-    def fieldName(self, aString):
-        self._fieldName = aString
+    @field_name.setter
+    def field_name(self, a_string):
+        self._fieldName = a_string
         self._fieldNameAndValueStringHasBeenSet = True
         self.clearRawString()
         self.clearAttributes()
 
     @property
-    def fieldValueString(self):
+    def field_value_string(self):
         if not self._fieldNameAndValueStringHasBeenSet:
             if self._attributeHasBeenSet:
                 self.renderFieldNameAndValueStringFromAttributes()
@@ -126,9 +126,9 @@ class SIPHeaderField(object):
                 self.parseFieldNameAndValueStringFromRawString()
         return self._fieldValueString
 
-    @fieldValueString.setter
-    def fieldValueString(self, aString):
-        self._fieldValueString = aString
+    @field_value_string.setter
+    def field_value_string(self, a_string):
+        self._fieldValueString = a_string
         self._fieldNameAndValueStringHasBeenSet = True
         self.clearRawString()
         self.clearAttributes()
@@ -153,7 +153,7 @@ class SIPHeaderField(object):
     @property
     def parameterNamesAndValueStrings(self):
         # RFC3261  7.3.1 Header Field Format
-        # return dict(self.__class__.regexForFindingParameterNamesAndValues.findall(self.fieldValueString))
+        # return dict(self.__class__.regexForFindingParameterNamesAndValues.findall(self.field_value_string))
         if not self._attributeHasBeenSet:
             self.parseAttributesFromFieldValueString()
         return self._parameterNamesAndValueStrings
@@ -165,8 +165,8 @@ class SIPHeaderField(object):
         self.clearRawString()
         self.clearFieldNameAndValueString()
 
-    def parameterNamed(self, aString):
-        return self.parameterNamesAndValueStrings.get(aString, None)
+    def parameterNamed(self, a_string):
+        return self.parameterNamesAndValueStrings.get(a_string, None)
 
     def parameterNamedPut(self, keyString, value):
         if value is None:
@@ -202,7 +202,7 @@ class SIPHeaderField(object):
         self._fieldNameAndValueStringHasBeenSet = True
 
     def renderFieldNameAndValueStringFromAttributes(self):
-        if self.useCompactHeaders:
+        if self.use_compact_headers:
             self._fieldName = self.canonicalCompactFieldName
         else:
             self._fieldName = self.canonicalFieldName
@@ -221,16 +221,16 @@ class SIPHeaderField(object):
         self._fieldNameAndValueStringHasBeenSet = True
 
     def parseAttributesFromFieldValueString(self):
-        self._value = self.fieldValueString
-        self._parameterNamesAndValueStrings = dict(self.__class__.regexForFindingParameterNamesAndValues.findall(self.fieldValueString))
+        self._value = self.field_value_string
+        self._parameterNamesAndValueStrings = dict(self.__class__.regexForFindingParameterNamesAndValues.findall(self.field_value_string))
         if self._parameterNamesAndValueStrings:
-            self._value = self.__class__.regexForFindingValueUpToParameters.match(self.fieldValueString).group(1)
+            self._value = self.__class__.regexForFindingValueUpToParameters.match(self.field_value_string).group(1)
 
     def renderRawStringFromFieldNameAndValueString(self):
         stringio = StringIO()
-        stringio.write(str(self.fieldName))
+        stringio.write(str(self.field_name))
         stringio.write(": ")
-        stringio.write(str(self.fieldValueString))
+        stringio.write(str(self.field_value_string))
         self._rawString = stringio.getvalue()
         stringio.close()
         self._rawStringHasBeenSet = True
@@ -288,12 +288,12 @@ class SIPHeaderField(object):
             return cls._regexForParsingFieldAndValue
 
     @classmethod
-    def canMatchString(cls, aString):
-        return cls.regexForMatching.match(aString) is not None
+    def canMatchString(cls, a_string):
+        return cls.regexForMatching.match(a_string) is not None
 
     @classmethod
-    def canMatchFieldName(cls, aString):
-        return cls.regexForMatchingFieldName().match(aString) is not None
+    def canMatchFieldName(cls, a_string):
+        return cls.regexForMatchingFieldName().match(a_string) is not None
 
     @property
     def isUnknown(self):
@@ -309,9 +309,9 @@ class SIPHeaderField(object):
 
     @property
     def isValid(self):
-        if not self.fieldName:  # fail if None or empty fieldName.
+        if not self.field_name:  # fail if None or empty field_name.
             return False
-        if self.fieldValueString is None:
+        if self.field_value_string is None:
             return False
         return True
 

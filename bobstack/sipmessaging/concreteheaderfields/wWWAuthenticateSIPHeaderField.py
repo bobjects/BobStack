@@ -18,8 +18,8 @@ class WWWAuthenticateSIPHeaderField(SIPHeaderField):
         return 'WWW-Authenticate'
 
     @classmethod
-    def newForAttributes(cls, fieldName="WWW-Authenticate", fieldValueString=""):
-        return cls.newForFieldNameAndValueString(fieldName=fieldName, fieldValueString=fieldValueString)
+    def newForAttributes(cls, field_name="WWW-Authenticate", field_value_string=""):
+        return cls.newForFieldNameAndValueString(field_name=field_name, field_value_string=field_value_string)
 
     @property
     def isWWWAuthenticate(self):
@@ -31,53 +31,53 @@ class WWWAuthenticateSIPHeaderField(SIPHeaderField):
         return self.parameterNamed('algorithm')
 
     @algorithm.setter
-    def algorithm(self, aString):
-        self.parameterNamedPut('algorithm', aString)
+    def algorithm(self, a_string):
+        self.parameterNamedPut('algorithm', a_string)
 
     @property
     def domain(self):
         return self.parameterNamed('domain')
 
     @domain.setter
-    def domain(self, aString):
-        self.parameterNamedPut('domain', aString)
+    def domain(self, a_string):
+        self.parameterNamedPut('domain', a_string)
 
     @property
     def nonce(self):
         return self.parameterNamed('nonce')
 
     @nonce.setter
-    def nonce(self, aString):
-        self.parameterNamedPut('nonce', aString)
+    def nonce(self, a_string):
+        self.parameterNamedPut('nonce', a_string)
 
     @property
     def opaque(self):
         return self.parameterNamed('opaque')
 
     @opaque.setter
-    def opaque(self, aString):
-        self.parameterNamedPut('opaque', aString)
+    def opaque(self, a_string):
+        self.parameterNamedPut('opaque', a_string)
 
     @property
     def qop(self):
         return self.parameterNamed('qop')
 
     @qop.setter
-    def qop(self, aString):
-        self.parameterNamedPut('qop', aString)
+    def qop(self, a_string):
+        self.parameterNamedPut('qop', a_string)
 
     @property
     def realm(self):
         return self.parameterNamed('realm')
 
     @realm.setter
-    def realm(self, aString):
-        self.parameterNamedPut('realm', aString)
+    def realm(self, a_string):
+        self.parameterNamedPut('realm', a_string)
 
     @property
     def stale(self):
         return self.parameterNamed('stale')
 
     @stale.setter
-    def stale(self, aString):
-        self.parameterNamedPut('stale', aString)
+    def stale(self, a_string):
+        self.parameterNamedPut('stale', a_string)

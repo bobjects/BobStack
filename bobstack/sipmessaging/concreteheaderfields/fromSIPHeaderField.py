@@ -35,12 +35,12 @@ class FromSIPHeaderField(SIPHeaderField):
         return 'f'
 
     @classmethod
-    def newForAttributes(cls, tag=None, displayName=None, sipURI=None):
+    def newForAttributes(cls, tag=None, display_name=None, sip_uri=None):
         answer = cls()
         answer.tag = tag
-        answer.displayName = displayName
-        answer.sipURI = sipURI
-        answer._isValid = (sipURI is not None)
+        answer.display_name = display_name
+        answer.sip_uri = sip_uri
+        answer._isValid = (sip_uri is not None)
         return answer
 
     def __init__(self):
@@ -56,28 +56,28 @@ class FromSIPHeaderField(SIPHeaderField):
         return self._isValid
 
     @property
-    def displayName(self):
+    def display_name(self):
         if not self._attributeHasBeenSet:
             self.parseAttributesFromFieldValueString()
         return self._displayName
 
-    @displayName.setter
-    def displayName(self, aString):
-        self._displayName = aString
+    @display_name.setter
+    def display_name(self, a_string):
+        self._displayName = a_string
         self._isValid = (self._sipURI is not None)
         self._attributeHasBeenSet = True
         self.clearRawString()
         self.clearFieldNameAndValueString()
 
     @property
-    def sipURI(self):
+    def sip_uri(self):
         if not self._attributeHasBeenSet:
             self.parseAttributesFromFieldValueString()
         return self._sipURI
 
-    @sipURI.setter
-    def sipURI(self, aSIPURI):
-        self._sipURI = aSIPURI
+    @sip_uri.setter
+    def sip_uri(self, a_sip_uri):
+        self._sipURI = a_sip_uri
         self._isValid = (self._sipURI is not None)
         self._attributeHasBeenSet = True
         self.clearRawString()
@@ -96,24 +96,24 @@ class FromSIPHeaderField(SIPHeaderField):
 
         # noinspection PyBroadException
         try:
-            match = self.__class__.regexForAngleBracketForm.match(self.fieldValueString)
+            match = self.__class__.regexForAngleBracketForm.match(self.field_value_string)
             if match:
                 # URI uses angle brackets
                 self._displayName = match.group(1)
-                uriAndParametersString = match.group(2)
-                self._sipURI = SIPURI.newParsedFrom(uriAndParametersString)
+                uri_and_parameter_string = match.group(2)
+                self._sipURI = SIPURI.newParsedFrom(uri_and_parameter_string)
                 # noinspection PyUnusedLocal
-                foo = self._sipURI.user  # We do this to make sure the sipURI gets parsed within our exception handler.
-                headerFieldParametersString = match.group(3)
+                foo = self._sipURI.user  # We do this to make sure the sip_uri gets parsed within our exception handler.
+                header_field_parameters_string = match.group(3)
             else:
-                # same logic as above, but work on sample, not uriAndParametersString.  This will be factored in the real solution.
-                uriAndHeaderFieldParametersMatchGroups = self.__class__.regexForNonAngleBracketForm.match(self.fieldValueString).groups()
-                uriString = uriAndHeaderFieldParametersMatchGroups[0]
-                self._sipURI = SIPURI.newParsedFrom(uriString)
+                # same logic as above, but work on sample, not uri_and_parameter_string.  This will be factored in the real solution.
+                uri_and_header_field_parameters_match_groups = self.__class__.regexForNonAngleBracketForm.match(self.field_value_string).groups()
+                uri_string = uri_and_header_field_parameters_match_groups[0]
+                self._sipURI = SIPURI.newParsedFrom(uri_string)
                 # noinspection PyUnusedLocal
-                foo = self._sipURI.user  # We do this to make sure the sipURI gets parsed within our exception handler.
-                headerFieldParametersString = uriAndHeaderFieldParametersMatchGroups[1]
-            self._parameterNamesAndValueStrings = dict(self.__class__.regexForFindingParameterNamesAndValues.findall(headerFieldParametersString))
+                foo = self._sipURI.user  # We do this to make sure the sip_uri gets parsed within our exception handler.
+                header_field_parameters_string = uri_and_header_field_parameters_match_groups[1]
+            self._parameterNamesAndValueStrings = dict(self.__class__.regexForFindingParameterNamesAndValues.findall(header_field_parameters_string))
             self._attributeHasBeenSet = True
         except Exception:
             self._isValid = False
@@ -151,6 +151,6 @@ class FromSIPHeaderField(SIPHeaderField):
         return self.parameterNamed('tag')
 
     @tag.setter
-    def tag(self, aString):
-        self.parameterNamedPut('tag', aString)
+    def tag(self, a_string):
+        self.parameterNamedPut('tag', a_string)
 

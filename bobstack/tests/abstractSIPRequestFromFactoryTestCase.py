@@ -13,8 +13,8 @@ class AbstractSIPRequestFromFactoryTestCase(AbstractSIPRequestTestCase):
         raise NotImplementedError('call to abstract method ' + inspect.stack()[0][3])
 
     def run_test_parsing(self):
-        for messageString in self.canonicalStrings:
-            request = SIPMessageFactory().nextForString(messageString)
+        for message_string in self.canonicalStrings:
+            request = SIPMessageFactory().nextForString(message_string)
             self.runAssertionsForSIPMessage(request)
 
     def run_test_rendering_from_list_of_header_fields(self):

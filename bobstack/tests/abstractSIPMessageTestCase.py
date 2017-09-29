@@ -70,15 +70,15 @@ class AbstractSIPMessageTestCase(TestCase):
     def canonicalStrings(self):
         answer = []
         for startLineString in self.canonicalStartLineStrings:
-            messageStringIO = StringIO()
-            messageStringIO.write(startLineString)
-            messageStringIO.write("\r\n")
-            for headerFieldString in self.canonicalHeaderFieldStrings:
-                messageStringIO.write(headerFieldString)
-                messageStringIO.write("\r\n")
-            messageStringIO.write("\r\n")
-            messageStringIO.write(self.canonicalContent)
-            answer.append(messageStringIO.getvalue())
+            message_string_io = StringIO()
+            message_string_io.write(startLineString)
+            message_string_io.write("\r\n")
+            for header_field_string in self.canonicalHeaderFieldStrings:
+                message_string_io.write(header_field_string)
+                message_string_io.write("\r\n")
+            message_string_io.write("\r\n")
+            message_string_io.write(self.canonicalContent)
+            answer.append(message_string_io.getvalue())
         return answer
 
     @property
@@ -337,80 +337,80 @@ class AbstractSIPMessageTestCase(TestCase):
     @property
     def listOfHeaderFieldsForAssertion(self):
         return [
-            # FromSIPHeaderField.newForAttributes(fieldValueString='<sip:200.25.3.150:5061>;tag=0ee8d3e272e31c9195299efc500'),
-            FromSIPHeaderField.newForAttributes(tag='0ee8d3e272e31c9195299efc500', displayName=None, sipURI=SIPURI.newParsedFrom('sip:200.25.3.150:5061')),
-            # ToSIPHeaderField.newForAttributes(fieldValueString='<sip:example.com:5061>'),
-            ToSIPHeaderField.newForAttributes(tag=None, displayName=None, sipURI=SIPURI.newParsedFrom('sip:example.com:5061')),
-            CallIDSIPHeaderField.newForAttributes(fieldValueString='0ee8d3e272e31c9195299efc500'),
-            CSeqSIPHeaderField.newForAttributes(fieldValueString='6711 ' + self.sipMethodString),
+            # FromSIPHeaderField.newForAttributes(field_value_string='<sip:200.25.3.150:5061>;tag=0ee8d3e272e31c9195299efc500'),
+            FromSIPHeaderField.newForAttributes(tag='0ee8d3e272e31c9195299efc500', display_name=None, sip_uri=SIPURI.newParsedFrom('sip:200.25.3.150:5061')),
+            # ToSIPHeaderField.newForAttributes(field_value_string='<sip:example.com:5061>'),
+            ToSIPHeaderField.newForAttributes(tag=None, display_name=None, sip_uri=SIPURI.newParsedFrom('sip:example.com:5061')),
+            CallIDSIPHeaderField.newForAttributes(field_value_string='0ee8d3e272e31c9195299efc500'),
+            CSeqSIPHeaderField.newForAttributes(field_value_string='6711 ' + self.sipMethodString),
             MaxForwardsSIPHeaderField.newForAttributes(value=70),
-            # ViaSIPHeaderField.newForAttributes(fieldValueString='SIP/2.0/TLS 200.25.3.150;branch=z9hG4bK0ee8d3e272e31ca195299efc500'),
+            # ViaSIPHeaderField.newForAttributes(field_value_string='SIP/2.0/TLS 200.25.3.150;branch=z9hG4bK0ee8d3e272e31ca195299efc500'),
             ViaSIPHeaderField.newForAttributes(transport='TLS', host='200.25.3.150', branch='z9hG4bK0ee8d3e272e31ca195299efc500'),
-            # ViaSIPHeaderField.newForAttributes(fieldValueString='SIP/2.0/TLS 200.25.3.250;branch=z9hG4bKfdkajhdiruyalkghjladksjf'),
+            # ViaSIPHeaderField.newForAttributes(field_value_string='SIP/2.0/TLS 200.25.3.250;branch=z9hG4bKfdkajhdiruyalkghjladksjf'),
             ViaSIPHeaderField.newForAttributes(transport='TLS', host='200.25.3.250', branch='z9hG4bKfdkajhdiruyalkghjladksjf'),
-            # ViaSIPHeaderField.newForAttributes(fieldValueString='SIP/2.0/TLS 200.25.3.255;branch=z9hG4bKduyroiuryaludhgviukfhlasf'),
+            # ViaSIPHeaderField.newForAttributes(field_value_string='SIP/2.0/TLS 200.25.3.255;branch=z9hG4bKduyroiuryaludhgviukfhlasf'),
             ViaSIPHeaderField.newForAttributes(transport='TLS', host='200.25.3.255', branch='z9hG4bKduyroiuryaludhgviukfhlasf'),
-            UserAgentSIPHeaderField.newForAttributes(fieldValueString='Example User Agent'),
-            # ContactSIPHeaderField.newForAttributes(fieldValueString='<sip:invalid@200.25.3.150:5061;transport=tls>'),
-            ContactSIPHeaderField.newForAttributes(displayName=None, sipURI=SIPURI.newParsedFrom('sip:invalid@200.25.3.150:5061;transport=tls')),
-            RouteSIPHeaderField.newForAttributes(sipURI=SIPURI.newParsedFrom('sip:200.25.3.230:5061;transport=tls;lr')),
-            RouteSIPHeaderField.newForAttributes(sipURI=SIPURI.newParsedFrom('sip:200.25.3.231:5061;transport=tls;lr')),
-            RouteSIPHeaderField.newForAttributes(sipURI=SIPURI.newParsedFrom('sip:200.25.3.232:5061;transport=tls;lr')),
+            UserAgentSIPHeaderField.newForAttributes(field_value_string='Example User Agent'),
+            # ContactSIPHeaderField.newForAttributes(field_value_string='<sip:invalid@200.25.3.150:5061;transport=tls>'),
+            ContactSIPHeaderField.newForAttributes(display_name=None, sip_uri=SIPURI.newParsedFrom('sip:invalid@200.25.3.150:5061;transport=tls')),
+            RouteSIPHeaderField.newForAttributes(sip_uri=SIPURI.newParsedFrom('sip:200.25.3.230:5061;transport=tls;lr')),
+            RouteSIPHeaderField.newForAttributes(sip_uri=SIPURI.newParsedFrom('sip:200.25.3.231:5061;transport=tls;lr')),
+            RouteSIPHeaderField.newForAttributes(sip_uri=SIPURI.newParsedFrom('sip:200.25.3.232:5061;transport=tls;lr')),
             ExpiresSIPHeaderField.newForAttributes(value=0),
-            AcceptSIPHeaderField.newForAttributes(fieldValueString='application/sdp,application/isup,application/dtmf,application/dtmf-relay,multipart/mixed'),
-            AcceptEncodingSIPHeaderField.newForAttributes(fieldValueString='x-nortel-short'),
-            AcceptLanguageSIPHeaderField.newForAttributes(fieldValueString='en-us,fr-fr'),
-            AllowSIPHeaderField.newForAttributes(fieldValueString=' ACK,BYE,CANCEL,INFO,INVITE,OPTIONS,REGISTER,SUBSCRIBE,UPDATE'),
-            AuthorizationSIPHeaderField.newForAttributes(fieldValueString='Digest username="3122221000",realm="SomeRealm",nonce="1111790769596",uri="sip:3122211004@example.com",response="9bf77d8238664fe08dafd4d2abb6f1cb",algorithm=MD5'),
-            CallInfoSIPHeaderField.newForAttributes(fieldValueString='<https://lsc14pa.example.com:443/pa/direct/pictureServlet?user=3126805100@example.com>;Purpose=icon'),
-            ContentDispositionSIPHeaderField.newForAttributes(fieldValueString='session;handling=required'),
-            ContentTypeSIPHeaderField.newForAttributes(fieldValueString='application/sdp'),
-            DateSIPHeaderField.newForAttributes(fieldValueString='Sat, 01 Feb 2014 22:07:34 GMT'),
-            RecordRouteSIPHeaderField.newForAttributes(sipURI=SIPURI.newParsedFrom('sip:200.25.3.230:5061;transport=tls;lr')),
-            RecordRouteSIPHeaderField.newForAttributes(sipURI=SIPURI.newParsedFrom('sip:200.25.3.231:5061;transport=tls;lr')),
-            RecordRouteSIPHeaderField.newForAttributes(sipURI=SIPURI.newParsedFrom('sip:200.25.3.232:5061;transport=tls;lr')),
-            RequireSIPHeaderField.newForAttributes(fieldValueString='sdp-anat'),
+            AcceptSIPHeaderField.newForAttributes(field_value_string='application/sdp,application/isup,application/dtmf,application/dtmf-relay,multipart/mixed'),
+            AcceptEncodingSIPHeaderField.newForAttributes(field_value_string='x-nortel-short'),
+            AcceptLanguageSIPHeaderField.newForAttributes(field_value_string='en-us,fr-fr'),
+            AllowSIPHeaderField.newForAttributes(field_value_string=' ACK,BYE,CANCEL,INFO,INVITE,OPTIONS,REGISTER,SUBSCRIBE,UPDATE'),
+            AuthorizationSIPHeaderField.newForAttributes(field_value_string='Digest username="3122221000",realm="SomeRealm",nonce="1111790769596",uri="sip:3122211004@example.com",response="9bf77d8238664fe08dafd4d2abb6f1cb",algorithm=MD5'),
+            CallInfoSIPHeaderField.newForAttributes(field_value_string='<https://lsc14pa.example.com:443/pa/direct/pictureServlet?user=3126805100@example.com>;Purpose=icon'),
+            ContentDispositionSIPHeaderField.newForAttributes(field_value_string='session;handling=required'),
+            ContentTypeSIPHeaderField.newForAttributes(field_value_string='application/sdp'),
+            DateSIPHeaderField.newForAttributes(field_value_string='Sat, 01 Feb 2014 22:07:34 GMT'),
+            RecordRouteSIPHeaderField.newForAttributes(sip_uri=SIPURI.newParsedFrom('sip:200.25.3.230:5061;transport=tls;lr')),
+            RecordRouteSIPHeaderField.newForAttributes(sip_uri=SIPURI.newParsedFrom('sip:200.25.3.231:5061;transport=tls;lr')),
+            RecordRouteSIPHeaderField.newForAttributes(sip_uri=SIPURI.newParsedFrom('sip:200.25.3.232:5061;transport=tls;lr')),
+            RequireSIPHeaderField.newForAttributes(field_value_string='sdp-anat'),
             RetryAfterSIPHeaderField.newForAttributes(value=30),
-            ServerSIPHeaderField.newForAttributes(fieldValueString='Blargomatic 2.0'),
+            ServerSIPHeaderField.newForAttributes(field_value_string='Blargomatic 2.0'),
             # TODO:  We will need to deal with the refresher parameter, i.e. we will need to
             # be able to specify parameter dictionaries to the newForAttributes method for
             # Integer header fields.  Maybe even more generically; for all SIP header fields.
-            # SessionExpiresSIPHeaderField.newForAttributes(fieldValueString='1200;refresher=uac'),
+            # SessionExpiresSIPHeaderField.newForAttributes(field_value_string='1200;refresher=uac'),
             SessionExpiresSIPHeaderField.newForAttributes(value=1200),
-            SupportedSIPHeaderField.newForAttributes(fieldValueString='100rel,histinfo,join,replaces,sdp-anat,timer'),
+            SupportedSIPHeaderField.newForAttributes(field_value_string='100rel,histinfo,join,replaces,sdp-anat,timer'),
             TimestampSIPHeaderField.newForAttributes(value=1392061773),
-            WWWAuthenticateSIPHeaderField.newForAttributes(fieldValueString='Digest algorithm=MD5,nonce="1111790769596",realm="SomeRealm"'),
-            WarningSIPHeaderField.newForAttributes(fieldValueString='370 200.21.3.10 "Insufficient Bandwidth"'),
-            UnknownSIPHeaderField.newForFieldNameAndValueString(fieldName='X-RTP-Stat', fieldValueString=' PR=0;ER=0;PL=0;RB=0/0;DE=PCMU;EN=PCMU;JI=0;DL=0,0;IP=10.1.0.33:16384,132.52.127.200:20048'),
-            UnknownSIPHeaderField.newForFieldNameAndValueString(fieldName='x-channel', fieldValueString=' ds/ds1-3/12;IP=132.52.127.16'),
-            ReferredBySIPHeaderField.newForAttributes(fieldValueString='<sip:6006665100@example.com;user=phone> ; CorrelationID="0508817f84e7ce64745ef9753e2fbff4664321a4@200.23.3.240"'),
-            ReferToSIPHeaderField.newForAttributes(fieldValueString='<sip:6006665499;rfrid=28661859@example.com;user=phone?x-nt-resource-priority=YNBvf.2j00qao>'),
+            WWWAuthenticateSIPHeaderField.newForAttributes(field_value_string='Digest algorithm=MD5,nonce="1111790769596",realm="SomeRealm"'),
+            WarningSIPHeaderField.newForAttributes(field_value_string='370 200.21.3.10 "Insufficient Bandwidth"'),
+            UnknownSIPHeaderField.newForFieldNameAndValueString(field_name='X-RTP-Stat', field_value_string=' PR=0;ER=0;PL=0;RB=0/0;DE=PCMU;EN=PCMU;JI=0;DL=0,0;IP=10.1.0.33:16384,132.52.127.200:20048'),
+            UnknownSIPHeaderField.newForFieldNameAndValueString(field_name='x-channel', field_value_string=' ds/ds1-3/12;IP=132.52.127.16'),
+            ReferredBySIPHeaderField.newForAttributes(field_value_string='<sip:6006665100@example.com;user=phone> ; CorrelationID="0508817f84e7ce64745ef9753e2fbff4664321a4@200.23.3.240"'),
+            ReferToSIPHeaderField.newForAttributes(field_value_string='<sip:6006665499;rfrid=28661859@example.com;user=phone?x-nt-resource-priority=YNBvf.2j00qao>'),
 
-            SubjectSIPHeaderField.newForAttributes(fieldValueString='Need more boxes'),
-            ReferredBySIPHeaderField.newForAttributes(fieldValueString='<sip:5556785103@example.com;user=phone> ; CorrelationID="348058f0947acec8745efd367e33542c5cb01436@192.168.0.3"'),
-            ReferToSIPHeaderField.newForAttributes(fieldValueString='<sip:5556645204@example.com:5064;user=phone;transport=udp>'),
-            AllowEventsSIPHeaderField.newForAttributes(fieldValueString='dialog,message-summary'),
-            EventSIPHeaderField.newForAttributes(fieldValueString='refer;id=10498'),
-            ContentEncodingSIPHeaderField.newForAttributes(fieldValueString='gzip'),
-            RAckSIPHeaderField.newForAttributes(fieldValueString='1 1 INVITE'),
-            PChargeSIPHeaderField.newForAttributes(fieldValueString='<sip:6425555555@10.10.10.10>;npi=ISDN;noa=2'),
-            ReplyToSIPHeaderField.newForAttributes(fieldValueString='Bob <sip:bob@biloxi.com>'),
-            UnsupportedSIPHeaderField.newForAttributes(fieldValueString='foo'),
-            PAssertedIdentitySIPHeaderField.newForAttributes(fieldValueString='"500 - SIP Test" <sip:500@192.168.0.3>'),
-            PPreferredIdentitySIPHeaderField.newForAttributes(fieldValueString='"User 5103" <sip:3126705103@192.168.0.3:5060>'),
-            RemotePartyIDSIPHeaderField.newForAttributes(fieldValueString='"1234567890" <sip:1234567890@192.168.1.195>;party=calling;privacy=off;screen=no'),
-            AlertInfoSIPHeaderField.newForAttributes(fieldValueString='<cid:internal@example.com>;alert-type=internal'),
-            HistoryInfoSIPHeaderField.newForAttributes(fieldValueString='"555122221002" <sip:555122221002@example.com>;index=1.1'),
-            PCalledPartyIdSIPHeaderField.newForAttributes(fieldValueString='<sip:2135881@example.com;user=phone>'),
-            PRTPStatSIPHeaderField.newForAttributes(fieldValueString='PS=0,OS=0,PR=5429,OR=955504,PL=0,JI=0,LA=0,DU=108'),
-            PrivacySIPHeaderField.newForAttributes(fieldValueString='id'),
-            ProxyAuthenticateSIPHeaderField.newForAttributes(fieldValueString='Digest realm="1.1.1.1", nonce="8dd33eb2-e3c4-11e5-a55b-83b175043a03", algorithm=MD5, qop="auth"'),
-            ProxyAuthorizationSIPHeaderField.newForAttributes(fieldValueString='Digest username="100",realm="209.105.255.124",nonce="7bebcf02-e01d-11e5-931d-83b175043a03",uri="sip:90011@209.105.255.124",response="63faaa2604cae36e9b38f2d5cd0abba4",cnonce="4b41f53e6f00c05",nc=00000001,qop="auth",algorithm=MD5'),
-            ProxyRequireSIPHeaderField.newForAttributes(fieldValueString='foo'),
-            ReasonSIPHeaderField.newForAttributes(fieldValueString='Q.850; cause=16; reason=Terminated'),
-            RecordSessionExpiresSIPHeaderField.newForValueString(fieldValueString='1200;refresher=uac'),
-            ReplacesSIPHeaderField.newForAttributes(fieldValueString='19cd9bf094ff5f0c1745ef975c1cf65d34beb908f@192.168.0.3;to-tag=29bd570-f0a1ec8-13c5-50029-aa872-7d78286-aa872;from-tag=7ca31b4791'),
-            SubscriptionStateSIPHeaderField.newForAttributes(fieldValueString='active;reason=deactivated;expires=50'),
+            SubjectSIPHeaderField.newForAttributes(field_value_string='Need more boxes'),
+            ReferredBySIPHeaderField.newForAttributes(field_value_string='<sip:5556785103@example.com;user=phone> ; CorrelationID="348058f0947acec8745efd367e33542c5cb01436@192.168.0.3"'),
+            ReferToSIPHeaderField.newForAttributes(field_value_string='<sip:5556645204@example.com:5064;user=phone;transport=udp>'),
+            AllowEventsSIPHeaderField.newForAttributes(field_value_string='dialog,message-summary'),
+            EventSIPHeaderField.newForAttributes(field_value_string='refer;id=10498'),
+            ContentEncodingSIPHeaderField.newForAttributes(field_value_string='gzip'),
+            RAckSIPHeaderField.newForAttributes(field_value_string='1 1 INVITE'),
+            PChargeSIPHeaderField.newForAttributes(field_value_string='<sip:6425555555@10.10.10.10>;npi=ISDN;noa=2'),
+            ReplyToSIPHeaderField.newForAttributes(field_value_string='Bob <sip:bob@biloxi.com>'),
+            UnsupportedSIPHeaderField.newForAttributes(field_value_string='foo'),
+            PAssertedIdentitySIPHeaderField.newForAttributes(field_value_string='"500 - SIP Test" <sip:500@192.168.0.3>'),
+            PPreferredIdentitySIPHeaderField.newForAttributes(field_value_string='"User 5103" <sip:3126705103@192.168.0.3:5060>'),
+            RemotePartyIDSIPHeaderField.newForAttributes(field_value_string='"1234567890" <sip:1234567890@192.168.1.195>;party=calling;privacy=off;screen=no'),
+            AlertInfoSIPHeaderField.newForAttributes(field_value_string='<cid:internal@example.com>;alert-type=internal'),
+            HistoryInfoSIPHeaderField.newForAttributes(field_value_string='"555122221002" <sip:555122221002@example.com>;index=1.1'),
+            PCalledPartyIdSIPHeaderField.newForAttributes(field_value_string='<sip:2135881@example.com;user=phone>'),
+            PRTPStatSIPHeaderField.newForAttributes(field_value_string='PS=0,OS=0,PR=5429,OR=955504,PL=0,JI=0,LA=0,DU=108'),
+            PrivacySIPHeaderField.newForAttributes(field_value_string='id'),
+            ProxyAuthenticateSIPHeaderField.newForAttributes(field_value_string='Digest realm="1.1.1.1", nonce="8dd33eb2-e3c4-11e5-a55b-83b175043a03", algorithm=MD5, qop="auth"'),
+            ProxyAuthorizationSIPHeaderField.newForAttributes(field_value_string='Digest username="100",realm="209.105.255.124",nonce="7bebcf02-e01d-11e5-931d-83b175043a03",uri="sip:90011@209.105.255.124",response="63faaa2604cae36e9b38f2d5cd0abba4",cnonce="4b41f53e6f00c05",nc=00000001,qop="auth",algorithm=MD5'),
+            ProxyRequireSIPHeaderField.newForAttributes(field_value_string='foo'),
+            ReasonSIPHeaderField.newForAttributes(field_value_string='Q.850; cause=16; reason=Terminated'),
+            RecordSessionExpiresSIPHeaderField.newForValueString(field_value_string='1200;refresher=uac'),
+            ReplacesSIPHeaderField.newForAttributes(field_value_string='19cd9bf094ff5f0c1745ef975c1cf65d34beb908f@192.168.0.3;to-tag=29bd570-f0a1ec8-13c5-50029-aa872-7d78286-aa872;from-tag=7ca31b4791'),
+            SubscriptionStateSIPHeaderField.newForAttributes(field_value_string='active;reason=deactivated;expires=50'),
             MinExpiresSIPHeaderField.newForAttributes(value=1800),
 
             ContentLengthSIPHeaderField.newForAttributes(value=11)]
@@ -633,171 +633,171 @@ class AbstractSIPMessageTestCase(TestCase):
                 ('Min-Expires', '1800'),
                 ('Content-Length', {"value": 11})]  # This last one actually instantiates a ContentLengthSIPHeaderField.
 
-    def runAssertionsForSIPMessage(self, aSIPMessage):
-        self.assertEqual(aSIPMessage.rawString, self.canonicalStrings[0])
-        self.assertIsNotNone(aSIPMessage.header.contentLengthHeaderField)
-        self.assertEqual(11, aSIPMessage.header.contentLength)
-        self.assertEqual(3, aSIPMessage.header.viaHeaderFields.__len__())
-        self.assertEqual(3, aSIPMessage.header.vias.__len__())
-        self.assertEqual(3, aSIPMessage.vias.__len__())
-        self.assertEqual(3, aSIPMessage.header.routeHeaderFields.__len__())
-        self.assertEqual(3, aSIPMessage.header.routeURIs.__len__())
-        self.assertEqual(3, aSIPMessage.routeURIs.__len__())
-        self.assertEqual(3, aSIPMessage.header.recordRouteHeaderFields.__len__())
-        self.assertEqual(3, aSIPMessage.header.recordRouteURIs.__len__())
-        self.assertEqual(3, aSIPMessage.recordRouteURIs.__len__())
-        self.assertIsInstance(aSIPMessage.transactionHash, basestring)
-        self.assertIsInstance(aSIPMessage.dialogHash, (basestring, type(None)))
-        self.assertIsInstance(aSIPMessage.header.invariantBranchHash, (basestring, type(None)))
-        self.assertIsInstance(aSIPMessage.header.callID, basestring)
-        self.assertIsInstance(aSIPMessage.header.cSeq, basestring)
-        self.assertIsInstance(aSIPMessage.header.toTag, (basestring, type(None)))
-        self.assertIsInstance(aSIPMessage.header.fromTag, basestring)
-        self.assertIsInstance(aSIPMessage.header.maxForwards, int)
-        self.assertIsInstance(aSIPMessage.header.routeURIs, list)
-        self.assertIsInstance(aSIPMessage.header.recordRouteURIs, list)
+    def runAssertionsForSIPMessage(self, a_sip_message):
+        self.assertEqual(a_sip_message.rawString, self.canonicalStrings[0])
+        self.assertIsNotNone(a_sip_message.header.contentLengthHeaderField)
+        self.assertEqual(11, a_sip_message.header.contentLength)
+        self.assertEqual(3, a_sip_message.header.viaHeaderFields.__len__())
+        self.assertEqual(3, a_sip_message.header.vias.__len__())
+        self.assertEqual(3, a_sip_message.vias.__len__())
+        self.assertEqual(3, a_sip_message.header.routeHeaderFields.__len__())
+        self.assertEqual(3, a_sip_message.header.routeURIs.__len__())
+        self.assertEqual(3, a_sip_message.routeURIs.__len__())
+        self.assertEqual(3, a_sip_message.header.recordRouteHeaderFields.__len__())
+        self.assertEqual(3, a_sip_message.header.recordRouteURIs.__len__())
+        self.assertEqual(3, a_sip_message.recordRouteURIs.__len__())
+        self.assertIsInstance(a_sip_message.transactionHash, basestring)
+        self.assertIsInstance(a_sip_message.dialogHash, (basestring, type(None)))
+        self.assertIsInstance(a_sip_message.header.invariantBranchHash, (basestring, type(None)))
+        self.assertIsInstance(a_sip_message.header.callID, basestring)
+        self.assertIsInstance(a_sip_message.header.cSeq, basestring)
+        self.assertIsInstance(a_sip_message.header.toTag, (basestring, type(None)))
+        self.assertIsInstance(a_sip_message.header.fromTag, basestring)
+        self.assertIsInstance(a_sip_message.header.maxForwards, int)
+        self.assertIsInstance(a_sip_message.header.routeURIs, list)
+        self.assertIsInstance(a_sip_message.header.recordRouteURIs, list)
 
         # TODO: assert other headers besides just content-length and via.
-        self.assertEqual('SIP/2.0/TLS 200.25.3.150;branch=z9hG4bK0ee8d3e272e31ca195299efc500', aSIPMessage.header.vias[0])
-        self.assertEqual('SIP/2.0/TLS 200.25.3.250;branch=z9hG4bKfdkajhdiruyalkghjladksjf', aSIPMessage.header.vias[1])
-        self.assertEqual('SIP/2.0/TLS 200.25.3.255;branch=z9hG4bKduyroiuryaludhgviukfhlasf', aSIPMessage.header.vias[2])
-        self.assertIsInstance(aSIPMessage.routeURIs[0], SIPURI)
-        self.assertEqual(aSIPMessage.routeURIs[0].host, '200.25.3.230')
-        self.assertIsInstance(aSIPMessage.routeURIs[1], SIPURI)
-        self.assertEqual(aSIPMessage.routeURIs[1].host, '200.25.3.231')
-        self.assertIsInstance(aSIPMessage.routeURIs[2], SIPURI)
-        self.assertEqual(aSIPMessage.routeURIs[2].host, '200.25.3.232')
-        self.assertIsInstance(aSIPMessage.recordRouteURIs[0], SIPURI)
-        self.assertEqual(aSIPMessage.recordRouteURIs[0].host, '200.25.3.230')
-        self.assertIsInstance(aSIPMessage.recordRouteURIs[1], SIPURI)
-        self.assertEqual(aSIPMessage.recordRouteURIs[1].host, '200.25.3.231')
-        self.assertIsInstance(aSIPMessage.recordRouteURIs[2], SIPURI)
-        self.assertEqual(aSIPMessage.recordRouteURIs[2].host, '200.25.3.232')
-        self.assertEqual(2, aSIPMessage.header.unknownHeaderFields.__len__())
-        self.assertEqual('Foo Content', aSIPMessage.content)
-        self.assertEqual(65, len(aSIPMessage.header.headerFields))
-        self.assertTrue(aSIPMessage.header.headerFields[0].isFrom)
-        self.assertTrue(aSIPMessage.header.headerFields[1].isTo)
-        self.assertTrue(aSIPMessage.header.headerFields[2].isCallID)
-        self.assertTrue(aSIPMessage.header.headerFields[3].isCSeq)
-        self.assertTrue(aSIPMessage.header.headerFields[4].isMaxForwards)
-        self.assertTrue(aSIPMessage.header.headerFields[5].isVia)
-        self.assertTrue(aSIPMessage.header.headerFields[6].isVia)
-        self.assertTrue(aSIPMessage.header.headerFields[7].isVia)
-        self.assertTrue(aSIPMessage.header.headerFields[8].isUserAgent)
-        self.assertTrue(aSIPMessage.header.headerFields[9].isContact)
-        self.assertTrue(aSIPMessage.header.headerFields[10].isRoute)
-        self.assertTrue(aSIPMessage.header.headerFields[11].isRoute)
-        self.assertTrue(aSIPMessage.header.headerFields[12].isRoute)
-        self.assertTrue(aSIPMessage.header.headerFields[13].isExpires)
-        self.assertTrue(aSIPMessage.header.headerFields[14].isAccept)
-        self.assertTrue(aSIPMessage.header.headerFields[15].isAcceptEncoding)
-        self.assertTrue(aSIPMessage.header.headerFields[16].isAcceptLanguage)
-        self.assertTrue(aSIPMessage.header.headerFields[17].isAllow)
-        self.assertTrue(aSIPMessage.header.headerFields[18].isAuthorization)
-        self.assertTrue(aSIPMessage.header.headerFields[19].isCallInfo)
-        self.assertTrue(aSIPMessage.header.headerFields[20].isContentDisposition)
-        self.assertTrue(aSIPMessage.header.headerFields[21].isContentType)
-        self.assertTrue(aSIPMessage.header.headerFields[22].isDate)
-        self.assertTrue(aSIPMessage.header.headerFields[23].isRecordRoute)
-        self.assertTrue(aSIPMessage.header.headerFields[24].isRecordRoute)
-        self.assertTrue(aSIPMessage.header.headerFields[25].isRecordRoute)
-        self.assertTrue(aSIPMessage.header.headerFields[26].isRequire)
-        self.assertTrue(aSIPMessage.header.headerFields[27].isRetryAfter)
-        self.assertTrue(aSIPMessage.header.headerFields[28].isServer)
-        self.assertTrue(aSIPMessage.header.headerFields[29].isSessionExpires)
-        self.assertTrue(aSIPMessage.header.headerFields[30].isSupported)
-        self.assertTrue(aSIPMessage.header.headerFields[31].isTimestamp)
-        self.assertTrue(aSIPMessage.header.headerFields[32].isWWWAuthenticate)
-        self.assertTrue(aSIPMessage.header.headerFields[33].isWarning)
-        self.assertTrue(aSIPMessage.header.headerFields[34].isUnknown)
-        self.assertTrue(aSIPMessage.header.headerFields[35].isUnknown)
-        self.assertTrue(aSIPMessage.header.headerFields[36].isReferredBy)
-        self.assertTrue(aSIPMessage.header.headerFields[37].isReferTo)
+        self.assertEqual('SIP/2.0/TLS 200.25.3.150;branch=z9hG4bK0ee8d3e272e31ca195299efc500', a_sip_message.header.vias[0])
+        self.assertEqual('SIP/2.0/TLS 200.25.3.250;branch=z9hG4bKfdkajhdiruyalkghjladksjf', a_sip_message.header.vias[1])
+        self.assertEqual('SIP/2.0/TLS 200.25.3.255;branch=z9hG4bKduyroiuryaludhgviukfhlasf', a_sip_message.header.vias[2])
+        self.assertIsInstance(a_sip_message.routeURIs[0], SIPURI)
+        self.assertEqual(a_sip_message.routeURIs[0].host, '200.25.3.230')
+        self.assertIsInstance(a_sip_message.routeURIs[1], SIPURI)
+        self.assertEqual(a_sip_message.routeURIs[1].host, '200.25.3.231')
+        self.assertIsInstance(a_sip_message.routeURIs[2], SIPURI)
+        self.assertEqual(a_sip_message.routeURIs[2].host, '200.25.3.232')
+        self.assertIsInstance(a_sip_message.recordRouteURIs[0], SIPURI)
+        self.assertEqual(a_sip_message.recordRouteURIs[0].host, '200.25.3.230')
+        self.assertIsInstance(a_sip_message.recordRouteURIs[1], SIPURI)
+        self.assertEqual(a_sip_message.recordRouteURIs[1].host, '200.25.3.231')
+        self.assertIsInstance(a_sip_message.recordRouteURIs[2], SIPURI)
+        self.assertEqual(a_sip_message.recordRouteURIs[2].host, '200.25.3.232')
+        self.assertEqual(2, a_sip_message.header.unknownHeaderFields.__len__())
+        self.assertEqual('Foo Content', a_sip_message.content)
+        self.assertEqual(65, len(a_sip_message.header.header_fields))
+        self.assertTrue(a_sip_message.header.header_fields[0].isFrom)
+        self.assertTrue(a_sip_message.header.header_fields[1].isTo)
+        self.assertTrue(a_sip_message.header.header_fields[2].isCallID)
+        self.assertTrue(a_sip_message.header.header_fields[3].isCSeq)
+        self.assertTrue(a_sip_message.header.header_fields[4].isMaxForwards)
+        self.assertTrue(a_sip_message.header.header_fields[5].isVia)
+        self.assertTrue(a_sip_message.header.header_fields[6].isVia)
+        self.assertTrue(a_sip_message.header.header_fields[7].isVia)
+        self.assertTrue(a_sip_message.header.header_fields[8].isUserAgent)
+        self.assertTrue(a_sip_message.header.header_fields[9].isContact)
+        self.assertTrue(a_sip_message.header.header_fields[10].isRoute)
+        self.assertTrue(a_sip_message.header.header_fields[11].isRoute)
+        self.assertTrue(a_sip_message.header.header_fields[12].isRoute)
+        self.assertTrue(a_sip_message.header.header_fields[13].isExpires)
+        self.assertTrue(a_sip_message.header.header_fields[14].isAccept)
+        self.assertTrue(a_sip_message.header.header_fields[15].isAcceptEncoding)
+        self.assertTrue(a_sip_message.header.header_fields[16].isAcceptLanguage)
+        self.assertTrue(a_sip_message.header.header_fields[17].isAllow)
+        self.assertTrue(a_sip_message.header.header_fields[18].isAuthorization)
+        self.assertTrue(a_sip_message.header.header_fields[19].isCallInfo)
+        self.assertTrue(a_sip_message.header.header_fields[20].isContentDisposition)
+        self.assertTrue(a_sip_message.header.header_fields[21].isContentType)
+        self.assertTrue(a_sip_message.header.header_fields[22].isDate)
+        self.assertTrue(a_sip_message.header.header_fields[23].isRecordRoute)
+        self.assertTrue(a_sip_message.header.header_fields[24].isRecordRoute)
+        self.assertTrue(a_sip_message.header.header_fields[25].isRecordRoute)
+        self.assertTrue(a_sip_message.header.header_fields[26].isRequire)
+        self.assertTrue(a_sip_message.header.header_fields[27].isRetryAfter)
+        self.assertTrue(a_sip_message.header.header_fields[28].isServer)
+        self.assertTrue(a_sip_message.header.header_fields[29].isSessionExpires)
+        self.assertTrue(a_sip_message.header.header_fields[30].isSupported)
+        self.assertTrue(a_sip_message.header.header_fields[31].isTimestamp)
+        self.assertTrue(a_sip_message.header.header_fields[32].isWWWAuthenticate)
+        self.assertTrue(a_sip_message.header.header_fields[33].isWarning)
+        self.assertTrue(a_sip_message.header.header_fields[34].isUnknown)
+        self.assertTrue(a_sip_message.header.header_fields[35].isUnknown)
+        self.assertTrue(a_sip_message.header.header_fields[36].isReferredBy)
+        self.assertTrue(a_sip_message.header.header_fields[37].isReferTo)
 
-        self.assertTrue(aSIPMessage.header.headerFields[38].isSubject)
-        self.assertTrue(aSIPMessage.header.headerFields[39].isReferredBy)
-        self.assertTrue(aSIPMessage.header.headerFields[40].isReferTo)
-        self.assertTrue(aSIPMessage.header.headerFields[41].isAllowEvents)
-        self.assertTrue(aSIPMessage.header.headerFields[42].isEvent)
-        self.assertTrue(aSIPMessage.header.headerFields[43].isContentEncoding)
-        self.assertTrue(aSIPMessage.header.headerFields[44].isRAck)
-        self.assertTrue(aSIPMessage.header.headerFields[45].isPCharge)
-        self.assertTrue(aSIPMessage.header.headerFields[46].isReplyTo)
-        self.assertTrue(aSIPMessage.header.headerFields[47].isUnsupported)
-        self.assertTrue(aSIPMessage.header.headerFields[48].isPAssertedIdentity)
-        self.assertTrue(aSIPMessage.header.headerFields[49].isPPreferredIdentity)
-        self.assertTrue(aSIPMessage.header.headerFields[50].isRemotePartyID)
-        self.assertTrue(aSIPMessage.header.headerFields[51].isAlertInfo)
-        self.assertTrue(aSIPMessage.header.headerFields[52].isHistoryInfo)
-        self.assertTrue(aSIPMessage.header.headerFields[53].isPCalledPartyId)
-        self.assertTrue(aSIPMessage.header.headerFields[54].isPRTPStat)
-        self.assertTrue(aSIPMessage.header.headerFields[55].isPrivacy)
-        self.assertTrue(aSIPMessage.header.headerFields[56].isProxyAuthenticate)
-        self.assertTrue(aSIPMessage.header.headerFields[57].isProxyAuthorization)
-        self.assertTrue(aSIPMessage.header.headerFields[58].isProxyRequire)
-        self.assertTrue(aSIPMessage.header.headerFields[59].isReason)
-        self.assertTrue(aSIPMessage.header.headerFields[60].isRecordSessionExpires)
-        self.assertTrue(aSIPMessage.header.headerFields[61].isReplaces)
-        self.assertTrue(aSIPMessage.header.headerFields[62].isSubscriptionState)
-        self.assertTrue(aSIPMessage.header.headerFields[63].isMinExpires)
-        self.assertTrue(aSIPMessage.header.headerFields[64].isContentLength)
+        self.assertTrue(a_sip_message.header.header_fields[38].isSubject)
+        self.assertTrue(a_sip_message.header.header_fields[39].isReferredBy)
+        self.assertTrue(a_sip_message.header.header_fields[40].isReferTo)
+        self.assertTrue(a_sip_message.header.header_fields[41].isAllowEvents)
+        self.assertTrue(a_sip_message.header.header_fields[42].isEvent)
+        self.assertTrue(a_sip_message.header.header_fields[43].isContentEncoding)
+        self.assertTrue(a_sip_message.header.header_fields[44].isRAck)
+        self.assertTrue(a_sip_message.header.header_fields[45].isPCharge)
+        self.assertTrue(a_sip_message.header.header_fields[46].isReplyTo)
+        self.assertTrue(a_sip_message.header.header_fields[47].isUnsupported)
+        self.assertTrue(a_sip_message.header.header_fields[48].isPAssertedIdentity)
+        self.assertTrue(a_sip_message.header.header_fields[49].isPPreferredIdentity)
+        self.assertTrue(a_sip_message.header.header_fields[50].isRemotePartyID)
+        self.assertTrue(a_sip_message.header.header_fields[51].isAlertInfo)
+        self.assertTrue(a_sip_message.header.header_fields[52].isHistoryInfo)
+        self.assertTrue(a_sip_message.header.header_fields[53].isPCalledPartyId)
+        self.assertTrue(a_sip_message.header.header_fields[54].isPRTPStat)
+        self.assertTrue(a_sip_message.header.header_fields[55].isPrivacy)
+        self.assertTrue(a_sip_message.header.header_fields[56].isProxyAuthenticate)
+        self.assertTrue(a_sip_message.header.header_fields[57].isProxyAuthorization)
+        self.assertTrue(a_sip_message.header.header_fields[58].isProxyRequire)
+        self.assertTrue(a_sip_message.header.header_fields[59].isReason)
+        self.assertTrue(a_sip_message.header.header_fields[60].isRecordSessionExpires)
+        self.assertTrue(a_sip_message.header.header_fields[61].isReplaces)
+        self.assertTrue(a_sip_message.header.header_fields[62].isSubscriptionState)
+        self.assertTrue(a_sip_message.header.header_fields[63].isMinExpires)
+        self.assertTrue(a_sip_message.header.header_fields[64].isContentLength)
 
-        self.assertTrue(3, len(aSIPMessage.vias))
-        self.assertTrue(aSIPMessage.header.headerFields[4].isMaxForwards)
-        self.assertTrue(aSIPMessage.header.headerFields[5].isVia)
-        self.assertTrue(aSIPMessage.header.headerFields[6].isVia)
-        self.assertTrue(aSIPMessage.header.headerFields[7].isVia)
-        self.assertTrue(aSIPMessage.header.headerFields[8].isUserAgent)
-        self.assertEqual('SIP/2.0/TLS 200.25.3.150;branch=z9hG4bK0ee8d3e272e31ca195299efc500', aSIPMessage.vias[0])
-        self.assertEqual('SIP/2.0/TLS 200.25.3.250;branch=z9hG4bKfdkajhdiruyalkghjladksjf', aSIPMessage.vias[1])
-        self.assertEqual('SIP/2.0/TLS 200.25.3.255;branch=z9hG4bKduyroiuryaludhgviukfhlasf', aSIPMessage.vias[2])
+        self.assertTrue(3, len(a_sip_message.vias))
+        self.assertTrue(a_sip_message.header.header_fields[4].isMaxForwards)
+        self.assertTrue(a_sip_message.header.header_fields[5].isVia)
+        self.assertTrue(a_sip_message.header.header_fields[6].isVia)
+        self.assertTrue(a_sip_message.header.header_fields[7].isVia)
+        self.assertTrue(a_sip_message.header.header_fields[8].isUserAgent)
+        self.assertEqual('SIP/2.0/TLS 200.25.3.150;branch=z9hG4bK0ee8d3e272e31ca195299efc500', a_sip_message.vias[0])
+        self.assertEqual('SIP/2.0/TLS 200.25.3.250;branch=z9hG4bKfdkajhdiruyalkghjladksjf', a_sip_message.vias[1])
+        self.assertEqual('SIP/2.0/TLS 200.25.3.255;branch=z9hG4bKduyroiuryaludhgviukfhlasf', a_sip_message.vias[2])
 
-        aSIPMessage.header.addHeaderFieldAfterHeaderFieldsOfSameClass(ViaSIPHeaderField.newForAttributes(host='localhost', transport='TLS'))
-        self.assertTrue(4, len(aSIPMessage.vias))
-        self.assertTrue(aSIPMessage.header.headerFields[4].isMaxForwards)
-        self.assertTrue(aSIPMessage.header.headerFields[5].isVia)
-        self.assertTrue(aSIPMessage.header.headerFields[6].isVia)
-        self.assertTrue(aSIPMessage.header.headerFields[7].isVia)
-        self.assertTrue(aSIPMessage.header.headerFields[8].isVia)
-        self.assertTrue(aSIPMessage.header.headerFields[9].isUserAgent)
-        self.assertEqual('SIP/2.0/TLS 200.25.3.150;branch=z9hG4bK0ee8d3e272e31ca195299efc500', aSIPMessage.vias[0])
-        self.assertEqual('SIP/2.0/TLS 200.25.3.250;branch=z9hG4bKfdkajhdiruyalkghjladksjf', aSIPMessage.vias[1])
-        self.assertEqual('SIP/2.0/TLS 200.25.3.255;branch=z9hG4bKduyroiuryaludhgviukfhlasf', aSIPMessage.vias[2])
-        self.assertEqual('SIP/2.0/TLS localhost', aSIPMessage.vias[3])
+        a_sip_message.header.addHeaderFieldAfterHeaderFieldsOfSameClass(ViaSIPHeaderField.newForAttributes(host='localhost', transport='TLS'))
+        self.assertTrue(4, len(a_sip_message.vias))
+        self.assertTrue(a_sip_message.header.header_fields[4].isMaxForwards)
+        self.assertTrue(a_sip_message.header.header_fields[5].isVia)
+        self.assertTrue(a_sip_message.header.header_fields[6].isVia)
+        self.assertTrue(a_sip_message.header.header_fields[7].isVia)
+        self.assertTrue(a_sip_message.header.header_fields[8].isVia)
+        self.assertTrue(a_sip_message.header.header_fields[9].isUserAgent)
+        self.assertEqual('SIP/2.0/TLS 200.25.3.150;branch=z9hG4bK0ee8d3e272e31ca195299efc500', a_sip_message.vias[0])
+        self.assertEqual('SIP/2.0/TLS 200.25.3.250;branch=z9hG4bKfdkajhdiruyalkghjladksjf', a_sip_message.vias[1])
+        self.assertEqual('SIP/2.0/TLS 200.25.3.255;branch=z9hG4bKduyroiuryaludhgviukfhlasf', a_sip_message.vias[2])
+        self.assertEqual('SIP/2.0/TLS localhost', a_sip_message.vias[3])
 
-        aSIPMessage.header.addHeaderFieldBeforeHeaderFieldsOfSameClass(ViaSIPHeaderField.newForAttributes(host='localhost', transport='TCP'))
-        self.assertTrue(5, len(aSIPMessage.vias))
-        self.assertTrue(aSIPMessage.header.headerFields[4].isMaxForwards)
-        self.assertTrue(aSIPMessage.header.headerFields[5].isVia)
-        self.assertTrue(aSIPMessage.header.headerFields[6].isVia)
-        self.assertTrue(aSIPMessage.header.headerFields[7].isVia)
-        self.assertTrue(aSIPMessage.header.headerFields[8].isVia)
-        self.assertTrue(aSIPMessage.header.headerFields[9].isVia)
-        self.assertTrue(aSIPMessage.header.headerFields[10].isUserAgent)
-        self.assertEqual('SIP/2.0/TCP localhost', aSIPMessage.vias[0])
-        self.assertEqual('SIP/2.0/TLS 200.25.3.150;branch=z9hG4bK0ee8d3e272e31ca195299efc500', aSIPMessage.vias[1])
-        self.assertEqual('SIP/2.0/TLS 200.25.3.250;branch=z9hG4bKfdkajhdiruyalkghjladksjf', aSIPMessage.vias[2])
-        self.assertEqual('SIP/2.0/TLS 200.25.3.255;branch=z9hG4bKduyroiuryaludhgviukfhlasf', aSIPMessage.vias[3])
-        self.assertEqual('SIP/2.0/TLS localhost', aSIPMessage.vias[4])
+        a_sip_message.header.addHeaderFieldBeforeHeaderFieldsOfSameClass(ViaSIPHeaderField.newForAttributes(host='localhost', transport='TCP'))
+        self.assertTrue(5, len(a_sip_message.vias))
+        self.assertTrue(a_sip_message.header.header_fields[4].isMaxForwards)
+        self.assertTrue(a_sip_message.header.header_fields[5].isVia)
+        self.assertTrue(a_sip_message.header.header_fields[6].isVia)
+        self.assertTrue(a_sip_message.header.header_fields[7].isVia)
+        self.assertTrue(a_sip_message.header.header_fields[8].isVia)
+        self.assertTrue(a_sip_message.header.header_fields[9].isVia)
+        self.assertTrue(a_sip_message.header.header_fields[10].isUserAgent)
+        self.assertEqual('SIP/2.0/TCP localhost', a_sip_message.vias[0])
+        self.assertEqual('SIP/2.0/TLS 200.25.3.150;branch=z9hG4bK0ee8d3e272e31ca195299efc500', a_sip_message.vias[1])
+        self.assertEqual('SIP/2.0/TLS 200.25.3.250;branch=z9hG4bKfdkajhdiruyalkghjladksjf', a_sip_message.vias[2])
+        self.assertEqual('SIP/2.0/TLS 200.25.3.255;branch=z9hG4bKduyroiuryaludhgviukfhlasf', a_sip_message.vias[3])
+        self.assertEqual('SIP/2.0/TLS localhost', a_sip_message.vias[4])
 
-        aSIPMessage.header.removeFirstHeaderFieldOfClass(ViaSIPHeaderField)
-        self.assertTrue(4, len(aSIPMessage.vias))
-        self.assertTrue(aSIPMessage.header.headerFields[4].isMaxForwards)
-        self.assertTrue(aSIPMessage.header.headerFields[5].isVia)
-        self.assertTrue(aSIPMessage.header.headerFields[6].isVia)
-        self.assertTrue(aSIPMessage.header.headerFields[7].isVia)
-        self.assertTrue(aSIPMessage.header.headerFields[8].isVia)
-        self.assertTrue(aSIPMessage.header.headerFields[9].isUserAgent)
-        self.assertEqual('SIP/2.0/TLS 200.25.3.150;branch=z9hG4bK0ee8d3e272e31ca195299efc500', aSIPMessage.vias[0])
-        self.assertEqual('SIP/2.0/TLS 200.25.3.250;branch=z9hG4bKfdkajhdiruyalkghjladksjf', aSIPMessage.vias[1])
-        self.assertEqual('SIP/2.0/TLS 200.25.3.255;branch=z9hG4bKduyroiuryaludhgviukfhlasf', aSIPMessage.vias[2])
-        self.assertEqual('SIP/2.0/TLS localhost', aSIPMessage.vias[3])
+        a_sip_message.header.removeFirstHeaderFieldOfClass(ViaSIPHeaderField)
+        self.assertTrue(4, len(a_sip_message.vias))
+        self.assertTrue(a_sip_message.header.header_fields[4].isMaxForwards)
+        self.assertTrue(a_sip_message.header.header_fields[5].isVia)
+        self.assertTrue(a_sip_message.header.header_fields[6].isVia)
+        self.assertTrue(a_sip_message.header.header_fields[7].isVia)
+        self.assertTrue(a_sip_message.header.header_fields[8].isVia)
+        self.assertTrue(a_sip_message.header.header_fields[9].isUserAgent)
+        self.assertEqual('SIP/2.0/TLS 200.25.3.150;branch=z9hG4bK0ee8d3e272e31ca195299efc500', a_sip_message.vias[0])
+        self.assertEqual('SIP/2.0/TLS 200.25.3.250;branch=z9hG4bKfdkajhdiruyalkghjladksjf', a_sip_message.vias[1])
+        self.assertEqual('SIP/2.0/TLS 200.25.3.255;branch=z9hG4bKduyroiuryaludhgviukfhlasf', a_sip_message.vias[2])
+        self.assertEqual('SIP/2.0/TLS localhost', a_sip_message.vias[3])
 
         # TODO:  test adding and removing header field of class that doesn't already exist in header.
 
-        for via in aSIPMessage.header.viaHeaderFields:
-            via.generateInvariantBranchForSIPHeader(aSIPMessage.header)
+        for via in a_sip_message.header.viaHeaderFields:
+            via.generateInvariantBranchForSIPHeader(a_sip_message.header)
             self.assertIsInstance(via.branch, basestring)
 
 

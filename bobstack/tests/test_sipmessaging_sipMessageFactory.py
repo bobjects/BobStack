@@ -55,11 +55,11 @@ from abstractMalformedSIPMessageFromFactoryTestCase import AbstractMalformedSIPM
 #                         for line in sanitizedFile:
 #                             if line.startswith("__MESSAGESEPARATOR__"):
 #                                 count += 1
-#                                 messageString = stringio.getvalue()
-#                                 self.assertTrue(messageString)
+#                                 message_string = stringio.getvalue()
+#                                 self.assertTrue(message_string)
 #                                 if count % 5000 == 0:
 #                                     print str(count)
-#                                 sipMessage = factory.nextForString(messageString)
+#                                 sipMessage = factory.nextForString(message_string)
 #                                 self.runAssertionsForSIPMessage(sipMessage)
 #                                 stringio.close()
 #                                 stringio = StringIO()
@@ -71,16 +71,16 @@ from abstractMalformedSIPMessageFromFactoryTestCase import AbstractMalformedSIPM
 #             finally:
 #                 for h, l in self.transactionHashesAndSIPMessages.iteritems():
 #                     self.appendStringToFileNamed(h + "\r\n", 'transactions')
-#                     for startLine in l:
-#                         self.appendStringToFileNamed('    ' + startLine + "\r\n", 'transactions')
+#                     for start_line in l:
+#                         self.appendStringToFileNamed('    ' + start_line + "\r\n", 'transactions')
 #                 for h, l in self.dialogHashesAndSIPMessages.iteritems():
 #                     self.appendStringToFileNamed(h + "\r\n", 'dialogs')
-#                     for startLine in l:
-#                         self.appendStringToFileNamed('    ' + startLine + "\r\n", 'dialogs')
+#                     for start_line in l:
+#                         self.appendStringToFileNamed('    ' + start_line + "\r\n", 'dialogs')
 #                 for h, l in self.invariantBranchHashesAndSIPMessages.iteritems():
 #                     self.appendStringToFileNamed(h + "\r\n", 'invariantBranchHashes')
-#                     for startLine in l:
-#                         self.appendStringToFileNamed('    ' + startLine + "\r\n", 'invariantBranchHashes')
+#                     for start_line in l:
+#                         self.appendStringToFileNamed('    ' + start_line + "\r\n", 'invariantBranchHashes')
 #                 self.closeFiles()
 #                 if settings.writeAnalyzedFiles:
 #                     print "de-duping..."
@@ -117,362 +117,362 @@ from abstractMalformedSIPMessageFromFactoryTestCase import AbstractMalformedSIPM
 #         self.validKnownSIPMessageCount = 0
 #         self.validUnknownSIPMessageCount = 0
 #
-#     def handleMalformedSIPMessage(self, aSIPMessage):
+#     def handleMalformedSIPMessage(self, a_sip_message):
 #         self.malformedSIPMessageCount += 1
-#         self.appendStringToFileNamed(aSIPMessage.rawString, 'malformedSIPMessages')
+#         self.appendStringToFileNamed(a_sip_message.rawString, 'malformedSIPMessages')
 #         self.appendStringToFileNamed(self.messageSeparator, 'malformedSIPMessages')
 #
-#     def handleValidSIPMessage(self, aSIPMessage):
+#     def handleValidSIPMessage(self, a_sip_message):
 #         self.validSIPMessageCount += 1
-#         self.assertTrue(aSIPMessage.isValid)
-#         self.appendStringToFileNamed(aSIPMessage.rawString, 'validSIPMessages')
+#         self.assertTrue(a_sip_message.isValid)
+#         self.appendStringToFileNamed(a_sip_message.rawString, 'validSIPMessages')
 #         self.appendStringToFileNamed(self.messageSeparator, 'validSIPMessages')
-#         # print aSIPMessage.transactionHash
-#         # print aSIPMessage.dialogHash
-#         if aSIPMessage.transactionHash:
+#         # print a_sip_message.transactionHash
+#         # print a_sip_message.dialogHash
+#         if a_sip_message.transactionHash:
 #             pass
 #             # TODO:  running into memory issues on small VMs.  Are these dicts the culprit?
-#             # if aSIPMessage.transactionHash not in self.transactionHashesAndSIPMessages:
-#             #     self.transactionHashesAndSIPMessages[aSIPMessage.transactionHash] = []
-#             # self.transactionHashesAndSIPMessages[aSIPMessage.transactionHash].append(aSIPMessage.startLine.rawString)
-#         if aSIPMessage.header.invariantBranchHash:
+#             # if a_sip_message.transactionHash not in self.transactionHashesAndSIPMessages:
+#             #     self.transactionHashesAndSIPMessages[a_sip_message.transactionHash] = []
+#             # self.transactionHashesAndSIPMessages[a_sip_message.transactionHash].append(a_sip_message.start_line.rawString)
+#         if a_sip_message.header.invariantBranchHash:
 #             pass
 #             # TODO:  running into memory issues on small VMs.  Are these dicts the culprit?
-#             # if aSIPMessage.header.invariantBranchHash not in self.invariantBranchHashesAndSIPMessages:
-#             #     self.invariantBranchHashesAndSIPMessages[aSIPMessage.header.invariantBranchHash] = []
-#             # self.invariantBranchHashesAndSIPMessages[aSIPMessage.header.invariantBranchHash].append(aSIPMessage.startLine.rawString)
-#         if aSIPMessage.dialogHash:
+#             # if a_sip_message.header.invariantBranchHash not in self.invariantBranchHashesAndSIPMessages:
+#             #     self.invariantBranchHashesAndSIPMessages[a_sip_message.header.invariantBranchHash] = []
+#             # self.invariantBranchHashesAndSIPMessages[a_sip_message.header.invariantBranchHash].append(a_sip_message.start_line.rawString)
+#         if a_sip_message.dialogHash:
 #             pass
 #             # TODO:  running into memory issues on small VMs.  Are these dicts the culprit?
-#             # if aSIPMessage.dialogHash not in self.dialogHashesAndSIPMessages:
-#             #     self.dialogHashesAndSIPMessages[aSIPMessage.dialogHash] = []
-#             # self.dialogHashesAndSIPMessages[aSIPMessage.dialogHash].append(aSIPMessage.startLine.rawString)
+#             # if a_sip_message.dialogHash not in self.dialogHashesAndSIPMessages:
+#             #     self.dialogHashesAndSIPMessages[a_sip_message.dialogHash] = []
+#             # self.dialogHashesAndSIPMessages[a_sip_message.dialogHash].append(a_sip_message.start_line.rawString)
 #
 #         # TODO:  log these to files?
-# #        print aSIPMessage.rawString
+# #        print a_sip_message.rawString
 # #        print ""
-#         if aSIPMessage.header.callIDHeaderField:
-#             self.assertIsInstance(aSIPMessage.header.callID, basestring)
+#         if a_sip_message.header.callIDHeaderField:
+#             self.assertIsInstance(a_sip_message.header.callID, basestring)
 #         else:
-#             self.assertIsInstance(aSIPMessage.header.callID, type(None))
-#         if aSIPMessage.header.cSeqHeaderField:
-#             self.assertIsInstance(aSIPMessage.header.cSeq, basestring)
+#             self.assertIsInstance(a_sip_message.header.callID, type(None))
+#         if a_sip_message.header.cSeqHeaderField:
+#             self.assertIsInstance(a_sip_message.header.cSeq, basestring)
 #         else:
-#             self.assertIsInstance(aSIPMessage.header.cSeq, type(None))
-#         self.assertIsInstance(aSIPMessage.header.toTag, (basestring, type(None)))
-#         self.assertIsInstance(aSIPMessage.header.fromTag, (basestring, type(None)))
-#         if aSIPMessage.header.maxForwardsHeaderField:
-#             self.assertIsInstance(aSIPMessage.header.maxForwards, int)
+#             self.assertIsInstance(a_sip_message.header.cSeq, type(None))
+#         self.assertIsInstance(a_sip_message.header.toTag, (basestring, type(None)))
+#         self.assertIsInstance(a_sip_message.header.fromTag, (basestring, type(None)))
+#         if a_sip_message.header.maxForwardsHeaderField:
+#             self.assertIsInstance(a_sip_message.header.maxForwards, int)
 #         else:
-#             self.assertIsInstance(aSIPMessage.header.maxForwards, type(None))
-#         self.assertIsInstance(aSIPMessage.header.routeURIs, list)
-#         self.assertIsInstance(aSIPMessage.header.recordRouteURIs, list)
+#             self.assertIsInstance(a_sip_message.header.maxForwards, type(None))
+#         self.assertIsInstance(a_sip_message.header.routeURIs, list)
+#         self.assertIsInstance(a_sip_message.header.recordRouteURIs, list)
 #
-#         for headerField in aSIPMessage.header.headerFields:
-#             if headerField.isAccept:
-#                 self.appendStringToFileNamed(headerField.rawString + '\r\n', 'acceptHeaderFields')
-#             if headerField.isAcceptEncoding:
-#                 self.appendStringToFileNamed(headerField.rawString + '\r\n', 'acceptEncodingHeaderFields')
-#             if headerField.isAcceptLanguage:
-#                 self.appendStringToFileNamed(headerField.rawString + '\r\n', 'acceptLanguageHeaderFields')
-#             if headerField.isAllow:
-#                 self.appendStringToFileNamed(headerField.rawString + '\r\n', 'allowHeaderFields')
-#             if headerField.isAuthorization:
-#                 self.appendStringToFileNamed(headerField.rawString + '\r\n', 'authorizationHeaderFields')
-#             if headerField.isCallID:
-#                 self.appendStringToFileNamed(headerField.rawString + '\r\n', 'callIDHeaderFields')
-#             if headerField.isCallInfo:
-#                 self.appendStringToFileNamed(headerField.rawString + '\r\n', 'callInfoHeaderFields')
-#             if headerField.isContact:
-#                 self.appendStringToFileNamed(headerField.rawString + '\r\n', 'contactHeaderFields')
-#             if headerField.isContentDisposition:
-#                 self.appendStringToFileNamed(headerField.rawString + '\r\n', 'contentDispositionHeaderFields')
-#             if headerField.isContentLength:
-#                 self.appendStringToFileNamed(headerField.rawString + '\r\n', 'contentLengthHeaderFields')
-#             if headerField.isContentType:
-#                 self.appendStringToFileNamed(headerField.rawString + '\r\n', 'contentTypeHeaderFields')
-#             if headerField.isCSeq:
-#                 self.appendStringToFileNamed(headerField.rawString + '\r\n', 'cSeqHeaderFields')
-#             if headerField.isDate:
-#                 self.appendStringToFileNamed(headerField.rawString + '\r\n', 'dateHeaderFields')
-#             if headerField.isExpires:
-#                 self.appendStringToFileNamed(headerField.rawString + '\r\n', 'expiresHeaderFields')
-#             if headerField.isFrom:
-#                 self.appendStringToFileNamed(headerField.rawString + '\r\n', 'fromHeaderFields')
-#             if headerField.isMaxForwards:
-#                 self.appendStringToFileNamed(headerField.rawString + '\r\n', 'maxForwardsHeaderFields')
-#             if headerField.isRecordRoute:
-#                 self.appendStringToFileNamed(headerField.rawString + '\r\n', 'recordRouteHeaderFields')
-#             if headerField.isRequire:
-#                 self.appendStringToFileNamed(headerField.rawString + '\r\n', 'requireHeaderFields')
-#             if headerField.isRetryAfter:
-#                 self.appendStringToFileNamed(headerField.rawString + '\r\n', 'retryAfterHeaderFields')
-#             if headerField.isRoute:
-#                 self.appendStringToFileNamed(headerField.rawString + '\r\n', 'routeHeaderFields')
-#             if headerField.isServer:
-#                 self.appendStringToFileNamed(headerField.rawString + '\r\n', 'serverHeaderFields')
-#             if headerField.isSessionExpires:
-#                 self.appendStringToFileNamed(headerField.rawString + '\r\n', 'sessionExpiresHeaderFields')
-#             if headerField.isSupported:
-#                 self.appendStringToFileNamed(headerField.rawString + '\r\n', 'supportedHeaderFields')
-#             if headerField.isTimestamp:
-#                 self.appendStringToFileNamed(headerField.rawString + '\r\n', 'timestampHeaderFields')
-#             if headerField.isTo:
-#                 self.appendStringToFileNamed(headerField.rawString + '\r\n', 'toHeaderFields')
-#             if headerField.isUserAgent:
-#                 self.appendStringToFileNamed(headerField.rawString + '\r\n', 'userAgentHeaderFields')
-#             if headerField.isVia:
-#                 self.appendStringToFileNamed(headerField.rawString + '\r\n', 'viaHeaderFields')
-#             if headerField.isWarning:
-#                 self.appendStringToFileNamed(headerField.rawString + '\r\n', 'warningHeaderFields')
-#             if headerField.isWWWAuthenticate:
-#                 self.appendStringToFileNamed(headerField.rawString + '\r\n', 'wwwAuthenticateHeaderFields')
-#             if headerField.isSubject:
-#                 self.appendStringToFileNamed(headerField.rawString + '\r\n', 'subjectSIPHeaderField')
-#             if headerField.isReferredBy:
-#                 self.appendStringToFileNamed(headerField.rawString + '\r\n', 'referredBySIPHeaderField')
-#             if headerField.isReferTo:
-#                 self.appendStringToFileNamed(headerField.rawString + '\r\n', 'referToSIPHeaderField')
-#             if headerField.isAllowEvents:
-#                 self.appendStringToFileNamed(headerField.rawString + '\r\n', 'allowEventsSIPHeaderField')
-#             if headerField.isEvent:
-#                 self.appendStringToFileNamed(headerField.rawString + '\r\n', 'eventSIPHeaderField')
-#             if headerField.isContentEncoding:
-#                 self.appendStringToFileNamed(headerField.rawString + '\r\n', 'contentEncodingSIPHeaderField')
-#             if headerField.isRAck:
-#                 self.appendStringToFileNamed(headerField.rawString + '\r\n', 'rAckSIPHeaderField')
-#             if headerField.isPCharge:
-#                 self.appendStringToFileNamed(headerField.rawString + '\r\n', 'pChargeSIPHeaderField')
-#             if headerField.isReplyTo:
-#                 self.appendStringToFileNamed(headerField.rawString + '\r\n', 'replyToSIPHeaderField')
-#             if headerField.isUnsupported:
-#                 self.appendStringToFileNamed(headerField.rawString + '\r\n', 'unsupportedSIPHeaderField')
-#             if headerField.isPAssertedIdentity:
-#                 self.appendStringToFileNamed(headerField.rawString + '\r\n', 'pAssertedIdentitySIPHeaderField')
-#             if headerField.isPPreferredIdentity:
-#                 self.appendStringToFileNamed(headerField.rawString + '\r\n', 'pPreferredIdentitySIPHeaderField')
-#             if headerField.isRemotePartyID:
-#                 self.appendStringToFileNamed(headerField.rawString + '\r\n', 'remotePartyIDSIPHeaderField')
-#             if headerField.isAlertInfo:
-#                 self.appendStringToFileNamed(headerField.rawString + '\r\n', 'alertInfoSIPHeaderField')
-#             if headerField.isHistoryInfo:
-#                 self.appendStringToFileNamed(headerField.rawString + '\r\n', 'historyInfoSIPHeaderField')
-#             if headerField.isPCalledPartyId:
-#                 self.appendStringToFileNamed(headerField.rawString + '\r\n', 'pCalledPartyIdSIPHeaderField')
-#             if headerField.isPRTPStat:
-#                 self.appendStringToFileNamed(headerField.rawString + '\r\n', 'pRTPStatSIPHeaderField')
-#             if headerField.isPrivacy:
-#                 self.appendStringToFileNamed(headerField.rawString + '\r\n', 'privacySIPHeaderField')
-#             if headerField.isProxyAuthenticate:
-#                 self.appendStringToFileNamed(headerField.rawString + '\r\n', 'proxyAuthenticateSIPHeaderField')
-#             if headerField.isProxyAuthorization:
-#                 self.appendStringToFileNamed(headerField.rawString + '\r\n', 'proxyAuthorizationSIPHeaderField')
-#             if headerField.isProxyRequire:
-#                 self.appendStringToFileNamed(headerField.rawString + '\r\n', 'proxyRequireSIPHeaderField')
-#             if headerField.isReason:
-#                 self.appendStringToFileNamed(headerField.rawString + '\r\n', 'reasonSIPHeaderField')
-#             if headerField.isRecordSessionExpires:
-#                 self.appendStringToFileNamed(headerField.rawString + '\r\n', 'recordSessionExpiresSIPHeaderField')
-#             if headerField.isReplaces:
-#                 self.appendStringToFileNamed(headerField.rawString + '\r\n', 'replacesSIPHeaderField')
-#             if headerField.isSubscriptionState:
-#                 self.appendStringToFileNamed(headerField.rawString + '\r\n', 'subscriptionStateSIPHeaderField')
-#             if headerField.isMinExpires:
-#                 self.appendStringToFileNamed(headerField.rawString + '\r\n', 'minExpiresSIPHeaderField')
-#             if headerField.isVia:
-#                 self.appendStringToFileNamed(headerField.rawString, 'viaHeaderFieldsAndAttributes')
-#                 self.appendStringToFileNamed('\r\n    host:  ' + str(headerField.host), 'viaHeaderFieldsAndAttributes')
-#                 self.appendStringToFileNamed('\r\n    port:  ' + str(headerField.port), 'viaHeaderFieldsAndAttributes')
-#                 self.appendStringToFileNamed('\r\n    transport:  ' + str(headerField.transport), 'viaHeaderFieldsAndAttributes')
-#                 self.appendStringToFileNamed('\r\n    branch:  ' + str(headerField.branch), 'viaHeaderFieldsAndAttributes')
-#                 self.appendStringToFileNamed('\r\n    headerFieldParameters:  ' + str(headerField.parameterNamesAndValueStrings), 'viaHeaderFieldsAndAttributes')
+#         for header_field in a_sip_message.header.header_fields:
+#             if header_field.isAccept:
+#                 self.appendStringToFileNamed(header_field.rawString + '\r\n', 'acceptHeaderFields')
+#             if header_field.isAcceptEncoding:
+#                 self.appendStringToFileNamed(header_field.rawString + '\r\n', 'acceptEncodingHeaderFields')
+#             if header_field.isAcceptLanguage:
+#                 self.appendStringToFileNamed(header_field.rawString + '\r\n', 'acceptLanguageHeaderFields')
+#             if header_field.isAllow:
+#                 self.appendStringToFileNamed(header_field.rawString + '\r\n', 'allowHeaderFields')
+#             if header_field.isAuthorization:
+#                 self.appendStringToFileNamed(header_field.rawString + '\r\n', 'authorizationHeaderFields')
+#             if header_field.isCallID:
+#                 self.appendStringToFileNamed(header_field.rawString + '\r\n', 'callIDHeaderFields')
+#             if header_field.isCallInfo:
+#                 self.appendStringToFileNamed(header_field.rawString + '\r\n', 'callInfoHeaderFields')
+#             if header_field.isContact:
+#                 self.appendStringToFileNamed(header_field.rawString + '\r\n', 'contactHeaderFields')
+#             if header_field.isContentDisposition:
+#                 self.appendStringToFileNamed(header_field.rawString + '\r\n', 'contentDispositionHeaderFields')
+#             if header_field.isContentLength:
+#                 self.appendStringToFileNamed(header_field.rawString + '\r\n', 'contentLengthHeaderFields')
+#             if header_field.isContentType:
+#                 self.appendStringToFileNamed(header_field.rawString + '\r\n', 'contentTypeHeaderFields')
+#             if header_field.isCSeq:
+#                 self.appendStringToFileNamed(header_field.rawString + '\r\n', 'cSeqHeaderFields')
+#             if header_field.isDate:
+#                 self.appendStringToFileNamed(header_field.rawString + '\r\n', 'dateHeaderFields')
+#             if header_field.isExpires:
+#                 self.appendStringToFileNamed(header_field.rawString + '\r\n', 'expiresHeaderFields')
+#             if header_field.isFrom:
+#                 self.appendStringToFileNamed(header_field.rawString + '\r\n', 'fromHeaderFields')
+#             if header_field.isMaxForwards:
+#                 self.appendStringToFileNamed(header_field.rawString + '\r\n', 'maxForwardsHeaderFields')
+#             if header_field.isRecordRoute:
+#                 self.appendStringToFileNamed(header_field.rawString + '\r\n', 'recordRouteHeaderFields')
+#             if header_field.isRequire:
+#                 self.appendStringToFileNamed(header_field.rawString + '\r\n', 'requireHeaderFields')
+#             if header_field.isRetryAfter:
+#                 self.appendStringToFileNamed(header_field.rawString + '\r\n', 'retryAfterHeaderFields')
+#             if header_field.isRoute:
+#                 self.appendStringToFileNamed(header_field.rawString + '\r\n', 'routeHeaderFields')
+#             if header_field.isServer:
+#                 self.appendStringToFileNamed(header_field.rawString + '\r\n', 'serverHeaderFields')
+#             if header_field.isSessionExpires:
+#                 self.appendStringToFileNamed(header_field.rawString + '\r\n', 'sessionExpiresHeaderFields')
+#             if header_field.isSupported:
+#                 self.appendStringToFileNamed(header_field.rawString + '\r\n', 'supportedHeaderFields')
+#             if header_field.isTimestamp:
+#                 self.appendStringToFileNamed(header_field.rawString + '\r\n', 'timestampHeaderFields')
+#             if header_field.isTo:
+#                 self.appendStringToFileNamed(header_field.rawString + '\r\n', 'toHeaderFields')
+#             if header_field.isUserAgent:
+#                 self.appendStringToFileNamed(header_field.rawString + '\r\n', 'userAgentHeaderFields')
+#             if header_field.isVia:
+#                 self.appendStringToFileNamed(header_field.rawString + '\r\n', 'viaHeaderFields')
+#             if header_field.isWarning:
+#                 self.appendStringToFileNamed(header_field.rawString + '\r\n', 'warningHeaderFields')
+#             if header_field.isWWWAuthenticate:
+#                 self.appendStringToFileNamed(header_field.rawString + '\r\n', 'wwwAuthenticateHeaderFields')
+#             if header_field.isSubject:
+#                 self.appendStringToFileNamed(header_field.rawString + '\r\n', 'subjectSIPHeaderField')
+#             if header_field.isReferredBy:
+#                 self.appendStringToFileNamed(header_field.rawString + '\r\n', 'referredBySIPHeaderField')
+#             if header_field.isReferTo:
+#                 self.appendStringToFileNamed(header_field.rawString + '\r\n', 'referToSIPHeaderField')
+#             if header_field.isAllowEvents:
+#                 self.appendStringToFileNamed(header_field.rawString + '\r\n', 'allowEventsSIPHeaderField')
+#             if header_field.isEvent:
+#                 self.appendStringToFileNamed(header_field.rawString + '\r\n', 'eventSIPHeaderField')
+#             if header_field.isContentEncoding:
+#                 self.appendStringToFileNamed(header_field.rawString + '\r\n', 'contentEncodingSIPHeaderField')
+#             if header_field.isRAck:
+#                 self.appendStringToFileNamed(header_field.rawString + '\r\n', 'rAckSIPHeaderField')
+#             if header_field.isPCharge:
+#                 self.appendStringToFileNamed(header_field.rawString + '\r\n', 'pChargeSIPHeaderField')
+#             if header_field.isReplyTo:
+#                 self.appendStringToFileNamed(header_field.rawString + '\r\n', 'replyToSIPHeaderField')
+#             if header_field.isUnsupported:
+#                 self.appendStringToFileNamed(header_field.rawString + '\r\n', 'unsupportedSIPHeaderField')
+#             if header_field.isPAssertedIdentity:
+#                 self.appendStringToFileNamed(header_field.rawString + '\r\n', 'pAssertedIdentitySIPHeaderField')
+#             if header_field.isPPreferredIdentity:
+#                 self.appendStringToFileNamed(header_field.rawString + '\r\n', 'pPreferredIdentitySIPHeaderField')
+#             if header_field.isRemotePartyID:
+#                 self.appendStringToFileNamed(header_field.rawString + '\r\n', 'remotePartyIDSIPHeaderField')
+#             if header_field.isAlertInfo:
+#                 self.appendStringToFileNamed(header_field.rawString + '\r\n', 'alertInfoSIPHeaderField')
+#             if header_field.isHistoryInfo:
+#                 self.appendStringToFileNamed(header_field.rawString + '\r\n', 'historyInfoSIPHeaderField')
+#             if header_field.isPCalledPartyId:
+#                 self.appendStringToFileNamed(header_field.rawString + '\r\n', 'pCalledPartyIdSIPHeaderField')
+#             if header_field.isPRTPStat:
+#                 self.appendStringToFileNamed(header_field.rawString + '\r\n', 'pRTPStatSIPHeaderField')
+#             if header_field.isPrivacy:
+#                 self.appendStringToFileNamed(header_field.rawString + '\r\n', 'privacySIPHeaderField')
+#             if header_field.isProxyAuthenticate:
+#                 self.appendStringToFileNamed(header_field.rawString + '\r\n', 'proxyAuthenticateSIPHeaderField')
+#             if header_field.isProxyAuthorization:
+#                 self.appendStringToFileNamed(header_field.rawString + '\r\n', 'proxyAuthorizationSIPHeaderField')
+#             if header_field.isProxyRequire:
+#                 self.appendStringToFileNamed(header_field.rawString + '\r\n', 'proxyRequireSIPHeaderField')
+#             if header_field.isReason:
+#                 self.appendStringToFileNamed(header_field.rawString + '\r\n', 'reasonSIPHeaderField')
+#             if header_field.isRecordSessionExpires:
+#                 self.appendStringToFileNamed(header_field.rawString + '\r\n', 'recordSessionExpiresSIPHeaderField')
+#             if header_field.isReplaces:
+#                 self.appendStringToFileNamed(header_field.rawString + '\r\n', 'replacesSIPHeaderField')
+#             if header_field.isSubscriptionState:
+#                 self.appendStringToFileNamed(header_field.rawString + '\r\n', 'subscriptionStateSIPHeaderField')
+#             if header_field.isMinExpires:
+#                 self.appendStringToFileNamed(header_field.rawString + '\r\n', 'minExpiresSIPHeaderField')
+#             if header_field.isVia:
+#                 self.appendStringToFileNamed(header_field.rawString, 'viaHeaderFieldsAndAttributes')
+#                 self.appendStringToFileNamed('\r\n    host:  ' + str(header_field.host), 'viaHeaderFieldsAndAttributes')
+#                 self.appendStringToFileNamed('\r\n    port:  ' + str(header_field.port), 'viaHeaderFieldsAndAttributes')
+#                 self.appendStringToFileNamed('\r\n    transport:  ' + str(header_field.transport), 'viaHeaderFieldsAndAttributes')
+#                 self.appendStringToFileNamed('\r\n    branch:  ' + str(header_field.branch), 'viaHeaderFieldsAndAttributes')
+#                 self.appendStringToFileNamed('\r\n    headerFieldParameters:  ' + str(header_field.parameterNamesAndValueStrings), 'viaHeaderFieldsAndAttributes')
 #                 self.appendStringToFileNamed('\r\n', 'viaHeaderFieldsAndAttributes')
-#                 self.appendStringToFileNamed(str(headerField.branch), 'viaBranches')
+#                 self.appendStringToFileNamed(str(header_field.branch), 'viaBranches')
 #                 self.appendStringToFileNamed('\r\n', 'viaBranches')
-#             if headerField.isContact:
-#                 self.appendStringToFileNamed(headerField.rawString, 'contactHeaderFieldsAndAttributes')
-#                 self.appendStringToFileNamed('\r\n    displayName:  ' + str(headerField.displayName), 'contactHeaderFieldsAndAttributes')
-#                 if headerField.sipURI:
-#                     self.appendStringToFileNamed('\r\n        scheme:  ' + str(headerField.sipURI.scheme), 'contactHeaderFieldsAndAttributes')
-#                     self.appendStringToFileNamed('\r\n        user:  ' + str(headerField.sipURI.user), 'contactHeaderFieldsAndAttributes')
-#                     self.appendStringToFileNamed('\r\n        host:  ' + str(headerField.sipURI.host), 'contactHeaderFieldsAndAttributes')
-#                     self.appendStringToFileNamed('\r\n        port:  ' + str(headerField.sipURI.port), 'contactHeaderFieldsAndAttributes')
-#                     self.appendStringToFileNamed('\r\n        uriParameters:  ' + str(headerField.sipURI.parameterNamesAndValueStrings), 'contactHeaderFieldsAndAttributes')
-#                 self.appendStringToFileNamed('\r\n    headerFieldParameters:  ' + str(headerField.parameterNamesAndValueStrings), 'contactHeaderFieldsAndAttributes')
+#             if header_field.isContact:
+#                 self.appendStringToFileNamed(header_field.rawString, 'contactHeaderFieldsAndAttributes')
+#                 self.appendStringToFileNamed('\r\n    display_name:  ' + str(header_field.display_name), 'contactHeaderFieldsAndAttributes')
+#                 if header_field.sip_uri:
+#                     self.appendStringToFileNamed('\r\n        scheme:  ' + str(header_field.sip_uri.scheme), 'contactHeaderFieldsAndAttributes')
+#                     self.appendStringToFileNamed('\r\n        user:  ' + str(header_field.sip_uri.user), 'contactHeaderFieldsAndAttributes')
+#                     self.appendStringToFileNamed('\r\n        host:  ' + str(header_field.sip_uri.host), 'contactHeaderFieldsAndAttributes')
+#                     self.appendStringToFileNamed('\r\n        port:  ' + str(header_field.sip_uri.port), 'contactHeaderFieldsAndAttributes')
+#                     self.appendStringToFileNamed('\r\n        uriParameters:  ' + str(header_field.sip_uri.parameterNamesAndValueStrings), 'contactHeaderFieldsAndAttributes')
+#                 self.appendStringToFileNamed('\r\n    headerFieldParameters:  ' + str(header_field.parameterNamesAndValueStrings), 'contactHeaderFieldsAndAttributes')
 #                 self.appendStringToFileNamed('\r\n', 'contactHeaderFieldsAndAttributes')
-#             if headerField.isTo:
-#                 self.appendStringToFileNamed(headerField.rawString, 'toHeaderFieldsAndAttributes')
-#                 self.appendStringToFileNamed('\r\n    displayName:  ' + str(headerField.displayName), 'toHeaderFieldsAndAttributes')
-#                 self.appendStringToFileNamed('\r\n    tag:  ' + str(headerField.tag), 'toHeaderFieldsAndAttributes')
-#                 if headerField.sipURI:
-#                     self.appendStringToFileNamed('\r\n        scheme:  ' + str(headerField.sipURI.scheme), 'toHeaderFieldsAndAttributes')
-#                     self.appendStringToFileNamed('\r\n        user:  ' + str(headerField.sipURI.user), 'toHeaderFieldsAndAttributes')
-#                     self.appendStringToFileNamed('\r\n        host:  ' + str(headerField.sipURI.host), 'toHeaderFieldsAndAttributes')
-#                     self.appendStringToFileNamed('\r\n        port:  ' + str(headerField.sipURI.port), 'toHeaderFieldsAndAttributes')
-#                     self.appendStringToFileNamed('\r\n        uriParameters:  ' + str(headerField.sipURI.parameterNamesAndValueStrings), 'toHeaderFieldsAndAttributes')
-#                 self.appendStringToFileNamed('\r\n    headerFieldParameters:  ' + str(headerField.parameterNamesAndValueStrings), 'toHeaderFieldsAndAttributes')
+#             if header_field.isTo:
+#                 self.appendStringToFileNamed(header_field.rawString, 'toHeaderFieldsAndAttributes')
+#                 self.appendStringToFileNamed('\r\n    display_name:  ' + str(header_field.display_name), 'toHeaderFieldsAndAttributes')
+#                 self.appendStringToFileNamed('\r\n    tag:  ' + str(header_field.tag), 'toHeaderFieldsAndAttributes')
+#                 if header_field.sip_uri:
+#                     self.appendStringToFileNamed('\r\n        scheme:  ' + str(header_field.sip_uri.scheme), 'toHeaderFieldsAndAttributes')
+#                     self.appendStringToFileNamed('\r\n        user:  ' + str(header_field.sip_uri.user), 'toHeaderFieldsAndAttributes')
+#                     self.appendStringToFileNamed('\r\n        host:  ' + str(header_field.sip_uri.host), 'toHeaderFieldsAndAttributes')
+#                     self.appendStringToFileNamed('\r\n        port:  ' + str(header_field.sip_uri.port), 'toHeaderFieldsAndAttributes')
+#                     self.appendStringToFileNamed('\r\n        uriParameters:  ' + str(header_field.sip_uri.parameterNamesAndValueStrings), 'toHeaderFieldsAndAttributes')
+#                 self.appendStringToFileNamed('\r\n    headerFieldParameters:  ' + str(header_field.parameterNamesAndValueStrings), 'toHeaderFieldsAndAttributes')
 #                 self.appendStringToFileNamed('\r\n', 'toHeaderFieldsAndAttributes')
-#                 if headerField.tag:
-#                     self.appendStringToFileNamed(headerField.tag, 'toAndFromTags')
+#                 if header_field.tag:
+#                     self.appendStringToFileNamed(header_field.tag, 'toAndFromTags')
 #                     self.appendStringToFileNamed('\r\n', 'toAndFromTags')
-#             if headerField.isFrom:
-#                 self.appendStringToFileNamed(headerField.rawString, 'fromHeaderFieldsAndAttributes')
-#                 self.appendStringToFileNamed('\r\n    displayName:  ' + str(headerField.displayName), 'fromHeaderFieldsAndAttributes')
-#                 self.appendStringToFileNamed('\r\n    tag:  ' + str(headerField.tag), 'fromHeaderFieldsAndAttributes')
-#                 if headerField.sipURI:
-#                     self.appendStringToFileNamed('\r\n        scheme:  ' + str(headerField.sipURI.scheme), 'fromHeaderFieldsAndAttributes')
-#                     self.appendStringToFileNamed('\r\n        user:  ' + str(headerField.sipURI.user), 'fromHeaderFieldsAndAttributes')
-#                     self.appendStringToFileNamed('\r\n        host:  ' + str(headerField.sipURI.host), 'fromHeaderFieldsAndAttributes')
-#                     self.appendStringToFileNamed('\r\n        port:  ' + str(headerField.sipURI.port), 'fromHeaderFieldsAndAttributes')
-#                     self.appendStringToFileNamed('\r\n        uriParameters:  ' + str(headerField.sipURI.parameterNamesAndValueStrings), 'fromHeaderFieldsAndAttributes')
-#                 self.appendStringToFileNamed('\r\n    headerFieldParameters:  ' + str(headerField.parameterNamesAndValueStrings), 'fromHeaderFieldsAndAttributes')
+#             if header_field.isFrom:
+#                 self.appendStringToFileNamed(header_field.rawString, 'fromHeaderFieldsAndAttributes')
+#                 self.appendStringToFileNamed('\r\n    display_name:  ' + str(header_field.display_name), 'fromHeaderFieldsAndAttributes')
+#                 self.appendStringToFileNamed('\r\n    tag:  ' + str(header_field.tag), 'fromHeaderFieldsAndAttributes')
+#                 if header_field.sip_uri:
+#                     self.appendStringToFileNamed('\r\n        scheme:  ' + str(header_field.sip_uri.scheme), 'fromHeaderFieldsAndAttributes')
+#                     self.appendStringToFileNamed('\r\n        user:  ' + str(header_field.sip_uri.user), 'fromHeaderFieldsAndAttributes')
+#                     self.appendStringToFileNamed('\r\n        host:  ' + str(header_field.sip_uri.host), 'fromHeaderFieldsAndAttributes')
+#                     self.appendStringToFileNamed('\r\n        port:  ' + str(header_field.sip_uri.port), 'fromHeaderFieldsAndAttributes')
+#                     self.appendStringToFileNamed('\r\n        uriParameters:  ' + str(header_field.sip_uri.parameterNamesAndValueStrings), 'fromHeaderFieldsAndAttributes')
+#                 self.appendStringToFileNamed('\r\n    headerFieldParameters:  ' + str(header_field.parameterNamesAndValueStrings), 'fromHeaderFieldsAndAttributes')
 #                 self.appendStringToFileNamed('\r\n', 'fromHeaderFieldsAndAttributes')
-#                 if headerField.tag:
-#                     self.appendStringToFileNamed(headerField.tag, 'toAndFromTags')
+#                 if header_field.tag:
+#                     self.appendStringToFileNamed(header_field.tag, 'toAndFromTags')
 #                     self.appendStringToFileNamed('\r\n', 'toAndFromTags')
-#             if headerField.parameterNamesAndValueStrings:
-#                 self.appendStringToFileNamed(headerField.rawString, 'headerFieldParameters')
+#             if header_field.parameterNamesAndValueStrings:
+#                 self.appendStringToFileNamed(header_field.rawString, 'headerFieldParameters')
 #                 self.appendStringToFileNamed('\r\n', 'headerFieldParameters')
-#                 for name, value in headerField.parameterNamesAndValueStrings.iteritems():
+#                 for name, value in header_field.parameterNamesAndValueStrings.iteritems():
 #                     self.appendStringToFileNamed("    " + name + " : " + value + '\r\n', 'headerFieldParameters')
-#         for headerField in aSIPMessage.header.knownHeaderFields:
-#             self.appendStringToFileNamed(headerField.rawString, 'knownHeaderFields')
+#         for header_field in a_sip_message.header.knownHeaderFields:
+#             self.appendStringToFileNamed(header_field.rawString, 'knownHeaderFields')
 #             self.appendStringToFileNamed("\r\n", 'knownHeaderFields')
-#         for headerField in aSIPMessage.header.knownHeaderFields:
-#             self.appendStringToFileNamed(headerField.fieldName, 'knownHeaderFieldNames')
+#         for header_field in a_sip_message.header.knownHeaderFields:
+#             self.appendStringToFileNamed(header_field.field_name, 'knownHeaderFieldNames')
 #             self.appendStringToFileNamed("\r\n", 'knownHeaderFieldNames')
-#         for headerField in aSIPMessage.header.unknownHeaderFields:
-#             self.appendStringToFileNamed(headerField.rawString, 'unknownHeaderFields')
+#         for header_field in a_sip_message.header.unknownHeaderFields:
+#             self.appendStringToFileNamed(header_field.rawString, 'unknownHeaderFields')
 #             self.appendStringToFileNamed("\r\n", 'unknownHeaderFields')
-#         for headerField in aSIPMessage.header.unknownHeaderFields:
-#             self.appendStringToFileNamed(headerField.fieldName, 'unknownHeaderFieldNames')
+#         for header_field in a_sip_message.header.unknownHeaderFields:
+#             self.appendStringToFileNamed(header_field.field_name, 'unknownHeaderFieldNames')
 #             self.appendStringToFileNamed("\r\n", 'unknownHeaderFieldNames')
 #
-#     def handleValidSIPRequest(self, aSIPRequest):
+#     def handleValidSIPRequest(self, a_sip_request):
 #         self.validSIPRequestCount += 1
-#         self.assertTrue(aSIPRequest.isRequest)
-#         self.assertTrue(aSIPRequest.isValid)
-#         self.appendStringToFileNamed(aSIPRequest.rawString, 'validSIPRequests')
+#         self.assertTrue(a_sip_request.isRequest)
+#         self.assertTrue(a_sip_request.isValid)
+#         self.appendStringToFileNamed(a_sip_request.rawString, 'validSIPRequests')
 #         self.appendStringToFileNamed(self.messageSeparator, 'validSIPRequests')
 #
-#     def handleValidSIPResponse(self, aSIPResponse):
+#     def handleValidSIPResponse(self, a_sip_response):
 #         self.validSIPResponseCount += 1
-#         self.assertTrue(aSIPResponse.isResponse)
-#         self.assertTrue(aSIPResponse.isValid)
-#         self.appendStringToFileNamed(aSIPResponse.rawString, 'validSIPResponses')
+#         self.assertTrue(a_sip_response.isResponse)
+#         self.assertTrue(a_sip_response.isValid)
+#         self.appendStringToFileNamed(a_sip_response.rawString, 'validSIPResponses')
 #         self.appendStringToFileNamed(self.messageSeparator, 'validSIPResponses')
 #
-#     def handleInvalidSIPMessage(self, aSIPMessage):
+#     def handleInvalidSIPMessage(self, a_sip_message):
 #         self.invalidSIPMessageCount += 1
-#         self.assertFalse(aSIPMessage.isValid)
-#         self.appendStringToFileNamed(aSIPMessage.rawString, 'invalidSIPMessages')
+#         self.assertFalse(a_sip_message.isValid)
+#         self.appendStringToFileNamed(a_sip_message.rawString, 'invalidSIPMessages')
 #         self.appendStringToFileNamed(self.messageSeparator, 'invalidSIPMessages')
-#         for headerField in aSIPMessage.header.headerFields:
-#             if headerField.isInvalid:
-#                 self.appendStringToFileNamed(headerField.rawString, 'invalidHeaderFields')
+#         for header_field in a_sip_message.header.header_fields:
+#             if header_field.isInvalid:
+#                 self.appendStringToFileNamed(header_field.rawString, 'invalidHeaderFields')
 #
-#     def handleInvalidSIPRequest(self, aSIPRequest):
+#     def handleInvalidSIPRequest(self, a_sip_request):
 #         self.invalidSIPRequestCount += 1
-#         self.assertTrue(aSIPRequest.isRequest)
-#         self.assertFalse(aSIPRequest.isValid)
-#         self.appendStringToFileNamed(aSIPRequest.rawString, 'invalidSIPRequests')
+#         self.assertTrue(a_sip_request.isRequest)
+#         self.assertFalse(a_sip_request.isValid)
+#         self.appendStringToFileNamed(a_sip_request.rawString, 'invalidSIPRequests')
 #         self.appendStringToFileNamed(self.messageSeparator, 'invalidSIPRequests')
 #
-#     def handleInvalidSIPResponse(self, aSIPResponse):
+#     def handleInvalidSIPResponse(self, a_sip_response):
 #         self.invalidSIPResponseCount += 1
-#         self.assertTrue(aSIPResponse.isResponse)
-#         self.assertFalse(aSIPResponse.isValid)
-#         self.appendStringToFileNamed(aSIPResponse.rawString, 'invalidSIPResponses')
+#         self.assertTrue(a_sip_response.isResponse)
+#         self.assertFalse(a_sip_response.isValid)
+#         self.appendStringToFileNamed(a_sip_response.rawString, 'invalidSIPResponses')
 #         self.appendStringToFileNamed(self.messageSeparator, 'invalidSIPResponses')
 #
-#     def handleSIPMessage(self, aSIPMessage):
+#     def handleSIPMessage(self, a_sip_message):
 #         self.sipMessageCount += 1
-#         self.appendStringToFileNamed(aSIPMessage.rawString, 'sipMessages')
+#         self.appendStringToFileNamed(a_sip_message.rawString, 'sipMessages')
 #         self.appendStringToFileNamed(self.messageSeparator, 'sipMessages')
 #
-#     def handleSIPRequest(self, aSIPRequest):
+#     def handleSIPRequest(self, a_sip_request):
 #         self.sipRequestCount += 1
-#         self.assertTrue(aSIPRequest.isRequest)
-#         self.appendStringToFileNamed(aSIPRequest.rawString, 'sipRequests')
+#         self.assertTrue(a_sip_request.isRequest)
+#         self.appendStringToFileNamed(a_sip_request.rawString, 'sipRequests')
 #         self.appendStringToFileNamed(self.messageSeparator, 'sipRequests')
 #
-#     def handleSIPResponse(self, aSIPResponse):
+#     def handleSIPResponse(self, a_sip_response):
 #         self.sipResponseCount += 1
-#         self.assertTrue(aSIPResponse.isResponse)
-#         self.appendStringToFileNamed(aSIPResponse.rawString, 'sipResponses')
+#         self.assertTrue(a_sip_response.isResponse)
+#         self.appendStringToFileNamed(a_sip_response.rawString, 'sipResponses')
 #         self.appendStringToFileNamed(self.messageSeparator, 'sipResponses')
 #
-#     def handleValidKnownSIPMessage(self, aSIPMessage):
+#     def handleValidKnownSIPMessage(self, a_sip_message):
 #         self.validKnownSIPMessageCount += 1
-#         self.assertTrue(aSIPMessage.isKnown)
-#         self.assertTrue(aSIPMessage.isValid)
-#         self.appendStringToFileNamed(aSIPMessage.rawString, 'validKnownSIPMessages')
+#         self.assertTrue(a_sip_message.isKnown)
+#         self.assertTrue(a_sip_message.isValid)
+#         self.appendStringToFileNamed(a_sip_message.rawString, 'validKnownSIPMessages')
 #         self.appendStringToFileNamed(self.messageSeparator, 'validKnownSIPMessages')
-#         if aSIPMessage.isRequest:
-#             self.appendStringToFileNamed(aSIPMessage.startLine.rawString, 'knownSIPStartLines')
+#         if a_sip_message.isRequest:
+#             self.appendStringToFileNamed(a_sip_message.start_line.rawString, 'knownSIPStartLines')
 #             self.appendStringToFileNamed("\r\n", 'knownSIPStartLines')
-#             self.appendStringToFileNamed(aSIPMessage.startLine.sipMethod, 'knownSIPMethods')
+#             self.appendStringToFileNamed(a_sip_message.start_line.sip_method, 'knownSIPMethods')
 #             self.appendStringToFileNamed("\r\n", 'knownSIPMethods')
 #
-#     def handleValidUnknownSIPMessage(self, aSIPMessage):
+#     def handleValidUnknownSIPMessage(self, a_sip_message):
 #         self.validUnknownSIPMessageCount += 1
-#         self.assertFalse(aSIPMessage.isKnown)
-#         self.assertTrue(aSIPMessage.isValid)
-#         self.appendStringToFileNamed(aSIPMessage.rawString, 'validUnknownSIPMessages')
+#         self.assertFalse(a_sip_message.isKnown)
+#         self.assertTrue(a_sip_message.isValid)
+#         self.appendStringToFileNamed(a_sip_message.rawString, 'validUnknownSIPMessages')
 #         self.appendStringToFileNamed(self.messageSeparator, 'validUnknownSIPMessages')
-#         if aSIPMessage.isRequest:
-#             self.appendStringToFileNamed(aSIPMessage.startLine.rawString, 'unknownSIPStartLines')
+#         if a_sip_message.isRequest:
+#             self.appendStringToFileNamed(a_sip_message.start_line.rawString, 'unknownSIPStartLines')
 #             self.appendStringToFileNamed("\r\n", 'unknownSIPStartLines')
-#             self.appendStringToFileNamed(aSIPMessage.startLine.sipMethod, 'unknownSIPMethods')
+#             self.appendStringToFileNamed(a_sip_message.start_line.sip_method, 'unknownSIPMethods')
 #             self.appendStringToFileNamed("\r\n", 'unknownSIPMethods')
 #
-#     def runAssertionsForSIPMessage(self, aSIPMessage):
-#         self.assertTrue(aSIPMessage.rawString)
-#         self.assertIsInstance(aSIPMessage.isKnown, bool)
-#         self.assertIsInstance(aSIPMessage.isUnknown, bool)
-#         self.assertIsInstance(aSIPMessage.isValid, bool)
-#         self.assertIsInstance(aSIPMessage.isRequest, bool)
-#         self.assertIsInstance(aSIPMessage.isResponse, bool)
-#         self.assertIsInstance(aSIPMessage.isOPTIONSRequest, bool)
-#         self.assertIsInstance(aSIPMessage.isACKRequest, bool)
-#         self.assertIsInstance(aSIPMessage.isBYERequest, bool)
-#         self.assertIsInstance(aSIPMessage.isCANCELRequest, bool)
-#         self.assertIsInstance(aSIPMessage.isINFORequest, bool)
-#         self.assertIsInstance(aSIPMessage.isINVITERequest, bool)
-#         self.assertIsInstance(aSIPMessage.isNOTIFYRequest, bool)
-#         self.assertIsInstance(aSIPMessage.isPRACKRequest, bool)
-#         self.assertIsInstance(aSIPMessage.isPUBLISHRequest, bool)
-#         self.assertIsInstance(aSIPMessage.isMESSAGERequest, bool)
-#         self.assertIsInstance(aSIPMessage.isREFERRequest, bool)
-#         self.assertIsInstance(aSIPMessage.isREGISTERRequest, bool)
-#         self.assertIsInstance(aSIPMessage.isSUBSCRIBERequest, bool)
-#         self.assertIsInstance(aSIPMessage.isUPDATERequest, bool)
-#         self.assertIsInstance(aSIPMessage.isMalformed, bool)
-#         # self.assertIsNotNone(aSIPMessage.header.contentLengthHeaderField)
-#         self.assertIsInstance(aSIPMessage.header.contentLength, (int, long))
-#         self.assertIsInstance(aSIPMessage.header.unknownHeaderFields, list)
-#         self.assertIsInstance(aSIPMessage.vias, list)
-#         self.assertIsInstance(aSIPMessage.header.vias, list)
-#         self.assertIsInstance(aSIPMessage.header.viaHeaderFields, list)
-#         self.assertIsInstance(aSIPMessage.routeURIs, list)
-#         self.assertIsInstance(aSIPMessage.header.routeURIs, list)
-#         self.assertIsInstance(aSIPMessage.header.routeHeaderFields, list)
-#         for u in aSIPMessage.routeURIs:
+#     def runAssertionsForSIPMessage(self, a_sip_message):
+#         self.assertTrue(a_sip_message.rawString)
+#         self.assertIsInstance(a_sip_message.isKnown, bool)
+#         self.assertIsInstance(a_sip_message.isUnknown, bool)
+#         self.assertIsInstance(a_sip_message.isValid, bool)
+#         self.assertIsInstance(a_sip_message.isRequest, bool)
+#         self.assertIsInstance(a_sip_message.isResponse, bool)
+#         self.assertIsInstance(a_sip_message.isOPTIONSRequest, bool)
+#         self.assertIsInstance(a_sip_message.isACKRequest, bool)
+#         self.assertIsInstance(a_sip_message.isBYERequest, bool)
+#         self.assertIsInstance(a_sip_message.isCANCELRequest, bool)
+#         self.assertIsInstance(a_sip_message.isINFORequest, bool)
+#         self.assertIsInstance(a_sip_message.isINVITERequest, bool)
+#         self.assertIsInstance(a_sip_message.isNOTIFYRequest, bool)
+#         self.assertIsInstance(a_sip_message.isPRACKRequest, bool)
+#         self.assertIsInstance(a_sip_message.isPUBLISHRequest, bool)
+#         self.assertIsInstance(a_sip_message.isMESSAGERequest, bool)
+#         self.assertIsInstance(a_sip_message.isREFERRequest, bool)
+#         self.assertIsInstance(a_sip_message.isREGISTERRequest, bool)
+#         self.assertIsInstance(a_sip_message.isSUBSCRIBERequest, bool)
+#         self.assertIsInstance(a_sip_message.isUPDATERequest, bool)
+#         self.assertIsInstance(a_sip_message.isMalformed, bool)
+#         # self.assertIsNotNone(a_sip_message.header.contentLengthHeaderField)
+#         self.assertIsInstance(a_sip_message.header.contentLength, (int, long))
+#         self.assertIsInstance(a_sip_message.header.unknownHeaderFields, list)
+#         self.assertIsInstance(a_sip_message.vias, list)
+#         self.assertIsInstance(a_sip_message.header.vias, list)
+#         self.assertIsInstance(a_sip_message.header.viaHeaderFields, list)
+#         self.assertIsInstance(a_sip_message.routeURIs, list)
+#         self.assertIsInstance(a_sip_message.header.routeURIs, list)
+#         self.assertIsInstance(a_sip_message.header.routeHeaderFields, list)
+#         for u in a_sip_message.routeURIs:
 #             self.assertIsInstance(u, SIPURI)
-#         self.assertIsInstance(aSIPMessage.recordRouteURIs, list)
-#         self.assertIsInstance(aSIPMessage.header.recordRouteURIs, list)
-#         self.assertIsInstance(aSIPMessage.header.recordRouteHeaderFields, list)
-#         for u in aSIPMessage.recordRouteURIs:
+#         self.assertIsInstance(a_sip_message.recordRouteURIs, list)
+#         self.assertIsInstance(a_sip_message.header.recordRouteURIs, list)
+#         self.assertIsInstance(a_sip_message.header.recordRouteHeaderFields, list)
+#         for u in a_sip_message.recordRouteURIs:
 #             self.assertIsInstance(u, SIPURI)
-#         # print aSIPMessage.startLine.rawString
-#         # print aSIPMessage.rawString
-#         self.assertIsInstance(aSIPMessage.isMalformed, bool)
-#         self.assertIsInstance(aSIPMessage.startLine.isMalformed, bool)
-#         self.assertIsInstance(aSIPMessage.startLine.isRequest, bool)
-#         self.assertIsInstance(aSIPMessage.startLine.isResponse, bool)
-#         self.assertIsInstance(aSIPMessage.content, basestring)
-#         # self.assertEqual(aSIPMessage.content__len__(), aSIPMessage.header.contentLength)
-#         # self.assertTrue(aSIPMessage.content__len__() in [aSIPMessage.header.contentLength, aSIPMessage.header.contentLength + 2)
+#         # print a_sip_message.start_line.rawString
+#         # print a_sip_message.rawString
+#         self.assertIsInstance(a_sip_message.isMalformed, bool)
+#         self.assertIsInstance(a_sip_message.start_line.isMalformed, bool)
+#         self.assertIsInstance(a_sip_message.start_line.isRequest, bool)
+#         self.assertIsInstance(a_sip_message.start_line.isResponse, bool)
+#         self.assertIsInstance(a_sip_message.content, basestring)
+#         # self.assertEqual(a_sip_message.content__len__(), a_sip_message.header.contentLength)
+#         # self.assertTrue(a_sip_message.content__len__() in [a_sip_message.header.contentLength, a_sip_message.header.contentLength + 2)
 #
 #     @property
 #     def sanitizedFileAndAnalyzedDirectoryPathName(self):
@@ -482,42 +482,42 @@ from abstractMalformedSIPMessageFromFactoryTestCase import AbstractMalformedSIPM
 #     def messageSeparator(self):
 #         return "__MESSAGESEPARATOR__\r\n"
 #
-#     def createFileNamed(self, fileName):
-#         self._fileNamesAndFiles[fileName] = open(self._analyzedDirectoryPathName + '/' + fileName + ".txt", "w")
+#     def createFileNamed(self, file_name):
+#         self._fileNamesAndFiles[file_name] = open(self._analyzedDirectoryPathName + '/' + file_name + ".txt", "w")
 #
-#     def appendStringToFileNamed(self, aString, fileName):
+#     def appendStringToFileNamed(self, a_string, file_name):
 #         if settings.writeAnalyzedFiles:
-#             if fileName not in self._fileNamesAndFiles:
-#                 self.createFileNamed(fileName)
-#             self._fileNamesAndFiles[fileName].write(aString)
+#             if file_name not in self._fileNamesAndFiles:
+#                 self.createFileNamed(file_name)
+#             self._fileNamesAndFiles[file_name].write(a_string)
 #
 #     def closeFiles(self):
-#         for fileName in self._fileNamesAndFiles.keys():
-#             self._fileNamesAndFiles[fileName].close()
+#         for file_name in self._fileNamesAndFiles.keys():
+#             self._fileNamesAndFiles[file_name].close()
 
 
 class TestSIPMessageFactoryForMalformedSIPRequest(AbstractMalformedSIPMessageFromFactoryTestCase):
     def test_parsing(self):
         self.run_test_parsing()
 
-    def runAssertionsForSIPMessage(self, aSIPRequest):
-        super(TestSIPMessageFactoryForMalformedSIPRequest, self).runAssertionsForSIPMessage(aSIPRequest)
-        self.assertFalse(aSIPRequest.isKnown)
-        self.assertTrue(aSIPRequest.isUnknown)
-        self.assertFalse(aSIPRequest.isACKRequest)
-        self.assertFalse(aSIPRequest.isBYERequest)
-        self.assertFalse(aSIPRequest.isCANCELRequest)
-        self.assertFalse(aSIPRequest.isINFORequest)
-        self.assertFalse(aSIPRequest.isINVITERequest)
-        self.assertFalse(aSIPRequest.isNOTIFYRequest)
-        self.assertFalse(aSIPRequest.isPRACKRequest)
-        self.assertFalse(aSIPRequest.isPUBLISHRequest)
-        self.assertFalse(aSIPRequest.isMESSAGERequest)
-        self.assertFalse(aSIPRequest.isOPTIONSRequest)
-        self.assertFalse(aSIPRequest.isREFERRequest)
-        self.assertFalse(aSIPRequest.isREGISTERRequest)
-        self.assertFalse(aSIPRequest.isSUBSCRIBERequest)
-        self.assertFalse(aSIPRequest.isUPDATERequest)
+    def runAssertionsForSIPMessage(self, a_sip_request):
+        super(TestSIPMessageFactoryForMalformedSIPRequest, self).runAssertionsForSIPMessage(a_sip_request)
+        self.assertFalse(a_sip_request.isKnown)
+        self.assertTrue(a_sip_request.isUnknown)
+        self.assertFalse(a_sip_request.isACKRequest)
+        self.assertFalse(a_sip_request.isBYERequest)
+        self.assertFalse(a_sip_request.isCANCELRequest)
+        self.assertFalse(a_sip_request.isINFORequest)
+        self.assertFalse(a_sip_request.isINVITERequest)
+        self.assertFalse(a_sip_request.isNOTIFYRequest)
+        self.assertFalse(a_sip_request.isPRACKRequest)
+        self.assertFalse(a_sip_request.isPUBLISHRequest)
+        self.assertFalse(a_sip_request.isMESSAGERequest)
+        self.assertFalse(a_sip_request.isOPTIONSRequest)
+        self.assertFalse(a_sip_request.isREFERRequest)
+        self.assertFalse(a_sip_request.isREGISTERRequest)
+        self.assertFalse(a_sip_request.isSUBSCRIBERequest)
+        self.assertFalse(a_sip_request.isUPDATERequest)
 
 
 class TestSIPMessageFactoryForUnknownSIPRequest(AbstractSIPRequestFromFactoryTestCase):
@@ -528,24 +528,24 @@ class TestSIPMessageFactoryForUnknownSIPRequest(AbstractSIPRequestFromFactoryTes
     def test_parsing(self):
         self.run_test_parsing()
 
-    def runAssertionsForSIPMessage(self, aSIPRequest):
-        super(TestSIPMessageFactoryForUnknownSIPRequest, self).runAssertionsForSIPMessage(aSIPRequest)
-        self.assertFalse(aSIPRequest.isKnown)
-        self.assertTrue(aSIPRequest.isUnknown)
-        self.assertFalse(aSIPRequest.isACKRequest)
-        self.assertFalse(aSIPRequest.isBYERequest)
-        self.assertFalse(aSIPRequest.isCANCELRequest)
-        self.assertFalse(aSIPRequest.isINFORequest)
-        self.assertFalse(aSIPRequest.isINVITERequest)
-        self.assertFalse(aSIPRequest.isNOTIFYRequest)
-        self.assertFalse(aSIPRequest.isPRACKRequest)
-        self.assertFalse(aSIPRequest.isPUBLISHRequest)
-        self.assertFalse(aSIPRequest.isMESSAGERequest)
-        self.assertFalse(aSIPRequest.isOPTIONSRequest)
-        self.assertFalse(aSIPRequest.isREFERRequest)
-        self.assertFalse(aSIPRequest.isREGISTERRequest)
-        self.assertFalse(aSIPRequest.isSUBSCRIBERequest)
-        self.assertFalse(aSIPRequest.isUPDATERequest)
+    def runAssertionsForSIPMessage(self, a_sip_request):
+        super(TestSIPMessageFactoryForUnknownSIPRequest, self).runAssertionsForSIPMessage(a_sip_request)
+        self.assertFalse(a_sip_request.isKnown)
+        self.assertTrue(a_sip_request.isUnknown)
+        self.assertFalse(a_sip_request.isACKRequest)
+        self.assertFalse(a_sip_request.isBYERequest)
+        self.assertFalse(a_sip_request.isCANCELRequest)
+        self.assertFalse(a_sip_request.isINFORequest)
+        self.assertFalse(a_sip_request.isINVITERequest)
+        self.assertFalse(a_sip_request.isNOTIFYRequest)
+        self.assertFalse(a_sip_request.isPRACKRequest)
+        self.assertFalse(a_sip_request.isPUBLISHRequest)
+        self.assertFalse(a_sip_request.isMESSAGERequest)
+        self.assertFalse(a_sip_request.isOPTIONSRequest)
+        self.assertFalse(a_sip_request.isREFERRequest)
+        self.assertFalse(a_sip_request.isREGISTERRequest)
+        self.assertFalse(a_sip_request.isSUBSCRIBERequest)
+        self.assertFalse(a_sip_request.isUPDATERequest)
 
 
 class TestSIPMessageFactoryForOPTIONSSIPRequest(AbstractSIPRequestFromFactoryTestCase):
@@ -556,24 +556,24 @@ class TestSIPMessageFactoryForOPTIONSSIPRequest(AbstractSIPRequestFromFactoryTes
     def test_parsing(self):
         self.run_test_parsing()
 
-    def runAssertionsForSIPMessage(self, aSIPRequest):
-        super(TestSIPMessageFactoryForOPTIONSSIPRequest, self).runAssertionsForSIPMessage(aSIPRequest)
-        self.assertTrue(aSIPRequest.isKnown)
-        self.assertFalse(aSIPRequest.isUnknown)
-        self.assertFalse(aSIPRequest.isACKRequest)
-        self.assertFalse(aSIPRequest.isBYERequest)
-        self.assertFalse(aSIPRequest.isCANCELRequest)
-        self.assertFalse(aSIPRequest.isINFORequest)
-        self.assertFalse(aSIPRequest.isINVITERequest)
-        self.assertFalse(aSIPRequest.isNOTIFYRequest)
-        self.assertFalse(aSIPRequest.isPRACKRequest)
-        self.assertFalse(aSIPRequest.isPUBLISHRequest)
-        self.assertFalse(aSIPRequest.isMESSAGERequest)
-        self.assertTrue(aSIPRequest.isOPTIONSRequest)
-        self.assertFalse(aSIPRequest.isREFERRequest)
-        self.assertFalse(aSIPRequest.isREGISTERRequest)
-        self.assertFalse(aSIPRequest.isSUBSCRIBERequest)
-        self.assertFalse(aSIPRequest.isUPDATERequest)
+    def runAssertionsForSIPMessage(self, a_sip_request):
+        super(TestSIPMessageFactoryForOPTIONSSIPRequest, self).runAssertionsForSIPMessage(a_sip_request)
+        self.assertTrue(a_sip_request.isKnown)
+        self.assertFalse(a_sip_request.isUnknown)
+        self.assertFalse(a_sip_request.isACKRequest)
+        self.assertFalse(a_sip_request.isBYERequest)
+        self.assertFalse(a_sip_request.isCANCELRequest)
+        self.assertFalse(a_sip_request.isINFORequest)
+        self.assertFalse(a_sip_request.isINVITERequest)
+        self.assertFalse(a_sip_request.isNOTIFYRequest)
+        self.assertFalse(a_sip_request.isPRACKRequest)
+        self.assertFalse(a_sip_request.isPUBLISHRequest)
+        self.assertFalse(a_sip_request.isMESSAGERequest)
+        self.assertTrue(a_sip_request.isOPTIONSRequest)
+        self.assertFalse(a_sip_request.isREFERRequest)
+        self.assertFalse(a_sip_request.isREGISTERRequest)
+        self.assertFalse(a_sip_request.isSUBSCRIBERequest)
+        self.assertFalse(a_sip_request.isUPDATERequest)
 
 
 class TestSIPMessageFactoryForACKSIPRequest(AbstractSIPRequestFromFactoryTestCase):
@@ -584,24 +584,24 @@ class TestSIPMessageFactoryForACKSIPRequest(AbstractSIPRequestFromFactoryTestCas
     def test_parsing(self):
         self.run_test_parsing()
 
-    def runAssertionsForSIPMessage(self, aSIPRequest):
-        super(TestSIPMessageFactoryForACKSIPRequest, self).runAssertionsForSIPMessage(aSIPRequest)
-        self.assertTrue(aSIPRequest.isKnown)
-        self.assertFalse(aSIPRequest.isUnknown)
-        self.assertTrue(aSIPRequest.isACKRequest)
-        self.assertFalse(aSIPRequest.isBYERequest)
-        self.assertFalse(aSIPRequest.isCANCELRequest)
-        self.assertFalse(aSIPRequest.isINFORequest)
-        self.assertFalse(aSIPRequest.isINVITERequest)
-        self.assertFalse(aSIPRequest.isNOTIFYRequest)
-        self.assertFalse(aSIPRequest.isPRACKRequest)
-        self.assertFalse(aSIPRequest.isPUBLISHRequest)
-        self.assertFalse(aSIPRequest.isMESSAGERequest)
-        self.assertFalse(aSIPRequest.isOPTIONSRequest)
-        self.assertFalse(aSIPRequest.isREFERRequest)
-        self.assertFalse(aSIPRequest.isREGISTERRequest)
-        self.assertFalse(aSIPRequest.isSUBSCRIBERequest)
-        self.assertFalse(aSIPRequest.isUPDATERequest)
+    def runAssertionsForSIPMessage(self, a_sip_request):
+        super(TestSIPMessageFactoryForACKSIPRequest, self).runAssertionsForSIPMessage(a_sip_request)
+        self.assertTrue(a_sip_request.isKnown)
+        self.assertFalse(a_sip_request.isUnknown)
+        self.assertTrue(a_sip_request.isACKRequest)
+        self.assertFalse(a_sip_request.isBYERequest)
+        self.assertFalse(a_sip_request.isCANCELRequest)
+        self.assertFalse(a_sip_request.isINFORequest)
+        self.assertFalse(a_sip_request.isINVITERequest)
+        self.assertFalse(a_sip_request.isNOTIFYRequest)
+        self.assertFalse(a_sip_request.isPRACKRequest)
+        self.assertFalse(a_sip_request.isPUBLISHRequest)
+        self.assertFalse(a_sip_request.isMESSAGERequest)
+        self.assertFalse(a_sip_request.isOPTIONSRequest)
+        self.assertFalse(a_sip_request.isREFERRequest)
+        self.assertFalse(a_sip_request.isREGISTERRequest)
+        self.assertFalse(a_sip_request.isSUBSCRIBERequest)
+        self.assertFalse(a_sip_request.isUPDATERequest)
 
 
 class TestSIPMessageFactoryForBYESIPRequest(AbstractSIPRequestFromFactoryTestCase):
@@ -612,24 +612,24 @@ class TestSIPMessageFactoryForBYESIPRequest(AbstractSIPRequestFromFactoryTestCas
     def test_parsing(self):
         self.run_test_parsing()
 
-    def runAssertionsForSIPMessage(self, aSIPRequest):
-        super(TestSIPMessageFactoryForBYESIPRequest, self).runAssertionsForSIPMessage(aSIPRequest)
-        self.assertTrue(aSIPRequest.isKnown)
-        self.assertFalse(aSIPRequest.isUnknown)
-        self.assertFalse(aSIPRequest.isACKRequest)
-        self.assertTrue(aSIPRequest.isBYERequest)
-        self.assertFalse(aSIPRequest.isCANCELRequest)
-        self.assertFalse(aSIPRequest.isINFORequest)
-        self.assertFalse(aSIPRequest.isINVITERequest)
-        self.assertFalse(aSIPRequest.isNOTIFYRequest)
-        self.assertFalse(aSIPRequest.isPRACKRequest)
-        self.assertFalse(aSIPRequest.isPUBLISHRequest)
-        self.assertFalse(aSIPRequest.isMESSAGERequest)
-        self.assertFalse(aSIPRequest.isOPTIONSRequest)
-        self.assertFalse(aSIPRequest.isREFERRequest)
-        self.assertFalse(aSIPRequest.isREGISTERRequest)
-        self.assertFalse(aSIPRequest.isSUBSCRIBERequest)
-        self.assertFalse(aSIPRequest.isUPDATERequest)
+    def runAssertionsForSIPMessage(self, a_sip_request):
+        super(TestSIPMessageFactoryForBYESIPRequest, self).runAssertionsForSIPMessage(a_sip_request)
+        self.assertTrue(a_sip_request.isKnown)
+        self.assertFalse(a_sip_request.isUnknown)
+        self.assertFalse(a_sip_request.isACKRequest)
+        self.assertTrue(a_sip_request.isBYERequest)
+        self.assertFalse(a_sip_request.isCANCELRequest)
+        self.assertFalse(a_sip_request.isINFORequest)
+        self.assertFalse(a_sip_request.isINVITERequest)
+        self.assertFalse(a_sip_request.isNOTIFYRequest)
+        self.assertFalse(a_sip_request.isPRACKRequest)
+        self.assertFalse(a_sip_request.isPUBLISHRequest)
+        self.assertFalse(a_sip_request.isMESSAGERequest)
+        self.assertFalse(a_sip_request.isOPTIONSRequest)
+        self.assertFalse(a_sip_request.isREFERRequest)
+        self.assertFalse(a_sip_request.isREGISTERRequest)
+        self.assertFalse(a_sip_request.isSUBSCRIBERequest)
+        self.assertFalse(a_sip_request.isUPDATERequest)
 
 
 class TestSIPMessageFactoryForCANCELSIPRequest(AbstractSIPRequestFromFactoryTestCase):
@@ -640,24 +640,24 @@ class TestSIPMessageFactoryForCANCELSIPRequest(AbstractSIPRequestFromFactoryTest
     def test_parsing(self):
         self.run_test_parsing()
 
-    def runAssertionsForSIPMessage(self, aSIPRequest):
-        super(TestSIPMessageFactoryForCANCELSIPRequest, self).runAssertionsForSIPMessage(aSIPRequest)
-        self.assertTrue(aSIPRequest.isKnown)
-        self.assertFalse(aSIPRequest.isUnknown)
-        self.assertFalse(aSIPRequest.isACKRequest)
-        self.assertFalse(aSIPRequest.isBYERequest)
-        self.assertTrue(aSIPRequest.isCANCELRequest)
-        self.assertFalse(aSIPRequest.isINFORequest)
-        self.assertFalse(aSIPRequest.isINVITERequest)
-        self.assertFalse(aSIPRequest.isNOTIFYRequest)
-        self.assertFalse(aSIPRequest.isPRACKRequest)
-        self.assertFalse(aSIPRequest.isPUBLISHRequest)
-        self.assertFalse(aSIPRequest.isMESSAGERequest)
-        self.assertFalse(aSIPRequest.isOPTIONSRequest)
-        self.assertFalse(aSIPRequest.isREFERRequest)
-        self.assertFalse(aSIPRequest.isREGISTERRequest)
-        self.assertFalse(aSIPRequest.isSUBSCRIBERequest)
-        self.assertFalse(aSIPRequest.isUPDATERequest)
+    def runAssertionsForSIPMessage(self, a_sip_request):
+        super(TestSIPMessageFactoryForCANCELSIPRequest, self).runAssertionsForSIPMessage(a_sip_request)
+        self.assertTrue(a_sip_request.isKnown)
+        self.assertFalse(a_sip_request.isUnknown)
+        self.assertFalse(a_sip_request.isACKRequest)
+        self.assertFalse(a_sip_request.isBYERequest)
+        self.assertTrue(a_sip_request.isCANCELRequest)
+        self.assertFalse(a_sip_request.isINFORequest)
+        self.assertFalse(a_sip_request.isINVITERequest)
+        self.assertFalse(a_sip_request.isNOTIFYRequest)
+        self.assertFalse(a_sip_request.isPRACKRequest)
+        self.assertFalse(a_sip_request.isPUBLISHRequest)
+        self.assertFalse(a_sip_request.isMESSAGERequest)
+        self.assertFalse(a_sip_request.isOPTIONSRequest)
+        self.assertFalse(a_sip_request.isREFERRequest)
+        self.assertFalse(a_sip_request.isREGISTERRequest)
+        self.assertFalse(a_sip_request.isSUBSCRIBERequest)
+        self.assertFalse(a_sip_request.isUPDATERequest)
 
 
 class TestSIPMessageFactoryForINFOSIPRequest(AbstractSIPRequestFromFactoryTestCase):
@@ -668,24 +668,24 @@ class TestSIPMessageFactoryForINFOSIPRequest(AbstractSIPRequestFromFactoryTestCa
     def test_parsing(self):
         self.run_test_parsing()
 
-    def runAssertionsForSIPMessage(self, aSIPRequest):
-        super(TestSIPMessageFactoryForINFOSIPRequest, self).runAssertionsForSIPMessage(aSIPRequest)
-        self.assertTrue(aSIPRequest.isKnown)
-        self.assertFalse(aSIPRequest.isUnknown)
-        self.assertFalse(aSIPRequest.isACKRequest)
-        self.assertFalse(aSIPRequest.isBYERequest)
-        self.assertFalse(aSIPRequest.isCANCELRequest)
-        self.assertTrue(aSIPRequest.isINFORequest)
-        self.assertFalse(aSIPRequest.isINVITERequest)
-        self.assertFalse(aSIPRequest.isNOTIFYRequest)
-        self.assertFalse(aSIPRequest.isPRACKRequest)
-        self.assertFalse(aSIPRequest.isPUBLISHRequest)
-        self.assertFalse(aSIPRequest.isMESSAGERequest)
-        self.assertFalse(aSIPRequest.isOPTIONSRequest)
-        self.assertFalse(aSIPRequest.isREFERRequest)
-        self.assertFalse(aSIPRequest.isREGISTERRequest)
-        self.assertFalse(aSIPRequest.isSUBSCRIBERequest)
-        self.assertFalse(aSIPRequest.isUPDATERequest)
+    def runAssertionsForSIPMessage(self, a_sip_request):
+        super(TestSIPMessageFactoryForINFOSIPRequest, self).runAssertionsForSIPMessage(a_sip_request)
+        self.assertTrue(a_sip_request.isKnown)
+        self.assertFalse(a_sip_request.isUnknown)
+        self.assertFalse(a_sip_request.isACKRequest)
+        self.assertFalse(a_sip_request.isBYERequest)
+        self.assertFalse(a_sip_request.isCANCELRequest)
+        self.assertTrue(a_sip_request.isINFORequest)
+        self.assertFalse(a_sip_request.isINVITERequest)
+        self.assertFalse(a_sip_request.isNOTIFYRequest)
+        self.assertFalse(a_sip_request.isPRACKRequest)
+        self.assertFalse(a_sip_request.isPUBLISHRequest)
+        self.assertFalse(a_sip_request.isMESSAGERequest)
+        self.assertFalse(a_sip_request.isOPTIONSRequest)
+        self.assertFalse(a_sip_request.isREFERRequest)
+        self.assertFalse(a_sip_request.isREGISTERRequest)
+        self.assertFalse(a_sip_request.isSUBSCRIBERequest)
+        self.assertFalse(a_sip_request.isUPDATERequest)
 
 
 class TestSIPMessageFactoryForINVITESIPRequest(AbstractSIPRequestFromFactoryTestCase):
@@ -696,24 +696,24 @@ class TestSIPMessageFactoryForINVITESIPRequest(AbstractSIPRequestFromFactoryTest
     def test_parsing(self):
         self.run_test_parsing()
 
-    def runAssertionsForSIPMessage(self, aSIPRequest):
-        super(TestSIPMessageFactoryForINVITESIPRequest, self).runAssertionsForSIPMessage(aSIPRequest)
-        self.assertTrue(aSIPRequest.isKnown)
-        self.assertFalse(aSIPRequest.isUnknown)
-        self.assertFalse(aSIPRequest.isACKRequest)
-        self.assertFalse(aSIPRequest.isBYERequest)
-        self.assertFalse(aSIPRequest.isCANCELRequest)
-        self.assertFalse(aSIPRequest.isINFORequest)
-        self.assertTrue(aSIPRequest.isINVITERequest)
-        self.assertFalse(aSIPRequest.isNOTIFYRequest)
-        self.assertFalse(aSIPRequest.isPRACKRequest)
-        self.assertFalse(aSIPRequest.isPUBLISHRequest)
-        self.assertFalse(aSIPRequest.isMESSAGERequest)
-        self.assertFalse(aSIPRequest.isOPTIONSRequest)
-        self.assertFalse(aSIPRequest.isREFERRequest)
-        self.assertFalse(aSIPRequest.isREGISTERRequest)
-        self.assertFalse(aSIPRequest.isSUBSCRIBERequest)
-        self.assertFalse(aSIPRequest.isUPDATERequest)
+    def runAssertionsForSIPMessage(self, a_sip_request):
+        super(TestSIPMessageFactoryForINVITESIPRequest, self).runAssertionsForSIPMessage(a_sip_request)
+        self.assertTrue(a_sip_request.isKnown)
+        self.assertFalse(a_sip_request.isUnknown)
+        self.assertFalse(a_sip_request.isACKRequest)
+        self.assertFalse(a_sip_request.isBYERequest)
+        self.assertFalse(a_sip_request.isCANCELRequest)
+        self.assertFalse(a_sip_request.isINFORequest)
+        self.assertTrue(a_sip_request.isINVITERequest)
+        self.assertFalse(a_sip_request.isNOTIFYRequest)
+        self.assertFalse(a_sip_request.isPRACKRequest)
+        self.assertFalse(a_sip_request.isPUBLISHRequest)
+        self.assertFalse(a_sip_request.isMESSAGERequest)
+        self.assertFalse(a_sip_request.isOPTIONSRequest)
+        self.assertFalse(a_sip_request.isREFERRequest)
+        self.assertFalse(a_sip_request.isREGISTERRequest)
+        self.assertFalse(a_sip_request.isSUBSCRIBERequest)
+        self.assertFalse(a_sip_request.isUPDATERequest)
 
 
 class TestSIPMessageFactoryForNOTIFYSIPRequest(AbstractSIPRequestFromFactoryTestCase):
@@ -724,24 +724,24 @@ class TestSIPMessageFactoryForNOTIFYSIPRequest(AbstractSIPRequestFromFactoryTest
     def test_parsing(self):
         self.run_test_parsing()
 
-    def runAssertionsForSIPMessage(self, aSIPRequest):
-        super(TestSIPMessageFactoryForNOTIFYSIPRequest, self).runAssertionsForSIPMessage(aSIPRequest)
-        self.assertTrue(aSIPRequest.isKnown)
-        self.assertFalse(aSIPRequest.isUnknown)
-        self.assertFalse(aSIPRequest.isACKRequest)
-        self.assertFalse(aSIPRequest.isBYERequest)
-        self.assertFalse(aSIPRequest.isCANCELRequest)
-        self.assertFalse(aSIPRequest.isINFORequest)
-        self.assertFalse(aSIPRequest.isINVITERequest)
-        self.assertTrue(aSIPRequest.isNOTIFYRequest)
-        self.assertFalse(aSIPRequest.isPRACKRequest)
-        self.assertFalse(aSIPRequest.isPUBLISHRequest)
-        self.assertFalse(aSIPRequest.isMESSAGERequest)
-        self.assertFalse(aSIPRequest.isOPTIONSRequest)
-        self.assertFalse(aSIPRequest.isREFERRequest)
-        self.assertFalse(aSIPRequest.isREGISTERRequest)
-        self.assertFalse(aSIPRequest.isSUBSCRIBERequest)
-        self.assertFalse(aSIPRequest.isUPDATERequest)
+    def runAssertionsForSIPMessage(self, a_sip_request):
+        super(TestSIPMessageFactoryForNOTIFYSIPRequest, self).runAssertionsForSIPMessage(a_sip_request)
+        self.assertTrue(a_sip_request.isKnown)
+        self.assertFalse(a_sip_request.isUnknown)
+        self.assertFalse(a_sip_request.isACKRequest)
+        self.assertFalse(a_sip_request.isBYERequest)
+        self.assertFalse(a_sip_request.isCANCELRequest)
+        self.assertFalse(a_sip_request.isINFORequest)
+        self.assertFalse(a_sip_request.isINVITERequest)
+        self.assertTrue(a_sip_request.isNOTIFYRequest)
+        self.assertFalse(a_sip_request.isPRACKRequest)
+        self.assertFalse(a_sip_request.isPUBLISHRequest)
+        self.assertFalse(a_sip_request.isMESSAGERequest)
+        self.assertFalse(a_sip_request.isOPTIONSRequest)
+        self.assertFalse(a_sip_request.isREFERRequest)
+        self.assertFalse(a_sip_request.isREGISTERRequest)
+        self.assertFalse(a_sip_request.isSUBSCRIBERequest)
+        self.assertFalse(a_sip_request.isUPDATERequest)
 
 
 class TestSIPMessageFactoryForPRACKSIPRequest(AbstractSIPRequestFromFactoryTestCase):
@@ -752,24 +752,24 @@ class TestSIPMessageFactoryForPRACKSIPRequest(AbstractSIPRequestFromFactoryTestC
     def test_parsing(self):
         self.run_test_parsing()
 
-    def runAssertionsForSIPMessage(self, aSIPRequest):
-        super(TestSIPMessageFactoryForPRACKSIPRequest, self).runAssertionsForSIPMessage(aSIPRequest)
-        self.assertTrue(aSIPRequest.isKnown)
-        self.assertFalse(aSIPRequest.isUnknown)
-        self.assertFalse(aSIPRequest.isACKRequest)
-        self.assertFalse(aSIPRequest.isBYERequest)
-        self.assertFalse(aSIPRequest.isCANCELRequest)
-        self.assertFalse(aSIPRequest.isINFORequest)
-        self.assertFalse(aSIPRequest.isINVITERequest)
-        self.assertFalse(aSIPRequest.isNOTIFYRequest)
-        self.assertTrue(aSIPRequest.isPRACKRequest)
-        self.assertFalse(aSIPRequest.isPUBLISHRequest)
-        self.assertFalse(aSIPRequest.isMESSAGERequest)
-        self.assertFalse(aSIPRequest.isOPTIONSRequest)
-        self.assertFalse(aSIPRequest.isREFERRequest)
-        self.assertFalse(aSIPRequest.isREGISTERRequest)
-        self.assertFalse(aSIPRequest.isSUBSCRIBERequest)
-        self.assertFalse(aSIPRequest.isUPDATERequest)
+    def runAssertionsForSIPMessage(self, a_sip_request):
+        super(TestSIPMessageFactoryForPRACKSIPRequest, self).runAssertionsForSIPMessage(a_sip_request)
+        self.assertTrue(a_sip_request.isKnown)
+        self.assertFalse(a_sip_request.isUnknown)
+        self.assertFalse(a_sip_request.isACKRequest)
+        self.assertFalse(a_sip_request.isBYERequest)
+        self.assertFalse(a_sip_request.isCANCELRequest)
+        self.assertFalse(a_sip_request.isINFORequest)
+        self.assertFalse(a_sip_request.isINVITERequest)
+        self.assertFalse(a_sip_request.isNOTIFYRequest)
+        self.assertTrue(a_sip_request.isPRACKRequest)
+        self.assertFalse(a_sip_request.isPUBLISHRequest)
+        self.assertFalse(a_sip_request.isMESSAGERequest)
+        self.assertFalse(a_sip_request.isOPTIONSRequest)
+        self.assertFalse(a_sip_request.isREFERRequest)
+        self.assertFalse(a_sip_request.isREGISTERRequest)
+        self.assertFalse(a_sip_request.isSUBSCRIBERequest)
+        self.assertFalse(a_sip_request.isUPDATERequest)
 
 
 class TestSIPMessageFactoryForPUBLISHSIPRequest(AbstractSIPRequestFromFactoryTestCase):
@@ -780,24 +780,24 @@ class TestSIPMessageFactoryForPUBLISHSIPRequest(AbstractSIPRequestFromFactoryTes
     def test_parsing(self):
         self.run_test_parsing()
 
-    def runAssertionsForSIPMessage(self, aSIPRequest):
-        super(TestSIPMessageFactoryForPUBLISHSIPRequest, self).runAssertionsForSIPMessage(aSIPRequest)
-        self.assertTrue(aSIPRequest.isKnown)
-        self.assertFalse(aSIPRequest.isUnknown)
-        self.assertFalse(aSIPRequest.isACKRequest)
-        self.assertFalse(aSIPRequest.isBYERequest)
-        self.assertFalse(aSIPRequest.isCANCELRequest)
-        self.assertFalse(aSIPRequest.isINFORequest)
-        self.assertFalse(aSIPRequest.isINVITERequest)
-        self.assertFalse(aSIPRequest.isNOTIFYRequest)
-        self.assertFalse(aSIPRequest.isPRACKRequest)
-        self.assertTrue(aSIPRequest.isPUBLISHRequest)
-        self.assertFalse(aSIPRequest.isMESSAGERequest)
-        self.assertFalse(aSIPRequest.isOPTIONSRequest)
-        self.assertFalse(aSIPRequest.isREFERRequest)
-        self.assertFalse(aSIPRequest.isREGISTERRequest)
-        self.assertFalse(aSIPRequest.isSUBSCRIBERequest)
-        self.assertFalse(aSIPRequest.isUPDATERequest)
+    def runAssertionsForSIPMessage(self, a_sip_request):
+        super(TestSIPMessageFactoryForPUBLISHSIPRequest, self).runAssertionsForSIPMessage(a_sip_request)
+        self.assertTrue(a_sip_request.isKnown)
+        self.assertFalse(a_sip_request.isUnknown)
+        self.assertFalse(a_sip_request.isACKRequest)
+        self.assertFalse(a_sip_request.isBYERequest)
+        self.assertFalse(a_sip_request.isCANCELRequest)
+        self.assertFalse(a_sip_request.isINFORequest)
+        self.assertFalse(a_sip_request.isINVITERequest)
+        self.assertFalse(a_sip_request.isNOTIFYRequest)
+        self.assertFalse(a_sip_request.isPRACKRequest)
+        self.assertTrue(a_sip_request.isPUBLISHRequest)
+        self.assertFalse(a_sip_request.isMESSAGERequest)
+        self.assertFalse(a_sip_request.isOPTIONSRequest)
+        self.assertFalse(a_sip_request.isREFERRequest)
+        self.assertFalse(a_sip_request.isREGISTERRequest)
+        self.assertFalse(a_sip_request.isSUBSCRIBERequest)
+        self.assertFalse(a_sip_request.isUPDATERequest)
 
 
 class TestSIPMessageFactoryForMESSAGESIPRequest(AbstractSIPRequestFromFactoryTestCase):
@@ -808,24 +808,24 @@ class TestSIPMessageFactoryForMESSAGESIPRequest(AbstractSIPRequestFromFactoryTes
     def test_parsing(self):
         self.run_test_parsing()
 
-    def runAssertionsForSIPMessage(self, aSIPRequest):
-        super(TestSIPMessageFactoryForMESSAGESIPRequest, self).runAssertionsForSIPMessage(aSIPRequest)
-        self.assertTrue(aSIPRequest.isKnown)
-        self.assertFalse(aSIPRequest.isUnknown)
-        self.assertFalse(aSIPRequest.isACKRequest)
-        self.assertFalse(aSIPRequest.isBYERequest)
-        self.assertFalse(aSIPRequest.isCANCELRequest)
-        self.assertFalse(aSIPRequest.isINFORequest)
-        self.assertFalse(aSIPRequest.isINVITERequest)
-        self.assertFalse(aSIPRequest.isNOTIFYRequest)
-        self.assertFalse(aSIPRequest.isPRACKRequest)
-        self.assertFalse(aSIPRequest.isPUBLISHRequest)
-        self.assertTrue(aSIPRequest.isMESSAGERequest)
-        self.assertFalse(aSIPRequest.isOPTIONSRequest)
-        self.assertFalse(aSIPRequest.isREFERRequest)
-        self.assertFalse(aSIPRequest.isREGISTERRequest)
-        self.assertFalse(aSIPRequest.isSUBSCRIBERequest)
-        self.assertFalse(aSIPRequest.isUPDATERequest)
+    def runAssertionsForSIPMessage(self, a_sip_request):
+        super(TestSIPMessageFactoryForMESSAGESIPRequest, self).runAssertionsForSIPMessage(a_sip_request)
+        self.assertTrue(a_sip_request.isKnown)
+        self.assertFalse(a_sip_request.isUnknown)
+        self.assertFalse(a_sip_request.isACKRequest)
+        self.assertFalse(a_sip_request.isBYERequest)
+        self.assertFalse(a_sip_request.isCANCELRequest)
+        self.assertFalse(a_sip_request.isINFORequest)
+        self.assertFalse(a_sip_request.isINVITERequest)
+        self.assertFalse(a_sip_request.isNOTIFYRequest)
+        self.assertFalse(a_sip_request.isPRACKRequest)
+        self.assertFalse(a_sip_request.isPUBLISHRequest)
+        self.assertTrue(a_sip_request.isMESSAGERequest)
+        self.assertFalse(a_sip_request.isOPTIONSRequest)
+        self.assertFalse(a_sip_request.isREFERRequest)
+        self.assertFalse(a_sip_request.isREGISTERRequest)
+        self.assertFalse(a_sip_request.isSUBSCRIBERequest)
+        self.assertFalse(a_sip_request.isUPDATERequest)
 
 
 class TestSIPMessageFactoryForREFERSIPRequest(AbstractSIPRequestFromFactoryTestCase):
@@ -836,24 +836,24 @@ class TestSIPMessageFactoryForREFERSIPRequest(AbstractSIPRequestFromFactoryTestC
     def test_parsing(self):
         self.run_test_parsing()
 
-    def runAssertionsForSIPMessage(self, aSIPRequest):
-        super(TestSIPMessageFactoryForREFERSIPRequest, self).runAssertionsForSIPMessage(aSIPRequest)
-        self.assertTrue(aSIPRequest.isKnown)
-        self.assertFalse(aSIPRequest.isUnknown)
-        self.assertFalse(aSIPRequest.isACKRequest)
-        self.assertFalse(aSIPRequest.isBYERequest)
-        self.assertFalse(aSIPRequest.isCANCELRequest)
-        self.assertFalse(aSIPRequest.isINFORequest)
-        self.assertFalse(aSIPRequest.isINVITERequest)
-        self.assertFalse(aSIPRequest.isNOTIFYRequest)
-        self.assertFalse(aSIPRequest.isPRACKRequest)
-        self.assertFalse(aSIPRequest.isPUBLISHRequest)
-        self.assertFalse(aSIPRequest.isMESSAGERequest)
-        self.assertFalse(aSIPRequest.isOPTIONSRequest)
-        self.assertTrue(aSIPRequest.isREFERRequest)
-        self.assertFalse(aSIPRequest.isREGISTERRequest)
-        self.assertFalse(aSIPRequest.isSUBSCRIBERequest)
-        self.assertFalse(aSIPRequest.isUPDATERequest)
+    def runAssertionsForSIPMessage(self, a_sip_request):
+        super(TestSIPMessageFactoryForREFERSIPRequest, self).runAssertionsForSIPMessage(a_sip_request)
+        self.assertTrue(a_sip_request.isKnown)
+        self.assertFalse(a_sip_request.isUnknown)
+        self.assertFalse(a_sip_request.isACKRequest)
+        self.assertFalse(a_sip_request.isBYERequest)
+        self.assertFalse(a_sip_request.isCANCELRequest)
+        self.assertFalse(a_sip_request.isINFORequest)
+        self.assertFalse(a_sip_request.isINVITERequest)
+        self.assertFalse(a_sip_request.isNOTIFYRequest)
+        self.assertFalse(a_sip_request.isPRACKRequest)
+        self.assertFalse(a_sip_request.isPUBLISHRequest)
+        self.assertFalse(a_sip_request.isMESSAGERequest)
+        self.assertFalse(a_sip_request.isOPTIONSRequest)
+        self.assertTrue(a_sip_request.isREFERRequest)
+        self.assertFalse(a_sip_request.isREGISTERRequest)
+        self.assertFalse(a_sip_request.isSUBSCRIBERequest)
+        self.assertFalse(a_sip_request.isUPDATERequest)
 
 
 class TestSIPMessageFactoryForREGISTERSIPRequest(AbstractSIPRequestFromFactoryTestCase):
@@ -864,24 +864,24 @@ class TestSIPMessageFactoryForREGISTERSIPRequest(AbstractSIPRequestFromFactoryTe
     def test_parsing(self):
         self.run_test_parsing()
 
-    def runAssertionsForSIPMessage(self, aSIPRequest):
-        super(TestSIPMessageFactoryForREGISTERSIPRequest, self).runAssertionsForSIPMessage(aSIPRequest)
-        self.assertTrue(aSIPRequest.isKnown)
-        self.assertFalse(aSIPRequest.isUnknown)
-        self.assertFalse(aSIPRequest.isACKRequest)
-        self.assertFalse(aSIPRequest.isBYERequest)
-        self.assertFalse(aSIPRequest.isCANCELRequest)
-        self.assertFalse(aSIPRequest.isINFORequest)
-        self.assertFalse(aSIPRequest.isINVITERequest)
-        self.assertFalse(aSIPRequest.isNOTIFYRequest)
-        self.assertFalse(aSIPRequest.isPRACKRequest)
-        self.assertFalse(aSIPRequest.isPUBLISHRequest)
-        self.assertFalse(aSIPRequest.isMESSAGERequest)
-        self.assertFalse(aSIPRequest.isOPTIONSRequest)
-        self.assertFalse(aSIPRequest.isREFERRequest)
-        self.assertTrue(aSIPRequest.isREGISTERRequest)
-        self.assertFalse(aSIPRequest.isSUBSCRIBERequest)
-        self.assertFalse(aSIPRequest.isUPDATERequest)
+    def runAssertionsForSIPMessage(self, a_sip_request):
+        super(TestSIPMessageFactoryForREGISTERSIPRequest, self).runAssertionsForSIPMessage(a_sip_request)
+        self.assertTrue(a_sip_request.isKnown)
+        self.assertFalse(a_sip_request.isUnknown)
+        self.assertFalse(a_sip_request.isACKRequest)
+        self.assertFalse(a_sip_request.isBYERequest)
+        self.assertFalse(a_sip_request.isCANCELRequest)
+        self.assertFalse(a_sip_request.isINFORequest)
+        self.assertFalse(a_sip_request.isINVITERequest)
+        self.assertFalse(a_sip_request.isNOTIFYRequest)
+        self.assertFalse(a_sip_request.isPRACKRequest)
+        self.assertFalse(a_sip_request.isPUBLISHRequest)
+        self.assertFalse(a_sip_request.isMESSAGERequest)
+        self.assertFalse(a_sip_request.isOPTIONSRequest)
+        self.assertFalse(a_sip_request.isREFERRequest)
+        self.assertTrue(a_sip_request.isREGISTERRequest)
+        self.assertFalse(a_sip_request.isSUBSCRIBERequest)
+        self.assertFalse(a_sip_request.isUPDATERequest)
 
 
 class TestSIPMessageFactoryForSUBSCRIBESIPRequest(AbstractSIPRequestFromFactoryTestCase):
@@ -892,24 +892,24 @@ class TestSIPMessageFactoryForSUBSCRIBESIPRequest(AbstractSIPRequestFromFactoryT
     def test_parsing(self):
         self.run_test_parsing()
 
-    def runAssertionsForSIPMessage(self, aSIPRequest):
-        super(TestSIPMessageFactoryForSUBSCRIBESIPRequest, self).runAssertionsForSIPMessage(aSIPRequest)
-        self.assertTrue(aSIPRequest.isKnown)
-        self.assertFalse(aSIPRequest.isUnknown)
-        self.assertFalse(aSIPRequest.isACKRequest)
-        self.assertFalse(aSIPRequest.isBYERequest)
-        self.assertFalse(aSIPRequest.isCANCELRequest)
-        self.assertFalse(aSIPRequest.isINFORequest)
-        self.assertFalse(aSIPRequest.isINVITERequest)
-        self.assertFalse(aSIPRequest.isNOTIFYRequest)
-        self.assertFalse(aSIPRequest.isPRACKRequest)
-        self.assertFalse(aSIPRequest.isPUBLISHRequest)
-        self.assertFalse(aSIPRequest.isMESSAGERequest)
-        self.assertFalse(aSIPRequest.isOPTIONSRequest)
-        self.assertFalse(aSIPRequest.isREFERRequest)
-        self.assertFalse(aSIPRequest.isREGISTERRequest)
-        self.assertTrue(aSIPRequest.isSUBSCRIBERequest)
-        self.assertFalse(aSIPRequest.isUPDATERequest)
+    def runAssertionsForSIPMessage(self, a_sip_request):
+        super(TestSIPMessageFactoryForSUBSCRIBESIPRequest, self).runAssertionsForSIPMessage(a_sip_request)
+        self.assertTrue(a_sip_request.isKnown)
+        self.assertFalse(a_sip_request.isUnknown)
+        self.assertFalse(a_sip_request.isACKRequest)
+        self.assertFalse(a_sip_request.isBYERequest)
+        self.assertFalse(a_sip_request.isCANCELRequest)
+        self.assertFalse(a_sip_request.isINFORequest)
+        self.assertFalse(a_sip_request.isINVITERequest)
+        self.assertFalse(a_sip_request.isNOTIFYRequest)
+        self.assertFalse(a_sip_request.isPRACKRequest)
+        self.assertFalse(a_sip_request.isPUBLISHRequest)
+        self.assertFalse(a_sip_request.isMESSAGERequest)
+        self.assertFalse(a_sip_request.isOPTIONSRequest)
+        self.assertFalse(a_sip_request.isREFERRequest)
+        self.assertFalse(a_sip_request.isREGISTERRequest)
+        self.assertTrue(a_sip_request.isSUBSCRIBERequest)
+        self.assertFalse(a_sip_request.isUPDATERequest)
 
 
 class TestSIPMessageFactoryForUPDATESIPRequest(AbstractSIPRequestFromFactoryTestCase):
@@ -920,53 +920,53 @@ class TestSIPMessageFactoryForUPDATESIPRequest(AbstractSIPRequestFromFactoryTest
     def test_parsing(self):
         self.run_test_parsing()
 
-    def runAssertionsForSIPMessage(self, aSIPRequest):
-        super(TestSIPMessageFactoryForUPDATESIPRequest, self).runAssertionsForSIPMessage(aSIPRequest)
-        self.assertTrue(aSIPRequest.isKnown)
-        self.assertFalse(aSIPRequest.isUnknown)
-        self.assertFalse(aSIPRequest.isACKRequest)
-        self.assertFalse(aSIPRequest.isBYERequest)
-        self.assertFalse(aSIPRequest.isCANCELRequest)
-        self.assertFalse(aSIPRequest.isINFORequest)
-        self.assertFalse(aSIPRequest.isINVITERequest)
-        self.assertFalse(aSIPRequest.isNOTIFYRequest)
-        self.assertFalse(aSIPRequest.isPRACKRequest)
-        self.assertFalse(aSIPRequest.isPUBLISHRequest)
-        self.assertFalse(aSIPRequest.isMESSAGERequest)
-        self.assertFalse(aSIPRequest.isOPTIONSRequest)
-        self.assertFalse(aSIPRequest.isREFERRequest)
-        self.assertFalse(aSIPRequest.isREGISTERRequest)
-        self.assertFalse(aSIPRequest.isSUBSCRIBERequest)
-        self.assertTrue(aSIPRequest.isUPDATERequest)
+    def runAssertionsForSIPMessage(self, a_sip_request):
+        super(TestSIPMessageFactoryForUPDATESIPRequest, self).runAssertionsForSIPMessage(a_sip_request)
+        self.assertTrue(a_sip_request.isKnown)
+        self.assertFalse(a_sip_request.isUnknown)
+        self.assertFalse(a_sip_request.isACKRequest)
+        self.assertFalse(a_sip_request.isBYERequest)
+        self.assertFalse(a_sip_request.isCANCELRequest)
+        self.assertFalse(a_sip_request.isINFORequest)
+        self.assertFalse(a_sip_request.isINVITERequest)
+        self.assertFalse(a_sip_request.isNOTIFYRequest)
+        self.assertFalse(a_sip_request.isPRACKRequest)
+        self.assertFalse(a_sip_request.isPUBLISHRequest)
+        self.assertFalse(a_sip_request.isMESSAGERequest)
+        self.assertFalse(a_sip_request.isOPTIONSRequest)
+        self.assertFalse(a_sip_request.isREFERRequest)
+        self.assertFalse(a_sip_request.isREGISTERRequest)
+        self.assertFalse(a_sip_request.isSUBSCRIBERequest)
+        self.assertTrue(a_sip_request.isUPDATERequest)
 
 
 class TestSIPMessageFactoryForSIPResponse(AbstractSIPResponseFromFactoryTestCase):
     @property
-    def statusCode(self):
+    def status_code(self):
         return 100
 
     @property
-    def reasonPhrase(self):
+    def reason_phrase(self):
         return "Trying"
 
     def test_parsing(self):
         self.run_test_parsing()
 
-    def runAssertionsForSIPMessage(self, aSIPResponse):
-        super(TestSIPMessageFactoryForSIPResponse, self).runAssertionsForSIPMessage(aSIPResponse)
-        self.assertTrue(aSIPResponse.isKnown)
-        self.assertFalse(aSIPResponse.isUnknown)
-        self.assertFalse(aSIPResponse.isACKRequest)
-        self.assertFalse(aSIPResponse.isBYERequest)
-        self.assertFalse(aSIPResponse.isCANCELRequest)
-        self.assertFalse(aSIPResponse.isINFORequest)
-        self.assertFalse(aSIPResponse.isINVITERequest)
-        self.assertFalse(aSIPResponse.isNOTIFYRequest)
-        self.assertFalse(aSIPResponse.isPRACKRequest)
-        self.assertFalse(aSIPResponse.isPUBLISHRequest)
-        self.assertFalse(aSIPResponse.isMESSAGERequest)
-        self.assertFalse(aSIPResponse.isOPTIONSRequest)
-        self.assertFalse(aSIPResponse.isREFERRequest)
-        self.assertFalse(aSIPResponse.isREGISTERRequest)
-        self.assertFalse(aSIPResponse.isSUBSCRIBERequest)
-        self.assertFalse(aSIPResponse.isUPDATERequest)
+    def runAssertionsForSIPMessage(self, a_sip_response):
+        super(TestSIPMessageFactoryForSIPResponse, self).runAssertionsForSIPMessage(a_sip_response)
+        self.assertTrue(a_sip_response.isKnown)
+        self.assertFalse(a_sip_response.isUnknown)
+        self.assertFalse(a_sip_response.isACKRequest)
+        self.assertFalse(a_sip_response.isBYERequest)
+        self.assertFalse(a_sip_response.isCANCELRequest)
+        self.assertFalse(a_sip_response.isINFORequest)
+        self.assertFalse(a_sip_response.isINVITERequest)
+        self.assertFalse(a_sip_response.isNOTIFYRequest)
+        self.assertFalse(a_sip_response.isPRACKRequest)
+        self.assertFalse(a_sip_response.isPUBLISHRequest)
+        self.assertFalse(a_sip_response.isMESSAGERequest)
+        self.assertFalse(a_sip_response.isOPTIONSRequest)
+        self.assertFalse(a_sip_response.isREFERRequest)
+        self.assertFalse(a_sip_response.isREGISTERRequest)
+        self.assertFalse(a_sip_response.isSUBSCRIBERequest)
+        self.assertFalse(a_sip_response.isUPDATERequest)

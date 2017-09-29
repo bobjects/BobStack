@@ -18,8 +18,8 @@ class AcceptSIPHeaderField(SIPHeaderField):
         return 'Accept'
 
     @classmethod
-    def newForAttributes(cls, fieldName="Accept", fieldValueString=""):
-        return cls.newForFieldNameAndValueString(fieldName=fieldName, fieldValueString=fieldValueString)
+    def newForAttributes(cls, field_name="Accept", field_value_string=""):
+        return cls.newForFieldNameAndValueString(field_name=field_name, field_value_string=field_value_string)
 
     @property
     def isAccept(self):
@@ -31,6 +31,6 @@ class AcceptSIPHeaderField(SIPHeaderField):
         return self.parameterNamed('q')
 
     @q.setter
-    def q(self, aString):
-        self.parameterNamedPut('q', aString)
+    def q(self, a_string):
+        self.parameterNamedPut('q', a_string)
 

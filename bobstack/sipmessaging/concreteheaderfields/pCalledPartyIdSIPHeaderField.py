@@ -18,8 +18,8 @@ class PCalledPartyIdSIPHeaderField(SIPHeaderField):
         return 'P-Called-Party-Id'
 
     @classmethod
-    def newForAttributes(cls, fieldName="P-Called-Party-Id", fieldValueString=""):
-        return cls.newForFieldNameAndValueString(fieldName=fieldName, fieldValueString=fieldValueString)
+    def newForAttributes(cls, field_name="P-Called-Party-Id", field_value_string=""):
+        return cls.newForFieldNameAndValueString(field_name=field_name, field_value_string=field_value_string)
 
     @property
     def isPCalledPartyId(self):

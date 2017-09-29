@@ -14,11 +14,12 @@ class SIPStartLineFactory(object):
         lineString = aStringIO.readline().rstrip('\r\n')
         return self.nextForString(lineString)
 
-    def nextForString(self, aString):
-        if SIPRequestStartLine.canMatchString(aString):
-            return SIPRequestStartLine.newParsedFrom(aString)
-        elif SIPResponseStartLine.canMatchString(aString):
-            return SIPResponseStartLine.newParsedFrom(aString)
+    @staticmethod
+    def nextForString(a_string):
+        if SIPRequestStartLine.canMatchString(a_string):
+            return SIPRequestStartLine.newParsedFrom(a_string)
+        elif SIPResponseStartLine.canMatchString(a_string):
+            return SIPResponseStartLine.newParsedFrom(a_string)
         else:
-            return MalformedSIPStartLine.newParsedFrom(aString)
+            return MalformedSIPStartLine.newParsedFrom(a_string)
 

@@ -57,14 +57,14 @@ do
 	# echo from concreteheaderfields import $NONHYPHENATED"SIPHeaderField" >> out
 	# echo from sipmessaging import $NONHYPHENATED"SIPHeaderField" >> out
 
-	# echo "        elif $CLASS.canMatchString(aString):"
-	# echo "            return $CLASS.newParsedFrom(aString)"
+	# echo "        elif $CLASS.canMatchString(a_string):"
+	# echo "            return $CLASS.newParsedFrom(a_string)"
 
-	# echo "        elif $CLASS.canMatchFieldName(aString):"
-	# echo "            return $CLASS.newForFieldNameAndValueString(fieldName=aString)"
+	# echo "        elif $CLASS.canMatchFieldName(a_string):"
+	# echo "            return $CLASS.newForFieldNameAndValueString(field_name=a_string)"
 
-	# echo "        elif $CLASS.canMatchFieldName(fieldName):"
-	# echo "            return $CLASS.newForFieldNameAndValueString(fieldName=fieldName, fieldValueString=fieldValueString)"
+	# echo "        elif $CLASS.canMatchFieldName(field_name):"
+	# echo "            return $CLASS.newForFieldNameAndValueString(field_name=field_name, field_value_string=field_value_string)"
 
 	# echo "    @property" >> out
 	# echo "    def is$CLASS(self):" >> out
@@ -88,19 +88,19 @@ do
         # echo "    def test_parsing(self):" >> out
         # echo "        self.basic_test_parsing()" >> out
         # echo "        for line in self.canonicalStrings:" >> out
-        # echo "            headerField = self.sipHeaderFieldClassUnderTest.newParsedFrom(line)" >> out
-        # echo "            self.assertTrue(headerField.is$NONHYPHENATED, line)" >> out
+        # echo "            header_field = self.sipHeaderFieldClassUnderTest.newParsedFrom(line)" >> out
+        # echo "            self.assertTrue(header_field.is$NONHYPHENATED, line)" >> out
         # echo "" >> out
         # echo "    def test_rendering(self):" >> out
         # echo "        self.basic_test_rendering()" >> out
-        # echo "        for fieldName in self.canonicalFieldNames:" >> out
-        # echo "            for fieldValueString in self.canonicalFieldValues:" >> out
-        # echo "                headerField = self.sipHeaderFieldClassUnderTest.newForFieldNameAndValueString(fieldName=fieldName, fieldValueString=fieldValueString)" >> out
-        # echo "                self.assertTrue(headerField.is$NONHYPHENATED)" >> out
-        # echo "                headerField = self.sipHeaderFieldClassUnderTest.newForValueString(fieldValueString=fieldValueString)" >> out
-        # echo "                self.assertTrue(headerField.is$NONHYPHENATED)" >> out
-        # echo "                headerField = self.sipHeaderFieldClassUnderTest.newForAttributes(fieldValueString=fieldValueString)" >> out
-        # echo "                self.assertTrue(headerField.is$NONHYPHENATED)" >> out
+        # echo "        for field_name in self.canonicalFieldNames:" >> out
+        # echo "            for field_value_string in self.canonicalFieldValues:" >> out
+        # echo "                header_field = self.sipHeaderFieldClassUnderTest.newForFieldNameAndValueString(field_name=field_name, field_value_string=field_value_string)" >> out
+        # echo "                self.assertTrue(header_field.is$NONHYPHENATED)" >> out
+        # echo "                header_field = self.sipHeaderFieldClassUnderTest.newForValueString(field_value_string=field_value_string)" >> out
+        # echo "                self.assertTrue(header_field.is$NONHYPHENATED)" >> out
+        # echo "                header_field = self.sipHeaderFieldClassUnderTest.newForAttributes(field_value_string=field_value_string)" >> out
+        # echo "                self.assertTrue(header_field.is$NONHYPHENATED)" >> out
         # echo "" >> out
         # echo "" >> out
 
@@ -116,21 +116,21 @@ do
         # echo "    def test_parsing(self):" >> out
         # echo "        self.basic_test_parsing()" >> out
         # echo "        for line in self.canonicalStrings:" >> out
-        # echo "            headerField = SIPHeaderFieldFactory().nextForString(line)" >> out
-        # echo "            self.assertTrue(headerField.is$NONHYPHENATED, line)" >> out
+        # echo "            header_field = SIPHeaderFieldFactory().nextForString(line)" >> out
+        # echo "            self.assertTrue(header_field.is$NONHYPHENATED, line)" >> out
         # echo "            stringio = StringIO(line + '\r\n')" >> out
-        # echo "            headerField = SIPHeaderFieldFactory().allForStringIO(stringio)[0]" >> out
-        # echo "            self.assertTrue(headerField.is$NONHYPHENATED, line)" >> out
+        # echo "            header_field = SIPHeaderFieldFactory().allForStringIO(stringio)[0]" >> out
+        # echo "            self.assertTrue(header_field.is$NONHYPHENATED, line)" >> out
         # echo "            stringio.close()" >> out
-        # echo "            headerField = SIPHeaderFieldFactory().nextForFieldName(self.canonicalFieldNames[0])" >> out
-        # echo "            self.assertTrue(headerField.is$NONHYPHENATED, line)" >> out
-        # echo '            headerField = SIPHeaderFieldFactory().nextForFieldNameAndFieldValue(self.canonicalFieldNames[0], "foo bar baz blarg")' >> out
-        # echo "            self.assertTrue(headerField.is$NONHYPHENATED, line)" >> out
+        # echo "            header_field = SIPHeaderFieldFactory().nextForFieldName(self.canonicalFieldNames[0])" >> out
+        # echo "            self.assertTrue(header_field.is$NONHYPHENATED, line)" >> out
+        # echo '            header_field = SIPHeaderFieldFactory().nextForFieldNameAndFieldValue(self.canonicalFieldNames[0], "foo bar baz blarg")' >> out
+        # echo "            self.assertTrue(header_field.is$NONHYPHENATED, line)" >> out
         # echo "" >> out
         # echo "" >> out
 
-       echo "            if headerField.is$NONHYPHENATED:" >> out
-       echo "                self.appendStringToFileNamed(headerField.rawString + '\r\n', '$TARGETFILENAMESANSEXTENSION')" >> out
+       echo "            if header_field.is$NONHYPHENATED:" >> out
+       echo "                self.appendStringToFileNamed(header_field.rawString + '\r\n', '$TARGETFILENAMESANSEXTENSION')" >> out
 
 
 done

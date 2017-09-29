@@ -17,11 +17,11 @@ class AbstractSIPResponseTestCase(AbstractSIPMessageTestCase):
         raise NotImplementedError('call to abstract method ' + inspect.stack()[0][3])
 
     @property
-    def statusCode(self):
+    def status_code(self):
         raise NotImplementedError('call to abstract method ' + inspect.stack()[0][3])
 
     @property
-    def reasonPhrase(self):
+    def reason_phrase(self):
         raise NotImplementedError('call to abstract method ' + inspect.stack()[0][3])
 
     @property
@@ -32,52 +32,52 @@ class AbstractSIPResponseTestCase(AbstractSIPMessageTestCase):
     @property
     def canonicalStartLineStrings(self):
         # TODO - Moar???
-        return ["SIP/2.0 " + str(self.statusCode) + " " + self.reasonPhrase]
+        return ["SIP/2.0 " + str(self.status_code) + " " + self.reason_phrase]
 
-    def runAssertionsForSIPMessage(self, aSIPMessage):
-        super(AbstractSIPResponseTestCase, self).runAssertionsForSIPMessage(aSIPMessage)
-        self.assertTrue(aSIPMessage.isValid)
-        self.assertFalse(aSIPMessage.isRequest)
-        self.assertTrue(aSIPMessage.isResponse)
-        self.assertFalse(aSIPMessage.isMalformed)
-        self.assertFalse(aSIPMessage.startLine.isRequest)
-        self.assertTrue(aSIPMessage.startLine.isResponse)
-        self.assertFalse(aSIPMessage.startLine.isMalformed)
-        self.assertEqual(self.canonicalStartLineStrings[0], aSIPMessage.startLine.rawString)
-        self.assertEqual(self.statusCode, aSIPMessage.startLine.statusCode)
-        self.assertEqual(self.reasonPhrase, aSIPMessage.startLine.reasonPhrase)
+    def runAssertionsForSIPMessage(self, a_sip_message):
+        super(AbstractSIPResponseTestCase, self).runAssertionsForSIPMessage(a_sip_message)
+        self.assertTrue(a_sip_message.isValid)
+        self.assertFalse(a_sip_message.isRequest)
+        self.assertTrue(a_sip_message.isResponse)
+        self.assertFalse(a_sip_message.isMalformed)
+        self.assertFalse(a_sip_message.start_line.isRequest)
+        self.assertTrue(a_sip_message.start_line.isResponse)
+        self.assertFalse(a_sip_message.start_line.isMalformed)
+        self.assertEqual(self.canonicalStartLineStrings[0], a_sip_message.start_line.rawString)
+        self.assertEqual(self.status_code, a_sip_message.start_line.status_code)
+        self.assertEqual(self.reason_phrase, a_sip_message.start_line.reason_phrase)
 
     def run_test_parsing(self):
-        for messageString in self.canonicalStrings:
-            response = self.sipMessageClassUnderTest.newParsedFrom(messageString)
+        for message_string in self.canonicalStrings:
+            response = self.sipMessageClassUnderTest.newParsedFrom(message_string)
             self.runAssertionsForSIPMessage(response)
 
     def run_test_rendering_from_list_of_header_fields(self):
-        headerFields = self.listOfHeaderFieldsForAssertion
-        response = self.sipMessageClassUnderTest.newForAttributes(statusCode=self.statusCode, reasonPhrase=self.reasonPhrase, content='Foo Content', header=SIPHeader.newForAttributes(headerFields=headerFields))
+        header_fields = self.listOfHeaderFieldsForAssertion
+        response = self.sipMessageClassUnderTest.newForAttributes(status_code=self.status_code, reason_phrase=self.reason_phrase, content='Foo Content', header=SIPHeader.newForAttributes(header_fields=header_fields))
         self.runAssertionsForSIPMessage(response)
 
     def run_test_rendering_from_one_big_header_string(self):
-        headerFields = self.oneBigHeaderStringForAssertion
-        response = self.sipMessageClassUnderTest.newForAttributes(statusCode=self.statusCode, reasonPhrase=self.reasonPhrase, content='Foo Content', header=SIPHeader.newForAttributes(headerFields=headerFields))
+        header_fields = self.oneBigHeaderStringForAssertion
+        response = self.sipMessageClassUnderTest.newForAttributes(status_code=self.status_code, reason_phrase=self.reason_phrase, content='Foo Content', header=SIPHeader.newForAttributes(header_fields=header_fields))
         self.runAssertionsForSIPMessage(response)
 
     def run_test_rendering_from_one_big_header_string_with_folding(self):
-        headerFields = self.oneBigHeaderStringWithFoldingForAssertion
-        response = self.sipMessageClassUnderTest.newForAttributes(statusCode=self.statusCode, reasonPhrase=self.reasonPhrase, content='Foo Content', header=SIPHeader.newForAttributes(headerFields=headerFields))
+        header_fields = self.oneBigHeaderStringWithFoldingForAssertion
+        response = self.sipMessageClassUnderTest.newForAttributes(status_code=self.status_code, reason_phrase=self.reason_phrase, content='Foo Content', header=SIPHeader.newForAttributes(header_fields=header_fields))
         self.runAssertionsForSIPMessage(response)
 
     def run_test_rendering_from_list_of_header_field_strings(self):
-        headerFields = self.listOfHeaderFieldStringsForAssertion
-        response = self.sipMessageClassUnderTest.newForAttributes(statusCode=self.statusCode, reasonPhrase=self.reasonPhrase, content='Foo Content', header=SIPHeader.newForAttributes(headerFields=headerFields))
+        header_fields = self.listOfHeaderFieldStringsForAssertion
+        response = self.sipMessageClassUnderTest.newForAttributes(status_code=self.status_code, reason_phrase=self.reason_phrase, content='Foo Content', header=SIPHeader.newForAttributes(header_fields=header_fields))
         self.runAssertionsForSIPMessage(response)
 
     def run_test_rendering_from_list_of_field_names_and_values(self):
-        headerFields = self.listOfHeaderFieldNamesAndValuesForAssertion
-        response = self.sipMessageClassUnderTest.newForAttributes(statusCode=self.statusCode, reasonPhrase=self.reasonPhrase, content='Foo Content', header=SIPHeader.newForAttributes(headerFields=headerFields))
+        header_fields = self.listOfHeaderFieldNamesAndValuesForAssertion
+        response = self.sipMessageClassUnderTest.newForAttributes(status_code=self.status_code, reason_phrase=self.reason_phrase, content='Foo Content', header=SIPHeader.newForAttributes(header_fields=header_fields))
         self.runAssertionsForSIPMessage(response)
 
     def run_test_rendering_from_list_of_field_names_and_values_using_property_dict(self):
-        headerFields = self.listOfHeaderFieldNamesAndValuesUsingPropertyDictForAssertion
-        response = self.sipMessageClassUnderTest.newForAttributes(statusCode=self.statusCode, reasonPhrase=self.reasonPhrase, content='Foo Content', header=SIPHeader.newForAttributes(headerFields=headerFields))
+        header_fields = self.listOfHeaderFieldNamesAndValuesUsingPropertyDictForAssertion
+        response = self.sipMessageClassUnderTest.newForAttributes(status_code=self.status_code, reason_phrase=self.reason_phrase, content='Foo Content', header=SIPHeader.newForAttributes(header_fields=header_fields))
         self.runAssertionsForSIPMessage(response)

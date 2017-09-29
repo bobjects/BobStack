@@ -78,30 +78,30 @@ class TestSIPHeaderFieldFactoryForUnknown(TestCase):
 
     def test_parsing(self):
         for line in self.canonicalStrings:
-            headerField = SIPHeaderFieldFactory().nextForString(line)
+            header_field = SIPHeaderFieldFactory().nextForString(line)
             if line.split().__len__() < 2:
-                self.assertFalse(headerField.isValid)
+                self.assertFalse(header_field.isValid)
             else:
                 if ":" not in line:
-                    self.assertFalse(headerField.isValid)
+                    self.assertFalse(header_field.isValid)
                 else:
-                    self.assertTrue(headerField.isValid)
-            self.assertFalse(headerField.isContentLength)
-            self.assertFalse(headerField.isKnown)
-            self.assertEqual(headerField.rawString, line)
+                    self.assertTrue(header_field.isValid)
+            self.assertFalse(header_field.isContentLength)
+            self.assertFalse(header_field.isKnown)
+            self.assertEqual(header_field.rawString, line)
             if line:
                 stringio = StringIO(line + '\r\n')
-                headerField = SIPHeaderFieldFactory().allForStringIO(stringio)[0]
+                header_field = SIPHeaderFieldFactory().allForStringIO(stringio)[0]
                 if line.split().__len__() < 2:
-                    self.assertFalse(headerField.isValid)
+                    self.assertFalse(header_field.isValid)
                 else:
                     if ":" not in line:
-                        self.assertFalse(headerField.isValid)
+                        self.assertFalse(header_field.isValid)
                     else:
-                        self.assertTrue(headerField.isValid)
-                    self.assertFalse(headerField.isContentLength)
-                    self.assertFalse(headerField.isKnown)
-                    self.assertEqual(headerField.rawString, line)
+                        self.assertTrue(header_field.isValid)
+                    self.assertFalse(header_field.isContentLength)
+                    self.assertFalse(header_field.isKnown)
+                    self.assertEqual(header_field.rawString, line)
                     stringio.close()
 
 
@@ -117,20 +117,20 @@ class TestSIPHeaderFieldFactoryForContentLength(AbstractIntegerSIPHeaderFieldFro
     def test_parsing(self):
         self.basic_test_parsing()
         for line in self.canonicalStrings:
-            headerField = SIPHeaderFieldFactory().nextForString(line)
-            self.assertTrue(headerField.isContentLength)
+            header_field = SIPHeaderFieldFactory().nextForString(line)
+            self.assertTrue(header_field.isContentLength)
             stringio = StringIO(line + '\r\n')
-            headerField = SIPHeaderFieldFactory().allForStringIO(stringio)[0]
-            self.assertTrue(headerField.isContentLength)
+            header_field = SIPHeaderFieldFactory().allForStringIO(stringio)[0]
+            self.assertTrue(header_field.isContentLength)
             stringio.close()
-            headerField = SIPHeaderFieldFactory().nextForFieldName(self.canonicalFieldNames[0])
-            self.assertTrue(headerField.isContentLength)
-            headerField = SIPHeaderFieldFactory().nextForFieldNameAndFieldValue(self.canonicalFieldNames[0], "foo bar baz blarg")
-            self.assertTrue(headerField.isContentLength)
-            headerField = SIPHeaderFieldFactory().nextForFieldName(self.canonicalCompactFieldNames[0])
-            self.assertTrue(headerField.isContentLength)
-            headerField = SIPHeaderFieldFactory().nextForFieldNameAndFieldValue(self.canonicalCompactFieldNames[0], "foo bar baz blarg")
-            self.assertTrue(headerField.isContentLength)
+            header_field = SIPHeaderFieldFactory().nextForFieldName(self.canonicalFieldNames[0])
+            self.assertTrue(header_field.isContentLength)
+            header_field = SIPHeaderFieldFactory().nextForFieldNameAndFieldValue(self.canonicalFieldNames[0], "foo bar baz blarg")
+            self.assertTrue(header_field.isContentLength)
+            header_field = SIPHeaderFieldFactory().nextForFieldName(self.canonicalCompactFieldNames[0])
+            self.assertTrue(header_field.isContentLength)
+            header_field = SIPHeaderFieldFactory().nextForFieldNameAndFieldValue(self.canonicalCompactFieldNames[0], "foo bar baz blarg")
+            self.assertTrue(header_field.isContentLength)
 
 
 class TestSIPHeaderFieldFactoryForAccept(AbstractSIPHeaderFieldFromFactoryTestCase):
@@ -145,16 +145,16 @@ class TestSIPHeaderFieldFactoryForAccept(AbstractSIPHeaderFieldFromFactoryTestCa
     def test_parsing(self):
         self.basic_test_parsing()
         for line in self.canonicalStrings:
-            headerField = SIPHeaderFieldFactory().nextForString(line)
-            self.assertTrue(headerField.isAccept)
+            header_field = SIPHeaderFieldFactory().nextForString(line)
+            self.assertTrue(header_field.isAccept)
             stringio = StringIO(line + '\r\n')
-            headerField = SIPHeaderFieldFactory().allForStringIO(stringio)[0]
-            self.assertTrue(headerField.isAccept)
+            header_field = SIPHeaderFieldFactory().allForStringIO(stringio)[0]
+            self.assertTrue(header_field.isAccept)
             stringio.close()
-            headerField = SIPHeaderFieldFactory().nextForFieldName(self.canonicalFieldNames[0])
-            self.assertTrue(headerField.isAccept)
-            headerField = SIPHeaderFieldFactory().nextForFieldNameAndFieldValue(self.canonicalFieldNames[0], "foo bar baz blarg")
-            self.assertTrue(headerField.isAccept)
+            header_field = SIPHeaderFieldFactory().nextForFieldName(self.canonicalFieldNames[0])
+            self.assertTrue(header_field.isAccept)
+            header_field = SIPHeaderFieldFactory().nextForFieldNameAndFieldValue(self.canonicalFieldNames[0], "foo bar baz blarg")
+            self.assertTrue(header_field.isAccept)
 
 
 class TestSIPHeaderFieldFactoryForAcceptEncoding(AbstractSIPHeaderFieldFromFactoryTestCase):
@@ -169,16 +169,16 @@ class TestSIPHeaderFieldFactoryForAcceptEncoding(AbstractSIPHeaderFieldFromFacto
     def test_parsing(self):
         self.basic_test_parsing()
         for line in self.canonicalStrings:
-            headerField = SIPHeaderFieldFactory().nextForString(line)
-            self.assertTrue(headerField.isAcceptEncoding)
+            header_field = SIPHeaderFieldFactory().nextForString(line)
+            self.assertTrue(header_field.isAcceptEncoding)
             stringio = StringIO(line + '\r\n')
-            headerField = SIPHeaderFieldFactory().allForStringIO(stringio)[0]
-            self.assertTrue(headerField.isAcceptEncoding)
+            header_field = SIPHeaderFieldFactory().allForStringIO(stringio)[0]
+            self.assertTrue(header_field.isAcceptEncoding)
             stringio.close()
-            headerField = SIPHeaderFieldFactory().nextForFieldName(self.canonicalFieldNames[0])
-            self.assertTrue(headerField.isAcceptEncoding)
-            headerField = SIPHeaderFieldFactory().nextForFieldNameAndFieldValue(self.canonicalFieldNames[0], "foo bar baz blarg")
-            self.assertTrue(headerField.isAcceptEncoding)
+            header_field = SIPHeaderFieldFactory().nextForFieldName(self.canonicalFieldNames[0])
+            self.assertTrue(header_field.isAcceptEncoding)
+            header_field = SIPHeaderFieldFactory().nextForFieldNameAndFieldValue(self.canonicalFieldNames[0], "foo bar baz blarg")
+            self.assertTrue(header_field.isAcceptEncoding)
 
 
 class TestSIPHeaderFieldFactoryForAcceptLanguage(AbstractSIPHeaderFieldFromFactoryTestCase):
@@ -193,16 +193,16 @@ class TestSIPHeaderFieldFactoryForAcceptLanguage(AbstractSIPHeaderFieldFromFacto
     def test_parsing(self):
         self.basic_test_parsing()
         for line in self.canonicalStrings:
-            headerField = SIPHeaderFieldFactory().nextForString(line)
-            self.assertTrue(headerField.isAcceptLanguage)
+            header_field = SIPHeaderFieldFactory().nextForString(line)
+            self.assertTrue(header_field.isAcceptLanguage)
             stringio = StringIO(line + '\r\n')
-            headerField = SIPHeaderFieldFactory().allForStringIO(stringio)[0]
-            self.assertTrue(headerField.isAcceptLanguage)
+            header_field = SIPHeaderFieldFactory().allForStringIO(stringio)[0]
+            self.assertTrue(header_field.isAcceptLanguage)
             stringio.close()
-            headerField = SIPHeaderFieldFactory().nextForFieldName(self.canonicalFieldNames[0])
-            self.assertTrue(headerField.isAcceptLanguage)
-            headerField = SIPHeaderFieldFactory().nextForFieldNameAndFieldValue(self.canonicalFieldNames[0], "foo bar baz blarg")
-            self.assertTrue(headerField.isAcceptLanguage)
+            header_field = SIPHeaderFieldFactory().nextForFieldName(self.canonicalFieldNames[0])
+            self.assertTrue(header_field.isAcceptLanguage)
+            header_field = SIPHeaderFieldFactory().nextForFieldNameAndFieldValue(self.canonicalFieldNames[0], "foo bar baz blarg")
+            self.assertTrue(header_field.isAcceptLanguage)
 
 
 class TestSIPHeaderFieldFactoryForAllow(AbstractSIPHeaderFieldFromFactoryTestCase):
@@ -217,16 +217,16 @@ class TestSIPHeaderFieldFactoryForAllow(AbstractSIPHeaderFieldFromFactoryTestCas
     def test_parsing(self):
         self.basic_test_parsing()
         for line in self.canonicalStrings:
-            headerField = SIPHeaderFieldFactory().nextForString(line)
-            self.assertTrue(headerField.isAllow)
+            header_field = SIPHeaderFieldFactory().nextForString(line)
+            self.assertTrue(header_field.isAllow)
             stringio = StringIO(line + '\r\n')
-            headerField = SIPHeaderFieldFactory().allForStringIO(stringio)[0]
-            self.assertTrue(headerField.isAllow)
+            header_field = SIPHeaderFieldFactory().allForStringIO(stringio)[0]
+            self.assertTrue(header_field.isAllow)
             stringio.close()
-            headerField = SIPHeaderFieldFactory().nextForFieldName(self.canonicalFieldNames[0])
-            self.assertTrue(headerField.isAllow)
-            headerField = SIPHeaderFieldFactory().nextForFieldNameAndFieldValue(self.canonicalFieldNames[0], "foo bar baz blarg")
-            self.assertTrue(headerField.isAllow)
+            header_field = SIPHeaderFieldFactory().nextForFieldName(self.canonicalFieldNames[0])
+            self.assertTrue(header_field.isAllow)
+            header_field = SIPHeaderFieldFactory().nextForFieldNameAndFieldValue(self.canonicalFieldNames[0], "foo bar baz blarg")
+            self.assertTrue(header_field.isAllow)
 
 
 class TestSIPHeaderFieldFactoryForAuthorization(AbstractSIPHeaderFieldFromFactoryTestCase):
@@ -241,16 +241,16 @@ class TestSIPHeaderFieldFactoryForAuthorization(AbstractSIPHeaderFieldFromFactor
     def test_parsing(self):
         self.basic_test_parsing()
         for line in self.canonicalStrings:
-            headerField = SIPHeaderFieldFactory().nextForString(line)
-            self.assertTrue(headerField.isAuthorization)
+            header_field = SIPHeaderFieldFactory().nextForString(line)
+            self.assertTrue(header_field.isAuthorization)
             stringio = StringIO(line + '\r\n')
-            headerField = SIPHeaderFieldFactory().allForStringIO(stringio)[0]
-            self.assertTrue(headerField.isAuthorization)
+            header_field = SIPHeaderFieldFactory().allForStringIO(stringio)[0]
+            self.assertTrue(header_field.isAuthorization)
             stringio.close()
-            headerField = SIPHeaderFieldFactory().nextForFieldName(self.canonicalFieldNames[0])
-            self.assertTrue(headerField.isAuthorization)
-            headerField = SIPHeaderFieldFactory().nextForFieldNameAndFieldValue(self.canonicalFieldNames[0], "foo bar baz blarg")
-            self.assertTrue(headerField.isAuthorization)
+            header_field = SIPHeaderFieldFactory().nextForFieldName(self.canonicalFieldNames[0])
+            self.assertTrue(header_field.isAuthorization)
+            header_field = SIPHeaderFieldFactory().nextForFieldNameAndFieldValue(self.canonicalFieldNames[0], "foo bar baz blarg")
+            self.assertTrue(header_field.isAuthorization)
 
 
 class TestSIPHeaderFieldFactoryForCSeq(AbstractSIPHeaderFieldFromFactoryTestCase):
@@ -265,16 +265,16 @@ class TestSIPHeaderFieldFactoryForCSeq(AbstractSIPHeaderFieldFromFactoryTestCase
     def test_parsing(self):
         self.basic_test_parsing()
         for line in self.canonicalStrings:
-            headerField = SIPHeaderFieldFactory().nextForString(line)
-            self.assertTrue(headerField.isCSeq)
+            header_field = SIPHeaderFieldFactory().nextForString(line)
+            self.assertTrue(header_field.isCSeq)
             stringio = StringIO(line + '\r\n')
-            headerField = SIPHeaderFieldFactory().allForStringIO(stringio)[0]
-            self.assertTrue(headerField.isCSeq)
+            header_field = SIPHeaderFieldFactory().allForStringIO(stringio)[0]
+            self.assertTrue(header_field.isCSeq)
             stringio.close()
-            headerField = SIPHeaderFieldFactory().nextForFieldName(self.canonicalFieldNames[0])
-            self.assertTrue(headerField.isCSeq)
-            headerField = SIPHeaderFieldFactory().nextForFieldNameAndFieldValue(self.canonicalFieldNames[0], "foo bar baz blarg")
-            self.assertTrue(headerField.isCSeq)
+            header_field = SIPHeaderFieldFactory().nextForFieldName(self.canonicalFieldNames[0])
+            self.assertTrue(header_field.isCSeq)
+            header_field = SIPHeaderFieldFactory().nextForFieldNameAndFieldValue(self.canonicalFieldNames[0], "foo bar baz blarg")
+            self.assertTrue(header_field.isCSeq)
 
 
 class TestSIPHeaderFieldFactoryForCallID(AbstractSIPHeaderFieldFromFactoryTestCase):
@@ -289,20 +289,20 @@ class TestSIPHeaderFieldFactoryForCallID(AbstractSIPHeaderFieldFromFactoryTestCa
     def test_parsing(self):
         self.basic_test_parsing()
         for line in self.canonicalStrings:
-            headerField = SIPHeaderFieldFactory().nextForString(line)
-            self.assertTrue(headerField.isCallID)
+            header_field = SIPHeaderFieldFactory().nextForString(line)
+            self.assertTrue(header_field.isCallID)
             stringio = StringIO(line + '\r\n')
-            headerField = SIPHeaderFieldFactory().allForStringIO(stringio)[0]
-            self.assertTrue(headerField.isCallID)
+            header_field = SIPHeaderFieldFactory().allForStringIO(stringio)[0]
+            self.assertTrue(header_field.isCallID)
             stringio.close()
-            headerField = SIPHeaderFieldFactory().nextForFieldName(self.canonicalFieldNames[0])
-            self.assertTrue(headerField.isCallID)
-            headerField = SIPHeaderFieldFactory().nextForFieldNameAndFieldValue(self.canonicalFieldNames[0], "foo bar baz blarg")
-            self.assertTrue(headerField.isCallID)
-            headerField = SIPHeaderFieldFactory().nextForFieldName(self.canonicalCompactFieldNames[0])
-            self.assertTrue(headerField.isCallID)
-            headerField = SIPHeaderFieldFactory().nextForFieldNameAndFieldValue(self.canonicalCompactFieldNames[0], "foo bar baz blarg")
-            self.assertTrue(headerField.isCallID)
+            header_field = SIPHeaderFieldFactory().nextForFieldName(self.canonicalFieldNames[0])
+            self.assertTrue(header_field.isCallID)
+            header_field = SIPHeaderFieldFactory().nextForFieldNameAndFieldValue(self.canonicalFieldNames[0], "foo bar baz blarg")
+            self.assertTrue(header_field.isCallID)
+            header_field = SIPHeaderFieldFactory().nextForFieldName(self.canonicalCompactFieldNames[0])
+            self.assertTrue(header_field.isCallID)
+            header_field = SIPHeaderFieldFactory().nextForFieldNameAndFieldValue(self.canonicalCompactFieldNames[0], "foo bar baz blarg")
+            self.assertTrue(header_field.isCallID)
 
 
 class TestSIPHeaderFieldFactoryForCallInfo(AbstractSIPHeaderFieldFromFactoryTestCase):
@@ -317,16 +317,16 @@ class TestSIPHeaderFieldFactoryForCallInfo(AbstractSIPHeaderFieldFromFactoryTest
     def test_parsing(self):
         self.basic_test_parsing()
         for line in self.canonicalStrings:
-            headerField = SIPHeaderFieldFactory().nextForString(line)
-            self.assertTrue(headerField.isCallInfo)
+            header_field = SIPHeaderFieldFactory().nextForString(line)
+            self.assertTrue(header_field.isCallInfo)
             stringio = StringIO(line + '\r\n')
-            headerField = SIPHeaderFieldFactory().allForStringIO(stringio)[0]
-            self.assertTrue(headerField.isCallInfo)
+            header_field = SIPHeaderFieldFactory().allForStringIO(stringio)[0]
+            self.assertTrue(header_field.isCallInfo)
             stringio.close()
-            headerField = SIPHeaderFieldFactory().nextForFieldName(self.canonicalFieldNames[0])
-            self.assertTrue(headerField.isCallInfo)
-            headerField = SIPHeaderFieldFactory().nextForFieldNameAndFieldValue(self.canonicalFieldNames[0], "foo bar baz blarg")
-            self.assertTrue(headerField.isCallInfo)
+            header_field = SIPHeaderFieldFactory().nextForFieldName(self.canonicalFieldNames[0])
+            self.assertTrue(header_field.isCallInfo)
+            header_field = SIPHeaderFieldFactory().nextForFieldNameAndFieldValue(self.canonicalFieldNames[0], "foo bar baz blarg")
+            self.assertTrue(header_field.isCallInfo)
 
 
 class TestSIPHeaderFieldFactoryForContact(AbstractSIPHeaderFieldFromFactoryTestCase):
@@ -355,26 +355,26 @@ class TestSIPHeaderFieldFactoryForContact(AbstractSIPHeaderFieldFromFactoryTestC
     def test_parsing(self):
         self.basic_test_parsing()
         for line in self.canonicalStrings:
-            headerField = SIPHeaderFieldFactory().nextForString(line)
-            self.assertTrue(headerField.isContact)
-            self.assertTrue(headerField.isValid)
+            header_field = SIPHeaderFieldFactory().nextForString(line)
+            self.assertTrue(header_field.isContact)
+            self.assertTrue(header_field.isValid)
             stringio = StringIO(line + '\r\n')
-            headerField = SIPHeaderFieldFactory().allForStringIO(stringio)[0]
-            self.assertTrue(headerField.isContact)
-            self.assertTrue(headerField.isValid)
+            header_field = SIPHeaderFieldFactory().allForStringIO(stringio)[0]
+            self.assertTrue(header_field.isContact)
+            self.assertTrue(header_field.isValid)
             stringio.close()
-            headerField = SIPHeaderFieldFactory().nextForFieldName(self.canonicalFieldNames[0])
-            self.assertTrue(headerField.isContact)
-            self.assertFalse(headerField.isValid)
-            headerField = SIPHeaderFieldFactory().nextForFieldNameAndFieldValue(self.canonicalFieldNames[0], "foo bar baz blarg")
-            self.assertTrue(headerField.isContact)
-            self.assertFalse(headerField.isValid)
-            headerField = SIPHeaderFieldFactory().nextForFieldName(self.canonicalCompactFieldNames[0])
-            self.assertTrue(headerField.isContact)
-            self.assertFalse(headerField.isValid)
-            headerField = SIPHeaderFieldFactory().nextForFieldNameAndFieldValue(self.canonicalCompactFieldNames[0], "foo bar baz blarg")
-            self.assertTrue(headerField.isContact)
-            self.assertFalse(headerField.isValid)
+            header_field = SIPHeaderFieldFactory().nextForFieldName(self.canonicalFieldNames[0])
+            self.assertTrue(header_field.isContact)
+            self.assertFalse(header_field.isValid)
+            header_field = SIPHeaderFieldFactory().nextForFieldNameAndFieldValue(self.canonicalFieldNames[0], "foo bar baz blarg")
+            self.assertTrue(header_field.isContact)
+            self.assertFalse(header_field.isValid)
+            header_field = SIPHeaderFieldFactory().nextForFieldName(self.canonicalCompactFieldNames[0])
+            self.assertTrue(header_field.isContact)
+            self.assertFalse(header_field.isValid)
+            header_field = SIPHeaderFieldFactory().nextForFieldNameAndFieldValue(self.canonicalCompactFieldNames[0], "foo bar baz blarg")
+            self.assertTrue(header_field.isContact)
+            self.assertFalse(header_field.isValid)
 
 
 class TestSIPHeaderFieldFactoryForContentDisposition(AbstractSIPHeaderFieldFromFactoryTestCase):
@@ -389,16 +389,16 @@ class TestSIPHeaderFieldFactoryForContentDisposition(AbstractSIPHeaderFieldFromF
     def test_parsing(self):
         self.basic_test_parsing()
         for line in self.canonicalStrings:
-            headerField = SIPHeaderFieldFactory().nextForString(line)
-            self.assertTrue(headerField.isContentDisposition)
+            header_field = SIPHeaderFieldFactory().nextForString(line)
+            self.assertTrue(header_field.isContentDisposition)
             stringio = StringIO(line + '\r\n')
-            headerField = SIPHeaderFieldFactory().allForStringIO(stringio)[0]
-            self.assertTrue(headerField.isContentDisposition)
+            header_field = SIPHeaderFieldFactory().allForStringIO(stringio)[0]
+            self.assertTrue(header_field.isContentDisposition)
             stringio.close()
-            headerField = SIPHeaderFieldFactory().nextForFieldName(self.canonicalFieldNames[0])
-            self.assertTrue(headerField.isContentDisposition)
-            headerField = SIPHeaderFieldFactory().nextForFieldNameAndFieldValue(self.canonicalFieldNames[0], "foo bar baz blarg")
-            self.assertTrue(headerField.isContentDisposition)
+            header_field = SIPHeaderFieldFactory().nextForFieldName(self.canonicalFieldNames[0])
+            self.assertTrue(header_field.isContentDisposition)
+            header_field = SIPHeaderFieldFactory().nextForFieldNameAndFieldValue(self.canonicalFieldNames[0], "foo bar baz blarg")
+            self.assertTrue(header_field.isContentDisposition)
 
 
 class TestSIPHeaderFieldFactoryForContentType(AbstractSIPHeaderFieldFromFactoryTestCase):
@@ -413,20 +413,20 @@ class TestSIPHeaderFieldFactoryForContentType(AbstractSIPHeaderFieldFromFactoryT
     def test_parsing(self):
         self.basic_test_parsing()
         for line in self.canonicalStrings:
-            headerField = SIPHeaderFieldFactory().nextForString(line)
-            self.assertTrue(headerField.isContentType)
+            header_field = SIPHeaderFieldFactory().nextForString(line)
+            self.assertTrue(header_field.isContentType)
             stringio = StringIO(line + '\r\n')
-            headerField = SIPHeaderFieldFactory().allForStringIO(stringio)[0]
-            self.assertTrue(headerField.isContentType)
+            header_field = SIPHeaderFieldFactory().allForStringIO(stringio)[0]
+            self.assertTrue(header_field.isContentType)
             stringio.close()
-            headerField = SIPHeaderFieldFactory().nextForFieldName(self.canonicalFieldNames[0])
-            self.assertTrue(headerField.isContentType)
-            headerField = SIPHeaderFieldFactory().nextForFieldNameAndFieldValue(self.canonicalFieldNames[0], "foo bar baz blarg")
-            self.assertTrue(headerField.isContentType)
-            headerField = SIPHeaderFieldFactory().nextForFieldName(self.canonicalCompactFieldNames[0])
-            self.assertTrue(headerField.isContentType)
-            headerField = SIPHeaderFieldFactory().nextForFieldNameAndFieldValue(self.canonicalCompactFieldNames[0], "foo bar baz blarg")
-            self.assertTrue(headerField.isContentType)
+            header_field = SIPHeaderFieldFactory().nextForFieldName(self.canonicalFieldNames[0])
+            self.assertTrue(header_field.isContentType)
+            header_field = SIPHeaderFieldFactory().nextForFieldNameAndFieldValue(self.canonicalFieldNames[0], "foo bar baz blarg")
+            self.assertTrue(header_field.isContentType)
+            header_field = SIPHeaderFieldFactory().nextForFieldName(self.canonicalCompactFieldNames[0])
+            self.assertTrue(header_field.isContentType)
+            header_field = SIPHeaderFieldFactory().nextForFieldNameAndFieldValue(self.canonicalCompactFieldNames[0], "foo bar baz blarg")
+            self.assertTrue(header_field.isContentType)
 
 
 class TestSIPHeaderFieldFactoryForDate(AbstractSIPHeaderFieldFromFactoryTestCase):
@@ -441,16 +441,16 @@ class TestSIPHeaderFieldFactoryForDate(AbstractSIPHeaderFieldFromFactoryTestCase
     def test_parsing(self):
         self.basic_test_parsing()
         for line in self.canonicalStrings:
-            headerField = SIPHeaderFieldFactory().nextForString(line)
-            self.assertTrue(headerField.isDate)
+            header_field = SIPHeaderFieldFactory().nextForString(line)
+            self.assertTrue(header_field.isDate)
             stringio = StringIO(line + '\r\n')
-            headerField = SIPHeaderFieldFactory().allForStringIO(stringio)[0]
-            self.assertTrue(headerField.isDate)
+            header_field = SIPHeaderFieldFactory().allForStringIO(stringio)[0]
+            self.assertTrue(header_field.isDate)
             stringio.close()
-            headerField = SIPHeaderFieldFactory().nextForFieldName(self.canonicalFieldNames[0])
-            self.assertTrue(headerField.isDate)
-            headerField = SIPHeaderFieldFactory().nextForFieldNameAndFieldValue(self.canonicalFieldNames[0], "foo bar baz blarg")
-            self.assertTrue(headerField.isDate)
+            header_field = SIPHeaderFieldFactory().nextForFieldName(self.canonicalFieldNames[0])
+            self.assertTrue(header_field.isDate)
+            header_field = SIPHeaderFieldFactory().nextForFieldNameAndFieldValue(self.canonicalFieldNames[0], "foo bar baz blarg")
+            self.assertTrue(header_field.isDate)
 
 
 class TestSIPHeaderFieldFactoryForExpires(AbstractIntegerSIPHeaderFieldFromFactoryTestCase):
@@ -465,16 +465,16 @@ class TestSIPHeaderFieldFactoryForExpires(AbstractIntegerSIPHeaderFieldFromFacto
     def test_parsing(self):
         self.basic_test_parsing()
         for line in self.canonicalStrings:
-            headerField = SIPHeaderFieldFactory().nextForString(line)
-            self.assertTrue(headerField.isExpires)
+            header_field = SIPHeaderFieldFactory().nextForString(line)
+            self.assertTrue(header_field.isExpires)
             stringio = StringIO(line + '\r\n')
-            headerField = SIPHeaderFieldFactory().allForStringIO(stringio)[0]
-            self.assertTrue(headerField.isExpires)
+            header_field = SIPHeaderFieldFactory().allForStringIO(stringio)[0]
+            self.assertTrue(header_field.isExpires)
             stringio.close()
-            headerField = SIPHeaderFieldFactory().nextForFieldName(self.canonicalFieldNames[0])
-            self.assertTrue(headerField.isExpires)
-            headerField = SIPHeaderFieldFactory().nextForFieldNameAndFieldValue(self.canonicalFieldNames[0], "foo bar baz blarg")
-            self.assertTrue(headerField.isExpires)
+            header_field = SIPHeaderFieldFactory().nextForFieldName(self.canonicalFieldNames[0])
+            self.assertTrue(header_field.isExpires)
+            header_field = SIPHeaderFieldFactory().nextForFieldNameAndFieldValue(self.canonicalFieldNames[0], "foo bar baz blarg")
+            self.assertTrue(header_field.isExpires)
 
 
 class TestSIPHeaderFieldFactoryForFrom(AbstractSIPHeaderFieldFromFactoryTestCase):
@@ -503,26 +503,26 @@ class TestSIPHeaderFieldFactoryForFrom(AbstractSIPHeaderFieldFromFactoryTestCase
     def test_parsing(self):
         self.basic_test_parsing()
         for line in self.canonicalStrings:
-            headerField = SIPHeaderFieldFactory().nextForString(line)
-            self.assertTrue(headerField.isFrom)
-            self.assertTrue(headerField.isValid)
+            header_field = SIPHeaderFieldFactory().nextForString(line)
+            self.assertTrue(header_field.isFrom)
+            self.assertTrue(header_field.isValid)
             stringio = StringIO(line + '\r\n')
-            headerField = SIPHeaderFieldFactory().allForStringIO(stringio)[0]
-            self.assertTrue(headerField.isFrom)
-            self.assertTrue(headerField.isValid)
+            header_field = SIPHeaderFieldFactory().allForStringIO(stringio)[0]
+            self.assertTrue(header_field.isFrom)
+            self.assertTrue(header_field.isValid)
             stringio.close()
-            headerField = SIPHeaderFieldFactory().nextForFieldName(self.canonicalFieldNames[0])
-            self.assertTrue(headerField.isFrom)
-            self.assertFalse(headerField.isValid)
-            headerField = SIPHeaderFieldFactory().nextForFieldNameAndFieldValue(self.canonicalFieldNames[0], "foo bar baz blarg")
-            self.assertTrue(headerField.isFrom)
-            self.assertFalse(headerField.isValid)
-            headerField = SIPHeaderFieldFactory().nextForFieldName(self.canonicalCompactFieldNames[0])
-            self.assertTrue(headerField.isFrom)
-            self.assertFalse(headerField.isValid)
-            headerField = SIPHeaderFieldFactory().nextForFieldNameAndFieldValue(self.canonicalCompactFieldNames[0], "foo bar baz blarg")
-            self.assertTrue(headerField.isFrom)
-            self.assertFalse(headerField.isValid)
+            header_field = SIPHeaderFieldFactory().nextForFieldName(self.canonicalFieldNames[0])
+            self.assertTrue(header_field.isFrom)
+            self.assertFalse(header_field.isValid)
+            header_field = SIPHeaderFieldFactory().nextForFieldNameAndFieldValue(self.canonicalFieldNames[0], "foo bar baz blarg")
+            self.assertTrue(header_field.isFrom)
+            self.assertFalse(header_field.isValid)
+            header_field = SIPHeaderFieldFactory().nextForFieldName(self.canonicalCompactFieldNames[0])
+            self.assertTrue(header_field.isFrom)
+            self.assertFalse(header_field.isValid)
+            header_field = SIPHeaderFieldFactory().nextForFieldNameAndFieldValue(self.canonicalCompactFieldNames[0], "foo bar baz blarg")
+            self.assertTrue(header_field.isFrom)
+            self.assertFalse(header_field.isValid)
 
 
 class TestSIPHeaderFieldFactoryForMaxForwards(AbstractIntegerSIPHeaderFieldFromFactoryTestCase):
@@ -537,16 +537,16 @@ class TestSIPHeaderFieldFactoryForMaxForwards(AbstractIntegerSIPHeaderFieldFromF
     def test_parsing(self):
         self.basic_test_parsing()
         for line in self.canonicalStrings:
-            headerField = SIPHeaderFieldFactory().nextForString(line)
-            self.assertTrue(headerField.isMaxForwards)
+            header_field = SIPHeaderFieldFactory().nextForString(line)
+            self.assertTrue(header_field.isMaxForwards)
             stringio = StringIO(line + '\r\n')
-            headerField = SIPHeaderFieldFactory().allForStringIO(stringio)[0]
-            self.assertTrue(headerField.isMaxForwards)
+            header_field = SIPHeaderFieldFactory().allForStringIO(stringio)[0]
+            self.assertTrue(header_field.isMaxForwards)
             stringio.close()
-            headerField = SIPHeaderFieldFactory().nextForFieldName(self.canonicalFieldNames[0])
-            self.assertTrue(headerField.isMaxForwards)
-            headerField = SIPHeaderFieldFactory().nextForFieldNameAndFieldValue(self.canonicalFieldNames[0], "foo bar baz blarg")
-            self.assertTrue(headerField.isMaxForwards)
+            header_field = SIPHeaderFieldFactory().nextForFieldName(self.canonicalFieldNames[0])
+            self.assertTrue(header_field.isMaxForwards)
+            header_field = SIPHeaderFieldFactory().nextForFieldNameAndFieldValue(self.canonicalFieldNames[0], "foo bar baz blarg")
+            self.assertTrue(header_field.isMaxForwards)
 
 
 class TestSIPHeaderFieldFactoryForRecordRoute(AbstractSIPHeaderFieldFromFactoryTestCase):
@@ -574,16 +574,16 @@ class TestSIPHeaderFieldFactoryForRecordRoute(AbstractSIPHeaderFieldFromFactoryT
     def test_parsing(self):
         self.basic_test_parsing()
         for line in self.canonicalStrings:
-            headerField = SIPHeaderFieldFactory().nextForString(line)
-            self.assertTrue(headerField.isRecordRoute)
+            header_field = SIPHeaderFieldFactory().nextForString(line)
+            self.assertTrue(header_field.isRecordRoute)
             stringio = StringIO(line + '\r\n')
-            headerField = SIPHeaderFieldFactory().allForStringIO(stringio)[0]
-            self.assertTrue(headerField.isRecordRoute)
+            header_field = SIPHeaderFieldFactory().allForStringIO(stringio)[0]
+            self.assertTrue(header_field.isRecordRoute)
             stringio.close()
-            headerField = SIPHeaderFieldFactory().nextForFieldName(self.canonicalFieldNames[0])
-            self.assertTrue(headerField.isRecordRoute)
-            headerField = SIPHeaderFieldFactory().nextForFieldNameAndFieldValue(self.canonicalFieldNames[0], "foo bar baz blarg")
-            self.assertTrue(headerField.isRecordRoute)
+            header_field = SIPHeaderFieldFactory().nextForFieldName(self.canonicalFieldNames[0])
+            self.assertTrue(header_field.isRecordRoute)
+            header_field = SIPHeaderFieldFactory().nextForFieldNameAndFieldValue(self.canonicalFieldNames[0], "foo bar baz blarg")
+            self.assertTrue(header_field.isRecordRoute)
 
 
 class TestSIPHeaderFieldFactoryForRequire(AbstractSIPHeaderFieldFromFactoryTestCase):
@@ -598,16 +598,16 @@ class TestSIPHeaderFieldFactoryForRequire(AbstractSIPHeaderFieldFromFactoryTestC
     def test_parsing(self):
         self.basic_test_parsing()
         for line in self.canonicalStrings:
-            headerField = SIPHeaderFieldFactory().nextForString(line)
-            self.assertTrue(headerField.isRequire)
+            header_field = SIPHeaderFieldFactory().nextForString(line)
+            self.assertTrue(header_field.isRequire)
             stringio = StringIO(line + '\r\n')
-            headerField = SIPHeaderFieldFactory().allForStringIO(stringio)[0]
-            self.assertTrue(headerField.isRequire)
+            header_field = SIPHeaderFieldFactory().allForStringIO(stringio)[0]
+            self.assertTrue(header_field.isRequire)
             stringio.close()
-            headerField = SIPHeaderFieldFactory().nextForFieldName(self.canonicalFieldNames[0])
-            self.assertTrue(headerField.isRequire)
-            headerField = SIPHeaderFieldFactory().nextForFieldNameAndFieldValue(self.canonicalFieldNames[0], "foo bar baz blarg")
-            self.assertTrue(headerField.isRequire)
+            header_field = SIPHeaderFieldFactory().nextForFieldName(self.canonicalFieldNames[0])
+            self.assertTrue(header_field.isRequire)
+            header_field = SIPHeaderFieldFactory().nextForFieldNameAndFieldValue(self.canonicalFieldNames[0], "foo bar baz blarg")
+            self.assertTrue(header_field.isRequire)
 
 
 class TestSIPHeaderFieldFactoryForRetryAfter(AbstractIntegerSIPHeaderFieldFromFactoryTestCase):
@@ -622,16 +622,16 @@ class TestSIPHeaderFieldFactoryForRetryAfter(AbstractIntegerSIPHeaderFieldFromFa
     def test_parsing(self):
         self.basic_test_parsing()
         for line in self.canonicalStrings:
-            headerField = SIPHeaderFieldFactory().nextForString(line)
-            self.assertTrue(headerField.isRetryAfter)
+            header_field = SIPHeaderFieldFactory().nextForString(line)
+            self.assertTrue(header_field.isRetryAfter)
             stringio = StringIO(line + '\r\n')
-            headerField = SIPHeaderFieldFactory().allForStringIO(stringio)[0]
-            self.assertTrue(headerField.isRetryAfter)
+            header_field = SIPHeaderFieldFactory().allForStringIO(stringio)[0]
+            self.assertTrue(header_field.isRetryAfter)
             stringio.close()
-            headerField = SIPHeaderFieldFactory().nextForFieldName(self.canonicalFieldNames[0])
-            self.assertTrue(headerField.isRetryAfter)
-            headerField = SIPHeaderFieldFactory().nextForFieldNameAndFieldValue(self.canonicalFieldNames[0], "foo bar baz blarg")
-            self.assertTrue(headerField.isRetryAfter)
+            header_field = SIPHeaderFieldFactory().nextForFieldName(self.canonicalFieldNames[0])
+            self.assertTrue(header_field.isRetryAfter)
+            header_field = SIPHeaderFieldFactory().nextForFieldNameAndFieldValue(self.canonicalFieldNames[0], "foo bar baz blarg")
+            self.assertTrue(header_field.isRetryAfter)
 
 
 class TestSIPHeaderFieldFactoryForRoute(AbstractSIPHeaderFieldFromFactoryTestCase):
@@ -659,16 +659,16 @@ class TestSIPHeaderFieldFactoryForRoute(AbstractSIPHeaderFieldFromFactoryTestCas
     def test_parsing(self):
         self.basic_test_parsing()
         for line in self.canonicalStrings:
-            headerField = SIPHeaderFieldFactory().nextForString(line)
-            self.assertTrue(headerField.isRoute)
+            header_field = SIPHeaderFieldFactory().nextForString(line)
+            self.assertTrue(header_field.isRoute)
             stringio = StringIO(line + '\r\n')
-            headerField = SIPHeaderFieldFactory().allForStringIO(stringio)[0]
-            self.assertTrue(headerField.isRoute)
+            header_field = SIPHeaderFieldFactory().allForStringIO(stringio)[0]
+            self.assertTrue(header_field.isRoute)
             stringio.close()
-            headerField = SIPHeaderFieldFactory().nextForFieldName(self.canonicalFieldNames[0])
-            self.assertTrue(headerField.isRoute)
-            headerField = SIPHeaderFieldFactory().nextForFieldNameAndFieldValue(self.canonicalFieldNames[0], "foo bar baz blarg")
-            self.assertTrue(headerField.isRoute)
+            header_field = SIPHeaderFieldFactory().nextForFieldName(self.canonicalFieldNames[0])
+            self.assertTrue(header_field.isRoute)
+            header_field = SIPHeaderFieldFactory().nextForFieldNameAndFieldValue(self.canonicalFieldNames[0], "foo bar baz blarg")
+            self.assertTrue(header_field.isRoute)
 
 
 class TestSIPHeaderFieldFactoryForServer(AbstractSIPHeaderFieldFromFactoryTestCase):
@@ -683,16 +683,16 @@ class TestSIPHeaderFieldFactoryForServer(AbstractSIPHeaderFieldFromFactoryTestCa
     def test_parsing(self):
         self.basic_test_parsing()
         for line in self.canonicalStrings:
-            headerField = SIPHeaderFieldFactory().nextForString(line)
-            self.assertTrue(headerField.isServer)
+            header_field = SIPHeaderFieldFactory().nextForString(line)
+            self.assertTrue(header_field.isServer)
             stringio = StringIO(line + '\r\n')
-            headerField = SIPHeaderFieldFactory().allForStringIO(stringio)[0]
-            self.assertTrue(headerField.isServer)
+            header_field = SIPHeaderFieldFactory().allForStringIO(stringio)[0]
+            self.assertTrue(header_field.isServer)
             stringio.close()
-            headerField = SIPHeaderFieldFactory().nextForFieldName(self.canonicalFieldNames[0])
-            self.assertTrue(headerField.isServer)
-            headerField = SIPHeaderFieldFactory().nextForFieldNameAndFieldValue(self.canonicalFieldNames[0], "foo bar baz blarg")
-            self.assertTrue(headerField.isServer)
+            header_field = SIPHeaderFieldFactory().nextForFieldName(self.canonicalFieldNames[0])
+            self.assertTrue(header_field.isServer)
+            header_field = SIPHeaderFieldFactory().nextForFieldNameAndFieldValue(self.canonicalFieldNames[0], "foo bar baz blarg")
+            self.assertTrue(header_field.isServer)
 
 
 class TestSIPHeaderFieldFactoryForSessionExpires(AbstractIntegerSIPHeaderFieldFromFactoryTestCase):
@@ -707,16 +707,16 @@ class TestSIPHeaderFieldFactoryForSessionExpires(AbstractIntegerSIPHeaderFieldFr
     def test_parsing(self):
         self.basic_test_parsing()
         for line in self.canonicalStrings:
-            headerField = SIPHeaderFieldFactory().nextForString(line)
-            self.assertTrue(headerField.isSessionExpires)
+            header_field = SIPHeaderFieldFactory().nextForString(line)
+            self.assertTrue(header_field.isSessionExpires)
             stringio = StringIO(line + '\r\n')
-            headerField = SIPHeaderFieldFactory().allForStringIO(stringio)[0]
-            self.assertTrue(headerField.isSessionExpires)
+            header_field = SIPHeaderFieldFactory().allForStringIO(stringio)[0]
+            self.assertTrue(header_field.isSessionExpires)
             stringio.close()
-            headerField = SIPHeaderFieldFactory().nextForFieldName(self.canonicalFieldNames[0])
-            self.assertTrue(headerField.isSessionExpires)
-            headerField = SIPHeaderFieldFactory().nextForFieldNameAndFieldValue(self.canonicalFieldNames[0], "foo bar baz blarg")
-            self.assertTrue(headerField.isSessionExpires)
+            header_field = SIPHeaderFieldFactory().nextForFieldName(self.canonicalFieldNames[0])
+            self.assertTrue(header_field.isSessionExpires)
+            header_field = SIPHeaderFieldFactory().nextForFieldNameAndFieldValue(self.canonicalFieldNames[0], "foo bar baz blarg")
+            self.assertTrue(header_field.isSessionExpires)
 
 
 class TestSIPHeaderFieldFactoryForSupported(AbstractSIPHeaderFieldFromFactoryTestCase):
@@ -731,20 +731,20 @@ class TestSIPHeaderFieldFactoryForSupported(AbstractSIPHeaderFieldFromFactoryTes
     def test_parsing(self):
         self.basic_test_parsing()
         for line in self.canonicalStrings:
-            headerField = SIPHeaderFieldFactory().nextForString(line)
-            self.assertTrue(headerField.isSupported)
+            header_field = SIPHeaderFieldFactory().nextForString(line)
+            self.assertTrue(header_field.isSupported)
             stringio = StringIO(line + '\r\n')
-            headerField = SIPHeaderFieldFactory().allForStringIO(stringio)[0]
-            self.assertTrue(headerField.isSupported)
+            header_field = SIPHeaderFieldFactory().allForStringIO(stringio)[0]
+            self.assertTrue(header_field.isSupported)
             stringio.close()
-            headerField = SIPHeaderFieldFactory().nextForFieldName(self.canonicalFieldNames[0])
-            self.assertTrue(headerField.isSupported)
-            headerField = SIPHeaderFieldFactory().nextForFieldNameAndFieldValue(self.canonicalFieldNames[0], "foo bar baz blarg")
-            self.assertTrue(headerField.isSupported)
-            headerField = SIPHeaderFieldFactory().nextForFieldName(self.canonicalCompactFieldNames[0])
-            self.assertTrue(headerField.isSupported)
-            headerField = SIPHeaderFieldFactory().nextForFieldNameAndFieldValue(self.canonicalCompactFieldNames[0], "foo bar baz blarg")
-            self.assertTrue(headerField.isSupported)
+            header_field = SIPHeaderFieldFactory().nextForFieldName(self.canonicalFieldNames[0])
+            self.assertTrue(header_field.isSupported)
+            header_field = SIPHeaderFieldFactory().nextForFieldNameAndFieldValue(self.canonicalFieldNames[0], "foo bar baz blarg")
+            self.assertTrue(header_field.isSupported)
+            header_field = SIPHeaderFieldFactory().nextForFieldName(self.canonicalCompactFieldNames[0])
+            self.assertTrue(header_field.isSupported)
+            header_field = SIPHeaderFieldFactory().nextForFieldNameAndFieldValue(self.canonicalCompactFieldNames[0], "foo bar baz blarg")
+            self.assertTrue(header_field.isSupported)
 
 
 class TestSIPHeaderFieldFactoryForTimestamp(AbstractIntegerSIPHeaderFieldFromFactoryTestCase):
@@ -759,16 +759,16 @@ class TestSIPHeaderFieldFactoryForTimestamp(AbstractIntegerSIPHeaderFieldFromFac
     def test_parsing(self):
         self.basic_test_parsing()
         for line in self.canonicalStrings:
-            headerField = SIPHeaderFieldFactory().nextForString(line)
-            self.assertTrue(headerField.isTimestamp)
+            header_field = SIPHeaderFieldFactory().nextForString(line)
+            self.assertTrue(header_field.isTimestamp)
             stringio = StringIO(line + '\r\n')
-            headerField = SIPHeaderFieldFactory().allForStringIO(stringio)[0]
-            self.assertTrue(headerField.isTimestamp)
+            header_field = SIPHeaderFieldFactory().allForStringIO(stringio)[0]
+            self.assertTrue(header_field.isTimestamp)
             stringio.close()
-            headerField = SIPHeaderFieldFactory().nextForFieldName(self.canonicalFieldNames[0])
-            self.assertTrue(headerField.isTimestamp)
-            headerField = SIPHeaderFieldFactory().nextForFieldNameAndFieldValue(self.canonicalFieldNames[0], "foo bar baz blarg")
-            self.assertTrue(headerField.isTimestamp)
+            header_field = SIPHeaderFieldFactory().nextForFieldName(self.canonicalFieldNames[0])
+            self.assertTrue(header_field.isTimestamp)
+            header_field = SIPHeaderFieldFactory().nextForFieldNameAndFieldValue(self.canonicalFieldNames[0], "foo bar baz blarg")
+            self.assertTrue(header_field.isTimestamp)
 
 
 class TestSIPHeaderFieldFactoryForTo(AbstractSIPHeaderFieldFromFactoryTestCase):
@@ -797,26 +797,26 @@ class TestSIPHeaderFieldFactoryForTo(AbstractSIPHeaderFieldFromFactoryTestCase):
     def test_parsing(self):
         self.basic_test_parsing()
         for line in self.canonicalStrings:
-            headerField = SIPHeaderFieldFactory().nextForString(line)
-            self.assertTrue(headerField.isTo)
-            self.assertTrue(headerField.isValid)
+            header_field = SIPHeaderFieldFactory().nextForString(line)
+            self.assertTrue(header_field.isTo)
+            self.assertTrue(header_field.isValid)
             stringio = StringIO(line + '\r\n')
-            headerField = SIPHeaderFieldFactory().allForStringIO(stringio)[0]
-            self.assertTrue(headerField.isTo)
-            self.assertTrue(headerField.isValid)
+            header_field = SIPHeaderFieldFactory().allForStringIO(stringio)[0]
+            self.assertTrue(header_field.isTo)
+            self.assertTrue(header_field.isValid)
             stringio.close()
-            headerField = SIPHeaderFieldFactory().nextForFieldName(self.canonicalFieldNames[0])
-            self.assertTrue(headerField.isTo)
-            self.assertFalse(headerField.isValid)
-            headerField = SIPHeaderFieldFactory().nextForFieldNameAndFieldValue(self.canonicalFieldNames[0], "foo bar baz blarg")
-            self.assertTrue(headerField.isTo)
-            self.assertFalse(headerField.isValid)
-            headerField = SIPHeaderFieldFactory().nextForFieldName(self.canonicalCompactFieldNames[0])
-            self.assertTrue(headerField.isTo)
-            self.assertFalse(headerField.isValid)
-            headerField = SIPHeaderFieldFactory().nextForFieldNameAndFieldValue(self.canonicalCompactFieldNames[0], "foo bar baz blarg")
-            self.assertTrue(headerField.isTo)
-            self.assertFalse(headerField.isValid)
+            header_field = SIPHeaderFieldFactory().nextForFieldName(self.canonicalFieldNames[0])
+            self.assertTrue(header_field.isTo)
+            self.assertFalse(header_field.isValid)
+            header_field = SIPHeaderFieldFactory().nextForFieldNameAndFieldValue(self.canonicalFieldNames[0], "foo bar baz blarg")
+            self.assertTrue(header_field.isTo)
+            self.assertFalse(header_field.isValid)
+            header_field = SIPHeaderFieldFactory().nextForFieldName(self.canonicalCompactFieldNames[0])
+            self.assertTrue(header_field.isTo)
+            self.assertFalse(header_field.isValid)
+            header_field = SIPHeaderFieldFactory().nextForFieldNameAndFieldValue(self.canonicalCompactFieldNames[0], "foo bar baz blarg")
+            self.assertTrue(header_field.isTo)
+            self.assertFalse(header_field.isValid)
 
 
 class TestSIPHeaderFieldFactoryForUserAgent(AbstractSIPHeaderFieldFromFactoryTestCase):
@@ -831,16 +831,16 @@ class TestSIPHeaderFieldFactoryForUserAgent(AbstractSIPHeaderFieldFromFactoryTes
     def test_parsing(self):
         self.basic_test_parsing()
         for line in self.canonicalStrings:
-            headerField = SIPHeaderFieldFactory().nextForString(line)
-            self.assertTrue(headerField.isUserAgent)
+            header_field = SIPHeaderFieldFactory().nextForString(line)
+            self.assertTrue(header_field.isUserAgent)
             stringio = StringIO(line + '\r\n')
-            headerField = SIPHeaderFieldFactory().allForStringIO(stringio)[0]
-            self.assertTrue(headerField.isUserAgent)
+            header_field = SIPHeaderFieldFactory().allForStringIO(stringio)[0]
+            self.assertTrue(header_field.isUserAgent)
             stringio.close()
-            headerField = SIPHeaderFieldFactory().nextForFieldName(self.canonicalFieldNames[0])
-            self.assertTrue(headerField.isUserAgent)
-            headerField = SIPHeaderFieldFactory().nextForFieldNameAndFieldValue(self.canonicalFieldNames[0], "foo bar baz blarg")
-            self.assertTrue(headerField.isUserAgent)
+            header_field = SIPHeaderFieldFactory().nextForFieldName(self.canonicalFieldNames[0])
+            self.assertTrue(header_field.isUserAgent)
+            header_field = SIPHeaderFieldFactory().nextForFieldNameAndFieldValue(self.canonicalFieldNames[0], "foo bar baz blarg")
+            self.assertTrue(header_field.isUserAgent)
 
 
 class TestSIPHeaderFieldFactoryForWWWAuthenticate(AbstractSIPHeaderFieldFromFactoryTestCase):
@@ -855,16 +855,16 @@ class TestSIPHeaderFieldFactoryForWWWAuthenticate(AbstractSIPHeaderFieldFromFact
     def test_parsing(self):
         self.basic_test_parsing()
         for line in self.canonicalStrings:
-            headerField = SIPHeaderFieldFactory().nextForString(line)
-            self.assertTrue(headerField.isWWWAuthenticate)
+            header_field = SIPHeaderFieldFactory().nextForString(line)
+            self.assertTrue(header_field.isWWWAuthenticate)
             stringio = StringIO(line + '\r\n')
-            headerField = SIPHeaderFieldFactory().allForStringIO(stringio)[0]
-            self.assertTrue(headerField.isWWWAuthenticate)
+            header_field = SIPHeaderFieldFactory().allForStringIO(stringio)[0]
+            self.assertTrue(header_field.isWWWAuthenticate)
             stringio.close()
-            headerField = SIPHeaderFieldFactory().nextForFieldName(self.canonicalFieldNames[0])
-            self.assertTrue(headerField.isWWWAuthenticate)
-            headerField = SIPHeaderFieldFactory().nextForFieldNameAndFieldValue(self.canonicalFieldNames[0], "foo bar baz blarg")
-            self.assertTrue(headerField.isWWWAuthenticate)
+            header_field = SIPHeaderFieldFactory().nextForFieldName(self.canonicalFieldNames[0])
+            self.assertTrue(header_field.isWWWAuthenticate)
+            header_field = SIPHeaderFieldFactory().nextForFieldNameAndFieldValue(self.canonicalFieldNames[0], "foo bar baz blarg")
+            self.assertTrue(header_field.isWWWAuthenticate)
 
 
 class TestSIPHeaderFieldFactoryForWarning(AbstractSIPHeaderFieldFromFactoryTestCase):
@@ -879,16 +879,16 @@ class TestSIPHeaderFieldFactoryForWarning(AbstractSIPHeaderFieldFromFactoryTestC
     def test_parsing(self):
         self.basic_test_parsing()
         for line in self.canonicalStrings:
-            headerField = SIPHeaderFieldFactory().nextForString(line)
-            self.assertTrue(headerField.isWarning)
+            header_field = SIPHeaderFieldFactory().nextForString(line)
+            self.assertTrue(header_field.isWarning)
             stringio = StringIO(line + '\r\n')
-            headerField = SIPHeaderFieldFactory().allForStringIO(stringio)[0]
-            self.assertTrue(headerField.isWarning)
+            header_field = SIPHeaderFieldFactory().allForStringIO(stringio)[0]
+            self.assertTrue(header_field.isWarning)
             stringio.close()
-            headerField = SIPHeaderFieldFactory().nextForFieldName(self.canonicalFieldNames[0])
-            self.assertTrue(headerField.isWarning)
-            headerField = SIPHeaderFieldFactory().nextForFieldNameAndFieldValue(self.canonicalFieldNames[0], "foo bar baz blarg")
-            self.assertTrue(headerField.isWarning)
+            header_field = SIPHeaderFieldFactory().nextForFieldName(self.canonicalFieldNames[0])
+            self.assertTrue(header_field.isWarning)
+            header_field = SIPHeaderFieldFactory().nextForFieldNameAndFieldValue(self.canonicalFieldNames[0], "foo bar baz blarg")
+            self.assertTrue(header_field.isWarning)
 
 
 class TestSIPHeaderFieldFactoryForSubject(AbstractSIPHeaderFieldFromFactoryTestCase):
@@ -903,20 +903,20 @@ class TestSIPHeaderFieldFactoryForSubject(AbstractSIPHeaderFieldFromFactoryTestC
     def test_parsing(self):
         self.basic_test_parsing()
         for line in self.canonicalStrings:
-            headerField = SIPHeaderFieldFactory().nextForString(line)
-            self.assertTrue(headerField.isSubject)
+            header_field = SIPHeaderFieldFactory().nextForString(line)
+            self.assertTrue(header_field.isSubject)
             stringio = StringIO(line + '\r\n')
-            headerField = SIPHeaderFieldFactory().allForStringIO(stringio)[0]
-            self.assertTrue(headerField.isSubject)
+            header_field = SIPHeaderFieldFactory().allForStringIO(stringio)[0]
+            self.assertTrue(header_field.isSubject)
             stringio.close()
-            headerField = SIPHeaderFieldFactory().nextForFieldName(self.canonicalFieldNames[0])
-            self.assertTrue(headerField.isSubject)
-            headerField = SIPHeaderFieldFactory().nextForFieldNameAndFieldValue(self.canonicalFieldNames[0], "foo bar baz blarg")
-            self.assertTrue(headerField.isSubject)
-            headerField = SIPHeaderFieldFactory().nextForFieldName(self.canonicalCompactFieldNames[0])
-            self.assertTrue(headerField.isSubject)
-            headerField = SIPHeaderFieldFactory().nextForFieldNameAndFieldValue(self.canonicalCompactFieldNames[0], "foo bar baz blarg")
-            self.assertTrue(headerField.isSubject)
+            header_field = SIPHeaderFieldFactory().nextForFieldName(self.canonicalFieldNames[0])
+            self.assertTrue(header_field.isSubject)
+            header_field = SIPHeaderFieldFactory().nextForFieldNameAndFieldValue(self.canonicalFieldNames[0], "foo bar baz blarg")
+            self.assertTrue(header_field.isSubject)
+            header_field = SIPHeaderFieldFactory().nextForFieldName(self.canonicalCompactFieldNames[0])
+            self.assertTrue(header_field.isSubject)
+            header_field = SIPHeaderFieldFactory().nextForFieldNameAndFieldValue(self.canonicalCompactFieldNames[0], "foo bar baz blarg")
+            self.assertTrue(header_field.isSubject)
 
 
 class TestSIPHeaderFieldFactoryForReferredBy(AbstractSIPHeaderFieldFromFactoryTestCase):
@@ -931,20 +931,20 @@ class TestSIPHeaderFieldFactoryForReferredBy(AbstractSIPHeaderFieldFromFactoryTe
     def test_parsing(self):
         self.basic_test_parsing()
         for line in self.canonicalStrings:
-            headerField = SIPHeaderFieldFactory().nextForString(line)
-            self.assertTrue(headerField.isReferredBy)
+            header_field = SIPHeaderFieldFactory().nextForString(line)
+            self.assertTrue(header_field.isReferredBy)
             stringio = StringIO(line + '\r\n')
-            headerField = SIPHeaderFieldFactory().allForStringIO(stringio)[0]
-            self.assertTrue(headerField.isReferredBy)
+            header_field = SIPHeaderFieldFactory().allForStringIO(stringio)[0]
+            self.assertTrue(header_field.isReferredBy)
             stringio.close()
-            headerField = SIPHeaderFieldFactory().nextForFieldName(self.canonicalFieldNames[0])
-            self.assertTrue(headerField.isReferredBy)
-            headerField = SIPHeaderFieldFactory().nextForFieldNameAndFieldValue(self.canonicalFieldNames[0], "foo bar baz blarg")
-            self.assertTrue(headerField.isReferredBy)
-            headerField = SIPHeaderFieldFactory().nextForFieldName(self.canonicalCompactFieldNames[0])
-            self.assertTrue(headerField.isReferredBy)
-            headerField = SIPHeaderFieldFactory().nextForFieldNameAndFieldValue(self.canonicalCompactFieldNames[0], "foo bar baz blarg")
-            self.assertTrue(headerField.isReferredBy)
+            header_field = SIPHeaderFieldFactory().nextForFieldName(self.canonicalFieldNames[0])
+            self.assertTrue(header_field.isReferredBy)
+            header_field = SIPHeaderFieldFactory().nextForFieldNameAndFieldValue(self.canonicalFieldNames[0], "foo bar baz blarg")
+            self.assertTrue(header_field.isReferredBy)
+            header_field = SIPHeaderFieldFactory().nextForFieldName(self.canonicalCompactFieldNames[0])
+            self.assertTrue(header_field.isReferredBy)
+            header_field = SIPHeaderFieldFactory().nextForFieldNameAndFieldValue(self.canonicalCompactFieldNames[0], "foo bar baz blarg")
+            self.assertTrue(header_field.isReferredBy)
 
 
 class TestSIPHeaderFieldFactoryForReferTo(AbstractSIPHeaderFieldFromFactoryTestCase):
@@ -959,20 +959,20 @@ class TestSIPHeaderFieldFactoryForReferTo(AbstractSIPHeaderFieldFromFactoryTestC
     def test_parsing(self):
         self.basic_test_parsing()
         for line in self.canonicalStrings:
-            headerField = SIPHeaderFieldFactory().nextForString(line)
-            self.assertTrue(headerField.isReferTo)
+            header_field = SIPHeaderFieldFactory().nextForString(line)
+            self.assertTrue(header_field.isReferTo)
             stringio = StringIO(line + '\r\n')
-            headerField = SIPHeaderFieldFactory().allForStringIO(stringio)[0]
-            self.assertTrue(headerField.isReferTo)
+            header_field = SIPHeaderFieldFactory().allForStringIO(stringio)[0]
+            self.assertTrue(header_field.isReferTo)
             stringio.close()
-            headerField = SIPHeaderFieldFactory().nextForFieldName(self.canonicalFieldNames[0])
-            self.assertTrue(headerField.isReferTo)
-            headerField = SIPHeaderFieldFactory().nextForFieldNameAndFieldValue(self.canonicalFieldNames[0], "foo bar baz blarg")
-            self.assertTrue(headerField.isReferTo)
-            headerField = SIPHeaderFieldFactory().nextForFieldName(self.canonicalCompactFieldNames[0])
-            self.assertTrue(headerField.isReferTo)
-            headerField = SIPHeaderFieldFactory().nextForFieldNameAndFieldValue(self.canonicalCompactFieldNames[0], "foo bar baz blarg")
-            self.assertTrue(headerField.isReferTo)
+            header_field = SIPHeaderFieldFactory().nextForFieldName(self.canonicalFieldNames[0])
+            self.assertTrue(header_field.isReferTo)
+            header_field = SIPHeaderFieldFactory().nextForFieldNameAndFieldValue(self.canonicalFieldNames[0], "foo bar baz blarg")
+            self.assertTrue(header_field.isReferTo)
+            header_field = SIPHeaderFieldFactory().nextForFieldName(self.canonicalCompactFieldNames[0])
+            self.assertTrue(header_field.isReferTo)
+            header_field = SIPHeaderFieldFactory().nextForFieldNameAndFieldValue(self.canonicalCompactFieldNames[0], "foo bar baz blarg")
+            self.assertTrue(header_field.isReferTo)
 
 
 class TestSIPHeaderFieldFactoryForAllowEvents(AbstractSIPHeaderFieldFromFactoryTestCase):
@@ -987,20 +987,20 @@ class TestSIPHeaderFieldFactoryForAllowEvents(AbstractSIPHeaderFieldFromFactoryT
     def test_parsing(self):
         self.basic_test_parsing()
         for line in self.canonicalStrings:
-            headerField = SIPHeaderFieldFactory().nextForString(line)
-            self.assertTrue(headerField.isAllowEvents)
+            header_field = SIPHeaderFieldFactory().nextForString(line)
+            self.assertTrue(header_field.isAllowEvents)
             stringio = StringIO(line + '\r\n')
-            headerField = SIPHeaderFieldFactory().allForStringIO(stringio)[0]
-            self.assertTrue(headerField.isAllowEvents)
+            header_field = SIPHeaderFieldFactory().allForStringIO(stringio)[0]
+            self.assertTrue(header_field.isAllowEvents)
             stringio.close()
-            headerField = SIPHeaderFieldFactory().nextForFieldName(self.canonicalFieldNames[0])
-            self.assertTrue(headerField.isAllowEvents)
-            headerField = SIPHeaderFieldFactory().nextForFieldNameAndFieldValue(self.canonicalFieldNames[0], "foo bar baz blarg")
-            self.assertTrue(headerField.isAllowEvents)
-            headerField = SIPHeaderFieldFactory().nextForFieldName(self.canonicalCompactFieldNames[0])
-            self.assertTrue(headerField.isAllowEvents)
-            headerField = SIPHeaderFieldFactory().nextForFieldNameAndFieldValue(self.canonicalCompactFieldNames[0], "foo bar baz blarg")
-            self.assertTrue(headerField.isAllowEvents)
+            header_field = SIPHeaderFieldFactory().nextForFieldName(self.canonicalFieldNames[0])
+            self.assertTrue(header_field.isAllowEvents)
+            header_field = SIPHeaderFieldFactory().nextForFieldNameAndFieldValue(self.canonicalFieldNames[0], "foo bar baz blarg")
+            self.assertTrue(header_field.isAllowEvents)
+            header_field = SIPHeaderFieldFactory().nextForFieldName(self.canonicalCompactFieldNames[0])
+            self.assertTrue(header_field.isAllowEvents)
+            header_field = SIPHeaderFieldFactory().nextForFieldNameAndFieldValue(self.canonicalCompactFieldNames[0], "foo bar baz blarg")
+            self.assertTrue(header_field.isAllowEvents)
 
 
 class TestSIPHeaderFieldFactoryForEvent(AbstractSIPHeaderFieldFromFactoryTestCase):
@@ -1015,16 +1015,16 @@ class TestSIPHeaderFieldFactoryForEvent(AbstractSIPHeaderFieldFromFactoryTestCas
     def test_parsing(self):
         self.basic_test_parsing()
         for line in self.canonicalStrings:
-            headerField = SIPHeaderFieldFactory().nextForString(line)
-            self.assertTrue(headerField.isEvent)
+            header_field = SIPHeaderFieldFactory().nextForString(line)
+            self.assertTrue(header_field.isEvent)
             stringio = StringIO(line + '\r\n')
-            headerField = SIPHeaderFieldFactory().allForStringIO(stringio)[0]
-            self.assertTrue(headerField.isEvent)
+            header_field = SIPHeaderFieldFactory().allForStringIO(stringio)[0]
+            self.assertTrue(header_field.isEvent)
             stringio.close()
-            headerField = SIPHeaderFieldFactory().nextForFieldName(self.canonicalFieldNames[0])
-            self.assertTrue(headerField.isEvent)
-            headerField = SIPHeaderFieldFactory().nextForFieldNameAndFieldValue(self.canonicalFieldNames[0], "foo bar baz blarg")
-            self.assertTrue(headerField.isEvent)
+            header_field = SIPHeaderFieldFactory().nextForFieldName(self.canonicalFieldNames[0])
+            self.assertTrue(header_field.isEvent)
+            header_field = SIPHeaderFieldFactory().nextForFieldNameAndFieldValue(self.canonicalFieldNames[0], "foo bar baz blarg")
+            self.assertTrue(header_field.isEvent)
 
 
 class TestSIPHeaderFieldFactoryForContentEncoding(AbstractSIPHeaderFieldFromFactoryTestCase):
@@ -1039,20 +1039,20 @@ class TestSIPHeaderFieldFactoryForContentEncoding(AbstractSIPHeaderFieldFromFact
     def test_parsing(self):
         self.basic_test_parsing()
         for line in self.canonicalStrings:
-            headerField = SIPHeaderFieldFactory().nextForString(line)
-            self.assertTrue(headerField.isContentEncoding)
+            header_field = SIPHeaderFieldFactory().nextForString(line)
+            self.assertTrue(header_field.isContentEncoding)
             stringio = StringIO(line + '\r\n')
-            headerField = SIPHeaderFieldFactory().allForStringIO(stringio)[0]
-            self.assertTrue(headerField.isContentEncoding)
+            header_field = SIPHeaderFieldFactory().allForStringIO(stringio)[0]
+            self.assertTrue(header_field.isContentEncoding)
             stringio.close()
-            headerField = SIPHeaderFieldFactory().nextForFieldName(self.canonicalFieldNames[0])
-            self.assertTrue(headerField.isContentEncoding)
-            headerField = SIPHeaderFieldFactory().nextForFieldNameAndFieldValue(self.canonicalFieldNames[0], "foo bar baz blarg")
-            self.assertTrue(headerField.isContentEncoding)
-            headerField = SIPHeaderFieldFactory().nextForFieldName(self.canonicalCompactFieldNames[0])
-            self.assertTrue(headerField.isContentEncoding)
-            headerField = SIPHeaderFieldFactory().nextForFieldNameAndFieldValue(self.canonicalCompactFieldNames[0], "foo bar baz blarg")
-            self.assertTrue(headerField.isContentEncoding)
+            header_field = SIPHeaderFieldFactory().nextForFieldName(self.canonicalFieldNames[0])
+            self.assertTrue(header_field.isContentEncoding)
+            header_field = SIPHeaderFieldFactory().nextForFieldNameAndFieldValue(self.canonicalFieldNames[0], "foo bar baz blarg")
+            self.assertTrue(header_field.isContentEncoding)
+            header_field = SIPHeaderFieldFactory().nextForFieldName(self.canonicalCompactFieldNames[0])
+            self.assertTrue(header_field.isContentEncoding)
+            header_field = SIPHeaderFieldFactory().nextForFieldNameAndFieldValue(self.canonicalCompactFieldNames[0], "foo bar baz blarg")
+            self.assertTrue(header_field.isContentEncoding)
 
 
 class TestSIPHeaderFieldFactoryForRAck(AbstractSIPHeaderFieldFromFactoryTestCase):
@@ -1067,16 +1067,16 @@ class TestSIPHeaderFieldFactoryForRAck(AbstractSIPHeaderFieldFromFactoryTestCase
     def test_parsing(self):
         self.basic_test_parsing()
         for line in self.canonicalStrings:
-            headerField = SIPHeaderFieldFactory().nextForString(line)
-            self.assertTrue(headerField.isRAck)
+            header_field = SIPHeaderFieldFactory().nextForString(line)
+            self.assertTrue(header_field.isRAck)
             stringio = StringIO(line + '\r\n')
-            headerField = SIPHeaderFieldFactory().allForStringIO(stringio)[0]
-            self.assertTrue(headerField.isRAck)
+            header_field = SIPHeaderFieldFactory().allForStringIO(stringio)[0]
+            self.assertTrue(header_field.isRAck)
             stringio.close()
-            headerField = SIPHeaderFieldFactory().nextForFieldName(self.canonicalFieldNames[0])
-            self.assertTrue(headerField.isRAck)
-            headerField = SIPHeaderFieldFactory().nextForFieldNameAndFieldValue(self.canonicalFieldNames[0], "foo bar baz blarg")
-            self.assertTrue(headerField.isRAck)
+            header_field = SIPHeaderFieldFactory().nextForFieldName(self.canonicalFieldNames[0])
+            self.assertTrue(header_field.isRAck)
+            header_field = SIPHeaderFieldFactory().nextForFieldNameAndFieldValue(self.canonicalFieldNames[0], "foo bar baz blarg")
+            self.assertTrue(header_field.isRAck)
 
 
 class TestSIPHeaderFieldFactoryForPCharge(AbstractSIPHeaderFieldFromFactoryTestCase):
@@ -1091,16 +1091,16 @@ class TestSIPHeaderFieldFactoryForPCharge(AbstractSIPHeaderFieldFromFactoryTestC
     def test_parsing(self):
         self.basic_test_parsing()
         for line in self.canonicalStrings:
-            headerField = SIPHeaderFieldFactory().nextForString(line)
-            self.assertTrue(headerField.isPCharge)
+            header_field = SIPHeaderFieldFactory().nextForString(line)
+            self.assertTrue(header_field.isPCharge)
             stringio = StringIO(line + '\r\n')
-            headerField = SIPHeaderFieldFactory().allForStringIO(stringio)[0]
-            self.assertTrue(headerField.isPCharge)
+            header_field = SIPHeaderFieldFactory().allForStringIO(stringio)[0]
+            self.assertTrue(header_field.isPCharge)
             stringio.close()
-            headerField = SIPHeaderFieldFactory().nextForFieldName(self.canonicalFieldNames[0])
-            self.assertTrue(headerField.isPCharge)
-            headerField = SIPHeaderFieldFactory().nextForFieldNameAndFieldValue(self.canonicalFieldNames[0], "foo bar baz blarg")
-            self.assertTrue(headerField.isPCharge)
+            header_field = SIPHeaderFieldFactory().nextForFieldName(self.canonicalFieldNames[0])
+            self.assertTrue(header_field.isPCharge)
+            header_field = SIPHeaderFieldFactory().nextForFieldNameAndFieldValue(self.canonicalFieldNames[0], "foo bar baz blarg")
+            self.assertTrue(header_field.isPCharge)
 
 
 class TestSIPHeaderFieldFactoryForReplyTo(AbstractSIPHeaderFieldFromFactoryTestCase):
@@ -1115,16 +1115,16 @@ class TestSIPHeaderFieldFactoryForReplyTo(AbstractSIPHeaderFieldFromFactoryTestC
     def test_parsing(self):
         self.basic_test_parsing()
         for line in self.canonicalStrings:
-            headerField = SIPHeaderFieldFactory().nextForString(line)
-            self.assertTrue(headerField.isReplyTo)
+            header_field = SIPHeaderFieldFactory().nextForString(line)
+            self.assertTrue(header_field.isReplyTo)
             stringio = StringIO(line + '\r\n')
-            headerField = SIPHeaderFieldFactory().allForStringIO(stringio)[0]
-            self.assertTrue(headerField.isReplyTo)
+            header_field = SIPHeaderFieldFactory().allForStringIO(stringio)[0]
+            self.assertTrue(header_field.isReplyTo)
             stringio.close()
-            headerField = SIPHeaderFieldFactory().nextForFieldName(self.canonicalFieldNames[0])
-            self.assertTrue(headerField.isReplyTo)
-            headerField = SIPHeaderFieldFactory().nextForFieldNameAndFieldValue(self.canonicalFieldNames[0], "foo bar baz blarg")
-            self.assertTrue(headerField.isReplyTo)
+            header_field = SIPHeaderFieldFactory().nextForFieldName(self.canonicalFieldNames[0])
+            self.assertTrue(header_field.isReplyTo)
+            header_field = SIPHeaderFieldFactory().nextForFieldNameAndFieldValue(self.canonicalFieldNames[0], "foo bar baz blarg")
+            self.assertTrue(header_field.isReplyTo)
 
 
 class TestSIPHeaderFieldFactoryForUnsupported(AbstractSIPHeaderFieldFromFactoryTestCase):
@@ -1139,16 +1139,16 @@ class TestSIPHeaderFieldFactoryForUnsupported(AbstractSIPHeaderFieldFromFactoryT
     def test_parsing(self):
         self.basic_test_parsing()
         for line in self.canonicalStrings:
-            headerField = SIPHeaderFieldFactory().nextForString(line)
-            self.assertTrue(headerField.isUnsupported)
+            header_field = SIPHeaderFieldFactory().nextForString(line)
+            self.assertTrue(header_field.isUnsupported)
             stringio = StringIO(line + '\r\n')
-            headerField = SIPHeaderFieldFactory().allForStringIO(stringio)[0]
-            self.assertTrue(headerField.isUnsupported)
+            header_field = SIPHeaderFieldFactory().allForStringIO(stringio)[0]
+            self.assertTrue(header_field.isUnsupported)
             stringio.close()
-            headerField = SIPHeaderFieldFactory().nextForFieldName(self.canonicalFieldNames[0])
-            self.assertTrue(headerField.isUnsupported)
-            headerField = SIPHeaderFieldFactory().nextForFieldNameAndFieldValue(self.canonicalFieldNames[0], "foo bar baz blarg")
-            self.assertTrue(headerField.isUnsupported)
+            header_field = SIPHeaderFieldFactory().nextForFieldName(self.canonicalFieldNames[0])
+            self.assertTrue(header_field.isUnsupported)
+            header_field = SIPHeaderFieldFactory().nextForFieldNameAndFieldValue(self.canonicalFieldNames[0], "foo bar baz blarg")
+            self.assertTrue(header_field.isUnsupported)
 
 
 class TestSIPHeaderFieldFactoryForPAssertedIdentity(AbstractSIPHeaderFieldFromFactoryTestCase):
@@ -1163,16 +1163,16 @@ class TestSIPHeaderFieldFactoryForPAssertedIdentity(AbstractSIPHeaderFieldFromFa
     def test_parsing(self):
         self.basic_test_parsing()
         for line in self.canonicalStrings:
-            headerField = SIPHeaderFieldFactory().nextForString(line)
-            self.assertTrue(headerField.isPAssertedIdentity)
+            header_field = SIPHeaderFieldFactory().nextForString(line)
+            self.assertTrue(header_field.isPAssertedIdentity)
             stringio = StringIO(line + '\r\n')
-            headerField = SIPHeaderFieldFactory().allForStringIO(stringio)[0]
-            self.assertTrue(headerField.isPAssertedIdentity)
+            header_field = SIPHeaderFieldFactory().allForStringIO(stringio)[0]
+            self.assertTrue(header_field.isPAssertedIdentity)
             stringio.close()
-            headerField = SIPHeaderFieldFactory().nextForFieldName(self.canonicalFieldNames[0])
-            self.assertTrue(headerField.isPAssertedIdentity)
-            headerField = SIPHeaderFieldFactory().nextForFieldNameAndFieldValue(self.canonicalFieldNames[0], "foo bar baz blarg")
-            self.assertTrue(headerField.isPAssertedIdentity)
+            header_field = SIPHeaderFieldFactory().nextForFieldName(self.canonicalFieldNames[0])
+            self.assertTrue(header_field.isPAssertedIdentity)
+            header_field = SIPHeaderFieldFactory().nextForFieldNameAndFieldValue(self.canonicalFieldNames[0], "foo bar baz blarg")
+            self.assertTrue(header_field.isPAssertedIdentity)
 
 
 class TestSIPHeaderFieldFactoryForPPreferredIdentity(AbstractSIPHeaderFieldFromFactoryTestCase):
@@ -1187,16 +1187,16 @@ class TestSIPHeaderFieldFactoryForPPreferredIdentity(AbstractSIPHeaderFieldFromF
     def test_parsing(self):
         self.basic_test_parsing()
         for line in self.canonicalStrings:
-            headerField = SIPHeaderFieldFactory().nextForString(line)
-            self.assertTrue(headerField.isPPreferredIdentity)
+            header_field = SIPHeaderFieldFactory().nextForString(line)
+            self.assertTrue(header_field.isPPreferredIdentity)
             stringio = StringIO(line + '\r\n')
-            headerField = SIPHeaderFieldFactory().allForStringIO(stringio)[0]
-            self.assertTrue(headerField.isPPreferredIdentity)
+            header_field = SIPHeaderFieldFactory().allForStringIO(stringio)[0]
+            self.assertTrue(header_field.isPPreferredIdentity)
             stringio.close()
-            headerField = SIPHeaderFieldFactory().nextForFieldName(self.canonicalFieldNames[0])
-            self.assertTrue(headerField.isPPreferredIdentity)
-            headerField = SIPHeaderFieldFactory().nextForFieldNameAndFieldValue(self.canonicalFieldNames[0], "foo bar baz blarg")
-            self.assertTrue(headerField.isPPreferredIdentity)
+            header_field = SIPHeaderFieldFactory().nextForFieldName(self.canonicalFieldNames[0])
+            self.assertTrue(header_field.isPPreferredIdentity)
+            header_field = SIPHeaderFieldFactory().nextForFieldNameAndFieldValue(self.canonicalFieldNames[0], "foo bar baz blarg")
+            self.assertTrue(header_field.isPPreferredIdentity)
 
 
 class TestSIPHeaderFieldFactoryForRemotePartyID(AbstractSIPHeaderFieldFromFactoryTestCase):
@@ -1211,16 +1211,16 @@ class TestSIPHeaderFieldFactoryForRemotePartyID(AbstractSIPHeaderFieldFromFactor
     def test_parsing(self):
         self.basic_test_parsing()
         for line in self.canonicalStrings:
-            headerField = SIPHeaderFieldFactory().nextForString(line)
-            self.assertTrue(headerField.isRemotePartyID)
+            header_field = SIPHeaderFieldFactory().nextForString(line)
+            self.assertTrue(header_field.isRemotePartyID)
             stringio = StringIO(line + '\r\n')
-            headerField = SIPHeaderFieldFactory().allForStringIO(stringio)[0]
-            self.assertTrue(headerField.isRemotePartyID)
+            header_field = SIPHeaderFieldFactory().allForStringIO(stringio)[0]
+            self.assertTrue(header_field.isRemotePartyID)
             stringio.close()
-            headerField = SIPHeaderFieldFactory().nextForFieldName(self.canonicalFieldNames[0])
-            self.assertTrue(headerField.isRemotePartyID)
-            headerField = SIPHeaderFieldFactory().nextForFieldNameAndFieldValue(self.canonicalFieldNames[0], "foo bar baz blarg")
-            self.assertTrue(headerField.isRemotePartyID)
+            header_field = SIPHeaderFieldFactory().nextForFieldName(self.canonicalFieldNames[0])
+            self.assertTrue(header_field.isRemotePartyID)
+            header_field = SIPHeaderFieldFactory().nextForFieldNameAndFieldValue(self.canonicalFieldNames[0], "foo bar baz blarg")
+            self.assertTrue(header_field.isRemotePartyID)
 
 
 class TestSIPHeaderFieldFactoryForAlertInfo(AbstractSIPHeaderFieldFromFactoryTestCase):
@@ -1235,16 +1235,16 @@ class TestSIPHeaderFieldFactoryForAlertInfo(AbstractSIPHeaderFieldFromFactoryTes
     def test_parsing(self):
         self.basic_test_parsing()
         for line in self.canonicalStrings:
-            headerField = SIPHeaderFieldFactory().nextForString(line)
-            self.assertTrue(headerField.isAlertInfo)
+            header_field = SIPHeaderFieldFactory().nextForString(line)
+            self.assertTrue(header_field.isAlertInfo)
             stringio = StringIO(line + '\r\n')
-            headerField = SIPHeaderFieldFactory().allForStringIO(stringio)[0]
-            self.assertTrue(headerField.isAlertInfo)
+            header_field = SIPHeaderFieldFactory().allForStringIO(stringio)[0]
+            self.assertTrue(header_field.isAlertInfo)
             stringio.close()
-            headerField = SIPHeaderFieldFactory().nextForFieldName(self.canonicalFieldNames[0])
-            self.assertTrue(headerField.isAlertInfo)
-            headerField = SIPHeaderFieldFactory().nextForFieldNameAndFieldValue(self.canonicalFieldNames[0], "foo bar baz blarg")
-            self.assertTrue(headerField.isAlertInfo)
+            header_field = SIPHeaderFieldFactory().nextForFieldName(self.canonicalFieldNames[0])
+            self.assertTrue(header_field.isAlertInfo)
+            header_field = SIPHeaderFieldFactory().nextForFieldNameAndFieldValue(self.canonicalFieldNames[0], "foo bar baz blarg")
+            self.assertTrue(header_field.isAlertInfo)
 
 
 class TestSIPHeaderFieldFactoryForHistoryInfo(AbstractSIPHeaderFieldFromFactoryTestCase):
@@ -1259,16 +1259,16 @@ class TestSIPHeaderFieldFactoryForHistoryInfo(AbstractSIPHeaderFieldFromFactoryT
     def test_parsing(self):
         self.basic_test_parsing()
         for line in self.canonicalStrings:
-            headerField = SIPHeaderFieldFactory().nextForString(line)
-            self.assertTrue(headerField.isHistoryInfo)
+            header_field = SIPHeaderFieldFactory().nextForString(line)
+            self.assertTrue(header_field.isHistoryInfo)
             stringio = StringIO(line + '\r\n')
-            headerField = SIPHeaderFieldFactory().allForStringIO(stringio)[0]
-            self.assertTrue(headerField.isHistoryInfo)
+            header_field = SIPHeaderFieldFactory().allForStringIO(stringio)[0]
+            self.assertTrue(header_field.isHistoryInfo)
             stringio.close()
-            headerField = SIPHeaderFieldFactory().nextForFieldName(self.canonicalFieldNames[0])
-            self.assertTrue(headerField.isHistoryInfo)
-            headerField = SIPHeaderFieldFactory().nextForFieldNameAndFieldValue(self.canonicalFieldNames[0], "foo bar baz blarg")
-            self.assertTrue(headerField.isHistoryInfo)
+            header_field = SIPHeaderFieldFactory().nextForFieldName(self.canonicalFieldNames[0])
+            self.assertTrue(header_field.isHistoryInfo)
+            header_field = SIPHeaderFieldFactory().nextForFieldNameAndFieldValue(self.canonicalFieldNames[0], "foo bar baz blarg")
+            self.assertTrue(header_field.isHistoryInfo)
 
 
 class TestSIPHeaderFieldFactoryForPCalledPartyId(AbstractSIPHeaderFieldFromFactoryTestCase):
@@ -1283,16 +1283,16 @@ class TestSIPHeaderFieldFactoryForPCalledPartyId(AbstractSIPHeaderFieldFromFacto
     def test_parsing(self):
         self.basic_test_parsing()
         for line in self.canonicalStrings:
-            headerField = SIPHeaderFieldFactory().nextForString(line)
-            self.assertTrue(headerField.isPCalledPartyId)
+            header_field = SIPHeaderFieldFactory().nextForString(line)
+            self.assertTrue(header_field.isPCalledPartyId)
             stringio = StringIO(line + '\r\n')
-            headerField = SIPHeaderFieldFactory().allForStringIO(stringio)[0]
-            self.assertTrue(headerField.isPCalledPartyId)
+            header_field = SIPHeaderFieldFactory().allForStringIO(stringio)[0]
+            self.assertTrue(header_field.isPCalledPartyId)
             stringio.close()
-            headerField = SIPHeaderFieldFactory().nextForFieldName(self.canonicalFieldNames[0])
-            self.assertTrue(headerField.isPCalledPartyId)
-            headerField = SIPHeaderFieldFactory().nextForFieldNameAndFieldValue(self.canonicalFieldNames[0], "foo bar baz blarg")
-            self.assertTrue(headerField.isPCalledPartyId)
+            header_field = SIPHeaderFieldFactory().nextForFieldName(self.canonicalFieldNames[0])
+            self.assertTrue(header_field.isPCalledPartyId)
+            header_field = SIPHeaderFieldFactory().nextForFieldNameAndFieldValue(self.canonicalFieldNames[0], "foo bar baz blarg")
+            self.assertTrue(header_field.isPCalledPartyId)
 
 
 class TestSIPHeaderFieldFactoryForPRTPStat(AbstractSIPHeaderFieldFromFactoryTestCase):
@@ -1307,16 +1307,16 @@ class TestSIPHeaderFieldFactoryForPRTPStat(AbstractSIPHeaderFieldFromFactoryTest
     def test_parsing(self):
         self.basic_test_parsing()
         for line in self.canonicalStrings:
-            headerField = SIPHeaderFieldFactory().nextForString(line)
-            self.assertTrue(headerField.isPRTPStat)
+            header_field = SIPHeaderFieldFactory().nextForString(line)
+            self.assertTrue(header_field.isPRTPStat)
             stringio = StringIO(line + '\r\n')
-            headerField = SIPHeaderFieldFactory().allForStringIO(stringio)[0]
-            self.assertTrue(headerField.isPRTPStat)
+            header_field = SIPHeaderFieldFactory().allForStringIO(stringio)[0]
+            self.assertTrue(header_field.isPRTPStat)
             stringio.close()
-            headerField = SIPHeaderFieldFactory().nextForFieldName(self.canonicalFieldNames[0])
-            self.assertTrue(headerField.isPRTPStat)
-            headerField = SIPHeaderFieldFactory().nextForFieldNameAndFieldValue(self.canonicalFieldNames[0], "foo bar baz blarg")
-            self.assertTrue(headerField.isPRTPStat)
+            header_field = SIPHeaderFieldFactory().nextForFieldName(self.canonicalFieldNames[0])
+            self.assertTrue(header_field.isPRTPStat)
+            header_field = SIPHeaderFieldFactory().nextForFieldNameAndFieldValue(self.canonicalFieldNames[0], "foo bar baz blarg")
+            self.assertTrue(header_field.isPRTPStat)
 
 
 class TestSIPHeaderFieldFactoryForPrivacy(AbstractSIPHeaderFieldFromFactoryTestCase):
@@ -1331,16 +1331,16 @@ class TestSIPHeaderFieldFactoryForPrivacy(AbstractSIPHeaderFieldFromFactoryTestC
     def test_parsing(self):
         self.basic_test_parsing()
         for line in self.canonicalStrings:
-            headerField = SIPHeaderFieldFactory().nextForString(line)
-            self.assertTrue(headerField.isPrivacy)
+            header_field = SIPHeaderFieldFactory().nextForString(line)
+            self.assertTrue(header_field.isPrivacy)
             stringio = StringIO(line + '\r\n')
-            headerField = SIPHeaderFieldFactory().allForStringIO(stringio)[0]
-            self.assertTrue(headerField.isPrivacy)
+            header_field = SIPHeaderFieldFactory().allForStringIO(stringio)[0]
+            self.assertTrue(header_field.isPrivacy)
             stringio.close()
-            headerField = SIPHeaderFieldFactory().nextForFieldName(self.canonicalFieldNames[0])
-            self.assertTrue(headerField.isPrivacy)
-            headerField = SIPHeaderFieldFactory().nextForFieldNameAndFieldValue(self.canonicalFieldNames[0], "foo bar baz blarg")
-            self.assertTrue(headerField.isPrivacy)
+            header_field = SIPHeaderFieldFactory().nextForFieldName(self.canonicalFieldNames[0])
+            self.assertTrue(header_field.isPrivacy)
+            header_field = SIPHeaderFieldFactory().nextForFieldNameAndFieldValue(self.canonicalFieldNames[0], "foo bar baz blarg")
+            self.assertTrue(header_field.isPrivacy)
 
 
 class TestSIPHeaderFieldFactoryForProxyAuthenticate(AbstractSIPHeaderFieldFromFactoryTestCase):
@@ -1355,16 +1355,16 @@ class TestSIPHeaderFieldFactoryForProxyAuthenticate(AbstractSIPHeaderFieldFromFa
     def test_parsing(self):
         self.basic_test_parsing()
         for line in self.canonicalStrings:
-            headerField = SIPHeaderFieldFactory().nextForString(line)
-            self.assertTrue(headerField.isProxyAuthenticate)
+            header_field = SIPHeaderFieldFactory().nextForString(line)
+            self.assertTrue(header_field.isProxyAuthenticate)
             stringio = StringIO(line + '\r\n')
-            headerField = SIPHeaderFieldFactory().allForStringIO(stringio)[0]
-            self.assertTrue(headerField.isProxyAuthenticate)
+            header_field = SIPHeaderFieldFactory().allForStringIO(stringio)[0]
+            self.assertTrue(header_field.isProxyAuthenticate)
             stringio.close()
-            headerField = SIPHeaderFieldFactory().nextForFieldName(self.canonicalFieldNames[0])
-            self.assertTrue(headerField.isProxyAuthenticate)
-            headerField = SIPHeaderFieldFactory().nextForFieldNameAndFieldValue(self.canonicalFieldNames[0], "foo bar baz blarg")
-            self.assertTrue(headerField.isProxyAuthenticate)
+            header_field = SIPHeaderFieldFactory().nextForFieldName(self.canonicalFieldNames[0])
+            self.assertTrue(header_field.isProxyAuthenticate)
+            header_field = SIPHeaderFieldFactory().nextForFieldNameAndFieldValue(self.canonicalFieldNames[0], "foo bar baz blarg")
+            self.assertTrue(header_field.isProxyAuthenticate)
 
 
 class TestSIPHeaderFieldFactoryForProxyAuthorization(AbstractSIPHeaderFieldFromFactoryTestCase):
@@ -1379,16 +1379,16 @@ class TestSIPHeaderFieldFactoryForProxyAuthorization(AbstractSIPHeaderFieldFromF
     def test_parsing(self):
         self.basic_test_parsing()
         for line in self.canonicalStrings:
-            headerField = SIPHeaderFieldFactory().nextForString(line)
-            self.assertTrue(headerField.isProxyAuthorization)
+            header_field = SIPHeaderFieldFactory().nextForString(line)
+            self.assertTrue(header_field.isProxyAuthorization)
             stringio = StringIO(line + '\r\n')
-            headerField = SIPHeaderFieldFactory().allForStringIO(stringio)[0]
-            self.assertTrue(headerField.isProxyAuthorization)
+            header_field = SIPHeaderFieldFactory().allForStringIO(stringio)[0]
+            self.assertTrue(header_field.isProxyAuthorization)
             stringio.close()
-            headerField = SIPHeaderFieldFactory().nextForFieldName(self.canonicalFieldNames[0])
-            self.assertTrue(headerField.isProxyAuthorization)
-            headerField = SIPHeaderFieldFactory().nextForFieldNameAndFieldValue(self.canonicalFieldNames[0], "foo bar baz blarg")
-            self.assertTrue(headerField.isProxyAuthorization)
+            header_field = SIPHeaderFieldFactory().nextForFieldName(self.canonicalFieldNames[0])
+            self.assertTrue(header_field.isProxyAuthorization)
+            header_field = SIPHeaderFieldFactory().nextForFieldNameAndFieldValue(self.canonicalFieldNames[0], "foo bar baz blarg")
+            self.assertTrue(header_field.isProxyAuthorization)
 
 
 class TestSIPHeaderFieldFactoryForProxyRequire(AbstractSIPHeaderFieldFromFactoryTestCase):
@@ -1403,16 +1403,16 @@ class TestSIPHeaderFieldFactoryForProxyRequire(AbstractSIPHeaderFieldFromFactory
     def test_parsing(self):
         self.basic_test_parsing()
         for line in self.canonicalStrings:
-            headerField = SIPHeaderFieldFactory().nextForString(line)
-            self.assertTrue(headerField.isProxyRequire)
+            header_field = SIPHeaderFieldFactory().nextForString(line)
+            self.assertTrue(header_field.isProxyRequire)
             stringio = StringIO(line + '\r\n')
-            headerField = SIPHeaderFieldFactory().allForStringIO(stringio)[0]
-            self.assertTrue(headerField.isProxyRequire)
+            header_field = SIPHeaderFieldFactory().allForStringIO(stringio)[0]
+            self.assertTrue(header_field.isProxyRequire)
             stringio.close()
-            headerField = SIPHeaderFieldFactory().nextForFieldName(self.canonicalFieldNames[0])
-            self.assertTrue(headerField.isProxyRequire)
-            headerField = SIPHeaderFieldFactory().nextForFieldNameAndFieldValue(self.canonicalFieldNames[0], "foo bar baz blarg")
-            self.assertTrue(headerField.isProxyRequire)
+            header_field = SIPHeaderFieldFactory().nextForFieldName(self.canonicalFieldNames[0])
+            self.assertTrue(header_field.isProxyRequire)
+            header_field = SIPHeaderFieldFactory().nextForFieldNameAndFieldValue(self.canonicalFieldNames[0], "foo bar baz blarg")
+            self.assertTrue(header_field.isProxyRequire)
 
 
 class TestSIPHeaderFieldFactoryForReason(AbstractSIPHeaderFieldFromFactoryTestCase):
@@ -1427,16 +1427,16 @@ class TestSIPHeaderFieldFactoryForReason(AbstractSIPHeaderFieldFromFactoryTestCa
     def test_parsing(self):
         self.basic_test_parsing()
         for line in self.canonicalStrings:
-            headerField = SIPHeaderFieldFactory().nextForString(line)
-            self.assertTrue(headerField.isReason)
+            header_field = SIPHeaderFieldFactory().nextForString(line)
+            self.assertTrue(header_field.isReason)
             stringio = StringIO(line + '\r\n')
-            headerField = SIPHeaderFieldFactory().allForStringIO(stringio)[0]
-            self.assertTrue(headerField.isReason)
+            header_field = SIPHeaderFieldFactory().allForStringIO(stringio)[0]
+            self.assertTrue(header_field.isReason)
             stringio.close()
-            headerField = SIPHeaderFieldFactory().nextForFieldName(self.canonicalFieldNames[0])
-            self.assertTrue(headerField.isReason)
-            headerField = SIPHeaderFieldFactory().nextForFieldNameAndFieldValue(self.canonicalFieldNames[0], "foo bar baz blarg")
-            self.assertTrue(headerField.isReason)
+            header_field = SIPHeaderFieldFactory().nextForFieldName(self.canonicalFieldNames[0])
+            self.assertTrue(header_field.isReason)
+            header_field = SIPHeaderFieldFactory().nextForFieldNameAndFieldValue(self.canonicalFieldNames[0], "foo bar baz blarg")
+            self.assertTrue(header_field.isReason)
 
 
 class TestSIPHeaderFieldFactoryForRecordSessionExpires(AbstractIntegerSIPHeaderFieldFromFactoryTestCase):
@@ -1451,16 +1451,16 @@ class TestSIPHeaderFieldFactoryForRecordSessionExpires(AbstractIntegerSIPHeaderF
     def test_parsing(self):
         self.basic_test_parsing()
         for line in self.canonicalStrings:
-            headerField = SIPHeaderFieldFactory().nextForString(line)
-            self.assertTrue(headerField.isRecordSessionExpires)
+            header_field = SIPHeaderFieldFactory().nextForString(line)
+            self.assertTrue(header_field.isRecordSessionExpires)
             stringio = StringIO(line + '\r\n')
-            headerField = SIPHeaderFieldFactory().allForStringIO(stringio)[0]
-            self.assertTrue(headerField.isRecordSessionExpires)
+            header_field = SIPHeaderFieldFactory().allForStringIO(stringio)[0]
+            self.assertTrue(header_field.isRecordSessionExpires)
             stringio.close()
-            headerField = SIPHeaderFieldFactory().nextForFieldName(self.canonicalFieldNames[0])
-            self.assertTrue(headerField.isRecordSessionExpires)
-            headerField = SIPHeaderFieldFactory().nextForFieldNameAndFieldValue(self.canonicalFieldNames[0], "foo bar baz blarg")
-            self.assertTrue(headerField.isRecordSessionExpires)
+            header_field = SIPHeaderFieldFactory().nextForFieldName(self.canonicalFieldNames[0])
+            self.assertTrue(header_field.isRecordSessionExpires)
+            header_field = SIPHeaderFieldFactory().nextForFieldNameAndFieldValue(self.canonicalFieldNames[0], "foo bar baz blarg")
+            self.assertTrue(header_field.isRecordSessionExpires)
 
 
 class TestSIPHeaderFieldFactoryForReplaces(AbstractSIPHeaderFieldFromFactoryTestCase):
@@ -1475,16 +1475,16 @@ class TestSIPHeaderFieldFactoryForReplaces(AbstractSIPHeaderFieldFromFactoryTest
     def test_parsing(self):
         self.basic_test_parsing()
         for line in self.canonicalStrings:
-            headerField = SIPHeaderFieldFactory().nextForString(line)
-            self.assertTrue(headerField.isReplaces)
+            header_field = SIPHeaderFieldFactory().nextForString(line)
+            self.assertTrue(header_field.isReplaces)
             stringio = StringIO(line + '\r\n')
-            headerField = SIPHeaderFieldFactory().allForStringIO(stringio)[0]
-            self.assertTrue(headerField.isReplaces)
+            header_field = SIPHeaderFieldFactory().allForStringIO(stringio)[0]
+            self.assertTrue(header_field.isReplaces)
             stringio.close()
-            headerField = SIPHeaderFieldFactory().nextForFieldName(self.canonicalFieldNames[0])
-            self.assertTrue(headerField.isReplaces)
-            headerField = SIPHeaderFieldFactory().nextForFieldNameAndFieldValue(self.canonicalFieldNames[0], "foo bar baz blarg")
-            self.assertTrue(headerField.isReplaces)
+            header_field = SIPHeaderFieldFactory().nextForFieldName(self.canonicalFieldNames[0])
+            self.assertTrue(header_field.isReplaces)
+            header_field = SIPHeaderFieldFactory().nextForFieldNameAndFieldValue(self.canonicalFieldNames[0], "foo bar baz blarg")
+            self.assertTrue(header_field.isReplaces)
 
 
 class TestSIPHeaderFieldFactoryForSubscriptionState(AbstractSIPHeaderFieldFromFactoryTestCase):
@@ -1499,16 +1499,16 @@ class TestSIPHeaderFieldFactoryForSubscriptionState(AbstractSIPHeaderFieldFromFa
     def test_parsing(self):
         self.basic_test_parsing()
         for line in self.canonicalStrings:
-            headerField = SIPHeaderFieldFactory().nextForString(line)
-            self.assertTrue(headerField.isSubscriptionState)
+            header_field = SIPHeaderFieldFactory().nextForString(line)
+            self.assertTrue(header_field.isSubscriptionState)
             stringio = StringIO(line + '\r\n')
-            headerField = SIPHeaderFieldFactory().allForStringIO(stringio)[0]
-            self.assertTrue(headerField.isSubscriptionState)
+            header_field = SIPHeaderFieldFactory().allForStringIO(stringio)[0]
+            self.assertTrue(header_field.isSubscriptionState)
             stringio.close()
-            headerField = SIPHeaderFieldFactory().nextForFieldName(self.canonicalFieldNames[0])
-            self.assertTrue(headerField.isSubscriptionState)
-            headerField = SIPHeaderFieldFactory().nextForFieldNameAndFieldValue(self.canonicalFieldNames[0], "foo bar baz blarg")
-            self.assertTrue(headerField.isSubscriptionState)
+            header_field = SIPHeaderFieldFactory().nextForFieldName(self.canonicalFieldNames[0])
+            self.assertTrue(header_field.isSubscriptionState)
+            header_field = SIPHeaderFieldFactory().nextForFieldNameAndFieldValue(self.canonicalFieldNames[0], "foo bar baz blarg")
+            self.assertTrue(header_field.isSubscriptionState)
 
 
 class TestSIPHeaderFieldFactoryForMinExpires(AbstractIntegerSIPHeaderFieldFromFactoryTestCase):
@@ -1523,16 +1523,16 @@ class TestSIPHeaderFieldFactoryForMinExpires(AbstractIntegerSIPHeaderFieldFromFa
     def test_parsing(self):
         self.basic_test_parsing()
         for line in self.canonicalStrings:
-            headerField = SIPHeaderFieldFactory().nextForString(line)
-            self.assertTrue(headerField.isMinExpires)
+            header_field = SIPHeaderFieldFactory().nextForString(line)
+            self.assertTrue(header_field.isMinExpires)
             stringio = StringIO(line + '\r\n')
-            headerField = SIPHeaderFieldFactory().allForStringIO(stringio)[0]
-            self.assertTrue(headerField.isMinExpires)
+            header_field = SIPHeaderFieldFactory().allForStringIO(stringio)[0]
+            self.assertTrue(header_field.isMinExpires)
             stringio.close()
-            headerField = SIPHeaderFieldFactory().nextForFieldName(self.canonicalFieldNames[0])
-            self.assertTrue(headerField.isMinExpires)
-            headerField = SIPHeaderFieldFactory().nextForFieldNameAndFieldValue(self.canonicalFieldNames[0], "foo bar baz blarg")
-            self.assertTrue(headerField.isMinExpires)
+            header_field = SIPHeaderFieldFactory().nextForFieldName(self.canonicalFieldNames[0])
+            self.assertTrue(header_field.isMinExpires)
+            header_field = SIPHeaderFieldFactory().nextForFieldNameAndFieldValue(self.canonicalFieldNames[0], "foo bar baz blarg")
+            self.assertTrue(header_field.isMinExpires)
 
 
 class TestSIPHeaderFieldFactoryForVia(AbstractSIPHeaderFieldFromFactoryTestCase):
@@ -1551,16 +1551,16 @@ class TestSIPHeaderFieldFactoryForVia(AbstractSIPHeaderFieldFromFactoryTestCase)
     # def test_parsing(self):
     #     self.basic_test_parsing()
     #     for line in self.canonicalStrings:
-    #         headerField = SIPHeaderFieldFactory().nextForString(line)
-    #         self.assertTrue(headerField.isVia)
+    #         header_field = SIPHeaderFieldFactory().nextForString(line)
+    #         self.assertTrue(header_field.isVia)
     #         stringio = StringIO(line + '\r\n')
-    #         headerField = SIPHeaderFieldFactory().allForStringIO(stringio)[0]
-    #         self.assertTrue(headerField.isVia)
+    #         header_field = SIPHeaderFieldFactory().allForStringIO(stringio)[0]
+    #         self.assertTrue(header_field.isVia)
     #         stringio.close()
-    #         headerField = SIPHeaderFieldFactory().nextForFieldName(self.canonicalFieldNames[0])
-    #         self.assertTrue(headerField.isVia)
-    #         headerField = SIPHeaderFieldFactory().nextForFieldNameAndFieldValue(self.canonicalFieldNames[0], "foo bar baz blarg")
-    #         self.assertTrue(headerField.isVia)
+    #         header_field = SIPHeaderFieldFactory().nextForFieldName(self.canonicalFieldNames[0])
+    #         self.assertTrue(header_field.isVia)
+    #         header_field = SIPHeaderFieldFactory().nextForFieldNameAndFieldValue(self.canonicalFieldNames[0], "foo bar baz blarg")
+    #         self.assertTrue(header_field.isVia)
     #
     @property
     def canonicalFieldValues(self):
@@ -1572,23 +1572,23 @@ class TestSIPHeaderFieldFactoryForVia(AbstractSIPHeaderFieldFromFactoryTestCase)
     def test_parsing(self):
         self.basic_test_parsing()
         for line in self.canonicalStrings:
-            headerField = SIPHeaderFieldFactory().nextForString(line)
-            self.assertTrue(headerField.isVia)
-            self.assertTrue(headerField.isValid)
+            header_field = SIPHeaderFieldFactory().nextForString(line)
+            self.assertTrue(header_field.isVia)
+            self.assertTrue(header_field.isValid)
             stringio = StringIO(line + '\r\n')
-            headerField = SIPHeaderFieldFactory().allForStringIO(stringio)[0]
-            self.assertTrue(headerField.isVia)
-            self.assertTrue(headerField.isValid)
+            header_field = SIPHeaderFieldFactory().allForStringIO(stringio)[0]
+            self.assertTrue(header_field.isVia)
+            self.assertTrue(header_field.isValid)
             stringio.close()
-            headerField = SIPHeaderFieldFactory().nextForFieldName(self.canonicalFieldNames[0])
-            self.assertTrue(headerField.isVia)
-            self.assertFalse(headerField.isValid)
-            headerField = SIPHeaderFieldFactory().nextForFieldNameAndFieldValue(self.canonicalFieldNames[0], "foo bar baz blarg")
-            self.assertTrue(headerField.isVia)
-            self.assertFalse(headerField.isValid)
-            headerField = SIPHeaderFieldFactory().nextForFieldName(self.canonicalCompactFieldNames[0])
-            self.assertTrue(headerField.isVia)
-            self.assertFalse(headerField.isValid)
-            headerField = SIPHeaderFieldFactory().nextForFieldNameAndFieldValue(self.canonicalFieldNames[0], "foo bar baz blarg")
-            self.assertTrue(headerField.isVia)
-            self.assertFalse(headerField.isValid)
+            header_field = SIPHeaderFieldFactory().nextForFieldName(self.canonicalFieldNames[0])
+            self.assertTrue(header_field.isVia)
+            self.assertFalse(header_field.isValid)
+            header_field = SIPHeaderFieldFactory().nextForFieldNameAndFieldValue(self.canonicalFieldNames[0], "foo bar baz blarg")
+            self.assertTrue(header_field.isVia)
+            self.assertFalse(header_field.isValid)
+            header_field = SIPHeaderFieldFactory().nextForFieldName(self.canonicalCompactFieldNames[0])
+            self.assertTrue(header_field.isVia)
+            self.assertFalse(header_field.isValid)
+            header_field = SIPHeaderFieldFactory().nextForFieldNameAndFieldValue(self.canonicalFieldNames[0], "foo bar baz blarg")
+            self.assertTrue(header_field.isVia)
+            self.assertFalse(header_field.isValid)

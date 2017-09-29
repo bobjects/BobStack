@@ -19,14 +19,14 @@ class StrongRandomStringServer(object):
             return cls._instance
 
     def __init__(self):
-        self.stringIO = StringIO()
+        self.string_io = StringIO()
 
     @property
     def next32Bits(self):
-        string = self.stringIO.read(8)
+        string = self.string_io.read(8)
         if not string:
-            self.stringIO.reset()
-            self.stringIO.write(sha512(str(randint(0, 0xFFFFFFFF))).hexdigest())
-            self.stringIO.reset()
+            self.string_io.reset()
+            self.string_io.write(sha512(str(randint(0, 0xFFFFFFFF))).hexdigest())
+            self.string_io.reset()
             return self.next32Bits
         return string

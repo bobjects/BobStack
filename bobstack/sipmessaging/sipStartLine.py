@@ -1,8 +1,8 @@
 class SIPStartLine(object):
     @classmethod
-    def newParsedFrom(cls, aString):
+    def newParsedFrom(cls, a_string):
         answer = cls()
-        answer.rawString = aString
+        answer.rawString = a_string
         return answer
 
     def __init__(self):
@@ -15,8 +15,8 @@ class SIPStartLine(object):
         return self._rawString
 
     @rawString.setter
-    def rawString(self, aString):
-        self._rawString = aString
+    def rawString(self, a_string):
+        self._rawString = a_string
         self.clearAttributes()
 
     def clearRawString(self):

@@ -18,8 +18,8 @@ class CallInfoSIPHeaderField(SIPHeaderField):
         return 'Call-Info'
 
     @classmethod
-    def newForAttributes(cls, fieldName="Call-Info", fieldValueString=""):
-        return cls.newForFieldNameAndValueString(fieldName=fieldName, fieldValueString=fieldValueString)
+    def newForAttributes(cls, field_name="Call-Info", field_value_string=""):
+        return cls.newForFieldNameAndValueString(field_name=field_name, field_value_string=field_value_string)
 
     @property
     def isCallInfo(self):
@@ -31,13 +31,13 @@ class CallInfoSIPHeaderField(SIPHeaderField):
         return self.parameterNamed('m')
 
     @m.setter
-    def m(self, aString):
-        self.parameterNamedPut('m', aString)
+    def m(self, a_string):
+        self.parameterNamedPut('m', a_string)
 
     @property
     def purpose(self):
         return self.parameterNamed('purpose')
 
     @purpose.setter
-    def purpose(self, aString):
-        self.parameterNamedPut('purpose', aString)
+    def purpose(self, a_string):
+        self.parameterNamedPut('purpose', a_string)
