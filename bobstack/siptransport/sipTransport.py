@@ -53,38 +53,38 @@ class SIPTransport(EventSourceMixin):
         pass
 
     def receivedValidConnectedRequestEventHandler(self, a_connected_aip_message):
-        print "(transport) receivedValidConnectedRequest event"
+        print("(transport) receivedValidConnectedRequest event")
         self.triggerEvent("receivedValidConnectedRequest", a_connected_aip_message)
 
     def receivedValidConnectedResponseEventHandler(self, a_connected_aip_message):
-        print "(transport) receivedValidConnectedResponse event"
+        print("(transport) receivedValidConnectedResponse event")
         self.triggerEvent("receivedValidConnectedResponse", a_connected_aip_message)
 
     def triggerBound(self):
-        print "bound event"
+        print("bound event")
         self.triggerEvent("bound")
 
     def triggerBindFailed(self):
-        print "bindFailed event"
+        print("bindFailed event")
         self.triggerEvent("bindFailed")
 
     def triggerMadeConnection(self, a_sip_transport_connection):
-        print "madeConnection event - " + str(a_sip_transport_connection)
+        print("madeConnection event - " + str(a_sip_transport_connection))
         self.triggerEvent("madeConnection", a_sip_transport_connection)
 
     def triggerCouldNotMakeConnection(self, address_string, port_integer):
-        print "couldNotMakeConnection event - " + str((address_string, port_integer))
+        print("couldNotMakeConnection event - " + str((address_string, port_integer)))
         self.triggerEvent("couldNotMakeConnection", (address_string, port_integer))
 
     def triggerLostConnection(self, a_sip_transport_connection):
-        print "lostConnection event - " + str(a_sip_transport_connection)
+        print("lostConnection event - " + str(a_sip_transport_connection))
         self.triggerEvent("lostConnection", a_sip_transport_connection)
 
     def triggerReceivedValidConnectedRequest(self, a_connected_aip_message):
-        print "receivedValidConnectedRequest event - " + str(a_connected_aip_message)
+        print("receivedValidConnectedRequest event - " + str(a_connected_aip_message))
         self.triggerEvent("receivedValidConnectedRequest", a_connected_aip_message)
 
     def triggerReceivedValidConnectedResponse(self, a_connected_aip_message):
-        print "receivedValidConnectedResponse event - " + str(a_connected_aip_message)
+        print("receivedValidConnectedResponse event - " + str(a_connected_aip_message))
         self.triggerEvent("receivedValidConnectedResponse", a_connected_aip_message)
 

@@ -35,11 +35,11 @@ startLineRegexes = [re.compile(s) for s in startLineRegexes]
 def createInterim1File():
     try:
         with open(interimFile1PathName, "w") as interimFile1:
-            print "creating interim file 1"
+            print("creating interim file 1")
             for rawLogFileDirectoryPathName in rawLogFileDirectoryPathNames:
                 # for rawLogFilePathName in os.listdir(rawLogFileDirectoryPathName):
                 for rawLogFilePathName in sorted(glob.iglob(rawLogFileDirectoryPathName + '/tlslog*.txt')):
-                    print rawLogFilePathName
+                    print(rawLogFilePathName)
                     with open(rawLogFilePathName, "r") as rawLogFile:
                         for line in rawLogFile:
                             line = line.replace("\r\r\n", "\r\n")
@@ -48,13 +48,13 @@ def createInterim1File():
                             interimFile1.write(line)
                         interimFile1.write("\r\n")
     except IOError:
-        print 'WARNING:  could not create interim file named {0}'.format(interimFile1PathName)
+        print('WARNING:  could not create interim file named {0}'.format(interimFile1PathName))
 
 
 def createInterim2File():
     try:
         with open(interimFile1PathName, "r") as interimFile1:
-            print "creating interim file 2"
+            print("creating interim file 2")
             with open(interimFile2PathName, "w") as interimFile2:
                 currentlyInMessage = False
                 totalSIPMessages = 0
@@ -71,15 +71,15 @@ def createInterim2File():
                             totalSIPMessages += 1
                             currentlyInMessage = True
                             interimFile2.write(line)
-                print str(totalSIPMessages) + " total SIP messages"
+                print(str(totalSIPMessages) + " total SIP messages")
     except IOError:
-        print 'WARNING:  could not create interim file named {0}'.format(interimFile1PathName)
+        print('WARNING:  could not create interim file named {0}'.format(interimFile1PathName))
 
 
 def processInterimFile():
     try:
         with open(sanitizedFilePathName, "w") as sanitizedFile:
-            print "processing interim file 2"
+            print("processing interim file 2")
             with open(interimFile2PathName, "r") as interimFile2:
                 currentlyInMessage = False
                 currentMessageString = ''
@@ -108,9 +108,9 @@ def processInterimFile():
                             currentlyInMessage = True
                             currentMessageString = ''
                             sanitizedFile.write(line)
-                print str(totalSIPMessages) + " total SIP messages"
+                print(str(totalSIPMessages) + " total SIP messages")
     except IOError:
-        print 'WARNING:  could not create sanitized file named {0}'.format(sanitizedFilePathName)
+        print('WARNING:  could not create sanitized file named {0}'.format(sanitizedFilePathName))
 
 
 def deleteInterimFiles():
@@ -124,10 +124,10 @@ def deleteInterimFiles():
 def processPCAPFiles():
     try:
         with open(sanitizedFilePathName, "a") as sanitizedFile:
-            print "processing pcap files"
+            print("processing pcap files")
             for pcapDirectoryPathName in pcapDirectoryPathNames:
                 for pcapFilePathName in sorted(glob.iglob(pcapDirectoryPathName + '/*.pcap')):
-                    print pcapFilePathName
+                    print(pcapFilePathName)
                     with open(pcapFilePathName, "r") as pcapFile:
                         for ts, pkt in dpkt.pcap.Reader(pcapFile):
                             eth = dpkt.ethernet.Ethernet(pkt)
@@ -141,17 +141,17 @@ def processPCAPFiles():
                                         sanitizedFile.write(data)
                                         sanitizedFile.write(messageSeparator + "\r\n")
     except IOError:
-        print 'WARNING:  could not create sanitized file named {0}'.format(sanitizedFilePathName)
+        print('WARNING:  could not create sanitized file named {0}'.format(sanitizedFilePathName))
 
 
 # @profile
 def processFreeswitchFiles():
     try:
         with open(sanitizedFilePathName, "a") as sanitizedFile:
-            print "processing Freeswitch files"
+            print("processing Freeswitch files")
             for freeswitchDirectoryPathName in freeswitchDirectoryPathNames:
                 for freeswitchFilePathName in sorted(glob.iglob(freeswitchDirectoryPathName + '/*')):
-                    print freeswitchFilePathName
+                    print(freeswitchFilePathName)
                     with open(freeswitchFilePathName, "r") as freeswitchFile:
                         stringio = StringIO()
                         state = 'outsideOfMessage'
@@ -166,7 +166,7 @@ def processFreeswitchFiles():
                                     stringio = StringIO()
                                     state = 'inMessage'
                                 else:
-                                    print 'ERROR!  Line {0} - First dashes not found.'.format(lineNumber)
+                                    print('ERROR!  Line {0} - First dashes not found.'.format(lineNumber))
                                     stringio.close()
                                     state = 'outsideOfMessage'
                             elif state == 'inMessage':
@@ -177,13 +177,13 @@ def processFreeswitchFiles():
                                     state = 'outsideOfMessage'
                                 else:
                                     if not re.match('^   ', line):
-                                        print 'WARNING!  Line {0} - In message, but line is not preceeded by 3 spaces.  Rejecting message.'.format(lineNumber)
+                                        print('WARNING!  Line {0} - In message, but line is not preceeded by 3 spaces.  Rejecting message.'.format(lineNumber))
                                         stringio.close()
                                         state = 'outsideOfMessage'
                                     else:
                                         stringio.write(line[3:].replace('\n', '\r\n'))
     except IOError:
-        print 'WARNING:  could not create sanitized file named {0}'.format(sanitizedFilePathName)
+        print('WARNING:  could not create sanitized file named {0}'.format(sanitizedFilePathName))
 
 def runAll():
     createInterim1File()
@@ -221,4 +221,4 @@ if __name__ == '__main__':
         # print timeit.timeit(processInterimFile, number=1)
         # deleteInterimFiles()
         # print timeit.timeit(processPCAPFiles, number=1)
-        print timeit.timeit(runAll, number=1)
+        print(timeit.timeit(runAll, number=1))

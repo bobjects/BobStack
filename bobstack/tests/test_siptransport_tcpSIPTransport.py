@@ -196,10 +196,10 @@ class TestTCPTransportConnection(AbstractTransportConnectionTestCase):
             self.connectedConnections.remove(a_tcp_sip_transport_connection)
 
     def receivedValidConnectedRequestEventHandler(self, a_connected_aip_message):
-        print "receivedValidConnectedRequestEventHandler"
+        print("receivedValidConnectedRequestEventHandler")
         self.receivedRequests.append(a_connected_aip_message)
 
     def receivedValidConnectedResponseEventHandler(self, a_connected_aip_message):
-        print "receivedValidConnectedResponseEventHandler"
+        print("receivedValidConnectedResponseEventHandler")
         self.receivedResponses.append(a_connected_aip_message)
 

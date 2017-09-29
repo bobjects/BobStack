@@ -44,11 +44,11 @@ class SIPTransportConnection(EventSourceMixin):
         self.messageFactory.nextForString(a_string)
 
     def receivedValidConnectedRequestEventHandler(self, a_connected_aip_message):
-        print "(connection) receivedValidConnectedRequest event"
+        print("(connection) receivedValidConnectedRequest event")
         self.triggerEvent("receivedValidConnectedRequest", a_connected_aip_message)
 
     def receivedValidConnectedResponseEventHandler(self, a_connected_aip_message):
-        print "(connection) receivedValidConnectedResponse event"
+        print("(connection) receivedValidConnectedResponse event")
         self.triggerEvent("receivedValidConnectedResponse", a_connected_aip_message)
 
     # TODO - need to get invalid messages as well, so that entities can deal with problems.

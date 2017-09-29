@@ -64,7 +64,7 @@ class TestSIPMessageFactoryForSanitizedLogFile(TestCase):
                                 message_string = stringio.getvalue()
                                 self.assertTrue(message_string)
                                 if count % 5000 == 0:
-                                    print str(count)
+                                    print(str(count))
                                 sipMessage = factory.nextForString(message_string)
                                 self.runAssertionsForSIPMessage(sipMessage)
                                 stringio.close()
@@ -89,26 +89,26 @@ class TestSIPMessageFactoryForSanitizedLogFile(TestCase):
                         self.appendStringToFileNamed('    ' + start_line + "\r\n", 'invariantBranchHashes')
                 self.closeFiles()
                 if settings.writeAnalyzedFiles:
-                    print "de-duping..."
+                    print("de-duping...")
                     try:
                         subprocess.call([self._analyzedDirectoryPathName + '/dedupelinefiles.sh'])
                     except OSError:
                         pass
-                    print "finished de-duping."
+                    print("finished de-duping.")
 
     def printSIPMessageCounts(self):
-        print "malformed: " + str(self.malformedSIPMessageCount)
-        print "total messages: " + str(self.sipMessageCount)
-        print "total requests: " + str(self.sipRequestCount)
-        print "total responses: " + str(self.sipResponseCount)
-        print "valid messages: " + str(self.validSIPMessageCount)
-        print "valid requests: " + str(self.validSIPRequestCount)
-        print "valid responses: " + str(self.validSIPResponseCount)
-        print "invalid messages: " + str(self.invalidSIPMessageCount)
-        print "invalid requests: " + str(self.invalidSIPRequestCount)
-        print "invalid responses: " + str(self.invalidSIPResponseCount)
-        print "valid known: " + str(self.validKnownSIPMessageCount)
-        print "valid unknown: " + str(self.validUnknownSIPMessageCount)
+        print("malformed: " + str(self.malformedSIPMessageCount))
+        print("total messages: " + str(self.sipMessageCount))
+        print("total requests: " + str(self.sipRequestCount))
+        print("total responses: " + str(self.sipResponseCount))
+        print("valid messages: " + str(self.validSIPMessageCount))
+        print("valid requests: " + str(self.validSIPRequestCount))
+        print("valid responses: " + str(self.validSIPResponseCount))
+        print("invalid messages: " + str(self.invalidSIPMessageCount))
+        print("invalid requests: " + str(self.invalidSIPRequestCount))
+        print("invalid responses: " + str(self.invalidSIPResponseCount))
+        print("valid known: " + str(self.validKnownSIPMessageCount))
+        print("valid unknown: " + str(self.validUnknownSIPMessageCount))
 
         self.malformedSIPMessageCount = 0
         self.sipMessageCount = 0
