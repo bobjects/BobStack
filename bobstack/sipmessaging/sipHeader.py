@@ -8,13 +8,13 @@ from sipHeaderFieldFactory import SIPHeaderFieldFactory
 
 class SIPHeader(object):
     @classmethod
-    def newParsedFrom(cls, stringio_to_parse):
+    def new_parsed_from(cls, stringio_to_parse):
         answer = cls()
-        answer.parseAttributesFromStringIO(stringio_to_parse)
+        answer.parse_attributes_from_stringio(stringio_to_parse)
         return answer
 
     @classmethod
-    def newForAttributes(cls, header_fields=None):
+    def new_for_attributes(cls, header_fields=None):
         answer = cls()
         if not header_fields:
             answer.header_fields = []
@@ -24,34 +24,34 @@ class SIPHeader(object):
 
     def __init__(self):
         self._headerFields = []
-        self.initializeCache()
+        self.initialize_cache()
 
-    def initializeCache(self):
+    def initialize_cache(self):
         self._cache = {}
 
-    def parseAttributesFromStringIO(self, stringio_to_parse):
+    def parse_attributes_from_stringio(self, stringio_to_parse):
         # TODO: don't forget to test folding in this factory method.  That's separate from the other technique.
-        self.initializeCache()
-        self._headerFields = SIPHeaderFieldFactory().allForStringIO(stringio_to_parse)
+        self.initialize_cache()
+        self._headerFields = SIPHeaderFieldFactory().all_for_stringio(stringio_to_parse)
 
-    def renderRawStringFromAttributes(self, stringio):
+    def render_raw_string_from_attributes(self, stringio):
         for header_field in self.header_fields:
-            stringio.write(header_field.rawString)
+            stringio.write(header_field.raw_string)
             stringio.write("\r\n")
         stringio.write("\r\n")
 
     # TODO: cache
     @property
-    def contentLength(self):
-        if self.contentLengthHeaderField is not None:
-            return self.contentLengthHeaderField.integerValue
+    def content_length(self):
+        if self.content_length_header_field is not None:
+            return self.content_length_header_field.integer_value
         return 0
 
     @property
-    def contentLengthHeaderField(self):
-        def _contentLengthHeaderField():
-            return next((header_field for header_field in self.header_fields if header_field.isContentLength), None)
-        return self.fromCache('contentLengthHeaderField', _contentLengthHeaderField)
+    def content_length_header_field(self):
+        def _content_length_header_field():
+            return next((header_field for header_field in self.header_fields if header_field.is_content_length), None)
+        return self.fromCache('content_length_header_field', _content_length_header_field)
 
     @property
     def callID(self):
@@ -64,7 +64,7 @@ class SIPHeader(object):
     @property
     def callIDHeaderField(self):
         def _callIDHeaderField():
-            return next((header_field for header_field in self.header_fields if header_field.isCallID), None)
+            return next((header_field for header_field in self.header_fields if header_field.is_call_id), None)
         return self.fromCache('callIDHeaderField', _callIDHeaderField)
 
     @property
@@ -78,7 +78,7 @@ class SIPHeader(object):
     @property
     def cSeqHeaderField(self):
         def _cSeqHeaderField():
-            return next((header_field for header_field in self.header_fields if header_field.isCSeq), None)
+            return next((header_field for header_field in self.header_fields if header_field.is_cseq), None)
         return self.fromCache('cSeqHeaderField', _cSeqHeaderField)
 
     # TODO - cache and test
@@ -92,7 +92,7 @@ class SIPHeader(object):
     @property
     def toHeaderField(self):
         def _toHeaderField():
-            return next((header_field for header_field in self.header_fields if header_field.isTo), None)
+            return next((header_field for header_field in self.header_fields if header_field.is_to), None)
         return self.fromCache('toHeaderField', _toHeaderField)
 
     # TODO - cache
@@ -105,21 +105,21 @@ class SIPHeader(object):
     @property
     def fromHeaderField(self):
         def _fromHeaderField():
-            return next((header_field for header_field in self.header_fields if header_field.isFrom), None)
+            return next((header_field for header_field in self.header_fields if header_field.is_from), None)
         return self.fromCache('fromHeaderField', _fromHeaderField)
 
     @property
-    def maxForwards(self):
+    def max_forwards(self):
         def _maxForwards():
             if self.maxForwardsHeaderField is not None:
-                return self.maxForwardsHeaderField.integerValue
+                return self.maxForwardsHeaderField.integer_value
             return None
-        return self.fromCache('maxForwards', _maxForwards)
+        return self.fromCache('max_forwards', _maxForwards)
 
     @property
     def maxForwardsHeaderField(self):
         def _maxForwardsHeaderField():
-            return next((header_field for header_field in self.header_fields if header_field.isMaxForwards), None)
+            return next((header_field for header_field in self.header_fields if header_field.is_max_forwards), None)
         return self.fromCache('maxForwardsHeaderField', _maxForwardsHeaderField)
 
     @property
@@ -131,13 +131,13 @@ class SIPHeader(object):
     @property
     def viaHeaderFields(self):
         def _viaHeaderFields():
-            return [header_field for header_field in self.header_fields if header_field.isVia]
+            return [header_field for header_field in self.header_fields if header_field.is_via]
         return self.fromCache('viaHeaderFields', _viaHeaderFields)
 
     @property
     def routeHeaderFields(self):
         def _routeHeaderFields():
-            return [header_field for header_field in self.header_fields if header_field.isRoute]
+            return [header_field for header_field in self.header_fields if header_field.is_route]
         return self.fromCache('routeHeaderFields', _routeHeaderFields)
 
     @property
@@ -149,7 +149,7 @@ class SIPHeader(object):
     @property
     def recordRouteHeaderFields(self):
         def _recordRouteHeaderFields():
-            return [header_field for header_field in self.header_fields if header_field.isRecordRoute]
+            return [header_field for header_field in self.header_fields if header_field.is_record_route]
         return self.fromCache('recordRouteHeaderFields', _recordRouteHeaderFields)
 
     @property
@@ -159,15 +159,15 @@ class SIPHeader(object):
         return self.fromCache('recordRouteURIs', _recordRouteURIs)
 
     # TODO:  need to test
-    def addHeaderField(self, a_sip_header_field):
+    def add_header_field(self, a_sip_header_field):
         if a_sip_header_field:
             self.header_fields.append(a_sip_header_field)
-            self.initializeCache()
+            self.initialize_cache()
 
     # TODO:  need to test
     def addHeaderFields(self, a_list_of_sip_header_field):
         for hf in a_list_of_sip_header_field:
-            self.addHeaderField(hf)
+            self.add_header_field(hf)
 
     # TODO:  need to test (partially tested)
     def addHeaderFieldAfterHeaderFieldsOfSameClass(self, a_header_field):
@@ -179,9 +179,9 @@ class SIPHeader(object):
             # the class is different.  Trap for young players.  We need to do better than this class name comparison.
             if header.__class__.__name__ == a_header_field.__class__.__name__:
                 class_index = i
-            if header.isTo:
+            if header.is_to:
                 toFromIndex = i
-            if header.isFrom:
+            if header.is_from:
                 toFromIndex = i
         insertionIndex = class_index
         if insertionIndex == -1:
@@ -200,9 +200,9 @@ class SIPHeader(object):
             if header.__class__.__name__ == a_header_field.__class__.__name__:
                 if class_index == -1:
                     class_index = i
-            if header.isTo:
+            if header.is_to:
                 toFromIndex = i
-            if header.isFrom:
+            if header.is_from:
                 toFromIndex = i
         insertionIndex = class_index
         if insertionIndex == -1:
@@ -217,13 +217,13 @@ class SIPHeader(object):
             # the class is different.  Trap for young players.  We need to do better than this class name comparison.
             if j.__class__.__name__ is aClass.__name__:
                 self.header_fields.pop(i)
-                self.initializeCache()
+                self.initialize_cache()
                 return
 
     @property
     def knownHeaderFields(self):
         def _knownHeaderFields():
-            return [header_field for header_field in self.header_fields if header_field.isKnown]
+            return [header_field for header_field in self.header_fields if header_field.is_known]
         return self.fromCache('knownHeaderFields', _knownHeaderFields)
 
     @property
@@ -233,10 +233,10 @@ class SIPHeader(object):
         return self.fromCache('unknownHeaderFields', _unknownHeaderFields)
 
     @property
-    def isValid(self):
+    def is_valid(self):
         def _isValid():
-            return all(f.isValid for f in self.header_fields)
-        return self.fromCache('isValid', _isValid)
+            return all(f.is_valid for f in self.header_fields)
+        return self.fromCache('is_valid', _isValid)
 
     # TODO:  it would also be nice to make this object iterable and indexable.  E.g. someHeader[3] to get someHeader.header_fields[3]
     @property
@@ -245,14 +245,14 @@ class SIPHeader(object):
 
     @header_fields.setter
     def header_fields(self, aListOrString):
-        self.initializeCache()
+        self.initialize_cache()
         if not aListOrString:
             self._headerFields = []
         else:
             factory = SIPHeaderFieldFactory()
             if isinstance(aListOrString, list):
                 if isinstance(aListOrString[0], basestring):  # list of complete header field strings
-                    self._headerFields = [factory.nextForString(s) for s in aListOrString]
+                    self._headerFields = [factory.next_for_string(s) for s in aListOrString]
                 elif isinstance(aListOrString[0], (list, tuple)):  # list of field names and field values
                     header_fields = []
                     for field_name, field_value_string in aListOrString:
@@ -272,7 +272,7 @@ class SIPHeader(object):
                     self._headerFields = aListOrString  # list of SIPHeaderField instances
             else:  # One big multiline string
                 stringio = StringIO(aListOrString)
-                self._headerFields = factory.allForStringIO(stringio)
+                self._headerFields = factory.all_for_stringio(stringio)
                 stringio.close()
 
     @property

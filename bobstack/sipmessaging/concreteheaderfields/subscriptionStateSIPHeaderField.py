@@ -14,62 +14,62 @@ class SubscriptionStateSIPHeaderField(SIPHeaderField):
     # noinspection PyNestedDecorators
     @classproperty
     @classmethod
-    def canonicalFieldName(cls):
+    def canonical_field_name(cls):
         return 'Subscription-State'
 
     @classmethod
-    def newForAttributes(cls, field_name="Subscription-State", field_value_string=""):
+    def new_for_attributes(cls, field_name="Subscription-State", field_value_string=""):
         return cls.newForFieldNameAndValueString(field_name=field_name, field_value_string=field_value_string)
 
     @property
-    def isSubscriptionState(self):
+    def is_subscription_state(self):
         return True
 
     # http://www.iana.org/assignments/sip-parameters/sip-parameters.xhtml#sip-parameters-2
     @property
     def adaptive_min_rate(self):
-        return self.parameterNamed('adaptive-min-rate')
+        return self.parameter_named('adaptive-min-rate')
 
     @adaptive_min_rate.setter
     def adaptive_min_rate(self, a_string):
-        self.parameterNamedPut('adaptive-min-rate', a_string)
+        self.parameter_named_put('adaptive-min-rate', a_string)
 
     @property
     def expires(self):
-        return self.parameterNamed('expires')
+        return self.parameter_named('expires')
 
     @expires.setter
     def expires(self, a_string):
-        self.parameterNamedPut('expires', a_string)
+        self.parameter_named_put('expires', a_string)
 
     @property
     def max_rate(self):
-        return self.parameterNamed('max-rate')
+        return self.parameter_named('max-rate')
 
     @max_rate.setter
     def max_rate(self, a_string):
-        self.parameterNamedPut('max-rate', a_string)
+        self.parameter_named_put('max-rate', a_string)
 
     @property
     def min_rate(self):
-        return self.parameterNamed('min-rate')
+        return self.parameter_named('min-rate')
 
     @min_rate.setter
     def min_rate(self, a_string):
-        self.parameterNamedPut('min-rate', a_string)
+        self.parameter_named_put('min-rate', a_string)
 
     @property
     def reason(self):
-        return self.parameterNamed('reason')
+        return self.parameter_named('reason')
 
     @reason.setter
     def reason(self, a_string):
-        self.parameterNamedPut('reason', a_string)
+        self.parameter_named_put('reason', a_string)
 
     @property
     def retry_after(self):
-        return self.parameterNamed('retry-after')
+        return self.parameter_named('retry-after')
 
     @retry_after.setter
     def retry_after(self, a_string):
-        self.parameterNamedPut('retry-after', a_string)
+        self.parameter_named_put('retry-after', a_string)

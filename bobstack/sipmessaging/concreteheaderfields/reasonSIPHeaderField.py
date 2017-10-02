@@ -14,31 +14,31 @@ class ReasonSIPHeaderField(SIPHeaderField):
     # noinspection PyNestedDecorators
     @classproperty
     @classmethod
-    def canonicalFieldName(cls):
+    def canonical_field_name(cls):
         return 'Reason'
 
     @classmethod
-    def newForAttributes(cls, field_name="Reason", field_value_string=""):
+    def new_for_attributes(cls, field_name="Reason", field_value_string=""):
         return cls.newForFieldNameAndValueString(field_name=field_name, field_value_string=field_value_string)
 
     @property
-    def isReason(self):
+    def is_reason(self):
         return True
 
     # http://www.iana.org/assignments/sip-parameters/sip-parameters.xhtml#sip-parameters-2
     @property
     def cause(self):
-        return self.parameterNamed('cause')
+        return self.parameter_named('cause')
 
     @cause.setter
     def cause(self, a_string):
-        self.parameterNamedPut('cause', a_string)
+        self.parameter_named_put('cause', a_string)
 
     @property
     def text(self):
-        return self.parameterNamed('text')
+        return self.parameter_named('text')
 
     @text.setter
     def text(self, a_string):
-        self.parameterNamedPut('text', a_string)
+        self.parameter_named_put('text', a_string)
 

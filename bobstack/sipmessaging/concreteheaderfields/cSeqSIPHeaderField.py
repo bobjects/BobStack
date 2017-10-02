@@ -14,14 +14,14 @@ class CSeqSIPHeaderField(SIPHeaderField):
     # noinspection PyNestedDecorators
     @classproperty
     @classmethod
-    def canonicalFieldName(cls):
+    def canonical_field_name(cls):
         return 'CSeq'
 
     @classmethod
-    def newForAttributes(cls, field_name="CSeq", field_value_string=""):
+    def new_for_attributes(cls, field_name="CSeq", field_value_string=""):
         return cls.newForFieldNameAndValueString(field_name=field_name, field_value_string=field_value_string)
 
     @property
-    def isCSeq(self):
+    def is_cseq(self):
         return True
 

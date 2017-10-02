@@ -6,9 +6,9 @@ from sipmessaging import SIPRequest
 
 class PUBLISHSIPRequest(SIPRequest):
     @property
-    def isPUBLISHRequest(self):
+    def is_publish_request(self):
         return True
 
     @property
-    def isKnown(self):
+    def is_known(self):
         return True

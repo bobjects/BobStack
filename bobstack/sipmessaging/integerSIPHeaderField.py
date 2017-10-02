@@ -17,35 +17,35 @@ class IntegerSIPHeaderField(SIPHeaderField):
         return super(IntegerSIPHeaderField, cls).newForFieldNameAndValueString(field_name, field_value_string, use_compact_headers)
 
     @classmethod
-    def newForIntegerValue(cls, an_integer):
+    def new_for_integer_value(cls, an_integer):
         return cls.newForValueString(str(an_integer))
 
     # noinspection PyNestedDecorators
     @classproperty
     @classmethod
-    def canonicalFieldName(cls):
+    def canonical_field_name(cls):
         raise NotImplementedError('call to abstract method ' + inspect.stack()[0][3])
 
     # noinspection PyNestedDecorators
     @classproperty
     @classmethod
-    def canonicalCompactFieldName(cls):
+    def canonical_compact_field_name(cls):
         return None
 
     @property
-    def integerValue(self):
+    def integer_value(self):
         try:
             return int(self.value)
         except ValueError:
             return 0
 
-    @integerValue.setter
-    def integerValue(self, an_integer):
+    @integer_value.setter
+    def integer_value(self, an_integer):
         self.value = str(an_integer)
 
     @property
-    def isValid(self):
+    def is_valid(self):
         # Answer false if the value is not present.
         # noinspection PyUnusedLocal
         test = self.value  # Make sure the attributes are lazily initialized.
-        return super(IntegerSIPHeaderField, self).isValid and self._value is not None
+        return super(IntegerSIPHeaderField, self).is_valid and self._value is not None

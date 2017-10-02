@@ -44,43 +44,43 @@ class SIPMessageFactory(EventSourceMixin):
     def __init__(self):
         EventSourceMixin.__init__(self)
 
-    def nextForString(self, a_string):
+    def next_for_string(self, a_string):
         string_io = StringIO(a_string)
-        sipStartLine = SIPStartLineFactory().nextForStringIO(string_io)
+        sip_start_line = SIPStartLineFactory().next_for_stringio(string_io)
         string_io.close()
-        sipMessage = self.sipMessageClassForStartLine(sipStartLine).newParsedFrom(a_string)
-        self.triggerEventForSIPMessage(sipMessage)
-        return sipMessage
+        sip_message = self.sip_message_class_for_start_line(sip_start_line).new_parsed_from(a_string)
+        self.trigger_event_for_sip_message(sip_message)
+        return sip_message
 
-    def sipMessageClassForStartLine(self, a_sip_start_line):
-        if a_sip_start_line.isRequest:
+    def sip_message_class_for_start_line(self, a_sip_start_line):
+        if a_sip_start_line.is_request:
             return self.__class__.methodNamesAndClasses.get(a_sip_start_line.sip_method, UnknownSIPRequest)
-        elif a_sip_start_line.isResponse:
+        elif a_sip_start_line.is_response:
             return SIPResponse
         else:
             return MalformedSIPMessage
 
-    def triggerEventForSIPMessage(self, a_sip_message):
-        self.triggerEvent("sipMessage", a_sip_message)
-        if a_sip_message.isRequest:
-            self.triggerEvent("sipRequest", a_sip_message)
-            if a_sip_message.isValid:
-                self.triggerEvent("validSIPRequest", a_sip_message)
+    def trigger_event_for_sip_message(self, a_sip_message):
+        self.trigger_event("sipMessage", a_sip_message)
+        if a_sip_message.is_request:
+            self.trigger_event("sipRequest", a_sip_message)
+            if a_sip_message.is_valid:
+                self.trigger_event("validSIPRequest", a_sip_message)
             else:
-                self.triggerEvent("invalidSIPRequest", a_sip_message)
-        if a_sip_message.isResponse:
-            self.triggerEvent("sipResponse", a_sip_message)
-            if a_sip_message.isValid:
-                self.triggerEvent("validSIPResponse", a_sip_message)
+                self.trigger_event("invalidSIPRequest", a_sip_message)
+        if a_sip_message.is_response:
+            self.trigger_event("sipResponse", a_sip_message)
+            if a_sip_message.is_valid:
+                self.trigger_event("validSIPResponse", a_sip_message)
             else:
-                self.triggerEvent("invalidSIPResponse", a_sip_message)
-        if a_sip_message.isMalformed:
-            self.triggerEvent("malformedSIPMessage", a_sip_message)
-        if a_sip_message.isValid:
-            self.triggerEvent("validSIPMessage", a_sip_message)
-            if a_sip_message.isKnown:
-                self.triggerEvent("validKnownSIPMessage", a_sip_message)
+                self.trigger_event("invalidSIPResponse", a_sip_message)
+        if a_sip_message.is_malformed:
+            self.trigger_event("malformedSIPMessage", a_sip_message)
+        if a_sip_message.is_valid:
+            self.trigger_event("validSIPMessage", a_sip_message)
+            if a_sip_message.is_known:
+                self.trigger_event("validKnownSIPMessage", a_sip_message)
             else:
-                self.triggerEvent("validUnknownSIPMessage", a_sip_message)
+                self.trigger_event("validUnknownSIPMessage", a_sip_message)
         else:
-            self.triggerEvent("invalidSIPMessage", a_sip_message)
+            self.trigger_event("invalidSIPMessage", a_sip_message)

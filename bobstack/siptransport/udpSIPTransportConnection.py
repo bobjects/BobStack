@@ -7,12 +7,12 @@ class UDPSIPTransportConnection(SIPTransportConnection):
         super(UDPSIPTransportConnection, self).__init__(bind_address_string, remote_address_string, bind_port_integer, remote_port_integer)
 
     @property
-    def isReliable(self):
+    def is_reliable(self):
         return False
 
     @property
-    def isStateful(self):
+    def is_stateful(self):
         return False
 
-    def sendMessage(self, a_sip_message):
-        self.twistedProtocol.sendMessage(a_sip_message)
+    def send_message(self, a_sip_message):
+        self.twistedProtocol.send_message(a_sip_message)

@@ -20,24 +20,24 @@ class TestStatelessProxyWithSimulatedTransport(AbstractStatelessProxyTestCase):
         self.bobReceivedRequests = []
         self.bobReceivedResponses = []
         self.atlanta = SIPStatelessProxy()
-        self.atlanta.transports = [SimulatedSIPTransport(self.atlanta_bind_address, self.atlantaBindPort)]
+        self.atlanta.transports = [SimulatedSIPTransport(self.atlanta_bind_address, self.atlanta_bind_port)]
         self.biloxi = SIPStatelessProxy()
-        self.biloxi.transports = [SimulatedSIPTransport(self.biloxi_bind_address, self.biloxiBindPort)]
-        self.aliceTransport = SimulatedSIPTransport(self.aliceBindAddress, self.aliceBindPort)
-        self.bobTransport = SimulatedSIPTransport(self.bobBindAddress, self.bobBindPort)
-        self.aliceTransport.whenEventDo("receivedValidConnectedRequest", self.aliceRequestEventHandler)
-        self.aliceTransport.whenEventDo("receivedValidConnectedResponse", self.aliceResponseEventHandler)
-        self.atlanta.transports[0].whenEventDo("receivedValidConnectedRequest", self.atlantaRequestEventHandler)
-        self.atlanta.transports[0].whenEventDo("receivedValidConnectedResponse", self.atlantaResponseEventHandler)
-        self.biloxi.transports[0].whenEventDo("receivedValidConnectedRequest", self.biloxiRequestEventHandler)
-        self.biloxi.transports[0].whenEventDo("receivedValidConnectedResponse", self.biloxiResponseEventHandler)
-        self.bobTransport.whenEventDo("receivedValidConnectedRequest", self.bobRequestEventHandler)
-        self.bobTransport.whenEventDo("receivedValidConnectedResponse", self.bobResponseEventHandler)
-        self.aliceTransport.bind()
-        self.bobTransport.bind()
-        self.aliceTransport.connectToAddressAndPort(self.atlanta_bind_address, self.atlantaBindPort)
+        self.biloxi.transports = [SimulatedSIPTransport(self.biloxi_bind_address, self.biloxi_bind_port)]
+        self.alice_transport = SimulatedSIPTransport(self.alice_bind_address, self.aliceBindPort)
+        self.bob_transport = SimulatedSIPTransport(self.bob_bind_address, self.bobBindPort)
+        self.alice_transport.when_event_do("receivedValidConnectedRequest", self.aliceRequestEventHandler)
+        self.alice_transport.when_event_do("receivedValidConnectedResponse", self.aliceResponseEventHandler)
+        self.atlanta.transports[0].when_event_do("receivedValidConnectedRequest", self.atlantaRequestEventHandler)
+        self.atlanta.transports[0].when_event_do("receivedValidConnectedResponse", self.atlantaResponseEventHandler)
+        self.biloxi.transports[0].when_event_do("receivedValidConnectedRequest", self.biloxiRequestEventHandler)
+        self.biloxi.transports[0].when_event_do("receivedValidConnectedResponse", self.biloxiResponseEventHandler)
+        self.bob_transport.when_event_do("receivedValidConnectedRequest", self.bobRequestEventHandler)
+        self.bob_transport.when_event_do("receivedValidConnectedResponse", self.bobResponseEventHandler)
+        self.alice_transport.bind()
+        self.bob_transport.bind()
+        self.alice_transport.connect_to_address_and_port(self.atlanta_bind_address, self.atlanta_bind_port)
         # Let Biloxi connect to Bob.  Don't pre-connect Bob to Biloxi.
-        # self.bobTransport.connectToAddressAndPort(self.biloxi_bind_address, self.biloxiBindPort)
+        # self.bob_transport.connect_to_address_and_port(self.biloxi_bind_address, self.biloxi_bind_port)
         # TODO:  need to bind?
 
     def test(self):
@@ -51,15 +51,15 @@ class TestStatelessProxyWithSimulatedTransport(AbstractStatelessProxyTestCase):
         self.assertEqual(1, len(self.atlanta.transports[0].connections))
         self.assertEqual(0, len(self.biloxi.transports[0].connections))
         self.assertEqual(self.atlanta_bind_address, self.atlanta.transports[0].bind_address)
-        self.assertEqual(self.atlantaBindPort, self.atlanta.transports[0].bind_port)
+        self.assertEqual(self.atlanta_bind_port, self.atlanta.transports[0].bind_port)
         self.assertEqual(self.atlanta_bind_address, self.atlanta.transports[0].connections[0].bind_address)
-        self.assertEqual(self.atlantaBindPort, self.atlanta.transports[0].connections[0].bind_port)
-        self.assertEqual(self.atlanta_bind_address, self.aliceTransport.connections[0].remoteAddress)
-        self.assertEqual(self.atlantaBindPort, self.aliceTransport.connections[0].remotePort)
-        self.assertEqual(self.aliceBindAddress, self.atlanta.transports[0].connections[0].remoteAddress)
+        self.assertEqual(self.atlanta_bind_port, self.atlanta.transports[0].connections[0].bind_port)
+        self.assertEqual(self.atlanta_bind_address, self.alice_transport.connections[0].remoteAddress)
+        self.assertEqual(self.atlanta_bind_port, self.alice_transport.connections[0].remotePort)
+        self.assertEqual(self.alice_bind_address, self.atlanta.transports[0].connections[0].remoteAddress)
         self.assertEqual(self.aliceBindPort, self.atlanta.transports[0].connections[0].remotePort)
         self.assertEqual(self.biloxi_bind_address, self.biloxi.transports[0].bind_address)
-        self.assertEqual(self.biloxiBindPort, self.biloxi.transports[0].bind_port)
+        self.assertEqual(self.biloxi_bind_port, self.biloxi.transports[0].bind_port)
         self.assertEqual(0, len(self.aliceReceivedRequests))
         self.assertEqual(0, len(self.aliceReceivedResponses))
         self.assertEqual(0, len(self.atlantaReceivedRequests))
@@ -70,7 +70,7 @@ class TestStatelessProxyWithSimulatedTransport(AbstractStatelessProxyTestCase):
         self.assertEqual(0, len(self.bobReceivedResponses))
 
     def run_01_atlantaToBiloxi(self):
-        self.aliceTransport.connections[0].sendString(self.aliceRequestString)
+        self.alice_transport.connections[0].send_string(self.aliceRequestString)
         self.assertEqual(0, len(self.aliceReceivedRequests))
         # self.assertEqual(1, len(self.aliceReceivedResponses))
         self.assertEqual(1, len(self.atlantaReceivedRequests))
@@ -80,47 +80,47 @@ class TestStatelessProxyWithSimulatedTransport(AbstractStatelessProxyTestCase):
         self.assertEqual(0, len(self.bobReceivedRequests))
         self.assertEqual(0, len(self.bobReceivedResponses))
 
-        self.assertEqual(self.aliceBindAddress, self.atlantaReceivedRequests[0].connection.remoteAddress)
+        self.assertEqual(self.alice_bind_address, self.atlantaReceivedRequests[0].connection.remoteAddress)
         self.assertEqual(self.aliceBindPort, self.atlantaReceivedRequests[0].connection.remotePort)
         self.assertEqual(self.atlanta_bind_address, self.atlantaReceivedRequests[0].connection.bind_address)
-        self.assertEqual(self.atlantaBindPort, self.atlantaReceivedRequests[0].connection.bind_port)
+        self.assertEqual(self.atlanta_bind_port, self.atlantaReceivedRequests[0].connection.bind_port)
         atlanta_received_request = self.atlantaReceivedRequests[0].sipMessage
-        ruri = SIPURI.newParsedFrom(atlanta_received_request.start_line.request_uri)
-        self.assertEqual(self.aliceRequestString, atlanta_received_request.rawString)
+        ruri = SIPURI.new_parsed_from(atlanta_received_request.start_line.request_uri)
+        self.assertEqual(self.aliceRequestString, atlanta_received_request.raw_string)
         self.assertEqual('INVITE', atlanta_received_request.start_line.sip_method)
         self.assertEqual(self.biloxi_bind_address, ruri.host)
         self.assertEqual(1, len(atlanta_received_request.vias))
-        self.assertEqual(self.aliceRequestString, atlanta_received_request.rawString)
+        self.assertEqual(self.aliceRequestString, atlanta_received_request.raw_string)
         self.assertIsNone(atlanta_received_request.header.toTag)
 
         self.assertEqual(self.atlanta_bind_address, self.biloxiReceivedRequests[0].connection.remoteAddress)
-        self.assertEqual(self.atlantaBindPort, self.biloxiReceivedRequests[0].connection.remotePort)
+        self.assertEqual(self.atlanta_bind_port, self.biloxiReceivedRequests[0].connection.remotePort)
         self.assertEqual(self.biloxi_bind_address, self.biloxiReceivedRequests[0].connection.bind_address)
-        self.assertEqual(self.biloxiBindPort, self.biloxiReceivedRequests[0].connection.bind_port)
-        biloxiReceivedRequest = self.biloxiReceivedRequests[0].sipMessage
-        self.assertEqual(atlanta_received_request.start_line.request_uri, biloxiReceivedRequest.start_line.request_uri)
-        self.assertEqual('INVITE', biloxiReceivedRequest.start_line.sip_method)
-        self.assertEqual(2, len(biloxiReceivedRequest.vias))
-        self.assertNotEqual(self.aliceRequestString, biloxiReceivedRequest.rawString)
-        self.assertIsNone(biloxiReceivedRequest.header.toTag)
+        self.assertEqual(self.biloxi_bind_port, self.biloxiReceivedRequests[0].connection.bind_port)
+        biloxi_received_request = self.biloxiReceivedRequests[0].sipMessage
+        self.assertEqual(atlanta_received_request.start_line.request_uri, biloxi_received_request.start_line.request_uri)
+        self.assertEqual('INVITE', biloxi_received_request.start_line.sip_method)
+        self.assertEqual(2, len(biloxi_received_request.vias))
+        self.assertNotEqual(self.aliceRequestString, biloxi_received_request.raw_string)
+        self.assertIsNone(biloxi_received_request.header.toTag)
 
         self.assertEqual(self.biloxi_bind_address, self.atlantaReceivedResponses[0].connection.remoteAddress)
-        self.assertEqual(self.biloxiBindPort, self.atlantaReceivedResponses[0].connection.remotePort)
+        self.assertEqual(self.biloxi_bind_port, self.atlantaReceivedResponses[0].connection.remotePort)
         self.assertEqual(self.atlanta_bind_address, self.atlantaReceivedResponses[0].connection.bind_address)
-        self.assertEqual(self.atlantaBindPort, self.atlantaReceivedResponses[0].connection.bind_port)
-        atlantaReceivedResponse = self.atlantaReceivedResponses[0].sipMessage
-        self.assertIsNotNone(atlantaReceivedResponse.header.toTag)
-        self.assertEqual(2, len(atlantaReceivedResponse.vias))
+        self.assertEqual(self.atlanta_bind_port, self.atlantaReceivedResponses[0].connection.bind_port)
+        atlanta_received_response = self.atlantaReceivedResponses[0].sipMessage
+        self.assertIsNotNone(atlanta_received_response.header.toTag)
+        self.assertEqual(2, len(atlanta_received_response.vias))
 
         self.assertEqual(self.atlanta_bind_address, self.aliceReceivedResponses[0].connection.remoteAddress)
-        self.assertEqual(self.atlantaBindPort, self.aliceReceivedResponses[0].connection.remotePort)
-        self.assertEqual(self.aliceBindAddress, self.aliceReceivedResponses[0].connection.bind_address)
+        self.assertEqual(self.atlanta_bind_port, self.aliceReceivedResponses[0].connection.remotePort)
+        self.assertEqual(self.alice_bind_address, self.aliceReceivedResponses[0].connection.bind_address)
         self.assertEqual(self.aliceBindPort, self.aliceReceivedResponses[0].connection.bind_port)
-        aliceReceivedResponse = self.aliceReceivedResponses[0].sipMessage
-        self.assertIsNotNone(aliceReceivedResponse.header.toTag)
-        self.assertEqual(1, len(aliceReceivedResponse.vias))
+        alice_received_response = self.aliceReceivedResponses[0].sipMessage
+        self.assertIsNotNone(alice_received_response.header.toTag)
+        self.assertEqual(1, len(alice_received_response.vias))
 
-        self.assertEqual(self.aliceBindAddress, atlanta_received_request.viaHeaderFields[0].host)
+        self.assertEqual(self.alice_bind_address, atlanta_received_request.viaHeaderFields[0].host)
         # TODO: This 404 nonsense is temporary.  Alice sends to a biloxi domain via atlanta, atlanta forwards her request to biloxi,
         # Biloxi sees that it is responsible for the request, and for right now, just answers 404.
         self.assertEqual(404, self.atlantaReceivedResponses[0].sipMessage.start_line.status_code)
@@ -132,7 +132,7 @@ class TestStatelessProxyWithSimulatedTransport(AbstractStatelessProxyTestCase):
         pass
 
     @property
-    def aliceBindAddress(self):
+    def alice_bind_address(self):
         # return '192.168.4.4'
         return '127.0.0.2'
 
@@ -148,7 +148,7 @@ class TestStatelessProxyWithSimulatedTransport(AbstractStatelessProxyTestCase):
         return '127.0.0.3'
 
     @property
-    def atlantaBindPort(self):
+    def atlanta_bind_port(self):
         return 5060
 
     @property
@@ -157,11 +157,11 @@ class TestStatelessProxyWithSimulatedTransport(AbstractStatelessProxyTestCase):
         return '127.0.0.4'
 
     @property
-    def biloxiBindPort(self):
+    def biloxi_bind_port(self):
         return 5060
 
     @property
-    def bobBindAddress(self):
+    def bob_bind_address(self):
         # return '192.168.4.5'
         return '127.0.0.5'
 
@@ -200,28 +200,28 @@ class TestStatelessProxyWithSimulatedTransport(AbstractStatelessProxyTestCase):
         #                  'a=fmtp:101 0-15\r\n'
         #                  'a=sendrecv\r\n')
         message_string = ('INVITE sip:1002@127.0.0.4 SIP/2.0\r\n'
-                         'Via: SIP/2.0/UDP 127.0.0.2:63354;branch=z9hG4bK-524287-1---7a462a5d1b6fe13b;rport\r\n'
-                         'Max-Forwards: 70\r\n'
-                         'Contact: <sip:alice@127.0.0.2:63354;rinstance=d875ce4fd8f72441>\r\n'
-                         'To: <sip:1002@127.0.0.4>\r\n'
-                         'From: "Alice"<sip:alice@127.0.0.3>;tag=9980376d\r\n'
-                         'Call-ID: YjBhMDliMWMxNzQ4ZTc5Nzg1ZTcyYTExMWMzZDlhNmQ\r\n'
-                         'CSeq: 1 INVITE\r\n'
-                         'Allow: INVITE, ACK, CANCEL, BYE, REFER, INFO, NOTIFY, UPDATE, PRACK, MESSAGE, OPTIONS, SUBSCRIBE, OPTIONS\r\n'
-                         'Content-Type: application/sdp\r\n'
-                         'Supported: replaces, 100rel\r\n'
-                         'User-Agent: Bria iOS release 3.6.2 stamp 33024\r\n'
-                         'Content-Length: 181\r\n'
-                         '\r\n'
-                         'v=0\r\n'
-                         'o=- 1457365987528724 1 IN IP4 127.0.0.2\r\n'
-                         's=Cpc session\r\n'
-                         'c=IN IP4 127.0.0.2\r\n'
-                         't=0 0\r\n'
-                         'm=audio 60668 RTP/AVP 0 101\r\n'
-                         'a=rtpmap:101 telephone-event/8000\r\n'
-                         'a=fmtp:101 0-15\r\n'
-                         'a=sendrecv\r\n')
+                          'Via: SIP/2.0/UDP 127.0.0.2:63354;branch=z9hG4bK-524287-1---7a462a5d1b6fe13b;rport\r\n'
+                          'Max-Forwards: 70\r\n'
+                          'Contact: <sip:alice@127.0.0.2:63354;rinstance=d875ce4fd8f72441>\r\n'
+                          'To: <sip:1002@127.0.0.4>\r\n'
+                          'From: "Alice"<sip:alice@127.0.0.3>;tag=9980376d\r\n'
+                          'Call-ID: YjBhMDliMWMxNzQ4ZTc5Nzg1ZTcyYTExMWMzZDlhNmQ\r\n'
+                          'CSeq: 1 INVITE\r\n'
+                          'Allow: INVITE, ACK, CANCEL, BYE, REFER, INFO, NOTIFY, UPDATE, PRACK, MESSAGE, OPTIONS, SUBSCRIBE, OPTIONS\r\n'
+                          'Content-Type: application/sdp\r\n'
+                          'Supported: replaces, 100rel\r\n'
+                          'User-Agent: Bria iOS release 3.6.2 stamp 33024\r\n'
+                          'Content-Length: 181\r\n'
+                          '\r\n'
+                          'v=0\r\n'
+                          'o=- 1457365987528724 1 IN IP4 127.0.0.2\r\n'
+                          's=Cpc session\r\n'
+                          'c=IN IP4 127.0.0.2\r\n'
+                          't=0 0\r\n'
+                          'm=audio 60668 RTP/AVP 0 101\r\n'
+                          'a=rtpmap:101 telephone-event/8000\r\n'
+                          'a=fmtp:101 0-15\r\n'
+                          'a=sendrecv\r\n')
         return message_string
 
     # @property
@@ -302,28 +302,28 @@ class TestStatelessProxyWithSimulatedTransport(AbstractStatelessProxyTestCase):
         #                  'a=fmtp:101 0-15\r\n'
         #                  'a=sendrecv\r\n')
         message_string = ('INVITE sip:1001@127.0.0.3 SIP/2.0\r\n'
-                         'Via: SIP/2.0/UDP 127.0.0.5:63354;branch=z9hG4bK-524287-1---7a462a5d1b6fe13b;rport\r\n'
-                         'Max-Forwards: 70\r\n'
-                         'Contact: <sip:bob@127.0.0.4:63354;rinstance=d875ce4fd8f72441>\r\n'
-                         'To: <sip:1001@127.0.0.3>\r\n'
-                         'From: "Alice"<sip:alice@127.0.0.3>;tag=9980376d\r\n'
-                         'Call-ID: YjBhMDliMWMxNzQ4ZTc5Nzg1ZTcyYTExMWMzZDlhNmQ\r\n'
-                         'CSeq: 1 INVITE\r\n'
-                         'Allow: INVITE, ACK, CANCEL, BYE, REFER, INFO, NOTIFY, UPDATE, PRACK, MESSAGE, OPTIONS, SUBSCRIBE, OPTIONS\r\n'
-                         'Content-Type: application/sdp\r\n'
-                         'Supported: replaces, 100rel\r\n'
-                         'User-Agent: Bria iOS release 3.6.2 stamp 33024\r\n'
-                         'Content-Length: 181\r\n'
-                         '\r\n'
-                         'v=0\r\n'
-                         'o=- 1457365987528724 1 IN IP4 127.0.0.5\r\n'
-                         's=Cpc session\r\n'
-                         'c=IN IP4 127.0.0.5\r\n'
-                         't=0 0\r\n'
-                         'm=audio 60668 RTP/AVP 0 101\r\n'
-                         'a=rtpmap:101 telephone-event/8000\r\n'
-                         'a=fmtp:101 0-15\r\n'
-                         'a=sendrecv\r\n')
+                          'Via: SIP/2.0/UDP 127.0.0.5:63354;branch=z9hG4bK-524287-1---7a462a5d1b6fe13b;rport\r\n'
+                          'Max-Forwards: 70\r\n'
+                          'Contact: <sip:bob@127.0.0.4:63354;rinstance=d875ce4fd8f72441>\r\n'
+                          'To: <sip:1001@127.0.0.3>\r\n'
+                          'From: "Alice"<sip:alice@127.0.0.3>;tag=9980376d\r\n'
+                          'Call-ID: YjBhMDliMWMxNzQ4ZTc5Nzg1ZTcyYTExMWMzZDlhNmQ\r\n'
+                          'CSeq: 1 INVITE\r\n'
+                          'Allow: INVITE, ACK, CANCEL, BYE, REFER, INFO, NOTIFY, UPDATE, PRACK, MESSAGE, OPTIONS, SUBSCRIBE, OPTIONS\r\n'
+                          'Content-Type: application/sdp\r\n'
+                          'Supported: replaces, 100rel\r\n'
+                          'User-Agent: Bria iOS release 3.6.2 stamp 33024\r\n'
+                          'Content-Length: 181\r\n'
+                          '\r\n'
+                          'v=0\r\n'
+                          'o=- 1457365987528724 1 IN IP4 127.0.0.5\r\n'
+                          's=Cpc session\r\n'
+                          'c=IN IP4 127.0.0.5\r\n'
+                          't=0 0\r\n'
+                          'm=audio 60668 RTP/AVP 0 101\r\n'
+                          'a=rtpmap:101 telephone-event/8000\r\n'
+                          'a=fmtp:101 0-15\r\n'
+                          'a=sendrecv\r\n')
         return message_string
 
     # @property

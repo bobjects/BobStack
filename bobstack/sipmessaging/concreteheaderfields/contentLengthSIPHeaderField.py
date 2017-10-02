@@ -14,16 +14,16 @@ class ContentLengthSIPHeaderField(IntegerSIPHeaderField):
     # noinspection PyNestedDecorators
     @classproperty
     @classmethod
-    def canonicalFieldName(cls):
+    def canonical_field_name(cls):
         return 'Content-Length'
 
     # noinspection PyNestedDecorators
     @classproperty
     @classmethod
-    def canonicalCompactFieldName(cls):
+    def canonical_compact_field_name(cls):
         return 'l'
 
     @property
-    def isContentLength(self):
+    def is_content_length(self):
         return True
 

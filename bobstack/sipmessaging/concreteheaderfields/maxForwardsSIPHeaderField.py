@@ -14,10 +14,10 @@ class MaxForwardsSIPHeaderField(IntegerSIPHeaderField):
     # noinspection PyNestedDecorators
     @classproperty
     @classmethod
-    def canonicalFieldName(cls):
+    def canonical_field_name(cls):
         return 'Max-Forwards'
 
     @property
-    def isMaxForwards(self):
+    def is_max_forwards(self):
         return True
 

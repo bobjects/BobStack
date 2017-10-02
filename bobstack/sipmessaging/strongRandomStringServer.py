@@ -22,11 +22,11 @@ class StrongRandomStringServer(object):
         self.string_io = StringIO()
 
     @property
-    def next32Bits(self):
+    def next_32_bits(self):
         string = self.string_io.read(8)
         if not string:
             self.string_io.reset()
             self.string_io.write(sha512(str(randint(0, 0xFFFFFFFF))).hexdigest())
             self.string_io.reset()
-            return self.next32Bits
+            return self.next_32_bits
         return string

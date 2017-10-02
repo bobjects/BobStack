@@ -14,14 +14,14 @@ class ProxyRequireSIPHeaderField(SIPHeaderField):
     # noinspection PyNestedDecorators
     @classproperty
     @classmethod
-    def canonicalFieldName(cls):
+    def canonical_field_name(cls):
         return 'Proxy-Require'
 
     @classmethod
-    def newForAttributes(cls, field_name="Proxy-Require", field_value_string=""):
+    def new_for_attributes(cls, field_name="Proxy-Require", field_value_string=""):
         return cls.newForFieldNameAndValueString(field_name=field_name, field_value_string=field_value_string)
 
     @property
-    def isProxyRequire(self):
+    def is_proxy_require(self):
         return True
 

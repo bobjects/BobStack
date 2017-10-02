@@ -6,9 +6,9 @@ from sipmessaging import SIPRequest
 
 class ACKSIPRequest(SIPRequest):
     @property
-    def isACKRequest(self):
+    def is_ack_request(self):
         return True
 
     @property
-    def isKnown(self):
+    def is_known(self):
         return True

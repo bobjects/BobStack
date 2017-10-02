@@ -15,14 +15,14 @@ class SIPHeaderField(object):
     regexForFindingValueUpToParameters = re.compile('([^;])')
 
     @classmethod
-    def newParsedFrom(cls, a_string, use_compact_headers=False):
+    def new_parsed_from(cls, a_string, use_compact_headers=False):
         answer = cls()
         answer.use_compact_headers = use_compact_headers
-        answer.rawString = a_string
+        answer.raw_string = a_string
         return answer
 
     @classmethod
-    def newForAttributes(cls, value='', parameterNamesAndValueStrings=None, use_compact_headers=False):
+    def new_for_attributes(cls, value='', parameterNamesAndValueStrings=None, use_compact_headers=False):
         # This will typically be overridden by classes that have interesting attributes.
         # return cls.newForFieldNameAndValueString(field_name=field_name, field_value_string=field_value_string)
         answer = cls()
@@ -44,22 +44,22 @@ class SIPHeaderField(object):
 
     @classmethod
     def newForValueString(cls, field_value_string, use_compact_headers=False):
-        return cls.newForFieldNameAndValueString(cls.canonicalFieldName, field_value_string, use_compact_headers)
+        return cls.newForFieldNameAndValueString(cls.canonical_field_name, field_value_string, use_compact_headers)
 
     @property
     def deepCopy(self):
-        return self.__class__.newParsedFrom(self.rawString, use_compact_headers=self.use_compact_headers)
+        return self.__class__.new_parsed_from(self.raw_string, use_compact_headers=self.use_compact_headers)
 
     # noinspection PyNestedDecorators
     @classproperty
     @classmethod
-    def canonicalFieldName(cls):
+    def canonical_field_name(cls):
         raise NotImplementedError('call to abstract method ' + inspect.stack()[0][3])
 
     # noinspection PyNestedDecorators
     @classproperty
     @classmethod
-    def canonicalCompactFieldName(cls):
+    def canonical_compact_field_name(cls):
         return None
 
     def __init__(self):
@@ -73,22 +73,22 @@ class SIPHeaderField(object):
         self._fieldValueString = None
         self._useCompactHeaders = False
 
-        self.clearRawString()
+        self.clear_raw_string()
         self.clearFieldNameAndValueString()
-        self.clearAttributes()
+        self.clear_attributes()
 
     @property
-    def rawString(self):
+    def raw_string(self):
         if not self._rawStringHasBeenSet:
             self.renderRawStringFromFieldNameAndValueString()
         return self._rawString
 
-    @rawString.setter
-    def rawString(self, a_string):
+    @raw_string.setter
+    def raw_string(self, a_string):
         self._rawString = a_string
         self._rawStringHasBeenSet = True
         self.clearFieldNameAndValueString()
-        self.clearAttributes()
+        self.clear_attributes()
 
     @property
     def use_compact_headers(self):
@@ -99,13 +99,13 @@ class SIPHeaderField(object):
         self._useCompactHeaders = aBoolean
         # noinspection PyUnusedLocal
         fieldValue = self.field_value_string  # render field values if not already rendered.
-        self.clearRawString()
+        self.clear_raw_string()
 
     @property
     def field_name(self):
         if not self._fieldNameAndValueStringHasBeenSet:
             if self._attributeHasBeenSet:
-                self.renderFieldNameAndValueStringFromAttributes()
+                self.render_field_name_and_value_string_from_attributes()
             elif self._rawStringHasBeenSet:
                 self.parseFieldNameAndValueStringFromRawString()
         return self._fieldName
@@ -114,14 +114,14 @@ class SIPHeaderField(object):
     def field_name(self, a_string):
         self._fieldName = a_string
         self._fieldNameAndValueStringHasBeenSet = True
-        self.clearRawString()
-        self.clearAttributes()
+        self.clear_raw_string()
+        self.clear_attributes()
 
     @property
     def field_value_string(self):
         if not self._fieldNameAndValueStringHasBeenSet:
             if self._attributeHasBeenSet:
-                self.renderFieldNameAndValueStringFromAttributes()
+                self.render_field_name_and_value_string_from_attributes()
             elif self._rawStringHasBeenSet:
                 self.parseFieldNameAndValueStringFromRawString()
         return self._fieldValueString
@@ -130,20 +130,20 @@ class SIPHeaderField(object):
     def field_value_string(self, a_string):
         self._fieldValueString = a_string
         self._fieldNameAndValueStringHasBeenSet = True
-        self.clearRawString()
-        self.clearAttributes()
+        self.clear_raw_string()
+        self.clear_attributes()
 
     @property
     def value(self):
         if not self._attributeHasBeenSet:
-            self.parseAttributesFromFieldValueString()
+            self.parse_attributes_from_field_value_string()
         return self._value
 
     @value.setter
     def value(self, value):
         self._value = value
         self._attributeHasBeenSet = True
-        self.clearRawString()
+        self.clear_raw_string()
         self.clearFieldNameAndValueString()
 
     # TODO: Answer a dict of parameter names and values encoded into the field value.
@@ -155,32 +155,32 @@ class SIPHeaderField(object):
         # RFC3261  7.3.1 Header Field Format
         # return dict(self.__class__.regexForFindingParameterNamesAndValues.findall(self.field_value_string))
         if not self._attributeHasBeenSet:
-            self.parseAttributesFromFieldValueString()
+            self.parse_attributes_from_field_value_string()
         return self._parameterNamesAndValueStrings
 
     @parameterNamesAndValueStrings.setter
     def parameterNamesAndValueStrings(self, aDictionary):
         self._parameterNamesAndValueStrings = aDictionary
         self._attributeHasBeenSet = True
-        self.clearRawString()
+        self.clear_raw_string()
         self.clearFieldNameAndValueString()
 
-    def parameterNamed(self, a_string):
+    def parameter_named(self, a_string):
         return self.parameterNamesAndValueStrings.get(a_string, None)
 
-    def parameterNamedPut(self, keyString, value):
+    def parameter_named_put(self, keyString, value):
         if value is None:
             self.parameterNamesAndValueStrings.pop(keyString, None)
         else:
             self.parameterNamesAndValueStrings[keyString] = value
-        self.clearRawString()
+        self.clear_raw_string()
         self.clearFieldNameAndValueString()
 
-    def clearRawString(self):
+    def clear_raw_string(self):
         self._rawStringHasBeenSet = False
         self._rawString = None
 
-    def clearAttributes(self):
+    def clear_attributes(self):
         # override in subclasses that have interesting attributes.
         self._parameterNamesAndValueStrings = {}
         self._value = None
@@ -192,7 +192,7 @@ class SIPHeaderField(object):
         self._fieldNameAndValueStringHasBeenSet = False
 
     def parseFieldNameAndValueStringFromRawString(self):
-        # self.clearAttributes()
+        # self.clear_attributes()
         # self._attributeHasBeenSet = False
         self._fieldName = ""
         self._fieldValueString = ""
@@ -201,11 +201,11 @@ class SIPHeaderField(object):
             self._fieldName, self._fieldValueString = match.group(1, 2)
         self._fieldNameAndValueStringHasBeenSet = True
 
-    def renderFieldNameAndValueStringFromAttributes(self):
+    def render_field_name_and_value_string_from_attributes(self):
         if self.use_compact_headers:
-            self._fieldName = self.canonicalCompactFieldName
+            self._fieldName = self.canonical_compact_field_name
         else:
-            self._fieldName = self.canonicalFieldName
+            self._fieldName = self.canonical_field_name
         if self.parameterNamesAndValueStrings:
             self._fieldValueString = str(self._value)
         else:
@@ -220,7 +220,7 @@ class SIPHeaderField(object):
             stringio.close()
         self._fieldNameAndValueStringHasBeenSet = True
 
-    def parseAttributesFromFieldValueString(self):
+    def parse_attributes_from_field_value_string(self):
         self._value = self.field_value_string
         self._parameterNamesAndValueStrings = dict(self.__class__.regexForFindingParameterNamesAndValues.findall(self.field_value_string))
         if self._parameterNamesAndValueStrings:
@@ -242,29 +242,29 @@ class SIPHeaderField(object):
         try:
             return cls._regexForMatchingFieldName
         except AttributeError:
-            if cls.canonicalCompactFieldName:
-                cls._regexForMatchingFieldName = re.compile('^(' + cls.canonicalFieldName + '|' + cls.canonicalCompactFieldName + ')$', re.I)
+            if cls.canonical_compact_field_name:
+                cls._regexForMatchingFieldName = re.compile('^(' + cls.canonical_field_name + '|' + cls.canonical_compact_field_name + ')$', re.I)
             else:
-                cls._regexForMatchingFieldName = re.compile('^' + cls.canonicalFieldName + '$', re.I)
+                cls._regexForMatchingFieldName = re.compile('^' + cls.canonical_field_name + '$', re.I)
             return cls._regexForMatchingFieldName
 
     # noinspection PyNestedDecorators
     @classproperty
     @classmethod
-    def regexForMatching(cls):
+    def regex_for_matching(cls):
         try:
             return cls._regexForMatching
         except AttributeError:
-            if cls.canonicalCompactFieldName:
-                cls._regexForMatching = re.compile('^(' + cls.canonicalFieldName + '|' + cls.canonicalCompactFieldName + ')\s*:', re.I)
+            if cls.canonical_compact_field_name:
+                cls._regexForMatching = re.compile('^(' + cls.canonical_field_name + '|' + cls.canonical_compact_field_name + ')\s*:', re.I)
             else:
-                cls._regexForMatching = re.compile('^' + cls.canonicalFieldName + '\s*:', re.I)
+                cls._regexForMatching = re.compile('^' + cls.canonical_field_name + '\s*:', re.I)
             return cls._regexForMatching
 
     # noinspection PyNestedDecorators
     @classproperty
     @classmethod
-    def regexForParsing(cls):
+    def regex_for_parsing(cls):
         return cls.regexToNeverMatch
 
     # noinspection PyNestedDecorators
@@ -288,8 +288,8 @@ class SIPHeaderField(object):
             return cls._regexForParsingFieldAndValue
 
     @classmethod
-    def canMatchString(cls, a_string):
-        return cls.regexForMatching.match(a_string) is not None
+    def can_match_string(cls, a_string):
+        return cls.regex_for_matching.match(a_string) is not None
 
     @classmethod
     def canMatchFieldName(cls, a_string):
@@ -297,18 +297,18 @@ class SIPHeaderField(object):
 
     @property
     def isUnknown(self):
-        return not self.isKnown
+        return not self.is_known
 
     @property
-    def isKnown(self):
+    def is_known(self):
         return True
 
     @property
     def isInvalid(self):
-        return not self.isValid
+        return not self.is_valid
 
     @property
-    def isValid(self):
+    def is_valid(self):
         if not self.field_name:  # fail if None or empty field_name.
             return False
         if self.field_value_string is None:
@@ -316,222 +316,222 @@ class SIPHeaderField(object):
         return True
 
     @property
-    def isAccept(self):
+    def is_accept(self):
         return False
 
     @property
-    def isAcceptEncoding(self):
+    def is_accept_encoding(self):
         return False
 
     @property
-    def isAcceptLanguage(self):
+    def is_accept_language(self):
         return False
 
     @property
-    def isAllow(self):
+    def is_allow(self):
         return False
 
     @property
-    def isAuthorization(self):
+    def is_authorization(self):
         return False
 
     @property
-    def isCSeq(self):
+    def is_cseq(self):
         return False
 
     @property
-    def isCallID(self):
+    def is_call_id(self):
         return False
 
     @property
-    def isCallInfo(self):
+    def is_call_info(self):
         return False
 
     @property
-    def isContact(self):
+    def is_contact(self):
         return False
 
     @property
-    def isContentDisposition(self):
+    def is_content_disposition(self):
         return False
 
     @property
-    def isContentType(self):
+    def is_content_type(self):
         return False
 
     @property
-    def isContentLength(self):
+    def is_content_length(self):
         return False
 
     @property
-    def isDate(self):
+    def is_date(self):
         return False
 
     @property
-    def isExpires(self):
+    def is_expires(self):
         return False
 
     @property
-    def isFrom(self):
+    def is_from(self):
         return False
 
     @property
-    def isMaxForwards(self):
+    def is_max_forwards(self):
         return False
 
     @property
-    def isRecordRoute(self):
+    def is_record_route(self):
         return False
 
     @property
-    def isRequire(self):
+    def is_require(self):
         return False
 
     @property
-    def isRetryAfter(self):
+    def is_retry_after(self):
         return False
 
     @property
-    def isRoute(self):
+    def is_route(self):
         return False
 
     @property
-    def isServer(self):
+    def is_server(self):
         return False
 
     @property
-    def isSessionExpires(self):
+    def is_session_expires(self):
         return False
 
     @property
-    def isSupported(self):
+    def is_supported(self):
         return False
 
     @property
-    def isTimestamp(self):
+    def is_timestamp(self):
         return False
 
     @property
-    def isTo(self):
+    def is_to(self):
         return False
 
     @property
-    def isUserAgent(self):
+    def is_user_agent(self):
         return False
 
     @property
-    def isVia(self):
+    def is_via(self):
         return False
 
     @property
-    def isWWWAuthenticate(self):
+    def is_www_authenticate(self):
         return False
 
     @property
-    def isWarning(self):
+    def is_warning(self):
         return False
 
     @property
-    def isSubject(self):
+    def is_subject(self):
         return False
 
     @property
-    def isReferredBy(self):
+    def is_referred_by(self):
         return False
 
     @property
-    def isReferTo(self):
+    def is_refer_to(self):
         return False
 
     @property
-    def isAllowEvents(self):
+    def is_allow_events(self):
         return False
 
     @property
-    def isEvent(self):
+    def is_event(self):
         return False
 
     @property
-    def isContentEncoding(self):
+    def is_content_encoding(self):
         return False
 
     @property
-    def isRAck(self):
+    def is_rack(self):
         return False
 
     @property
-    def isPCharge(self):
+    def is_p_charge(self):
         return False
 
     @property
-    def isReplyTo(self):
+    def is_reply_to(self):
         return False
 
     @property
-    def isUnsupported(self):
+    def is_unsupported(self):
         return False
 
     @property
-    def isPAssertedIdentity(self):
+    def is_p_asserted_identity(self):
         return False
 
     @property
-    def isPPreferredIdentity(self):
+    def is_p_preferred_identity(self):
         return False
 
     @property
-    def isRemotePartyID(self):
+    def is_remote_party_id(self):
         return False
 
     @property
-    def isAlertInfo(self):
+    def is_alert_info(self):
         return False
 
     @property
-    def isHistoryInfo(self):
+    def is_history_info(self):
         return False
 
     @property
-    def isPCalledPartyId(self):
+    def is_p_called_party_id(self):
         return False
 
     @property
-    def isPRTPStat(self):
+    def is_p_rtp_stat(self):
         return False
 
     @property
-    def isPrivacy(self):
+    def is_privacy(self):
         return False
 
     @property
-    def isProxyAuthenticate(self):
+    def is_proxy_authenticate(self):
         return False
 
     @property
-    def isProxyAuthorization(self):
+    def is_proxy_authorization(self):
         return False
 
     @property
-    def isProxyRequire(self):
+    def is_proxy_require(self):
         return False
 
     @property
-    def isReason(self):
+    def is_reason(self):
         return False
 
     @property
-    def isRecordSessionExpires(self):
+    def is_record_session_expires(self):
         return False
 
     @property
-    def isReplaces(self):
+    def is_replaces(self):
         return False
 
     @property
-    def isSubscriptionState(self):
+    def is_subscription_state(self):
         return False
 
     @property
-    def isMinExpires(self):
+    def is_min_expires(self):
         return False
 

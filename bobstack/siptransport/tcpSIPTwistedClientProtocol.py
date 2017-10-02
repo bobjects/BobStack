@@ -1,6 +1,7 @@
 from twisted.protocols import basic
 from tcpSIPTwistedProtocol import TCPSIPTwistedProtcol
 
+
 # TODO:  Maybe not LineReceiver.  We are message-oriented, not line-oriented.
-class TCPSIPTwistedClientProtcol( TCPSIPTwistedProtcol, basic.LineReceiver ):
+class TCPSIPTwistedClientProtcol(TCPSIPTwistedProtcol, basic.LineReceiver):
     pass

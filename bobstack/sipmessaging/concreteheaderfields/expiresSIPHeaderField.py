@@ -14,10 +14,10 @@ class ExpiresSIPHeaderField(IntegerSIPHeaderField):
     # noinspection PyNestedDecorators
     @classproperty
     @classmethod
-    def canonicalFieldName(cls):
+    def canonical_field_name(cls):
         return 'Expires'
 
     @property
-    def isExpires(self):
+    def is_expires(self):
         return True
 

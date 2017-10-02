@@ -10,9 +10,9 @@ class UnknownSIPHeaderField(SIPHeaderField):
     # noinspection PyNestedDecorators
     @classproperty
     @classmethod
-    def canonicalFieldName(cls):
+    def canonical_field_name(cls):
         return 'NEVER-MATCH'
 
     @property
-    def isKnown(self):
+    def is_known(self):
         return False

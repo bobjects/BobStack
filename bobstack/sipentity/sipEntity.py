@@ -2,12 +2,12 @@
 
 class SIPEntity(object):
     def __init__(self):
-        # TODO: still need to test homeDomains.
+        # TODO: still need to test home_domains.
         self._homeDomains = []
         self._transports = []
 
     @property
-    def homeDomains(self):
+    def home_domains(self):
         # TODO: Is this correct?  We are deriving domains for each bind address, and letting the user add additional domains.
         return [t.bind_address for t in self.transports] + self._homeDomains
 
@@ -20,50 +20,50 @@ class SIPEntity(object):
         new_transports = [t for t in sip_transports if t not in self._transports]
         old_transports = [t for t in self._transports if t not in sip_transports]
         for t in new_transports:
-            self.subscribeToTransportEvents(t)
+            self.subscribe_to_transport_events(t)
             t.bind()
             self._transports.append(t)
         for t in old_transports:
-            self.unSubscribeFromTransportEvents(t)
+            self.unsubscribe_from_transport_events(t)
             # TODO - will need to un-bind, and also probably break all connections.
             self._transports.remove(t)
 
-    def subscribeToTransportEvents(self, a_sip_transport):
-        a_sip_transport.whenEventDo('receivedValidConnectedRequest', self.receivedValidConnectedRequestEventHandler)
-        a_sip_transport.whenEventDo('receivedValidConnectedResponse', self.receivedValidConnectedResponseEventHandler)
-        a_sip_transport.whenEventDo('bound', self.boundEventHandler)
-        a_sip_transport.whenEventDo('bindFailed', self.bindFailedEventHandler)
-        a_sip_transport.whenEventDo('madeConnection', self.madeConnectionEventHandler)
-        a_sip_transport.whenEventDo('couldNotMakeConnection', self.couldNotMakeConnectionEventHandler)
-        a_sip_transport.whenEventDo('lostConnection', self.lostConnectionEventHandler)
+    def subscribe_to_transport_events(self, a_sip_transport):
+        a_sip_transport.when_event_do('receivedValidConnectedRequest', self.received_valid_connected_request_event_handler)
+        a_sip_transport.when_event_do('receivedValidConnectedResponse', self.received_valid_connected_response_event_handler)
+        a_sip_transport.when_event_do('bound', self.bound_event_handler)
+        a_sip_transport.when_event_do('bindFailed', self.bind_failed_event_handler)
+        a_sip_transport.when_event_do('madeConnection', self.made_connection_event_handler)
+        a_sip_transport.when_event_do('couldNotMakeConnection', self.could_not_make_connection_event_handler)
+        a_sip_transport.when_event_do('lostConnection', self.lost_connection_event_handler)
 
-    def unSubscribeFromTransportEvents(self, a_sip_transport):
-        a_sip_transport.whenEventDoNot('receivedValidConnectedRequest', self.receivedValidConnectedRequestEventHandler)
-        a_sip_transport.whenEventDoNot('receivedValidConnectedResponse', self.receivedValidConnectedResponseEventHandler)
-        a_sip_transport.whenEventDoNot('bound', self.boundEventHandler)
-        a_sip_transport.whenEventDoNot('bindFailed', self.bindFailedEventHandler)
-        a_sip_transport.whenEventDoNot('madeConnection', self.madeConnectionEventHandler)
-        a_sip_transport.whenEventDoNot('couldNotMakeConnection', self.couldNotMakeConnectionEventHandler)
-        a_sip_transport.whenEventDoNot('lostConnection', self.lostConnectionEventHandler)
+    def unsubscribe_from_transport_events(self, a_sip_transport):
+        a_sip_transport.when_event_do_not('receivedValidConnectedRequest', self.received_valid_connected_request_event_handler)
+        a_sip_transport.when_event_do_not('receivedValidConnectedResponse', self.received_valid_connected_response_event_handler)
+        a_sip_transport.when_event_do_not('bound', self.bound_event_handler)
+        a_sip_transport.when_event_do_not('bindFailed', self.bind_failed_event_handler)
+        a_sip_transport.when_event_do_not('madeConnection', self.made_connection_event_handler)
+        a_sip_transport.when_event_do_not('couldNotMakeConnection', self.could_not_make_connection_event_handler)
+        a_sip_transport.when_event_do_not('lostConnection', self.lost_connection_event_handler)
 
-    def boundEventHandler(self):
+    def bound_event_handler(self):
         pass
 
-    def bindFailedEventHandler(self):
+    def bind_failed_event_handler(self):
         pass
 
-    def madeConnectionEventHandler(self, a_sip_transport_connection):
+    def made_connection_event_handler(self, a_sip_transport_connection):
         pass
 
-    def couldNotMakeConnectionEventHandler(self, bind_address_and_port):
+    def could_not_make_connection_event_handler(self, bind_address_and_port):
         pass
 
-    def lostConnectionEventHandler(self, a_sip_transport_connction):
+    def lost_connection_event_handler(self, a_sip_transport_connction):
         pass
 
-    def receivedValidConnectedRequestEventHandler(self, a_connected_aip_message):
+    def received_valid_connected_request_event_handler(self, a_connected_aip_message):
         pass
 
-    def receivedValidConnectedResponseEventHandler(self, a_connected_aip_message):
+    def received_valid_connected_response_event_handler(self, a_connected_aip_message):
         pass
 

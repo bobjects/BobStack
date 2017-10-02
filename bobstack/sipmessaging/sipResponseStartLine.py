@@ -9,7 +9,7 @@ from classproperty import classproperty
 
 class SIPResponseStartLine(SIPStartLine):
     @classmethod
-    def newForAttributes(cls, status_code="", reason_phrase=""):
+    def new_for_attributes(cls, status_code="", reason_phrase=""):
         answer = cls()
         answer.status_code = status_code
         answer.reason_phrase = reason_phrase
@@ -23,38 +23,38 @@ class SIPResponseStartLine(SIPStartLine):
     @property
     def status_code(self):
         if self._statusCode is None:
-            self.parseAttributesFromRawString()
+            self.parse_attributes_from_raw_string()
         return self._statusCode
 
     @status_code.setter
     def status_code(self, a_string):
         self._statusCode = a_string
-        self.clearRawString()
+        self.clear_raw_string()
 
     @property
     def reason_phrase(self):
         if self._reasonPhrase is None:
-            self.parseAttributesFromRawString()
+            self.parse_attributes_from_raw_string()
         return self._reasonPhrase
 
     @reason_phrase.setter
     def reason_phrase(self, a_string):
         self._reasonPhrase = a_string
-        self.clearRawString()
+        self.clear_raw_string()
 
-    def clearAttributes(self):
+    def clear_attributes(self):
         self._statusCode = None
         self._reasonPhrase = None
 
-    def parseAttributesFromRawString(self):
+    def parse_attributes_from_raw_string(self):
         self._statusCode = 500
         self._reasonPhrase = ""
-        match = self.__class__.regexForParsing.match(self._rawString)
+        match = self.__class__.regex_for_parsing.match(self._rawString)
         if match:
             self._statusCode, self._reasonPhrase = match.group(1, 2)
             self._statusCode = int(self._statusCode)
 
-    def renderRawStringFromAttributes(self):
+    def render_raw_string_from_attributes(self):
         stringio = StringIO()
         stringio.write("SIP/2.0 ")
         stringio.write(str(self._statusCode))
@@ -66,13 +66,13 @@ class SIPResponseStartLine(SIPStartLine):
     # noinspection PyNestedDecorators
     @classproperty
     @classmethod
-    def regexForMatching(cls):
-        return cls.regexForParsing
+    def regex_for_matching(cls):
+        return cls.regex_for_parsing
 
     # noinspection PyNestedDecorators
     @classproperty
     @classmethod
-    def regexForParsing(cls):
+    def regex_for_parsing(cls):
         try:
             return cls._regexForParsing
         except AttributeError:
@@ -80,20 +80,20 @@ class SIPResponseStartLine(SIPStartLine):
             return cls._regexForParsing
 
     @classmethod
-    def canMatchString(cls, a_string):
-        return cls.regexForMatching.match(a_string) is not None
+    def can_match_string(cls, a_string):
+        return cls.regex_for_matching.match(a_string) is not None
 
     @property
-    def isResponse(self):
+    def is_response(self):
         return True
 
     # TODO:  need to test.
     @property
-    def isProvisional(self):
+    def is_provisional(self):
         # True if 1xx
         return self.status_code.startsWith('1')
 
     # TODO:  need to test.
     @property
-    def isFinal(self):
-        return not self.isProvisional
+    def is_final(self):
+        return not self.is_provisional

@@ -14,14 +14,14 @@ class RecordSessionExpiresSIPHeaderField(IntegerSIPHeaderField):
     # noinspection PyNestedDecorators
     @classproperty
     @classmethod
-    def canonicalFieldName(cls):
+    def canonical_field_name(cls):
         return 'Record-Session-Expires'
 
     # @classmethod
-    # def newForAttributes(cls, field_name="Record-Session-Expires", field_value_string=""):
+    # def new_for_attributes(cls, field_name="Record-Session-Expires", field_value_string=""):
     #     return cls.newForFieldNameAndValueString(field_name=field_name, field_value_string=field_value_string)
 
     @property
-    def isRecordSessionExpires(self):
+    def is_record_session_expires(self):
         return True
 

@@ -6,9 +6,9 @@ from sipmessaging import SIPRequest
 
 class REGISTERSIPRequest(SIPRequest):
     @property
-    def isREGISTERRequest(self):
+    def is_register_request(self):
         return True
 
     @property
-    def isKnown(self):
+    def is_known(self):
         return True

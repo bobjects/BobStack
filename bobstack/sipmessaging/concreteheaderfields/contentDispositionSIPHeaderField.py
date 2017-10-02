@@ -14,23 +14,23 @@ class ContentDispositionSIPHeaderField(SIPHeaderField):
     # noinspection PyNestedDecorators
     @classproperty
     @classmethod
-    def canonicalFieldName(cls):
+    def canonical_field_name(cls):
         return 'Content-Disposition'
 
     @classmethod
-    def newForAttributes(cls, field_name="Content-Disposition", field_value_string=""):
+    def new_for_attributes(cls, field_name="Content-Disposition", field_value_string=""):
         return cls.newForFieldNameAndValueString(field_name=field_name, field_value_string=field_value_string)
 
     @property
-    def isContentDisposition(self):
+    def is_content_disposition(self):
         return True
 
     # http://www.iana.org/assignments/sip-parameters/sip-parameters.xhtml#sip-parameters-2
     @property
     def handling(self):
-        return self.parameterNamed('handling')
+        return self.parameter_named('handling')
 
     @handling.setter
     def handling(self, a_string):
-        self.parameterNamedPut('handling', a_string)
+        self.parameter_named_put('handling', a_string)
 

@@ -11,7 +11,7 @@ from classproperty import classproperty
 
 class SIPRequestStartLine(SIPStartLine):
     @classmethod
-    def newForAttributes(cls, sip_method="", request_uri=""):
+    def new_for_attributes(cls, sip_method="", request_uri=""):
         answer = cls()
         answer.sip_method = sip_method
         answer.request_uri = request_uri
@@ -25,37 +25,37 @@ class SIPRequestStartLine(SIPStartLine):
     @property
     def sip_method(self):
         if self._sipMethod is None:
-            self.parseAttributesFromRawString()
+            self.parse_attributes_from_raw_string()
         return self._sipMethod
 
     @sip_method.setter
     def sip_method(self, a_string):
         self._sipMethod = a_string
-        self.clearRawString()
+        self.clear_raw_string()
 
     @property
     def request_uri(self):
         if self._requestURI is None:
-            self.parseAttributesFromRawString()
+            self.parse_attributes_from_raw_string()
         return self._requestURI
 
     @request_uri.setter
     def request_uri(self, a_string):
         self._requestURI = a_string
-        self.clearRawString()
+        self.clear_raw_string()
 
-    def clearAttributes(self):
+    def clear_attributes(self):
         self._sipMethod = None
         self._requestURI = None
 
-    def parseAttributesFromRawString(self):
+    def parse_attributes_from_raw_string(self):
         self._sipMethod = ""
         self._requestURI = ""
-        match = self.__class__.regexForParsing.match(self._rawString)
+        match = self.__class__.regex_for_parsing.match(self._rawString)
         if match:
             self._sipMethod, self._requestURI = match.group(1, 2)
 
-    def renderRawStringFromAttributes(self):
+    def render_raw_string_from_attributes(self):
         stringio = StringIO()
         stringio.write(str(self._sipMethod))
         stringio.write(" ")
@@ -67,13 +67,13 @@ class SIPRequestStartLine(SIPStartLine):
     # noinspection PyNestedDecorators
     @classproperty
     @classmethod
-    def regexForMatching(cls):
-        return cls.regexForParsing
+    def regex_for_matching(cls):
+        return cls.regex_for_parsing
 
     # noinspection PyNestedDecorators
     @classproperty
     @classmethod
-    def regexForParsing(cls):
+    def regex_for_parsing(cls):
         try:
             return cls._regexForParsing
         except AttributeError:
@@ -81,10 +81,10 @@ class SIPRequestStartLine(SIPStartLine):
             return cls._regexForParsing
 
     @classmethod
-    def canMatchString(cls, a_string):
-        return cls.regexForMatching.match(a_string) is not None
+    def can_match_string(cls, a_string):
+        return cls.regex_for_matching.match(a_string) is not None
 
     @property
-    def isRequest(self):
+    def is_request(self):
         return True
 

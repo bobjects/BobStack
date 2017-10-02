@@ -207,14 +207,14 @@ class SIPHeaderFieldFactory(object):
     # noinspection PyNestedDecorators
     @classproperty
     @classmethod
-    def regexForGettingHeaderFieldName(cls):
+    def regex_for_getting_header_field_name(cls):
         try:
             return cls._regexForGettingHeaderFieldName
         except AttributeError:
             cls._regexForGettingHeaderFieldName = re.compile('^([^\s:]*)')
             return cls._regexForGettingHeaderFieldName
 
-    def allForStringIO(self, aStringIO):
+    def all_for_stringio(self, aStringIO):
         lineStrings = []
         lineString = aStringIO.readline().rstrip('\r\n')
         while lineString:
@@ -226,7 +226,7 @@ class SIPHeaderFieldFactory(object):
                 lineStrings.append(lineString)
 
             lineString = aStringIO.readline().rstrip('\r\n')
-        return [self.nextForString(s) for s in lineStrings]
+        return [self.next_for_string(s) for s in lineStrings]
 
     def classForString(self, a_string):
         # This is invalid.  There can be no whitespace before the colon.
@@ -234,7 +234,7 @@ class SIPHeaderFieldFactory(object):
         #     return self.classForFieldName(a_string.split()[0])
         # except IndexError:
         #     return UnknownSIPHeaderField
-        match = self.__class__.regexForGettingHeaderFieldName.match(a_string)
+        match = self.__class__.regex_for_getting_header_field_name.match(a_string)
         if match:
             return self.classForFieldName(match.group(1))
         else:
@@ -243,8 +243,8 @@ class SIPHeaderFieldFactory(object):
     def classForFieldName(self, a_string):
         return self.__class__.headerFieldNamesAndClasses.get(a_string.lower(), UnknownSIPHeaderField)
 
-    def nextForString(self, a_string):
-        return self.classForString(a_string).newParsedFrom(a_string)
+    def next_for_string(self, a_string):
+        return self.classForString(a_string).new_parsed_from(a_string)
 
     def nextForFieldName(self, a_string):
         return self.classForFieldName(a_string).newForFieldNameAndValueString(field_name=a_string)

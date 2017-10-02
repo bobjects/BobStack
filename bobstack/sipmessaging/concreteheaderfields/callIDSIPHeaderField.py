@@ -14,20 +14,20 @@ class CallIDSIPHeaderField(SIPHeaderField):
     # noinspection PyNestedDecorators
     @classproperty
     @classmethod
-    def canonicalFieldName(cls):
+    def canonical_field_name(cls):
         return 'Call-ID'
 
     # noinspection PyNestedDecorators
     @classproperty
     @classmethod
-    def canonicalCompactFieldName(cls):
+    def canonical_compact_field_name(cls):
         return 'i'
 
     @classmethod
-    def newForAttributes(cls, field_name="Call-ID", field_value_string=""):
+    def new_for_attributes(cls, field_name="Call-ID", field_value_string=""):
         return cls.newForFieldNameAndValueString(field_name=field_name, field_value_string=field_value_string)
 
     @property
-    def isCallID(self):
+    def is_call_id(self):
         return True
 

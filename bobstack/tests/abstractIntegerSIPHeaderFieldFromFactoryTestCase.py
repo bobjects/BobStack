@@ -29,23 +29,23 @@ class AbstractIntegerSIPHeaderFieldFromFactoryTestCase(AbstractSIPHeaderFieldFro
     def basic_test_parsing(self):
         super(AbstractIntegerSIPHeaderFieldFromFactoryTestCase, self).basic_test_parsing()
         for line in self.canonicalStrings:
-            header_field = SIPHeaderFieldFactory().nextForString(line)
+            header_field = SIPHeaderFieldFactory().next_for_string(line)
             self.assertTrue(header_field.field_name.lower() in [name.lower() for name in self.canonicalFieldNames] + [name.lower() for name in self.canonicalCompactFieldNames])
-            self.assertIsInstance(header_field.integerValue, (int, long), line)
-            self.assertEqual(header_field.integerValue, int(self.canonicalFieldValues[0]))
-            header_field.rawString = self.canonicalFieldNames[0] + ': 301'
+            self.assertIsInstance(header_field.integer_value, (int, long), line)
+            self.assertEqual(header_field.integer_value, int(self.canonicalFieldValues[0]))
+            header_field.raw_string = self.canonicalFieldNames[0] + ': 301'
             self.assertNotEqual(header_field.value, None)
             self.assertIsInstance(header_field.parameterNamesAndValueStrings, dict)
-            self.assertEqual(301, header_field.integerValue)
+            self.assertEqual(301, header_field.integer_value)
             self.assertEqual(header_field.field_name.lower(), self.canonicalFieldNames[0].lower())
             self.assertEqual(header_field.field_value_string, "301")
-            self.assertEqual(self.canonicalFieldNames[0] + ': 301', header_field.rawString)
+            self.assertEqual(self.canonicalFieldNames[0] + ': 301', header_field.raw_string)
             if self.canonicalCompactFieldNames:
-                header_field.rawString = self.canonicalCompactFieldNames[0] + ': 301'
+                header_field.raw_string = self.canonicalCompactFieldNames[0] + ': 301'
                 self.assertNotEqual(header_field.value, None)
                 self.assertIsInstance(header_field.parameterNamesAndValueStrings, dict)
-                self.assertEqual(301, header_field.integerValue)
+                self.assertEqual(301, header_field.integer_value)
                 self.assertEqual(header_field.field_name.lower(), self.canonicalCompactFieldNames[0].lower())
                 self.assertEqual(header_field.field_value_string, "301")
-                self.assertEqual(self.canonicalCompactFieldNames[0] + ': 301', header_field.rawString)
+                self.assertEqual(self.canonicalCompactFieldNames[0] + ': 301', header_field.raw_string)
 

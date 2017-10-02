@@ -14,14 +14,14 @@ class PCalledPartyIdSIPHeaderField(SIPHeaderField):
     # noinspection PyNestedDecorators
     @classproperty
     @classmethod
-    def canonicalFieldName(cls):
+    def canonical_field_name(cls):
         return 'P-Called-Party-Id'
 
     @classmethod
-    def newForAttributes(cls, field_name="P-Called-Party-Id", field_value_string=""):
+    def new_for_attributes(cls, field_name="P-Called-Party-Id", field_value_string=""):
         return cls.newForFieldNameAndValueString(field_name=field_name, field_value_string=field_value_string)
 
     @property
-    def isPCalledPartyId(self):
+    def is_p_called_party_id(self):
         return True
 

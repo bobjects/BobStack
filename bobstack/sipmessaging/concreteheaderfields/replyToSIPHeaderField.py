@@ -14,14 +14,14 @@ class ReplyToSIPHeaderField(SIPHeaderField):
     # noinspection PyNestedDecorators
     @classproperty
     @classmethod
-    def canonicalFieldName(cls):
+    def canonical_field_name(cls):
         return 'Reply-To'
 
     @classmethod
-    def newForAttributes(cls, field_name="Reply-To", field_value_string=""):
+    def new_for_attributes(cls, field_name="Reply-To", field_value_string=""):
         return cls.newForFieldNameAndValueString(field_name=field_name, field_value_string=field_value_string)
 
     @property
-    def isReplyTo(self):
+    def is_reply_to(self):
         return True
 

@@ -57,8 +57,8 @@ do
 	# echo from concreteheaderfields import $NONHYPHENATED"SIPHeaderField" >> out
 	# echo from sipmessaging import $NONHYPHENATED"SIPHeaderField" >> out
 
-	# echo "        elif $CLASS.canMatchString(a_string):"
-	# echo "            return $CLASS.newParsedFrom(a_string)"
+	# echo "        elif $CLASS.can_match_string(a_string):"
+	# echo "            return $CLASS.new_parsed_from(a_string)"
 
 	# echo "        elif $CLASS.canMatchFieldName(a_string):"
 	# echo "            return $CLASS.newForFieldNameAndValueString(field_name=a_string)"
@@ -88,7 +88,7 @@ do
         # echo "    def test_parsing(self):" >> out
         # echo "        self.basic_test_parsing()" >> out
         # echo "        for line in self.canonicalStrings:" >> out
-        # echo "            header_field = self.sipHeaderFieldClassUnderTest.newParsedFrom(line)" >> out
+        # echo "            header_field = self.sipHeaderFieldClassUnderTest.new_parsed_from(line)" >> out
         # echo "            self.assertTrue(header_field.is$NONHYPHENATED, line)" >> out
         # echo "" >> out
         # echo "    def test_rendering(self):" >> out
@@ -99,7 +99,7 @@ do
         # echo "                self.assertTrue(header_field.is$NONHYPHENATED)" >> out
         # echo "                header_field = self.sipHeaderFieldClassUnderTest.newForValueString(field_value_string=field_value_string)" >> out
         # echo "                self.assertTrue(header_field.is$NONHYPHENATED)" >> out
-        # echo "                header_field = self.sipHeaderFieldClassUnderTest.newForAttributes(field_value_string=field_value_string)" >> out
+        # echo "                header_field = self.sipHeaderFieldClassUnderTest.new_for_attributes(field_value_string=field_value_string)" >> out
         # echo "                self.assertTrue(header_field.is$NONHYPHENATED)" >> out
         # echo "" >> out
         # echo "" >> out
@@ -116,10 +116,10 @@ do
         # echo "    def test_parsing(self):" >> out
         # echo "        self.basic_test_parsing()" >> out
         # echo "        for line in self.canonicalStrings:" >> out
-        # echo "            header_field = SIPHeaderFieldFactory().nextForString(line)" >> out
+        # echo "            header_field = SIPHeaderFieldFactory().next_for_string(line)" >> out
         # echo "            self.assertTrue(header_field.is$NONHYPHENATED, line)" >> out
         # echo "            stringio = StringIO(line + '\r\n')" >> out
-        # echo "            header_field = SIPHeaderFieldFactory().allForStringIO(stringio)[0]" >> out
+        # echo "            header_field = SIPHeaderFieldFactory().all_for_stringio(stringio)[0]" >> out
         # echo "            self.assertTrue(header_field.is$NONHYPHENATED, line)" >> out
         # echo "            stringio.close()" >> out
         # echo "            header_field = SIPHeaderFieldFactory().nextForFieldName(self.canonicalFieldNames[0])" >> out
@@ -130,7 +130,7 @@ do
         # echo "" >> out
 
        echo "            if header_field.is$NONHYPHENATED:" >> out
-       echo "                self.appendStringToFileNamed(header_field.rawString + '\r\n', '$TARGETFILENAMESANSEXTENSION')" >> out
+       echo "                self.appendStringToFileNamed(header_field.raw_string + '\r\n', '$TARGETFILENAMESANSEXTENSION')" >> out
 
 
 done

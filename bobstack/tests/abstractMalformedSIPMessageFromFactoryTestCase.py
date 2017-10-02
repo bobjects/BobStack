@@ -10,8 +10,8 @@ class AbstractMalformedSIPMessageFromFactoryTestCase(AbstractMalformedSIPMessage
 
     def run_test_parsing(self):
         for message_string in self.canonicalStrings:
-            response = SIPMessageFactory().nextForString(message_string)
-            # response = self.sipMessageClassUnderTest.newParsedFrom(message_string)
+            response = SIPMessageFactory().next_for_string(message_string)
+            # response = self.sipMessageClassUnderTest.new_parsed_from(message_string)
             self.runAssertionsForSIPMessage(response)
 
     def run_test_rendering_from_list_of_header_fields(self):

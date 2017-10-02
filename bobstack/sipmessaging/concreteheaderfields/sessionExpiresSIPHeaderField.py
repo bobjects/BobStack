@@ -18,10 +18,10 @@ class SessionExpiresSIPHeaderField(IntegerSIPHeaderField):
     # noinspection PyNestedDecorators
     @classproperty
     @classmethod
-    def canonicalFieldName(cls):
+    def canonical_field_name(cls):
         return 'Session-Expires'
 
     @property
-    def isSessionExpires(self):
+    def is_session_expires(self):
         return True
 

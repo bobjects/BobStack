@@ -6,9 +6,9 @@ from sipmessaging import SIPRequest
 
 class BYESIPRequest(SIPRequest):
     @property
-    def isBYERequest(self):
+    def is_bye_request(self):
         return True
 
     @property
-    def isKnown(self):
+    def is_known(self):
         return True

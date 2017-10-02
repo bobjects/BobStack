@@ -14,20 +14,20 @@ class ReferredBySIPHeaderField(SIPHeaderField):
     # noinspection PyNestedDecorators
     @classproperty
     @classmethod
-    def canonicalFieldName(cls):
+    def canonical_field_name(cls):
         return 'Referred-By'
 
     # noinspection PyNestedDecorators
     @classproperty
     @classmethod
-    def canonicalCompactFieldName(cls):
+    def canonical_compact_field_name(cls):
         return 'b'
 
     @classmethod
-    def newForAttributes(cls, field_name="Referred-By", field_value_string=""):
+    def new_for_attributes(cls, field_name="Referred-By", field_value_string=""):
         return cls.newForFieldNameAndValueString(field_name=field_name, field_value_string=field_value_string)
 
     @property
-    def isReferredBy(self):
+    def is_referred_by(self):
         return True
 

@@ -3,5 +3,5 @@ from sipStartLine import SIPStartLine
 
 class MalformedSIPStartLine(SIPStartLine):
     @property
-    def isMalformed(self):
+    def is_malformed(self):
         return True

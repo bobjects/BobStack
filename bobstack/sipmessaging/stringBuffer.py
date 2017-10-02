@@ -79,12 +79,12 @@ class StringBuffer(object):
     def readline(self):
         # TODO - very inefficient, fix that.
         # TODO - left off testing this.  Python never returned from this function.  Presumably a problem with peek().  Debug with PyCharm's debugger.
-        asString = self.peek()
-        match = re.search(u'^(.*)\r\n', asString)
+        as_string = self.peek()
+        match = re.search(u'^(.*)\r\n', as_string)
         if match:
             return match.group(0)
         else:
-            return asString
+            return as_string
 
     def __len__(self):
         len = 0

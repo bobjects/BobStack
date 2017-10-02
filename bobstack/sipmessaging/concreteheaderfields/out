@@ -1,52 +1,52 @@
-            if header_field.isSubject:
-                self.appendStringToFileNamed(header_field.rawString + '\r\n', 'subjectSIPHeaderField')
-            if header_field.isReferredBy:
-                self.appendStringToFileNamed(header_field.rawString + '\r\n', 'referredBySIPHeaderField')
-            if header_field.isReferTo:
-                self.appendStringToFileNamed(header_field.rawString + '\r\n', 'referToSIPHeaderField')
-            if header_field.isAllowEvents:
-                self.appendStringToFileNamed(header_field.rawString + '\r\n', 'allowEventsSIPHeaderField')
-            if header_field.isEvent:
-                self.appendStringToFileNamed(header_field.rawString + '\r\n', 'eventSIPHeaderField')
-            if header_field.isContentEncoding:
-                self.appendStringToFileNamed(header_field.rawString + '\r\n', 'contentEncodingSIPHeaderField')
-            if header_field.isRAck:
-                self.appendStringToFileNamed(header_field.rawString + '\r\n', 'rAckSIPHeaderField')
-            if header_field.isPCharge:
-                self.appendStringToFileNamed(header_field.rawString + '\r\n', 'pChargeSIPHeaderField')
-            if header_field.isReplyTo:
-                self.appendStringToFileNamed(header_field.rawString + '\r\n', 'replyToSIPHeaderField')
-            if header_field.isUnsupported:
-                self.appendStringToFileNamed(header_field.rawString + '\r\n', 'unsupportedSIPHeaderField')
-            if header_field.isPAssertedIdentity:
-                self.appendStringToFileNamed(header_field.rawString + '\r\n', 'pAssertedIdentitySIPHeaderField')
-            if header_field.isPPreferredIdentity:
-                self.appendStringToFileNamed(header_field.rawString + '\r\n', 'pPreferredIdentitySIPHeaderField')
-            if header_field.isRemotePartyID:
-                self.appendStringToFileNamed(header_field.rawString + '\r\n', 'remotePartyIDSIPHeaderField')
-            if header_field.isAlertInfo:
-                self.appendStringToFileNamed(header_field.rawString + '\r\n', 'alertInfoSIPHeaderField')
-            if header_field.isHistoryInfo:
-                self.appendStringToFileNamed(header_field.rawString + '\r\n', 'historyInfoSIPHeaderField')
-            if header_field.isPCalledPartyId:
-                self.appendStringToFileNamed(header_field.rawString + '\r\n', 'pCalledPartyIdSIPHeaderField')
-            if header_field.isPRTPStat:
-                self.appendStringToFileNamed(header_field.rawString + '\r\n', 'pRTPStatSIPHeaderField')
-            if header_field.isPrivacy:
-                self.appendStringToFileNamed(header_field.rawString + '\r\n', 'privacySIPHeaderField')
-            if header_field.isProxyAuthenticate:
-                self.appendStringToFileNamed(header_field.rawString + '\r\n', 'proxyAuthenticateSIPHeaderField')
-            if header_field.isProxyAuthorization:
-                self.appendStringToFileNamed(header_field.rawString + '\r\n', 'proxyAuthorizationSIPHeaderField')
-            if header_field.isProxyRequire:
-                self.appendStringToFileNamed(header_field.rawString + '\r\n', 'proxyRequireSIPHeaderField')
-            if header_field.isReason:
-                self.appendStringToFileNamed(header_field.rawString + '\r\n', 'reasonSIPHeaderField')
-            if header_field.isRecordSessionExpires:
-                self.appendStringToFileNamed(header_field.rawString + '\r\n', 'recordSessionExpiresSIPHeaderField')
-            if header_field.isReplaces:
-                self.appendStringToFileNamed(header_field.rawString + '\r\n', 'replacesSIPHeaderField')
-            if header_field.isSubscriptionState:
-                self.appendStringToFileNamed(header_field.rawString + '\r\n', 'subscriptionStateSIPHeaderField')
-            if header_field.isMinExpires:
-                self.appendStringToFileNamed(header_field.rawString + '\r\n', 'minExpiresSIPHeaderField')
+            if header_field.is_subject:
+                self.appendStringToFileNamed(header_field.raw_string + '\r\n', 'subjectSIPHeaderField')
+            if header_field.is_referred_by:
+                self.appendStringToFileNamed(header_field.raw_string + '\r\n', 'referredBySIPHeaderField')
+            if header_field.is_refer_to:
+                self.appendStringToFileNamed(header_field.raw_string + '\r\n', 'referToSIPHeaderField')
+            if header_field.is_allow_events:
+                self.appendStringToFileNamed(header_field.raw_string + '\r\n', 'allowEventsSIPHeaderField')
+            if header_field.is_event:
+                self.appendStringToFileNamed(header_field.raw_string + '\r\n', 'eventSIPHeaderField')
+            if header_field.is_content_encoding:
+                self.appendStringToFileNamed(header_field.raw_string + '\r\n', 'contentEncodingSIPHeaderField')
+            if header_field.is_rack:
+                self.appendStringToFileNamed(header_field.raw_string + '\r\n', 'rAckSIPHeaderField')
+            if header_field.is_p_charge:
+                self.appendStringToFileNamed(header_field.raw_string + '\r\n', 'pChargeSIPHeaderField')
+            if header_field.is_reply_to:
+                self.appendStringToFileNamed(header_field.raw_string + '\r\n', 'replyToSIPHeaderField')
+            if header_field.is_unsupported:
+                self.appendStringToFileNamed(header_field.raw_string + '\r\n', 'unsupportedSIPHeaderField')
+            if header_field.is_p_asserted_identity:
+                self.appendStringToFileNamed(header_field.raw_string + '\r\n', 'pAssertedIdentitySIPHeaderField')
+            if header_field.is_p_preferred_identity:
+                self.appendStringToFileNamed(header_field.raw_string + '\r\n', 'pPreferredIdentitySIPHeaderField')
+            if header_field.is_remote_party_id:
+                self.appendStringToFileNamed(header_field.raw_string + '\r\n', 'remotePartyIDSIPHeaderField')
+            if header_field.is_alert_info:
+                self.appendStringToFileNamed(header_field.raw_string + '\r\n', 'alertInfoSIPHeaderField')
+            if header_field.is_history_info:
+                self.appendStringToFileNamed(header_field.raw_string + '\r\n', 'historyInfoSIPHeaderField')
+            if header_field.is_p_called_party_id:
+                self.appendStringToFileNamed(header_field.raw_string + '\r\n', 'pCalledPartyIdSIPHeaderField')
+            if header_field.is_p_rtp_stat:
+                self.appendStringToFileNamed(header_field.raw_string + '\r\n', 'pRTPStatSIPHeaderField')
+            if header_field.is_privacy:
+                self.appendStringToFileNamed(header_field.raw_string + '\r\n', 'privacySIPHeaderField')
+            if header_field.is_proxy_authenticate:
+                self.appendStringToFileNamed(header_field.raw_string + '\r\n', 'proxyAuthenticateSIPHeaderField')
+            if header_field.is_proxy_authorization:
+                self.appendStringToFileNamed(header_field.raw_string + '\r\n', 'proxyAuthorizationSIPHeaderField')
+            if header_field.is_proxy_require:
+                self.appendStringToFileNamed(header_field.raw_string + '\r\n', 'proxyRequireSIPHeaderField')
+            if header_field.is_reason:
+                self.appendStringToFileNamed(header_field.raw_string + '\r\n', 'reasonSIPHeaderField')
+            if header_field.is_record_session_expires:
+                self.appendStringToFileNamed(header_field.raw_string + '\r\n', 'recordSessionExpiresSIPHeaderField')
+            if header_field.is_replaces:
+                self.appendStringToFileNamed(header_field.raw_string + '\r\n', 'replacesSIPHeaderField')
+            if header_field.is_subscription_state:
+                self.appendStringToFileNamed(header_field.raw_string + '\r\n', 'subscriptionStateSIPHeaderField')
+            if header_field.is_min_expires:
+                self.appendStringToFileNamed(header_field.raw_string + '\r\n', 'minExpiresSIPHeaderField')

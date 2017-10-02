@@ -10,16 +10,16 @@ from malformedSIPStartLine import MalformedSIPStartLine
 
 
 class SIPStartLineFactory(object):
-    def nextForStringIO(self, aStringIO):
-        lineString = aStringIO.readline().rstrip('\r\n')
-        return self.nextForString(lineString)
+    def next_for_stringio(self, a_stringio):
+        line_string = a_stringio.readline().rstrip('\r\n')
+        return self.next_for_string(line_string)
 
     @staticmethod
-    def nextForString(a_string):
-        if SIPRequestStartLine.canMatchString(a_string):
-            return SIPRequestStartLine.newParsedFrom(a_string)
-        elif SIPResponseStartLine.canMatchString(a_string):
-            return SIPResponseStartLine.newParsedFrom(a_string)
+    def next_for_string(a_string):
+        if SIPRequestStartLine.can_match_string(a_string):
+            return SIPRequestStartLine.new_parsed_from(a_string)
+        elif SIPResponseStartLine.can_match_string(a_string):
+            return SIPResponseStartLine.new_parsed_from(a_string)
         else:
-            return MalformedSIPStartLine.newParsedFrom(a_string)
+            return MalformedSIPStartLine.new_parsed_from(a_string)
 

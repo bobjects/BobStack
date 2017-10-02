@@ -6,9 +6,9 @@ from sipmessaging import SIPRequest
 
 class CANCELSIPRequest(SIPRequest):
     @property
-    def isCANCELRequest(self):
+    def is_cancel_request(self):
         return True
 
     @property
-    def isKnown(self):
+    def is_known(self):
         return True

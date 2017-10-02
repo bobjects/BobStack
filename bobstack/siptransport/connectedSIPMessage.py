@@ -6,8 +6,8 @@ class ConnectedSIPMessage(object):
         self.sipMessage = a_sip_message
 
     @property
-    def rawString(self):
+    def raw_string(self):
         if self.sipMessage:
-            return self.sipMessage.rawString
+            return self.sipMessage.raw_string
         else:
             return None

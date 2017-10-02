@@ -1,45 +1,45 @@
 class SIPStartLine(object):
     @classmethod
-    def newParsedFrom(cls, a_string):
+    def new_parsed_from(cls, a_string):
         answer = cls()
-        answer.rawString = a_string
+        answer.raw_string = a_string
         return answer
 
     def __init__(self):
         self._rawString = None
 
     @property
-    def rawString(self):
+    def raw_string(self):
         if self._rawString is None:
-            self.renderRawStringFromAttributes()
+            self.render_raw_string_from_attributes()
         return self._rawString
 
-    @rawString.setter
-    def rawString(self, a_string):
+    @raw_string.setter
+    def raw_string(self, a_string):
         self._rawString = a_string
-        self.clearAttributes()
+        self.clear_attributes()
 
-    def clearRawString(self):
+    def clear_raw_string(self):
         self._rawString = None
 
-    def clearAttributes(self):
+    def clear_attributes(self):
         pass
 
-    def parseAttributesFromRawString(self):
+    def parse_attributes_from_raw_string(self):
         pass
 
-    def renderRawStringFromAttributes(self):
+    def render_raw_string_from_attributes(self):
         pass
 
     @property
-    def isResponse(self):
+    def is_response(self):
         return False
 
     @property
-    def isRequest(self):
+    def is_request(self):
         return False
 
     @property
-    def isMalformed(self):
+    def is_malformed(self):
         return False
 

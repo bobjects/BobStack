@@ -24,9 +24,9 @@ class TestRFC5118SIPTortureTest(TestCase):
             'Content-Length: 0\r\n'
             '\r\n'
         )
-        message = SIPMessageFactory().nextForString(message_string)
+        message = SIPMessageFactory().next_for_string(message_string)
         self.assertIsNotNone(message)
-        self.assertIsInstance(message.isValid, bool)
+        self.assertIsInstance(message.is_valid, bool)
         # TODO
 
     def testInvalidSIPMessageWithAnIPv6Reference(self):
@@ -44,9 +44,9 @@ class TestRFC5118SIPTortureTest(TestCase):
             'Content-Length: 0\r\n'
             '\r\n'
         )
-        message = SIPMessageFactory().nextForString(message_string)
+        message = SIPMessageFactory().next_for_string(message_string)
         self.assertIsNotNone(message)
-        self.assertIsInstance(message.isValid, bool)
+        self.assertIsInstance(message.is_valid, bool)
         # TODO
 
     def testPortAmbiguousInASIPURI(self):
@@ -64,9 +64,9 @@ class TestRFC5118SIPTortureTest(TestCase):
             'Content-Length: 0\r\n'
             '\r\n'
         )
-        message = SIPMessageFactory().nextForString(message_string)
+        message = SIPMessageFactory().next_for_string(message_string)
         self.assertIsNotNone(message)
-        self.assertIsInstance(message.isValid, bool)
+        self.assertIsInstance(message.is_valid, bool)
         # TODO
 
     def testPortUnambiguousInASIPURI(self):
@@ -84,9 +84,9 @@ class TestRFC5118SIPTortureTest(TestCase):
             'Content-Length: 0\r\n'
             '\r\n'
         )
-        message = SIPMessageFactory().nextForString(message_string)
+        message = SIPMessageFactory().next_for_string(message_string)
         self.assertIsNotNone(message)
-        self.assertIsInstance(message.isValid, bool)
+        self.assertIsInstance(message.is_valid, bool)
         # TODO
 
     def testIPv6ReferenceDelimitersInViaHeader(self):
@@ -103,9 +103,9 @@ class TestRFC5118SIPTortureTest(TestCase):
             'Content-Length: 0\r\n'
             '\r\n'
         )
-        message = SIPMessageFactory().nextForString(message_string)
+        message = SIPMessageFactory().next_for_string(message_string)
         self.assertIsNotNone(message)
-        self.assertIsInstance(message.isValid, bool)
+        self.assertIsInstance(message.is_valid, bool)
         # TODO
 
     def testIPv6ReferenceDelimitersInViaHeader2(self):
@@ -123,9 +123,9 @@ class TestRFC5118SIPTortureTest(TestCase):
             'Content-Length: 0\r\n'
             '\r\n'
         )
-        message = SIPMessageFactory().nextForString(message_string)
+        message = SIPMessageFactory().next_for_string(message_string)
         self.assertIsNotNone(message)
-        self.assertIsInstance(message.isValid, bool)
+        self.assertIsInstance(message.is_valid, bool)
         # TODO
 
     def testSIPRequestWithIPv6AddressesInSDPBody(self):
@@ -153,9 +153,9 @@ class TestRFC5118SIPTortureTest(TestCase):
             'm=video 6024 RTP/AVP 107\r\n'
             'a=rtpmap:107 H263-1998/90000\r\n'
         )
-        message = SIPMessageFactory().nextForString(message_string)
+        message = SIPMessageFactory().next_for_string(message_string)
         self.assertIsNotNone(message)
-        self.assertIsInstance(message.isValid, bool)
+        self.assertIsInstance(message.is_valid, bool)
         # TODO
 
     def testMultipleIPAddressesInSIPHeaders(self):
@@ -174,9 +174,9 @@ class TestRFC5118SIPTortureTest(TestCase):
             'Content-Length: 0\r\n'
             '\r\n'
         )
-        message = SIPMessageFactory().nextForString(message_string)
+        message = SIPMessageFactory().next_for_string(message_string)
         self.assertIsNotNone(message)
-        self.assertIsInstance(message.isValid, bool)
+        self.assertIsInstance(message.is_valid, bool)
         # TODO
 
     def testMultipleIPAddressesInSDP(self):
@@ -204,9 +204,9 @@ class TestRFC5118SIPTortureTest(TestCase):
             'c=IN IP6 2001:db8::1\r\n'
             'a=rtpmap:107 H263-1998/90000\r\n'
         )
-        message = SIPMessageFactory().nextForString(message_string)
+        message = SIPMessageFactory().next_for_string(message_string)
         self.assertIsNotNone(message)
-        self.assertIsInstance(message.isValid, bool)
+        self.assertIsInstance(message.is_valid, bool)
         # TODO
 
     def testIPv4MappedIPv6Addresses(self):
@@ -235,9 +235,9 @@ class TestRFC5118SIPTortureTest(TestCase):
             'm=video 6024 RTP/AVP 107\r\n'
             'a=rtpmap:107 H263-1998/90000\r\n'
         )
-        message = SIPMessageFactory().nextForString(message_string)
+        message = SIPMessageFactory().next_for_string(message_string)
         self.assertIsNotNone(message)
-        self.assertIsInstance(message.isValid, bool)
+        self.assertIsInstance(message.is_valid, bool)
         # TODO
 
     def testIPv6ReferenceBugInRFC3261ABNF(self):
@@ -253,9 +253,9 @@ class TestRFC5118SIPTortureTest(TestCase):
             'Max-Forwards: 70\r\n'
             'Content-Length: 0\r\n'
         )
-        message = SIPMessageFactory().nextForString(message_string)
+        message = SIPMessageFactory().next_for_string(message_string)
         self.assertIsNotNone(message)
-        self.assertIsInstance(message.isValid, bool)
+        self.assertIsInstance(message.is_valid, bool)
         # TODO
 
     def testIPv6ReferenceBugInRFC3261ABNF2(self):
@@ -271,8 +271,8 @@ class TestRFC5118SIPTortureTest(TestCase):
             'Max-Forwards: 70\r\n'
             'Content-Length: 0\r\n'
         )
-        message = SIPMessageFactory().nextForString(message_string)
+        message = SIPMessageFactory().next_for_string(message_string)
         self.assertIsNotNone(message)
-        self.assertIsInstance(message.isValid, bool)
+        self.assertIsInstance(message.is_valid, bool)
         # TODO
 

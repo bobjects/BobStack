@@ -14,71 +14,71 @@ class ProxyAuthenticateSIPHeaderField(SIPHeaderField):
     # noinspection PyNestedDecorators
     @classproperty
     @classmethod
-    def canonicalFieldName(cls):
+    def canonical_field_name(cls):
         return 'Proxy-Authenticate'
 
     @classmethod
-    def newForAttributes(cls, field_name="Proxy-Authenticate", field_value_string=""):
+    def new_for_attributes(cls, field_name="Proxy-Authenticate", field_value_string=""):
         return cls.newForFieldNameAndValueString(field_name=field_name, field_value_string=field_value_string)
 
     @property
-    def isProxyAuthenticate(self):
+    def is_proxy_authenticate(self):
         return True
 
     # http://www.iana.org/assignments/sip-parameters/sip-parameters.xhtml#sip-parameters-2
     @property
     def algorithm(self):
-        return self.parameterNamed('algorithm')
+        return self.parameter_named('algorithm')
 
     @algorithm.setter
     def algorithm(self, a_string):
-        self.parameterNamedPut('algorithm', a_string)
+        self.parameter_named_put('algorithm', a_string)
 
     @property
     def domain(self):
-        return self.parameterNamed('domain')
+        return self.parameter_named('domain')
 
     @domain.setter
     def domain(self, a_string):
-        self.parameterNamedPut('domain', a_string)
+        self.parameter_named_put('domain', a_string)
 
     @property
     def nonce(self):
-        return self.parameterNamed('nonce')
+        return self.parameter_named('nonce')
 
     @nonce.setter
     def nonce(self, a_string):
-        self.parameterNamedPut('nonce', a_string)
+        self.parameter_named_put('nonce', a_string)
 
     @property
     def opaque(self):
-        return self.parameterNamed('opaque')
+        return self.parameter_named('opaque')
 
     @opaque.setter
     def opaque(self, a_string):
-        self.parameterNamedPut('opaque', a_string)
+        self.parameter_named_put('opaque', a_string)
 
     @property
     def qop(self):
-        return self.parameterNamed('qop')
+        return self.parameter_named('qop')
 
     @qop.setter
     def qop(self, a_string):
-        self.parameterNamedPut('qop', a_string)
+        self.parameter_named_put('qop', a_string)
 
     @property
     def realm(self):
-        return self.parameterNamed('realm')
+        return self.parameter_named('realm')
 
     @realm.setter
     def realm(self, a_string):
-        self.parameterNamedPut('realm', a_string)
+        self.parameter_named_put('realm', a_string)
 
     @property
     def stale(self):
-        return self.parameterNamed('stale')
+        return self.parameter_named('stale')
 
     @stale.setter
     def stale(self, a_string):
-        self.parameterNamedPut('stale', a_string)
+        self.parameter_named_put('stale', a_string)
 

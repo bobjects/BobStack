@@ -14,10 +14,10 @@ class TimestampSIPHeaderField(IntegerSIPHeaderField):
     # noinspection PyNestedDecorators
     @classproperty
     @classmethod
-    def canonicalFieldName(cls):
+    def canonical_field_name(cls):
         return 'Timestamp'
 
     @property
-    def isTimestamp(self):
+    def is_timestamp(self):
         return True
 

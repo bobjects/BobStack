@@ -8,9 +8,9 @@ from sipStartLineFactory import SIPStartLineFactory
 
 class SIPMessage(object):
     @classmethod
-    def newParsedFrom(cls, a_string):
+    def new_parsed_from(cls, a_string):
         answer = cls()
-        answer.rawString = a_string
+        answer.raw_string = a_string
         return answer
 
     @classmethod
@@ -20,7 +20,7 @@ class SIPMessage(object):
         if header:
             answer.header = header
         else:
-            answer.header = SIPHeader.newForAttributes(header_fields=None)
+            answer.header = SIPHeader.new_for_attributes(header_fields=None)
         answer.content = content
         return answer
 
@@ -32,44 +32,44 @@ class SIPMessage(object):
 
     @property
     def deepCopy(self):
-        return self.__class__.newParsedFrom(self.rawString)
+        return self.__class__.new_parsed_from(self.raw_string)
 
     @property
-    def rawString(self):
+    def raw_string(self):
         if self._rawString is None:
-            self.renderRawStringFromAttributes()
+            self.render_raw_string_from_attributes()
         return self._rawString
 
-    @rawString.setter
-    def rawString(self, a_string):
+    @raw_string.setter
+    def raw_string(self, a_string):
         self._rawString = a_string
-        self.clearAttributes()
+        self.clear_attributes()
 
     @property
     def body(self):
         return self.content
 
-    def clearRawString(self):
+    def clear_raw_string(self):
         self._rawString = None
 
-    def clearAttributes(self):
+    def clear_attributes(self):
         self._content = None
         self._startLine = None
         self._header = None
 
-    def parseAttributesFromRawString(self):
+    def parse_attributes_from_raw_string(self):
         self._content = ""
         string_io = StringIO(self._rawString)
-        self._startLine = SIPStartLineFactory().nextForStringIO(string_io)
-        self._header = SIPHeader.newParsedFrom(string_io)
+        self._startLine = SIPStartLineFactory().next_for_stringio(string_io)
+        self._header = SIPHeader.new_parsed_from(string_io)
         self._content = string_io.read()
         string_io.close()
 
-    def renderRawStringFromAttributes(self):
+    def render_raw_string_from_attributes(self):
         stringio = StringIO()
-        stringio.write(self._startLine.rawString)
+        stringio.write(self._startLine.raw_string)
         stringio.write("\r\n")
-        self._header.renderRawStringFromAttributes(stringio)
+        self._header.render_raw_string_from_attributes(stringio)
         stringio.write(self._content)
         self._rawString = stringio.getvalue()
         stringio.close()
@@ -77,35 +77,35 @@ class SIPMessage(object):
     @property
     def start_line(self):
         if self._startLine is None:
-            self.parseAttributesFromRawString()
+            self.parse_attributes_from_raw_string()
         return self._startLine
 
     @start_line.setter
     def start_line(self, a_sip_start_line):
         self._startLine = a_sip_start_line
-        self.clearRawString()
+        self.clear_raw_string()
 
     @property
     def header(self):
         if self._header is None:
-            self.parseAttributesFromRawString()
+            self.parse_attributes_from_raw_string()
         return self._header
 
     @header.setter
     def header(self, a_sip_header):
         self._header = a_sip_header
-        self.clearRawString()
+        self.clear_raw_string()
 
     @property
     def content(self):
         if self._content is None:
-            self.parseAttributesFromRawString()
+            self.parse_attributes_from_raw_string()
         return self._content
 
     @content.setter
     def content(self, a_string):
         self._content = a_string
-        self.clearRawString()
+        self.clear_raw_string()
 
     @property
     def vias(self):
@@ -133,93 +133,93 @@ class SIPMessage(object):
 
     # TODO:  This is a hot method.  Should we cache?
     @property
-    def isValid(self):
-        if self.isMalformed:
+    def is_valid(self):
+        if self.is_malformed:
             return False
-        if not self.header.isValid:
+        if not self.header.is_valid:
             return False
-        if self.header.contentLength is not None:
-            if self.header.contentLength != self.content.__len__():
+        if self.header.content_length is not None:
+            if self.header.content_length != self.content.__len__():
                 return False
         return True
 
     @property
     def isInvalid(self):
-        return not self.isValid
+        return not self.is_valid
 
     @property
     def isUnknown(self):
-        return not self.isKnown
+        return not self.is_known
 
     @property
-    def isKnown(self):
+    def is_known(self):
         return False
 
     @property
-    def isMalformed(self):
+    def is_malformed(self):
         return False
 
     @property
-    def isRequest(self):
+    def is_request(self):
         return False
 
     @property
-    def isResponse(self):
+    def is_response(self):
         return False
 
     @property
-    def isACKRequest(self):
+    def is_ack_request(self):
         return False
 
     @property
-    def isBYERequest(self):
+    def is_bye_request(self):
         return False
 
     @property
-    def isCANCELRequest(self):
+    def is_cancel_request(self):
         return False
 
     @property
-    def isINFORequest(self):
+    def is_info_request(self):
         return False
 
     @property
-    def isINVITERequest(self):
+    def is_invite_request(self):
         return False
 
     @property
-    def isMESSAGERequest(self):
+    def is_message_request(self):
         return False
 
     @property
-    def isNOTIFYRequest(self):
+    def is_notify_request(self):
         return False
 
     @property
-    def isOPTIONSRequest(self):
+    def is_options_request(self):
         return False
 
     @property
-    def isPUBLISHRequest(self):
+    def is_publish_request(self):
         return False
 
     @property
-    def isPRACKRequest(self):
+    def is_prack_request(self):
         return False
 
     @property
-    def isREFERRequest(self):
+    def is_refer_request(self):
         return False
 
     @property
-    def isREGISTERRequest(self):
+    def is_register_request(self):
         return False
 
     @property
-    def isSUBSCRIBERequest(self):
+    def is_subscribe_request(self):
         return False
 
     @property
-    def isUPDATERequest(self):
+    def is_update_request(self):
         return False
 

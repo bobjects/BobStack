@@ -14,17 +14,17 @@ class SIPTransportConnection(EventSourceMixin):
         self.bind_port = bind_port_integer
         self.remoteAddress = remote_address_string
         self.remotePort = remote_port_integer
-        # self.id = StrongRandomStringServer.instance.next32Bits
+        # self.id = StrongRandomStringServer.instance.next_32_bits
         self.messageFactory = ConnectedSIPMessageFactory(self)
-        self.messageFactory.whenEventDo('receivedValidConnectedRequest', self.receivedValidConnectedRequestEventHandler)
-        self.messageFactory.whenEventDo('receivedValidConnectedResponse', self.receivedValidConnectedResponseEventHandler)
+        self.messageFactory.when_event_do('receivedValidConnectedRequest', self.received_valid_connected_request_event_handler)
+        self.messageFactory.when_event_do('receivedValidConnectedResponse', self.received_valid_connected_response_event_handler)
 
     @property
-    def isReliable(self):
+    def is_reliable(self):
         return True
 
     @property
-    def isStateful(self):
+    def is_stateful(self):
         return True
 
     @property
@@ -37,18 +37,18 @@ class SIPTransportConnection(EventSourceMixin):
         answer.update(str(self.remoteAddress))
         return answer.hexdigest()
 
-    def sendMessage(self, a_sip_message):
+    def send_message(self, a_sip_message):
         raise NotImplementedError('call to abstract method ' + inspect.stack()[0][3])
 
-    def receivedString(self, a_string):
-        self.messageFactory.nextForString(a_string)
+    def received_string(self, a_string):
+        self.messageFactory.next_for_string(a_string)
 
-    def receivedValidConnectedRequestEventHandler(self, a_connected_aip_message):
+    def received_valid_connected_request_event_handler(self, a_connected_aip_message):
         print("(connection) receivedValidConnectedRequest event")
-        self.triggerEvent("receivedValidConnectedRequest", a_connected_aip_message)
+        self.trigger_event("receivedValidConnectedRequest", a_connected_aip_message)
 
-    def receivedValidConnectedResponseEventHandler(self, a_connected_aip_message):
+    def received_valid_connected_response_event_handler(self, a_connected_aip_message):
         print("(connection) receivedValidConnectedResponse event")
-        self.triggerEvent("receivedValidConnectedResponse", a_connected_aip_message)
+        self.trigger_event("receivedValidConnectedResponse", a_connected_aip_message)
 
     # TODO - need to get invalid messages as well, so that entities can deal with problems.

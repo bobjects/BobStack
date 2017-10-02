@@ -14,30 +14,30 @@ class CallInfoSIPHeaderField(SIPHeaderField):
     # noinspection PyNestedDecorators
     @classproperty
     @classmethod
-    def canonicalFieldName(cls):
+    def canonical_field_name(cls):
         return 'Call-Info'
 
     @classmethod
-    def newForAttributes(cls, field_name="Call-Info", field_value_string=""):
+    def new_for_attributes(cls, field_name="Call-Info", field_value_string=""):
         return cls.newForFieldNameAndValueString(field_name=field_name, field_value_string=field_value_string)
 
     @property
-    def isCallInfo(self):
+    def is_call_info(self):
         return True
 
     # http://www.iana.org/assignments/sip-parameters/sip-parameters.xhtml#sip-parameters-2
     @property
     def m(self):
-        return self.parameterNamed('m')
+        return self.parameter_named('m')
 
     @m.setter
     def m(self, a_string):
-        self.parameterNamedPut('m', a_string)
+        self.parameter_named_put('m', a_string)
 
     @property
     def purpose(self):
-        return self.parameterNamed('purpose')
+        return self.parameter_named('purpose')
 
     @purpose.setter
     def purpose(self, a_string):
-        self.parameterNamedPut('purpose', a_string)
+        self.parameter_named_put('purpose', a_string)

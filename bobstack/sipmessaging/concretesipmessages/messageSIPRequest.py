@@ -6,9 +6,9 @@ from sipmessaging import SIPRequest
 
 class MESSAGESIPRequest(SIPRequest):
     @property
-    def isMESSAGERequest(self):
+    def is_message_request(self):
         return True
 
     @property
-    def isKnown(self):
+    def is_known(self):
         return True

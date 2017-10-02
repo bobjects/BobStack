@@ -23,12 +23,12 @@ class RecordRouteSIPHeaderField(SIPHeaderField):
     # noinspection PyNestedDecorators
     @classproperty
     @classmethod
-    def canonicalFieldName(cls):
+    def canonical_field_name(cls):
         return 'Record-Route'
 
     # noinspection PyMethodOverriding
     @classmethod
-    def newForAttributes(cls, sip_uri=None):
+    def new_for_attributes(cls, sip_uri=None):
         answer = cls()
         answer.sip_uri = sip_uri
         answer._isValid = (sip_uri is not None)
@@ -40,15 +40,15 @@ class RecordRouteSIPHeaderField(SIPHeaderField):
         super(RecordRouteSIPHeaderField, self).__init__()
 
     @property
-    def isValid(self):
+    def is_valid(self):
         if not self._attributeHasBeenSet:
-            self.parseAttributesFromFieldValueString()
+            self.parse_attributes_from_field_value_string()
         return self._isValid
 
     @property
     def sip_uri(self):
         if not self._attributeHasBeenSet:
-            self.parseAttributesFromFieldValueString()
+            self.parse_attributes_from_field_value_string()
         return self._sipURI
 
     @sip_uri.setter
@@ -56,15 +56,15 @@ class RecordRouteSIPHeaderField(SIPHeaderField):
         self._sipURI = a_sip_uri
         self._isValid = (self._sipURI is not None)
         self._attributeHasBeenSet = True
-        self.clearRawString()
+        self.clear_raw_string()
         self.clearFieldNameAndValueString()
 
-    def clearAttributes(self):
-        super(RecordRouteSIPHeaderField, self).clearAttributes()
+    def clear_attributes(self):
+        super(RecordRouteSIPHeaderField, self).clear_attributes()
         self._sipURI = None
         self._isValid = None
 
-    def parseAttributesFromFieldValueString(self):
+    def parse_attributes_from_field_value_string(self):
         self._parameterNamesAndValueStrings = {}
         self._sipURI = None
 
@@ -74,7 +74,7 @@ class RecordRouteSIPHeaderField(SIPHeaderField):
             if match:
                 # URI uses angle brackets
                 uri_and_parameter_string = match.group(2)
-                self._sipURI = SIPURI.newParsedFrom(uri_and_parameter_string)
+                self._sipURI = SIPURI.new_parsed_from(uri_and_parameter_string)
                 # noinspection PyUnusedLocal
                 foo = self._sipURI.user  # We do this to make sure the sip_uri gets parsed within our exception handler.
                 header_field_parameters_string = match.group(3)
@@ -82,7 +82,7 @@ class RecordRouteSIPHeaderField(SIPHeaderField):
                 # same logic as above, but work on sample, not uri_and_parameter_string.  This will be factored in the real solution.
                 uri_and_header_field_parameters_match_groups = self.__class__.regexForNonAngleBracketForm.match(self.field_value_string).groups()
                 uri_string = uri_and_header_field_parameters_match_groups[0]
-                self._sipURI = SIPURI.newParsedFrom(uri_string)
+                self._sipURI = SIPURI.new_parsed_from(uri_string)
                 # noinspection PyUnusedLocal
                 foo = self._sipURI.user  # We do this to make sure the sip_uri gets parsed within our exception handler.
                 header_field_parameters_string = uri_and_header_field_parameters_match_groups[1]
@@ -93,12 +93,12 @@ class RecordRouteSIPHeaderField(SIPHeaderField):
         else:
             self._isValid = True
 
-    def renderFieldNameAndValueStringFromAttributes(self):
-        self._fieldName = self.canonicalFieldName
+    def render_field_name_and_value_string_from_attributes(self):
+        self._fieldName = self.canonical_field_name
         stringio = StringIO()
         stringio.write('<')
         if self._sipURI:
-            stringio.write(self._sipURI.rawString)
+            stringio.write(self._sipURI.raw_string)
         stringio.write('>')
         for key, value in self._parameterNamesAndValueStrings.iteritems():
             stringio.write(';')
@@ -110,6 +110,6 @@ class RecordRouteSIPHeaderField(SIPHeaderField):
         self._fieldNameAndValueStringHasBeenSet = True
 
     @property
-    def isRecordRoute(self):
+    def is_record_route(self):
         return True
 

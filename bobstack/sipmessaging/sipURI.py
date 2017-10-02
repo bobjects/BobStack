@@ -15,13 +15,13 @@ class SIPURI(object):
     regexForURI = re.compile('(([^:]*):([^@;]*)@?([^;]*)?)')
 
     @classmethod
-    def newParsedFrom(cls, a_string):
+    def new_parsed_from(cls, a_string):
         answer = cls()
-        answer.rawString = a_string
+        answer.raw_string = a_string
         return answer
 
     @classmethod
-    def newForAttributes(cls, host='', port=None, scheme='sip', user=None, parameterNamesAndValueStrings=None):
+    def new_for_attributes(cls, host='', port=None, scheme='sip', user=None, parameterNamesAndValueStrings=None):
         answer = cls()
         answer.host = host
         answer.port = port
@@ -40,30 +40,30 @@ class SIPURI(object):
         self._parameterNamesAndValueStrings = None
         self._attributesMustBeParsed = None
 
-        self.clearRawString()
-        self.clearAttributes()
+        self.clear_raw_string()
+        self.clear_attributes()
 
     @property
-    def rawString(self):
+    def raw_string(self):
         if self._rawString is None:
-            self.renderRawStringFromAttributes()
+            self.render_raw_string_from_attributes()
         return self._rawString
 
-    @rawString.setter
-    def rawString(self, a_string):
+    @raw_string.setter
+    def raw_string(self, a_string):
         self._rawString = a_string
-        self.clearAttributes()
+        self.clear_attributes()
 
     @property
     def host(self):
         if self._attributesMustBeParsed:
-            self.parseAttributesFromRawString()
+            self.parse_attributes_from_raw_string()
         return self._host
 
     @host.setter
     def host(self, a_string):
         self._host = a_string
-        self.clearRawString()
+        self.clear_raw_string()
 
     @property
     def derivedPort(self):
@@ -78,40 +78,40 @@ class SIPURI(object):
     @property
     def port(self):
         if self._attributesMustBeParsed:
-            self.parseAttributesFromRawString()
+            self.parse_attributes_from_raw_string()
         return self._port
 
     @port.setter
     def port(self, an_integer):
         self._port = an_integer
-        self.clearRawString()
+        self.clear_raw_string()
 
     @property
     def scheme(self):
         if self._attributesMustBeParsed:
-            self.parseAttributesFromRawString()
+            self.parse_attributes_from_raw_string()
         return self._scheme
 
     @scheme.setter
     def scheme(self, a_string):
         self._scheme = a_string
-        self.clearRawString()
+        self.clear_raw_string()
 
     @property
     def user(self):
         if self._attributesMustBeParsed:
-            self.parseAttributesFromRawString()
+            self.parse_attributes_from_raw_string()
         return self._user
 
     @user.setter
     def user(self, a_string):
         self._user = a_string
-        self.clearRawString()
+        self.clear_raw_string()
 
     @property
     def parameterNamesAndValueStrings(self):
         if self._attributesMustBeParsed:
-            self.parseAttributesFromRawString()
+            self.parse_attributes_from_raw_string()
         if self._parameterNamesAndValueStrings is None:
             self._parameterNamesAndValueStrings = {}
         return self._parameterNamesAndValueStrings
@@ -119,27 +119,27 @@ class SIPURI(object):
     @parameterNamesAndValueStrings.setter
     def parameterNamesAndValueStrings(self, aDictionary):
         self._parameterNamesAndValueStrings = aDictionary
-        self.clearRawString()
+        self.clear_raw_string()
 
     # TODO: need to test.
     @property
     def parameterNames(self):
         return self.parameterNamesAndValueStrings.keys()
 
-    def parameterNamed(self, keyString):
+    def parameter_named(self, keyString):
         return self.parameterNamesAndValueStrings.get(keyString, None)
 
-    def parameterNamedPut(self, keyString, valueObject):
+    def parameter_named_put(self, keyString, valueObject):
         if not self.parameterNamesAndValueStrings:
             self.parameterNamesAndValueStrings = {}
         self.parameterNamesAndValueStrings[keyString] = valueObject
-        self.clearRawString()
+        self.clear_raw_string()
 
-    def clearRawString(self):
+    def clear_raw_string(self):
         self._attributesMustBeParsed = False
         self._rawString = None
 
-    def clearAttributes(self):
+    def clear_attributes(self):
         self._host = None
         self._port = None
         self._scheme = None
@@ -147,8 +147,8 @@ class SIPURI(object):
         self._parameterNamesAndValueStrings = None
         self._attributesMustBeParsed = True
 
-    def parseAttributesFromRawString(self):
-        self.clearAttributes()
+    def parse_attributes_from_raw_string(self):
+        self.clear_attributes()
         self._attributesMustBeParsed = False
         # TODO - put in exception handler for malformed SIPURI, after we do some testing.
         self._parameterNamesAndValueStrings = dict(self.__class__.regexForFindingParameterNamesAndValues.findall(self._rawString))
@@ -166,7 +166,7 @@ class SIPURI(object):
         if host_port_match_groups[1]:
             self._port = int(host_port_match_groups[1])
 
-    def renderRawStringFromAttributes(self):
+    def render_raw_string_from_attributes(self):
         stringio = StringIO()
         scheme = self.scheme
         if not scheme:

@@ -14,7 +14,7 @@ class AbstractSIPRequestFromFactoryTestCase(AbstractSIPRequestTestCase):
 
     def run_test_parsing(self):
         for message_string in self.canonicalStrings:
-            request = SIPMessageFactory().nextForString(message_string)
+            request = SIPMessageFactory().next_for_string(message_string)
             self.runAssertionsForSIPMessage(request)
 
     def run_test_rendering_from_list_of_header_fields(self):

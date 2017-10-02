@@ -27,7 +27,7 @@ class AbstractSIPHeaderFieldFromFactoryTestCase(TestCase):
 
     @property
     def canonicalCompactFieldNames(self):
-        name = self.sipHeaderFieldClassUnderTest.canonicalCompactFieldName
+        name = self.sipHeaderFieldClassUnderTest.canonical_compact_field_name
         if name:
             return [name.lower(), name.upper()]
         else:
@@ -47,11 +47,11 @@ class AbstractSIPHeaderFieldFromFactoryTestCase(TestCase):
 
     def basic_test_parsing(self):
         for line in self.canonicalStrings:
-            header_field = SIPHeaderFieldFactory().nextForString(line)
+            header_field = SIPHeaderFieldFactory().next_for_string(line)
             # print line
-            self.assertTrue(header_field.isValid, line)
-            self.assertTrue(header_field.isKnown, line)
-            self.assertEqual(header_field.rawString, line, line)
+            self.assertTrue(header_field.is_valid, line)
+            self.assertTrue(header_field.is_known, line)
+            self.assertEqual(header_field.raw_string, line, line)
             # self.assertNotEqual(header_field.value, None)
             self.assertIsInstance(header_field.parameterNamesAndValueStrings, dict)
             self.assertTrue('foo' in ['foo', 'bar'])
@@ -60,10 +60,10 @@ class AbstractSIPHeaderFieldFromFactoryTestCase(TestCase):
             self.assertTrue(header_field.field_value_string in self.canonicalFieldValues)
 
             stringio = StringIO(line + '\r\n')
-            header_field = SIPHeaderFieldFactory().allForStringIO(stringio)[0]
-            self.assertTrue(header_field.isValid, line)
-            self.assertTrue(header_field.isKnown, line)
-            self.assertEqual(header_field.rawString, line, line)
+            header_field = SIPHeaderFieldFactory().all_for_stringio(stringio)[0]
+            self.assertTrue(header_field.is_valid, line)
+            self.assertTrue(header_field.is_known, line)
+            self.assertEqual(header_field.raw_string, line, line)
             # self.assertNotEqual(header_field.value, None)
             self.assertIsInstance(header_field.parameterNamesAndValueStrings, dict)
             self.assertTrue(header_field.field_name.lower() in [name.lower() for name in self.canonicalFieldNames] + [name.lower() for name in self.canonicalCompactFieldNames])
@@ -73,16 +73,16 @@ class AbstractSIPHeaderFieldFromFactoryTestCase(TestCase):
 
             # print self.canonicalFieldNames[0]
             header_field = SIPHeaderFieldFactory().nextForFieldName(self.canonicalFieldNames[0])
-            self.assertEqual(self.emptyHeaderFieldBodyIsValid, header_field.isValid)
-            self.assertTrue(header_field.isKnown)
+            self.assertEqual(self.emptyHeaderFieldBodyIsValid, header_field.is_valid)
+            self.assertTrue(header_field.is_known)
             self.assertEqual(header_field.field_name.lower(), self.canonicalFieldNames[0].lower())
             self.assertIsInstance(header_field.field_value_string, basestring)
             # self.assertNotEqual(header_field.value, None)
             self.assertIsInstance(header_field.parameterNamesAndValueStrings, dict)
             if self.canonicalCompactFieldNames:
                 header_field = SIPHeaderFieldFactory().nextForFieldName(self.canonicalCompactFieldNames[0])
-                self.assertEqual(self.emptyHeaderFieldBodyIsValid, header_field.isValid)
-                self.assertTrue(header_field.isKnown)
+                self.assertEqual(self.emptyHeaderFieldBodyIsValid, header_field.is_valid)
+                self.assertTrue(header_field.is_known)
                 self.assertEqual(header_field.field_name.lower(), self.canonicalCompactFieldNames[0].lower())
                 self.assertIsInstance(header_field.field_value_string, basestring)
                 # self.assertNotEqual(header_field.value, None)
@@ -90,9 +90,9 @@ class AbstractSIPHeaderFieldFromFactoryTestCase(TestCase):
 
             header_field = SIPHeaderFieldFactory().nextForFieldNameAndFieldValue(self.canonicalFieldNames[0], self.canonicalFieldValues[0])
             self.assertEqual(header_field.field_value_string, self.canonicalFieldValues[0], line)
-            self.assertTrue(header_field.isValid, line)
-            self.assertTrue(header_field.isKnown, line)
-            self.assertEqual(header_field.rawString, self.canonicalStrings[0])
+            self.assertTrue(header_field.is_valid, line)
+            self.assertTrue(header_field.is_known, line)
+            self.assertEqual(header_field.raw_string, self.canonicalStrings[0])
             self.assertEqual(header_field.field_name.lower(), self.canonicalFieldNames[0].lower())
             self.assertIsInstance(header_field.field_value_string, basestring, line)
             self.assertTrue(header_field.field_value_string in self.canonicalFieldValues)
@@ -101,9 +101,9 @@ class AbstractSIPHeaderFieldFromFactoryTestCase(TestCase):
             if self.canonicalCompactFieldNames:
                 header_field = SIPHeaderFieldFactory().nextForFieldNameAndFieldValue(self.canonicalCompactFieldNames[0], self.canonicalFieldValues[0])
                 self.assertEqual(header_field.field_value_string, self.canonicalFieldValues[0], line)
-                self.assertTrue(header_field.isValid, line)
-                self.assertTrue(header_field.isKnown, line)
-                self.assertTrue(header_field.rawString in self.canonicalStrings)
+                self.assertTrue(header_field.is_valid, line)
+                self.assertTrue(header_field.is_known, line)
+                self.assertTrue(header_field.raw_string in self.canonicalStrings)
                 self.assertEqual(header_field.field_name.lower(), self.canonicalCompactFieldNames[0].lower())
                 self.assertIsInstance(header_field.field_value_string, basestring, line)
                 self.assertTrue(header_field.field_value_string in self.canonicalFieldValues)
