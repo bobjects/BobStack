@@ -19,7 +19,7 @@ class SIPTransport(EventSourceMixin):
         return True
 
     @property
-    def transportParameterName(self):
+    def transport_parameter_name(self):
         raise NotImplementedError('call to abstract method ' + inspect.stack()[0][3])
 
     def bind(self):
@@ -28,19 +28,19 @@ class SIPTransport(EventSourceMixin):
     def connect_to_address_and_port(self, address_string, port_integer):
         raise NotImplementedError('call to abstract method ' + inspect.stack()[0][3])
 
-    def connectionWithAddressAndPort(self, address_string, port_integer):
+    def connection_with_address_and_port(self, address_string, port_integer):
         return next((c for c in self.connections if c.remoteAddress == address_string and c.remotePort == port_integer), None)
 
-    def connectionWithID(self, idString):
-        return next((c for c in self.connections if c.id == idString), None)
+    def connection_with_id(self, id_string):
+        return next((c for c in self.connections if c.id == id_string), None)
 
-    def subscribeToTransportConnectionEvents(self, a_sip_transport_connection):
+    def subscribe_to_transport_connection_events(self, a_sip_transport_connection):
         a_sip_transport_connection.when_event_do('receivedValidConnectedRequest', self.received_valid_connected_request_event_handler)
         a_sip_transport_connection.when_event_do('receivedValidConnectedResponse', self.received_valid_connected_response_event_handler)
         a_sip_transport_connection.when_event_do('madeConnection', self.made_connection_event_handler)
         a_sip_transport_connection.when_event_do('lostConnection', self.lost_connection_event_handler)
 
-    def unSubscribeFromTransportConnectionEvents(self, a_sip_transport_connection):
+    def unsubscribe_rrom_transport_connection_events(self, a_sip_transport_connection):
         a_sip_transport_connection.when_event_do_not('receivedValidConnectedRequest', self.received_valid_connected_request_event_handler)
         a_sip_transport_connection.when_event_do_not('receivedValidConnectedResponse', self.received_valid_connected_response_event_handler)
         a_sip_transport_connection.when_event_do_not('madeConnection', self.made_connection_event_handler)
@@ -60,23 +60,23 @@ class SIPTransport(EventSourceMixin):
         print("(transport) receivedValidConnectedResponse event")
         self.trigger_event("receivedValidConnectedResponse", a_connected_aip_message)
 
-    def triggerBound(self):
+    def trigger_bound(self):
         print("bound event")
         self.trigger_event("bound")
 
-    def triggerBindFailed(self):
+    def trigger_bind_failed(self):
         print("bindFailed event")
         self.trigger_event("bindFailed")
 
-    def triggerMadeConnection(self, a_sip_transport_connection):
+    def trigger_made_connection(self, a_sip_transport_connection):
         print("madeConnection event - " + str(a_sip_transport_connection))
         self.trigger_event("madeConnection", a_sip_transport_connection)
 
-    def triggerCouldNotMakeConnection(self, address_string, port_integer):
+    def trigger_could_not_make_connection(self, address_string, port_integer):
         print("couldNotMakeConnection event - " + str((address_string, port_integer)))
         self.trigger_event("couldNotMakeConnection", (address_string, port_integer))
 
-    def triggerLostConnection(self, a_sip_transport_connection):
+    def trigger_lost_connection(self, a_sip_transport_connection):
         print("lostConnection event - " + str(a_sip_transport_connection))
         self.trigger_event("lostConnection", a_sip_transport_connection)
 

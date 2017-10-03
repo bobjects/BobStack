@@ -91,8 +91,8 @@ def processInterimFile():
                             # No real way to figure out which
                             # ones, except by instantiating a SIPMessage and checking.  Look for messages
                             # that are exactly two bytes too long, and chop them down.
-                            sipMessage = SIPMessageFactory().next_for_string(currentMessageString)
-                            truncateBytes = sipMessage.content.__len__() - sipMessage.header.content_length
+                            sip_message = SIPMessageFactory().next_for_string(currentMessageString)
+                            truncateBytes = sip_message.content.__len__() - sip_message.header.content_length
                             if truncateBytes == 2:
                                 currentMessageString = currentMessageString[:currentMessageString.__len__() - 2]
 

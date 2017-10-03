@@ -6,8 +6,8 @@ class SIPResponse(SIPMessage):
     @classmethod
     def new_for_attributes(cls, status_code=500, reason_phrase="", content="", header=None):
         start_line = SIPResponseStartLine.new_for_attributes(status_code=status_code, reason_phrase=reason_phrase)
-        # SIPMessage._newForAttributes(cls, start_line=start_line, content=content, header=header)
-        return cls._newForAttributes(start_line=start_line, content=content, header=header)
+        # SIPMessage._new_for_attributes(cls, start_line=start_line, content=content, header=header)
+        return cls._new_for_attributes(start_line=start_line, content=content, header=header)
 
     @property
     def is_response(self):

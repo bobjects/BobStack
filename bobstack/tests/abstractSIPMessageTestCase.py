@@ -381,8 +381,8 @@ class AbstractSIPMessageTestCase(TestCase):
             TimestampSIPHeaderField.new_for_attributes(value=1392061773),
             WWWAuthenticateSIPHeaderField.new_for_attributes(field_value_string='Digest algorithm=MD5,nonce="1111790769596",realm="SomeRealm"'),
             WarningSIPHeaderField.new_for_attributes(field_value_string='370 200.21.3.10 "Insufficient Bandwidth"'),
-            UnknownSIPHeaderField.newForFieldNameAndValueString(field_name='X-RTP-Stat', field_value_string=' PR=0;ER=0;PL=0;RB=0/0;DE=PCMU;EN=PCMU;JI=0;DL=0,0;IP=10.1.0.33:16384,132.52.127.200:20048'),
-            UnknownSIPHeaderField.newForFieldNameAndValueString(field_name='x-channel', field_value_string=' ds/ds1-3/12;IP=132.52.127.16'),
+            UnknownSIPHeaderField.new_for_field_name_and_value_string(field_name='X-RTP-Stat', field_value_string=' PR=0;ER=0;PL=0;RB=0/0;DE=PCMU;EN=PCMU;JI=0;DL=0,0;IP=10.1.0.33:16384,132.52.127.200:20048'),
+            UnknownSIPHeaderField.new_for_field_name_and_value_string(field_name='x-channel', field_value_string=' ds/ds1-3/12;IP=132.52.127.16'),
             ReferredBySIPHeaderField.new_for_attributes(field_value_string='<sip:6006665100@example.com;user=phone> ; CorrelationID="0508817f84e7ce64745ef9753e2fbff4664321a4@200.23.3.240"'),
             ReferToSIPHeaderField.new_for_attributes(field_value_string='<sip:6006665499;rfrid=28661859@example.com;user=phone?x-nt-resource-priority=YNBvf.2j00qao>'),
 
@@ -408,7 +408,7 @@ class AbstractSIPMessageTestCase(TestCase):
             ProxyAuthorizationSIPHeaderField.new_for_attributes(field_value_string='Digest username="100",realm="209.105.255.124",nonce="7bebcf02-e01d-11e5-931d-83b175043a03",uri="sip:90011@209.105.255.124",response="63faaa2604cae36e9b38f2d5cd0abba4",cnonce="4b41f53e6f00c05",nc=00000001,qop="auth",algorithm=MD5'),
             ProxyRequireSIPHeaderField.new_for_attributes(field_value_string='foo'),
             ReasonSIPHeaderField.new_for_attributes(field_value_string='Q.850; cause=16; reason=Terminated'),
-            RecordSessionExpiresSIPHeaderField.newForValueString(field_value_string='1200;refresher=uac'),
+            RecordSessionExpiresSIPHeaderField.new_for_value_string(field_value_string='1200;refresher=uac'),
             ReplacesSIPHeaderField.new_for_attributes(field_value_string='19cd9bf094ff5f0c1745ef975c1cf65d34beb908f@192.168.0.3;to-tag=29bd570-f0a1ec8-13c5-50029-aa872-7d78286-aa872;from-tag=7ca31b4791'),
             SubscriptionStateSIPHeaderField.new_for_attributes(field_value_string='active;reason=deactivated;expires=50'),
             MinExpiresSIPHeaderField.new_for_attributes(value=1800),
@@ -637,42 +637,42 @@ class AbstractSIPMessageTestCase(TestCase):
         self.assertEqual(a_sip_message.raw_string, self.canonicalStrings[0])
         self.assertIsNotNone(a_sip_message.header.content_length_header_field)
         self.assertEqual(11, a_sip_message.header.content_length)
-        self.assertEqual(3, a_sip_message.header.viaHeaderFields.__len__())
+        self.assertEqual(3, a_sip_message.header.via_header_fields.__len__())
         self.assertEqual(3, a_sip_message.header.vias.__len__())
         self.assertEqual(3, a_sip_message.vias.__len__())
         self.assertEqual(3, a_sip_message.header.routeHeaderFields.__len__())
-        self.assertEqual(3, a_sip_message.header.routeURIs.__len__())
-        self.assertEqual(3, a_sip_message.routeURIs.__len__())
+        self.assertEqual(3, a_sip_message.header.route_uris.__len__())
+        self.assertEqual(3, a_sip_message.route_uris.__len__())
         self.assertEqual(3, a_sip_message.header.recordRouteHeaderFields.__len__())
-        self.assertEqual(3, a_sip_message.header.recordRouteURIs.__len__())
-        self.assertEqual(3, a_sip_message.recordRouteURIs.__len__())
-        self.assertIsInstance(a_sip_message.transactionHash, basestring)
-        self.assertIsInstance(a_sip_message.dialogHash, (basestring, type(None)))
-        self.assertIsInstance(a_sip_message.header.invariantBranchHash, (basestring, type(None)))
-        self.assertIsInstance(a_sip_message.header.callID, basestring)
-        self.assertIsInstance(a_sip_message.header.cSeq, basestring)
+        self.assertEqual(3, a_sip_message.header.record_route_uris.__len__())
+        self.assertEqual(3, a_sip_message.record_route_uris.__len__())
+        self.assertIsInstance(a_sip_message.transaction_hash, basestring)
+        self.assertIsInstance(a_sip_message.dialog_hash, (basestring, type(None)))
+        self.assertIsInstance(a_sip_message.header.invariant_branch_hash, (basestring, type(None)))
+        self.assertIsInstance(a_sip_message.header.call_id, basestring)
+        self.assertIsInstance(a_sip_message.header.cseq, basestring)
         self.assertIsInstance(a_sip_message.header.toTag, (basestring, type(None)))
         self.assertIsInstance(a_sip_message.header.fromTag, basestring)
         self.assertIsInstance(a_sip_message.header.max_forwards, int)
-        self.assertIsInstance(a_sip_message.header.routeURIs, list)
-        self.assertIsInstance(a_sip_message.header.recordRouteURIs, list)
+        self.assertIsInstance(a_sip_message.header.route_uris, list)
+        self.assertIsInstance(a_sip_message.header.record_route_uris, list)
 
         # TODO: assert other headers besides just content-length and via.
         self.assertEqual('SIP/2.0/TLS 200.25.3.150;branch=z9hG4bK0ee8d3e272e31ca195299efc500', a_sip_message.header.vias[0])
         self.assertEqual('SIP/2.0/TLS 200.25.3.250;branch=z9hG4bKfdkajhdiruyalkghjladksjf', a_sip_message.header.vias[1])
         self.assertEqual('SIP/2.0/TLS 200.25.3.255;branch=z9hG4bKduyroiuryaludhgviukfhlasf', a_sip_message.header.vias[2])
-        self.assertIsInstance(a_sip_message.routeURIs[0], SIPURI)
-        self.assertEqual(a_sip_message.routeURIs[0].host, '200.25.3.230')
-        self.assertIsInstance(a_sip_message.routeURIs[1], SIPURI)
-        self.assertEqual(a_sip_message.routeURIs[1].host, '200.25.3.231')
-        self.assertIsInstance(a_sip_message.routeURIs[2], SIPURI)
-        self.assertEqual(a_sip_message.routeURIs[2].host, '200.25.3.232')
-        self.assertIsInstance(a_sip_message.recordRouteURIs[0], SIPURI)
-        self.assertEqual(a_sip_message.recordRouteURIs[0].host, '200.25.3.230')
-        self.assertIsInstance(a_sip_message.recordRouteURIs[1], SIPURI)
-        self.assertEqual(a_sip_message.recordRouteURIs[1].host, '200.25.3.231')
-        self.assertIsInstance(a_sip_message.recordRouteURIs[2], SIPURI)
-        self.assertEqual(a_sip_message.recordRouteURIs[2].host, '200.25.3.232')
+        self.assertIsInstance(a_sip_message.route_uris[0], SIPURI)
+        self.assertEqual(a_sip_message.route_uris[0].host, '200.25.3.230')
+        self.assertIsInstance(a_sip_message.route_uris[1], SIPURI)
+        self.assertEqual(a_sip_message.route_uris[1].host, '200.25.3.231')
+        self.assertIsInstance(a_sip_message.route_uris[2], SIPURI)
+        self.assertEqual(a_sip_message.route_uris[2].host, '200.25.3.232')
+        self.assertIsInstance(a_sip_message.record_route_uris[0], SIPURI)
+        self.assertEqual(a_sip_message.record_route_uris[0].host, '200.25.3.230')
+        self.assertIsInstance(a_sip_message.record_route_uris[1], SIPURI)
+        self.assertEqual(a_sip_message.record_route_uris[1].host, '200.25.3.231')
+        self.assertIsInstance(a_sip_message.record_route_uris[2], SIPURI)
+        self.assertEqual(a_sip_message.record_route_uris[2].host, '200.25.3.232')
         self.assertEqual(2, a_sip_message.header.unknownHeaderFields.__len__())
         self.assertEqual(63, a_sip_message.header.knownHeaderFields.__len__())
         self.assertEqual('Foo Content', a_sip_message.content)
@@ -711,8 +711,8 @@ class AbstractSIPMessageTestCase(TestCase):
         self.assertTrue(a_sip_message.header.header_fields[31].is_timestamp)
         self.assertTrue(a_sip_message.header.header_fields[32].is_www_authenticate)
         self.assertTrue(a_sip_message.header.header_fields[33].is_warning)
-        self.assertTrue(a_sip_message.header.header_fields[34].isUnknown)
-        self.assertTrue(a_sip_message.header.header_fields[35].isUnknown)
+        self.assertTrue(a_sip_message.header.header_fields[34].is_unknown)
+        self.assertTrue(a_sip_message.header.header_fields[35].is_unknown)
         self.assertTrue(a_sip_message.header.header_fields[36].is_referred_by)
         self.assertTrue(a_sip_message.header.header_fields[37].is_refer_to)
 
@@ -797,7 +797,7 @@ class AbstractSIPMessageTestCase(TestCase):
 
         # TODO:  test adding and removing header field of class that doesn't already exist in header.
 
-        for via in a_sip_message.header.viaHeaderFields:
+        for via in a_sip_message.header.via_header_fields:
             via.generate_invariant_branch_for_sip_header(a_sip_message.header)
             self.assertIsInstance(via.branch, basestring)
 

@@ -15,8 +15,8 @@ class UDPSIPTwistedProtocol(DatagramProtocol):
         # reactor.listenUDP(self.sipTransport.bind_port, self, interface=self.sipTransport.bind_address)
         # reactor.run()
         TwistedMultiService.instance.register_twisted_udp_protocol(self, self.sipTransport.bind_port, self.sipTransport.bind_address)
-        self.sipTransport.triggerBound()
-        # self.sipTransport.triggerBindFailed()
+        self.sipTransport.trigger_bound()
+        # self.sipTransport.trigger_bind_failed()
 
     def datagramReceived(self, data_string, (host, port)):
         # TODO:  edge cases.

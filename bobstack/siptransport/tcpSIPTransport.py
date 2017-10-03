@@ -4,7 +4,7 @@ from tcpSIPTransportConnection import TCPSIPTransportConnection
 
 class TCPSIPTransport(SIPTransport):
     @property
-    def transportParameterName(self):
+    def transport_parameter_name(self):
         return 'TCP'
 
     def connect_to_address_and_port(self, address_string, port_integer):

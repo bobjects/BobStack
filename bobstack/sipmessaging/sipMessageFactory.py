@@ -61,7 +61,7 @@ class SIPMessageFactory(EventSourceMixin):
             return MalformedSIPMessage
 
     def trigger_event_for_sip_message(self, a_sip_message):
-        self.trigger_event("sipMessage", a_sip_message)
+        self.trigger_event("sip_message", a_sip_message)
         if a_sip_message.is_request:
             self.trigger_event("sipRequest", a_sip_message)
             if a_sip_message.is_valid:

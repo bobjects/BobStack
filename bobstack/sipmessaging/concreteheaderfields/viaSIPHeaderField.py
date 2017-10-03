@@ -17,7 +17,7 @@ from sipmessaging import StrongRandomStringServer
 class ViaSIPHeaderField(SIPHeaderField):
     # TODO
     regexForViaSpecificValue = re.compile('SIP\s*/\s*(\d.\d)\s*/\s*([^\s]+)\s+([^;]+)')
-    regexForParsingHostPort = re.compile('([^:]*):?(.*)')
+    regex_for_parsing_host_port = re.compile('([^:]*):?(.*)')
 
     # noinspection PyNestedDecorators
     @classproperty
@@ -66,7 +66,7 @@ class ViaSIPHeaderField(SIPHeaderField):
         self._host = a_string
         self._attributeHasBeenSet = True
         self.clear_raw_string()
-        self.clearFieldNameAndValueString()
+        self.clear_field_name_and_value_string()
 
     @property
     def port(self):
@@ -79,7 +79,7 @@ class ViaSIPHeaderField(SIPHeaderField):
         self._port = a_string
         self._attributeHasBeenSet = True
         self.clear_raw_string()
-        self.clearFieldNameAndValueString()
+        self.clear_field_name_and_value_string()
 
     @property
     def transport(self):
@@ -92,7 +92,7 @@ class ViaSIPHeaderField(SIPHeaderField):
         self._transport = a_string
         self._attributeHasBeenSet = True
         self.clear_raw_string()
-        self.clearFieldNameAndValueString()
+        self.clear_field_name_and_value_string()
 
     # TODO:  write tests, maybe cache.
     @property
@@ -105,7 +105,7 @@ class ViaSIPHeaderField(SIPHeaderField):
         self.branch = 'z9hG4bK-' + StrongRandomStringServer.instance.next_32_bits + StrongRandomStringServer.instance.next_32_bits + "-BobStack"
 
     def generate_invariant_branch_for_sip_header(self, a_sip_header):
-        self.branch = 'z9hG4bK-' + a_sip_header.invariantBranchHash + "-BobStack"
+        self.branch = 'z9hG4bK-' + a_sip_header.invariant_branch_hash + "-BobStack"
 
     def clear_attributes(self):
         super(ViaSIPHeaderField, self).clear_attributes()
@@ -129,7 +129,7 @@ class ViaSIPHeaderField(SIPHeaderField):
                 sip_version = match.group(1)
                 self._transport = match.group(2)
                 host_port = match.group(3)
-                host_port_match_groups = self.__class__.regexForParsingHostPort.match(host_port).groups()
+                host_port_match_groups = self.__class__.regex_for_parsing_host_port.match(host_port).groups()
                 self._host = host_port_match_groups[0]
                 if host_port_match_groups[1]:
                     self._port = int(host_port_match_groups[1])

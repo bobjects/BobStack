@@ -13,7 +13,7 @@ class TestSIPURI(TestCase):
         self.assertEqual(uri.port, 5061)
         self.assertEqual(uri.scheme, 'sips')
         self.assertEqual(uri.user, '8005551212')
-        self.assertEqual(uri.parameterNamesAndValueStrings, {'user': 'phone'})
+        self.assertEqual(uri.parameter_names_and_value_strings, {'user': 'phone'})
         self.assertEqual(uri.parameter_named('user'), 'phone')
         self.assertEqual(uri.parameter_named('nonExistentKey'), None)
         uri.parameter_named_put('foo', 42)
@@ -26,7 +26,7 @@ class TestSIPURI(TestCase):
         self.assertEqual('sip:8005551212@192.168.0.100:5062;foo=42;user=phone', uri.raw_string)
         uri.user = '8885551212'
         self.assertEqual('sip:8885551212@192.168.0.100:5062;foo=42;user=phone', uri.raw_string)
-        uri.parameterNamesAndValueStrings = None
+        uri.parameter_names_and_value_strings = None
         self.assertEqual('sip:8885551212@192.168.0.100:5062', uri.raw_string)
         uri.parameter_named_put('foo', 42)
         self.assertEqual('sip:8885551212@192.168.0.100:5062;foo=42', uri.raw_string)
@@ -36,7 +36,7 @@ class TestSIPURI(TestCase):
         self.assertEqual(uri.port, 5061)
         self.assertEqual(uri.scheme, 'sips')
         self.assertEqual(uri.user, '8005551212')
-        self.assertEqual(uri.parameterNamesAndValueStrings, {'user': 'phone'})
+        self.assertEqual(uri.parameter_names_and_value_strings, {'user': 'phone'})
         self.assertEqual(uri.parameter_named('user'), 'phone')
         self.assertEqual(uri.parameter_named('nonExistentKey'), None)
 
@@ -46,13 +46,13 @@ class TestSIPURI(TestCase):
                                         port=5061,
                                         scheme='sips',
                                         user='8005551212',
-                                        parameterNamesAndValueStrings={'user': 'phone'})
+                                        parameter_names_and_value_strings={'user': 'phone'})
         self.assertEqual(uri_string, uri.raw_string)
         self.assertEqual(uri.host, '192.168.0.99')
         self.assertEqual(uri.port, 5061)
         self.assertEqual(uri.scheme, 'sips')
         self.assertEqual(uri.user, '8005551212')
-        self.assertEqual(uri.parameterNamesAndValueStrings, {'user': 'phone'})
+        self.assertEqual(uri.parameter_names_and_value_strings, {'user': 'phone'})
         self.assertEqual(uri.parameter_named('user'), 'phone')
         self.assertEqual(uri.parameter_named('nonExistentKey'), None)
         uri.parameter_named_put('foo', 42)
@@ -65,7 +65,7 @@ class TestSIPURI(TestCase):
         self.assertEqual('sip:8005551212@192.168.0.100:5062;foo=42;user=phone', uri.raw_string)
         uri.user = '8885551212'
         self.assertEqual('sip:8885551212@192.168.0.100:5062;foo=42;user=phone', uri.raw_string)
-        uri.parameterNamesAndValueStrings = None
+        uri.parameter_names_and_value_strings = None
         self.assertEqual('sip:8885551212@192.168.0.100:5062', uri.raw_string)
         uri.parameter_named_put('foo', 42)
         self.assertEqual('sip:8885551212@192.168.0.100:5062;foo=42', uri.raw_string)
@@ -75,7 +75,7 @@ class TestSIPURI(TestCase):
         self.assertEqual(uri.port, 5061)
         self.assertEqual(uri.scheme, 'sips')
         self.assertEqual(uri.user, '8005551212')
-        self.assertEqual(uri.parameterNamesAndValueStrings, {'user': 'phone'})
+        self.assertEqual(uri.parameter_names_and_value_strings, {'user': 'phone'})
         self.assertEqual(uri.parameter_named('user'), 'phone')
         self.assertEqual(uri.parameter_named('nonExistentKey'), None)
 
@@ -87,7 +87,7 @@ class TestSIPURI(TestCase):
         self.assertEqual(uri.port, 5061)
         self.assertEqual(uri.scheme, 'sips')
         self.assertEqual(uri.user, '8005551212')
-        self.assertEqual(uri.parameterNamesAndValueStrings, {'user': 'phone', 'foo': 'bar'})
+        self.assertEqual(uri.parameter_names_and_value_strings, {'user': 'phone', 'foo': 'bar'})
         self.assertEqual(uri.parameter_named('user'), 'phone')
         self.assertEqual(uri.parameter_named('foo'), 'bar')
         self.assertEqual(uri.parameter_named('nonExistentKey'), None)
@@ -100,7 +100,7 @@ class TestSIPURI(TestCase):
         self.assertEqual(uri.port, 5061)
         self.assertEqual(uri.scheme, 'sips')
         self.assertEqual(uri.user, '8005551212')
-        self.assertEqual(uri.parameterNamesAndValueStrings, {'user': 'phone'})
+        self.assertEqual(uri.parameter_names_and_value_strings, {'user': 'phone'})
         self.assertEqual(uri.parameter_named('user'), 'phone')
         self.assertEqual(uri.parameter_named('nonExistentKey'), None)
 
@@ -112,7 +112,7 @@ class TestSIPURI(TestCase):
         self.assertEqual(uri.port, 5061)
         self.assertEqual(uri.scheme, 'sips')
         self.assertEqual(uri.user, '8005551212')
-        self.assertEqual(uri.parameterNamesAndValueStrings, {})
+        self.assertEqual(uri.parameter_names_and_value_strings, {})
         self.assertEqual(uri.parameter_named('nonExistentKey'), None)
 
     def test_parseValid004(self):
@@ -123,7 +123,7 @@ class TestSIPURI(TestCase):
         self.assertEqual(uri.port, None)
         self.assertEqual(uri.scheme, 'sips')
         self.assertEqual(uri.user, '8005551212')
-        self.assertEqual(uri.parameterNamesAndValueStrings, {'user': 'phone', 'foo': 'bar'})
+        self.assertEqual(uri.parameter_names_and_value_strings, {'user': 'phone', 'foo': 'bar'})
         self.assertEqual(uri.parameter_named('user'), 'phone')
         self.assertEqual(uri.parameter_named('foo'), 'bar')
         self.assertEqual(uri.parameter_named('nonExistentKey'), None)
@@ -136,7 +136,7 @@ class TestSIPURI(TestCase):
         self.assertEqual(uri.port, None)
         self.assertEqual(uri.scheme, 'sips')
         self.assertEqual(uri.user, '8005551212')
-        self.assertEqual(uri.parameterNamesAndValueStrings, {})
+        self.assertEqual(uri.parameter_names_and_value_strings, {})
         self.assertEqual(uri.parameter_named('nonExistentKey'), None)
 
     def test_parseValid006(self):
@@ -147,7 +147,7 @@ class TestSIPURI(TestCase):
         self.assertEqual(uri.port, 5061)
         self.assertEqual(uri.scheme, 'sips')
         self.assertEqual(uri.user, None)
-        self.assertEqual(uri.parameterNamesAndValueStrings, {'user': 'phone', 'foo': 'bar'})
+        self.assertEqual(uri.parameter_names_and_value_strings, {'user': 'phone', 'foo': 'bar'})
         self.assertEqual(uri.parameter_named('user'), 'phone')
         self.assertEqual(uri.parameter_named('foo'), 'bar')
         self.assertEqual(uri.parameter_named('nonExistentKey'), None)
@@ -160,7 +160,7 @@ class TestSIPURI(TestCase):
         self.assertEqual(uri.port, None)
         self.assertEqual(uri.scheme, 'sips')
         self.assertEqual(uri.user, None)
-        self.assertEqual(uri.parameterNamesAndValueStrings, {})
+        self.assertEqual(uri.parameter_names_and_value_strings, {})
         self.assertEqual(uri.parameter_named('nonExistentKey'), None)
 
     def test_render001(self):
@@ -169,12 +169,12 @@ class TestSIPURI(TestCase):
                                         port=5061,
                                         scheme='sips',
                                         user='8005551212',
-                                        parameterNamesAndValueStrings={'user': 'phone'})
+                                        parameter_names_and_value_strings={'user': 'phone'})
         self.assertEqual(uri.host, '192.168.0.99')
         self.assertEqual(uri.port, 5061)
         self.assertEqual(uri.scheme, 'sips')
         self.assertEqual(uri.user, '8005551212')
-        self.assertEqual(uri.parameterNamesAndValueStrings, {'user': 'phone'})
+        self.assertEqual(uri.parameter_names_and_value_strings, {'user': 'phone'})
         self.assertEqual(uri.parameter_named('user'), 'phone')
         self.assertEqual(uri.parameter_named('nonExistentKey'), None)
         self.assertEqual(uri_string, uri.raw_string)
@@ -185,12 +185,12 @@ class TestSIPURI(TestCase):
                                         port=5061,
                                         scheme='sips',
                                         user='8005551212',
-                                        parameterNamesAndValueStrings={'user': 'phone', 'foo': 'bar'})
+                                        parameter_names_and_value_strings={'user': 'phone', 'foo': 'bar'})
         self.assertEqual(uri.host, '192.168.0.99')
         self.assertEqual(uri.port, 5061)
         self.assertEqual(uri.scheme, 'sips')
         self.assertEqual(uri.user, '8005551212')
-        self.assertEqual(uri.parameterNamesAndValueStrings, {'foo': 'bar', 'user': 'phone'})
+        self.assertEqual(uri.parameter_names_and_value_strings, {'foo': 'bar', 'user': 'phone'})
         self.assertEqual(uri.parameter_named('user'), 'phone')
         self.assertEqual(uri.parameter_named('foo'), 'bar')
         self.assertEqual(uri.parameter_named('nonExistentKey'), None)
@@ -206,7 +206,7 @@ class TestSIPURI(TestCase):
         self.assertEqual(uri.port, 5061)
         self.assertEqual(uri.scheme, 'sips')
         self.assertEqual(uri.user, '8005551212')
-        self.assertEqual(uri.parameterNamesAndValueStrings, {})
+        self.assertEqual(uri.parameter_names_and_value_strings, {})
         self.assertEqual(uri.parameter_named('nonExistentKey'), None)
         self.assertEqual(uri_string, uri.raw_string)
 
@@ -216,12 +216,12 @@ class TestSIPURI(TestCase):
                                         port=None,
                                         scheme='sips',
                                         user='8005551212',
-                                        parameterNamesAndValueStrings={'user': 'phone'})
+                                        parameter_names_and_value_strings={'user': 'phone'})
         self.assertEqual(uri.host, '192.168.0.99')
         self.assertEqual(uri.port, None)
         self.assertEqual(uri.scheme, 'sips')
         self.assertEqual(uri.user, '8005551212')
-        self.assertEqual(uri.parameterNamesAndValueStrings, {'user': 'phone'})
+        self.assertEqual(uri.parameter_names_and_value_strings, {'user': 'phone'})
         self.assertEqual(uri.parameter_named('user'), 'phone')
         self.assertEqual(uri.parameter_named('nonExistentKey'), None)
         self.assertEqual(uri_string, uri.raw_string)
@@ -236,7 +236,7 @@ class TestSIPURI(TestCase):
         self.assertEqual(uri.port, None)
         self.assertEqual(uri.scheme, 'sips')
         self.assertEqual(uri.user, '8005551212')
-        self.assertEqual(uri.parameterNamesAndValueStrings, {})
+        self.assertEqual(uri.parameter_names_and_value_strings, {})
         self.assertEqual(uri.parameter_named('nonExistentKey'), None)
         self.assertEqual(uri_string, uri.raw_string)
 
@@ -246,12 +246,12 @@ class TestSIPURI(TestCase):
                                         port=5061,
                                         scheme='sips',
                                         user=None,
-                                        parameterNamesAndValueStrings={})
+                                        parameter_names_and_value_strings={})
         self.assertEqual(uri.host, '192.168.0.99')
         self.assertEqual(uri.port, 5061)
         self.assertEqual(uri.scheme, 'sips')
         self.assertEqual(uri.user, None)
-        self.assertEqual(uri.parameterNamesAndValueStrings, {})
+        self.assertEqual(uri.parameter_names_and_value_strings, {})
         self.assertEqual(uri.parameter_named('nonExistentKey'), None)
         self.assertEqual(uri_string, uri.raw_string)
 
@@ -265,7 +265,7 @@ class TestSIPURI(TestCase):
         self.assertEqual(uri.port, None)
         self.assertEqual(uri.scheme, 'sips')
         self.assertEqual(uri.user, None)
-        self.assertEqual(uri.parameterNamesAndValueStrings, {})
+        self.assertEqual(uri.parameter_names_and_value_strings, {})
         self.assertEqual(uri.parameter_named('nonExistentKey'), None)
         self.assertEqual(uri_string, uri.raw_string)
 

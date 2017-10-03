@@ -6,8 +6,8 @@ class SIPRequest(SIPMessage):
     @classmethod
     def new_for_attributes(cls, sip_method="", request_uri="", content="", header=None):
         start_line = SIPRequestStartLine.new_for_attributes(sip_method=sip_method, request_uri=request_uri)
-        # SIPMessage._newForAttributes(cls, start_line=start_line, content=content, header=header)
-        return cls._newForAttributes(start_line=start_line, content=content, header=header)
+        # SIPMessage._new_for_attributes(cls, start_line=start_line, content=content, header=header)
+        return cls._new_for_attributes(start_line=start_line, content=content, header=header)
 
     @property
     def is_request(self):

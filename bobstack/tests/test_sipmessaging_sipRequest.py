@@ -53,7 +53,7 @@ class TestUnknownSIPRequest(AbstractSIPRequestTestCase):
     def runAssertionsForSIPMessage(self, a_sip_request):
         super(TestUnknownSIPRequest, self).runAssertionsForSIPMessage(a_sip_request)
         self.assertFalse(a_sip_request.is_known)
-        self.assertTrue(a_sip_request.isUnknown)
+        self.assertTrue(a_sip_request.is_unknown)
         self.assertFalse(a_sip_request.is_ack_request)
         self.assertFalse(a_sip_request.is_bye_request)
         self.assertFalse(a_sip_request.is_cancel_request)
@@ -105,7 +105,7 @@ class TestOPTIONSSIPRequest(AbstractSIPRequestTestCase):
     def runAssertionsForSIPMessage(self, a_sip_request):
         super(TestOPTIONSSIPRequest, self).runAssertionsForSIPMessage(a_sip_request)
         self.assertTrue(a_sip_request.is_known)
-        self.assertFalse(a_sip_request.isUnknown)
+        self.assertFalse(a_sip_request.is_unknown)
         self.assertFalse(a_sip_request.is_ack_request)
         self.assertFalse(a_sip_request.is_bye_request)
         self.assertFalse(a_sip_request.is_cancel_request)
@@ -157,7 +157,7 @@ class TestACKSIPRequest(AbstractSIPRequestTestCase):
     def runAssertionsForSIPMessage(self, a_sip_request):
         super(TestACKSIPRequest, self).runAssertionsForSIPMessage(a_sip_request)
         self.assertTrue(a_sip_request.is_known)
-        self.assertFalse(a_sip_request.isUnknown)
+        self.assertFalse(a_sip_request.is_unknown)
         self.assertTrue(a_sip_request.is_ack_request)
         self.assertFalse(a_sip_request.is_bye_request)
         self.assertFalse(a_sip_request.is_cancel_request)
@@ -209,7 +209,7 @@ class TestBYESIPRequest(AbstractSIPRequestTestCase):
     def runAssertionsForSIPMessage(self, a_sip_request):
         super(TestBYESIPRequest, self).runAssertionsForSIPMessage(a_sip_request)
         self.assertTrue(a_sip_request.is_known)
-        self.assertFalse(a_sip_request.isUnknown)
+        self.assertFalse(a_sip_request.is_unknown)
         self.assertFalse(a_sip_request.is_ack_request)
         self.assertTrue(a_sip_request.is_bye_request)
         self.assertFalse(a_sip_request.is_cancel_request)
@@ -261,7 +261,7 @@ class TestCANCELSIPRequest(AbstractSIPRequestTestCase):
     def runAssertionsForSIPMessage(self, a_sip_request):
         super(TestCANCELSIPRequest, self).runAssertionsForSIPMessage(a_sip_request)
         self.assertTrue(a_sip_request.is_known)
-        self.assertFalse(a_sip_request.isUnknown)
+        self.assertFalse(a_sip_request.is_unknown)
         self.assertFalse(a_sip_request.is_ack_request)
         self.assertFalse(a_sip_request.is_bye_request)
         self.assertTrue(a_sip_request.is_cancel_request)
@@ -313,7 +313,7 @@ class TestINFOSIPRequest(AbstractSIPRequestTestCase):
     def runAssertionsForSIPMessage(self, a_sip_request):
         super(TestINFOSIPRequest, self).runAssertionsForSIPMessage(a_sip_request)
         self.assertTrue(a_sip_request.is_known)
-        self.assertFalse(a_sip_request.isUnknown)
+        self.assertFalse(a_sip_request.is_unknown)
         self.assertFalse(a_sip_request.is_ack_request)
         self.assertFalse(a_sip_request.is_bye_request)
         self.assertFalse(a_sip_request.is_cancel_request)
@@ -365,7 +365,7 @@ class TestINVITESIPRequest(AbstractSIPRequestTestCase):
     def runAssertionsForSIPMessage(self, a_sip_request):
         super(TestINVITESIPRequest, self).runAssertionsForSIPMessage(a_sip_request)
         self.assertTrue(a_sip_request.is_known)
-        self.assertFalse(a_sip_request.isUnknown)
+        self.assertFalse(a_sip_request.is_unknown)
         self.assertFalse(a_sip_request.is_ack_request)
         self.assertFalse(a_sip_request.is_bye_request)
         self.assertFalse(a_sip_request.is_cancel_request)
@@ -417,7 +417,7 @@ class TestNOTIFYSIPRequest(AbstractSIPRequestTestCase):
     def runAssertionsForSIPMessage(self, a_sip_request):
         super(TestNOTIFYSIPRequest, self).runAssertionsForSIPMessage(a_sip_request)
         self.assertTrue(a_sip_request.is_known)
-        self.assertFalse(a_sip_request.isUnknown)
+        self.assertFalse(a_sip_request.is_unknown)
         self.assertFalse(a_sip_request.is_ack_request)
         self.assertFalse(a_sip_request.is_bye_request)
         self.assertFalse(a_sip_request.is_cancel_request)
@@ -469,7 +469,7 @@ class TestPRACKSIPRequest(AbstractSIPRequestTestCase):
     def runAssertionsForSIPMessage(self, a_sip_request):
         super(TestPRACKSIPRequest, self).runAssertionsForSIPMessage(a_sip_request)
         self.assertTrue(a_sip_request.is_known)
-        self.assertFalse(a_sip_request.isUnknown)
+        self.assertFalse(a_sip_request.is_unknown)
         self.assertFalse(a_sip_request.is_ack_request)
         self.assertFalse(a_sip_request.is_bye_request)
         self.assertFalse(a_sip_request.is_cancel_request)
@@ -521,7 +521,7 @@ class TestPUBLISHSIPRequest(AbstractSIPRequestTestCase):
     def runAssertionsForSIPMessage(self, a_sip_request):
         super(TestPUBLISHSIPRequest, self).runAssertionsForSIPMessage(a_sip_request)
         self.assertTrue(a_sip_request.is_known)
-        self.assertFalse(a_sip_request.isUnknown)
+        self.assertFalse(a_sip_request.is_unknown)
         self.assertFalse(a_sip_request.is_ack_request)
         self.assertFalse(a_sip_request.is_bye_request)
         self.assertFalse(a_sip_request.is_cancel_request)
@@ -573,7 +573,7 @@ class TestMESSAGESIPRequest(AbstractSIPRequestTestCase):
     def runAssertionsForSIPMessage(self, a_sip_request):
         super(TestMESSAGESIPRequest, self).runAssertionsForSIPMessage(a_sip_request)
         self.assertTrue(a_sip_request.is_known)
-        self.assertFalse(a_sip_request.isUnknown)
+        self.assertFalse(a_sip_request.is_unknown)
         self.assertFalse(a_sip_request.is_ack_request)
         self.assertFalse(a_sip_request.is_bye_request)
         self.assertFalse(a_sip_request.is_cancel_request)
@@ -625,7 +625,7 @@ class TestREFERSIPRequest(AbstractSIPRequestTestCase):
     def runAssertionsForSIPMessage(self, a_sip_request):
         super(TestREFERSIPRequest, self).runAssertionsForSIPMessage(a_sip_request)
         self.assertTrue(a_sip_request.is_known)
-        self.assertFalse(a_sip_request.isUnknown)
+        self.assertFalse(a_sip_request.is_unknown)
         self.assertFalse(a_sip_request.is_ack_request)
         self.assertFalse(a_sip_request.is_bye_request)
         self.assertFalse(a_sip_request.is_cancel_request)
@@ -677,7 +677,7 @@ class TestREGISTERSIPRequest(AbstractSIPRequestTestCase):
     def runAssertionsForSIPMessage(self, a_sip_request):
         super(TestREGISTERSIPRequest, self).runAssertionsForSIPMessage(a_sip_request)
         self.assertTrue(a_sip_request.is_known)
-        self.assertFalse(a_sip_request.isUnknown)
+        self.assertFalse(a_sip_request.is_unknown)
         self.assertFalse(a_sip_request.is_ack_request)
         self.assertFalse(a_sip_request.is_bye_request)
         self.assertFalse(a_sip_request.is_cancel_request)
@@ -729,7 +729,7 @@ class TestSUBSCRIBESIPRequest(AbstractSIPRequestTestCase):
     def runAssertionsForSIPMessage(self, a_sip_request):
         super(TestSUBSCRIBESIPRequest, self).runAssertionsForSIPMessage(a_sip_request)
         self.assertTrue(a_sip_request.is_known)
-        self.assertFalse(a_sip_request.isUnknown)
+        self.assertFalse(a_sip_request.is_unknown)
         self.assertFalse(a_sip_request.is_ack_request)
         self.assertFalse(a_sip_request.is_bye_request)
         self.assertFalse(a_sip_request.is_cancel_request)
@@ -781,7 +781,7 @@ class TestUPDATESIPRequest(AbstractSIPRequestTestCase):
     def runAssertionsForSIPMessage(self, a_sip_request):
         super(TestUPDATESIPRequest, self).runAssertionsForSIPMessage(a_sip_request)
         self.assertTrue(a_sip_request.is_known)
-        self.assertFalse(a_sip_request.isUnknown)
+        self.assertFalse(a_sip_request.is_unknown)
         self.assertFalse(a_sip_request.is_ack_request)
         self.assertFalse(a_sip_request.is_bye_request)
         self.assertFalse(a_sip_request.is_cancel_request)

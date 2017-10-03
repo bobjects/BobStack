@@ -43,20 +43,20 @@ class AbstractMalformedSIPMessageTestCase(AbstractSIPMessageTestCase):
 
     def run_test_rendering_from_one_big_header_string(self):
         header_fields = self.oneBigHeaderStringForAssertion
-        message = self.sipMessageClassUnderTest._newForAttributes(start_line=MalformedSIPStartLine.new_parsed_from('Malformed start line'), content='Foo Content', header=SIPHeader.new_for_attributes(header_fields=header_fields))
+        message = self.sipMessageClassUnderTest._new_for_attributes(start_line=MalformedSIPStartLine.new_parsed_from('Malformed start line'), content='Foo Content', header=SIPHeader.new_for_attributes(header_fields=header_fields))
         self.runAssertionsForSIPMessage(message)
 
     def run_test_rendering_from_list_of_header_field_strings(self):
         header_fields = self.listOfHeaderFieldStringsForAssertion
-        message = self.sipMessageClassUnderTest._newForAttributes(start_line=MalformedSIPStartLine.new_parsed_from('Malformed start line'), content='Foo Content', header=SIPHeader.new_for_attributes(header_fields=header_fields))
+        message = self.sipMessageClassUnderTest._new_for_attributes(start_line=MalformedSIPStartLine.new_parsed_from('Malformed start line'), content='Foo Content', header=SIPHeader.new_for_attributes(header_fields=header_fields))
         self.runAssertionsForSIPMessage(message)
 
     def run_test_rendering_from_list_of_field_names_and_values(self):
         header_fields = self.listOfHeaderFieldNamesAndValuesForAssertion
-        message = self.sipMessageClassUnderTest._newForAttributes(start_line=MalformedSIPStartLine.new_parsed_from('Malformed start line'), content='Foo Content', header=SIPHeader.new_for_attributes(header_fields=header_fields))
+        message = self.sipMessageClassUnderTest._new_for_attributes(start_line=MalformedSIPStartLine.new_parsed_from('Malformed start line'), content='Foo Content', header=SIPHeader.new_for_attributes(header_fields=header_fields))
         self.runAssertionsForSIPMessage(message)
 
     def run_test_rendering_from_list_of_field_names_and_values_using_property_dict(self):
         header_fields = self.listOfHeaderFieldNamesAndValuesUsingPropertyDictForAssertion
-        message = self.sipMessageClassUnderTest._newForAttributes(start_line=MalformedSIPStartLine.new_parsed_from('Malformed start line'), content='Foo Content', header=SIPHeader.new_for_attributes(header_fields=header_fields))
+        message = self.sipMessageClassUnderTest._new_for_attributes(start_line=MalformedSIPStartLine.new_parsed_from('Malformed start line'), content='Foo Content', header=SIPHeader.new_for_attributes(header_fields=header_fields))
         self.runAssertionsForSIPMessage(message)

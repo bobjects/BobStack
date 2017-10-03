@@ -67,7 +67,7 @@ class FromSIPHeaderField(SIPHeaderField):
         self._isValid = (self._sipURI is not None)
         self._attributeHasBeenSet = True
         self.clear_raw_string()
-        self.clearFieldNameAndValueString()
+        self.clear_field_name_and_value_string()
 
     @property
     def sip_uri(self):
@@ -81,7 +81,7 @@ class FromSIPHeaderField(SIPHeaderField):
         self._isValid = (self._sipURI is not None)
         self._attributeHasBeenSet = True
         self.clear_raw_string()
-        self.clearFieldNameAndValueString()
+        self.clear_field_name_and_value_string()
 
     def clear_attributes(self):
         super(FromSIPHeaderField, self).clear_attributes()

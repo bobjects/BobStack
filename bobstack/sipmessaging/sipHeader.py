@@ -54,32 +54,32 @@ class SIPHeader(object):
         return self.fromCache('content_length_header_field', _content_length_header_field)
 
     @property
-    def callID(self):
-        def _callID():
-            if self.callIDHeaderField is not None:
-                return self.callIDHeaderField.field_value_string
+    def call_id(self):
+        def _call_id():
+            if self.call_id_header_field is not None:
+                return self.call_id_header_field.field_value_string
             return None
-        return self.fromCache('callID', _callID)
+        return self.fromCache('call_id', _call_id)
 
     @property
-    def callIDHeaderField(self):
-        def _callIDHeaderField():
+    def call_id_header_field(self):
+        def _call_id_header_field():
             return next((header_field for header_field in self.header_fields if header_field.is_call_id), None)
-        return self.fromCache('callIDHeaderField', _callIDHeaderField)
+        return self.fromCache('call_id_header_field', _call_id_header_field)
 
     @property
-    def cSeq(self):
-        def _cSeq():
-            if self.cSeqHeaderField is not None:
-                return self.cSeqHeaderField.field_value_string
+    def cseq(self):
+        def _cseq():
+            if self.cseq_header_field is not None:
+                return self.cseq_header_field.field_value_string
             return None
-        return self.fromCache('cSeq', _cSeq)
+        return self.fromCache('cseq', _cseq)
 
     @property
-    def cSeqHeaderField(self):
+    def cseq_header_field(self):
         def _cSeqHeaderField():
             return next((header_field for header_field in self.header_fields if header_field.is_cseq), None)
-        return self.fromCache('cSeqHeaderField', _cSeqHeaderField)
+        return self.fromCache('cseq_header_field', _cSeqHeaderField)
 
     # TODO - cache and test
     # @property
@@ -125,14 +125,14 @@ class SIPHeader(object):
     @property
     def vias(self):
         def _vias():
-            return [x.field_value_string for x in self.viaHeaderFields]
+            return [x.field_value_string for x in self.via_header_fields]
         return self.fromCache('vias', _vias)
 
     @property
-    def viaHeaderFields(self):
+    def via_header_fields(self):
         def _viaHeaderFields():
             return [header_field for header_field in self.header_fields if header_field.is_via]
-        return self.fromCache('viaHeaderFields', _viaHeaderFields)
+        return self.fromCache('via_header_fields', _viaHeaderFields)
 
     @property
     def routeHeaderFields(self):
@@ -141,10 +141,10 @@ class SIPHeader(object):
         return self.fromCache('routeHeaderFields', _routeHeaderFields)
 
     @property
-    def routeURIs(self):
+    def route_uris(self):
         def _routeURIs():
             return [x.sip_uri for x in self.routeHeaderFields]
-        return self.fromCache('routeURIs', _routeURIs)
+        return self.fromCache('route_uris', _routeURIs)
 
     @property
     def recordRouteHeaderFields(self):
@@ -153,10 +153,10 @@ class SIPHeader(object):
         return self.fromCache('recordRouteHeaderFields', _recordRouteHeaderFields)
 
     @property
-    def recordRouteURIs(self):
+    def record_route_uris(self):
         def _recordRouteURIs():
             return [x.sip_uri for x in self.recordRouteHeaderFields]
-        return self.fromCache('recordRouteURIs', _recordRouteURIs)
+        return self.fromCache('record_route_uris', _recordRouteURIs)
 
     # TODO:  need to test
     def add_header_field(self, a_sip_header_field):
@@ -229,7 +229,7 @@ class SIPHeader(object):
     @property
     def unknownHeaderFields(self):
         def _unknownHeaderFields():
-            return [header_field for header_field in self.header_fields if header_field.isUnknown]
+            return [header_field for header_field in self.header_fields if header_field.is_unknown]
         return self.fromCache('unknownHeaderFields', _unknownHeaderFields)
 
     @property
@@ -257,7 +257,7 @@ class SIPHeader(object):
                     header_fields = []
                     for field_name, field_value_string in aListOrString:
                         if isinstance(field_value_string, dict):  # field_value_string is dict of property names and values.
-                            header_field = factory.nextForFieldName(field_name)
+                            header_field = factory.next_for_field_name(field_name)
                             for propertyName, propertyValue in field_value_string.iteritems():
                                 prop = next(c.__dict__.get(propertyName, None) for c in header_field.__class__.__mro__ if propertyName in c.__dict__)
                                 if type(prop) is property:
@@ -266,7 +266,7 @@ class SIPHeader(object):
                                         setter(header_field, propertyValue)
                             header_fields.append(header_field)
                         else:
-                            header_fields.append(factory.nextForFieldNameAndFieldValue(field_name, str(field_value_string)))
+                            header_fields.append(factory.next_for_field_name_and_field_value(field_name, str(field_value_string)))
                     self._headerFields = header_fields
                 else:
                     self._headerFields = aListOrString  # list of SIPHeaderField instances
@@ -276,12 +276,12 @@ class SIPHeader(object):
                 stringio.close()
 
     @property
-    def transactionHash(self):
+    def transaction_hash(self):
         # cseq + branch id on Via header (the last one, which is the via of the original request)
         def _transactionHash():
             answer = None
-            viaFields = self.viaHeaderFields
-            cseq = self.cSeq
+            viaFields = self.via_header_fields
+            cseq = self.cseq
             if viaFields:
                 originalViaField = viaFields[-1]
                 if originalViaField.branch and cseq:
@@ -290,26 +290,26 @@ class SIPHeader(object):
                     answer.update(cseq)
                     answer = answer.hexdigest()
             return answer
-        return self.fromCache('transactionHash', _transactionHash)
+        return self.fromCache('transaction_hash', _transactionHash)
 
     @property
-    def dialogHash(self):
+    def dialog_hash(self):
         def _dialogHash():
             answer = None
             toTag = self.toTag
             fromTag = self.fromTag
-            callID = self.callID
-            if toTag and fromTag and callID:
+            call_id = self.call_id
+            if toTag and fromTag and call_id:
                 answer = sha1()
                 answer.update(toTag)
                 answer.update(fromTag)
-                answer.update(callID)
+                answer.update(call_id)
                 answer = answer.hexdigest()
             return answer
-        return self.fromCache('dialogHash', _dialogHash)
+        return self.fromCache('dialog_hash', _dialogHash)
 
     @property
-    def invariantBranchHash(self):
+    def invariant_branch_hash(self):
         # TODO: we may need to extend this when we want to be resilient to loop and spiral detection
         # See section 16.6 point 8 of RFC3261.
         def _invariantBranchHash():
@@ -317,12 +317,12 @@ class SIPHeader(object):
             # It's OK if some of these are None.
             answer.update(str(self.toTag))
             answer.update(str(self.fromTag))
-            answer.update(str(self.callID))
-            answer.update(str(self.cSeq))
+            answer.update(str(self.call_id))
+            answer.update(str(self.cseq))
             if self.vias:
                 answer.update(self.vias[0])
             return answer.hexdigest()
-        return self.fromCache('invariantBranchHash', _invariantBranchHash)
+        return self.fromCache('invariant_branch_hash', _invariantBranchHash)
 
     @property
     def toTag(self):

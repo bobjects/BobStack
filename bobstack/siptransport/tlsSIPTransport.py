@@ -4,7 +4,7 @@ from tlsSIPTransportConnection import TLSSIPTransportConnection
 
 class TLSSIPTransport(SIPTransport):
     @property
-    def transportParameterName(self):
+    def transport_parameter_name(self):
         return 'TLS'
 
     def connect_to_address_and_port(self, address_string, port_integer):

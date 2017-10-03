@@ -53,7 +53,7 @@ class AbstractSIPHeaderFieldTestCase(TestCase):
             self.assertTrue(header_field.field_name.lower() in [name.lower() for name in self.canonicalFieldNames] + [name.lower() for name in self.canonicalCompactFieldNames])
             self.assertTrue(header_field.field_value_string in self.canonicalFieldValues)
             # self.assertNotEqual(header_field.value, None)
-            self.assertIsInstance(header_field.parameterNamesAndValueStrings, dict)
+            self.assertIsInstance(header_field.parameter_names_and_value_strings, dict)
             header_field.raw_string = self.canonicalFieldNames[0] + ': blooey'
             self.assertEqual("blooey", header_field.field_value_string)
             self.assertEqual(header_field.field_name.lower(), self.canonicalFieldNames[0].lower())

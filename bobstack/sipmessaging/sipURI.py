@@ -10,7 +10,7 @@ import re
 
 
 class SIPURI(object):
-    regexForParsingHostPort = re.compile('([^:]*):?(.*)')
+    regex_for_parsing_host_port = re.compile('([^:]*):?(.*)')
     regexForFindingParameterNamesAndValues = re.compile(';([^=;]+)=?([^;]+)?')
     regexForURI = re.compile('(([^:]*):([^@;]*)@?([^;]*)?)')
 
@@ -21,13 +21,13 @@ class SIPURI(object):
         return answer
 
     @classmethod
-    def new_for_attributes(cls, host='', port=None, scheme='sip', user=None, parameterNamesAndValueStrings=None):
+    def new_for_attributes(cls, host='', port=None, scheme='sip', user=None, parameter_names_and_value_strings=None):
         answer = cls()
         answer.host = host
         answer.port = port
         answer.scheme = scheme
         answer.user = user
-        answer.parameterNamesAndValueStrings = parameterNamesAndValueStrings
+        answer.parameter_names_and_value_strings = parameter_names_and_value_strings
         return answer
 
     def __init__(self):
@@ -66,7 +66,7 @@ class SIPURI(object):
         self.clear_raw_string()
 
     @property
-    def derivedPort(self):
+    def derived_port(self):
         if self.port is not None:
             return self.port
         else:
@@ -109,30 +109,30 @@ class SIPURI(object):
         self.clear_raw_string()
 
     @property
-    def parameterNamesAndValueStrings(self):
+    def parameter_names_and_value_strings(self):
         if self._attributesMustBeParsed:
             self.parse_attributes_from_raw_string()
         if self._parameterNamesAndValueStrings is None:
             self._parameterNamesAndValueStrings = {}
         return self._parameterNamesAndValueStrings
 
-    @parameterNamesAndValueStrings.setter
-    def parameterNamesAndValueStrings(self, aDictionary):
-        self._parameterNamesAndValueStrings = aDictionary
+    @parameter_names_and_value_strings.setter
+    def parameter_names_and_value_strings(self, a_dictionary):
+        self._parameterNamesAndValueStrings = a_dictionary
         self.clear_raw_string()
 
     # TODO: need to test.
     @property
-    def parameterNames(self):
-        return self.parameterNamesAndValueStrings.keys()
+    def parameter_names(self):
+        return self.parameter_names_and_value_strings.keys()
 
-    def parameter_named(self, keyString):
-        return self.parameterNamesAndValueStrings.get(keyString, None)
+    def parameter_named(self, key_string):
+        return self.parameter_names_and_value_strings.get(key_string, None)
 
-    def parameter_named_put(self, keyString, valueObject):
-        if not self.parameterNamesAndValueStrings:
-            self.parameterNamesAndValueStrings = {}
-        self.parameterNamesAndValueStrings[keyString] = valueObject
+    def parameter_named_put(self, key_string, value_object):
+        if not self.parameter_names_and_value_strings:
+            self.parameter_names_and_value_strings = {}
+        self.parameter_names_and_value_strings[key_string] = value_object
         self.clear_raw_string()
 
     def clear_raw_string(self):
@@ -152,16 +152,16 @@ class SIPURI(object):
         self._attributesMustBeParsed = False
         # TODO - put in exception handler for malformed SIPURI, after we do some testing.
         self._parameterNamesAndValueStrings = dict(self.__class__.regexForFindingParameterNamesAndValues.findall(self._rawString))
-        uriMatchGroups = self.__class__.regexForURI.match(self._rawString).groups()
-        # parsedAttributes['sip_uri'] = uriMatchGroups[0]
-        self._scheme = uriMatchGroups[1]
-        if uriMatchGroups[3]:
-            self._user = uriMatchGroups[2]
-            host_port = uriMatchGroups[3]
+        uri_match_groups = self.__class__.regexForURI.match(self._rawString).groups()
+        # parsedAttributes['sip_uri'] = uri_match_groups[0]
+        self._scheme = uri_match_groups[1]
+        if uri_match_groups[3]:
+            self._user = uri_match_groups[2]
+            host_port = uri_match_groups[3]
         else:
             self._user = None
-            host_port = uriMatchGroups[2]
-        host_port_match_groups = self.__class__.regexForParsingHostPort.match(host_port).groups()
+            host_port = uri_match_groups[2]
+        host_port_match_groups = self.__class__.regex_for_parsing_host_port.match(host_port).groups()
         self._host = host_port_match_groups[0]
         if host_port_match_groups[1]:
             self._port = int(host_port_match_groups[1])
@@ -180,8 +180,8 @@ class SIPURI(object):
         if self.port is not None:
             stringio.write(':')
             stringio.write(str(self.port))
-        if self.parameterNamesAndValueStrings:
-            for key, value in self.parameterNamesAndValueStrings.iteritems():
+        if self.parameter_names_and_value_strings:
+            for key, value in self.parameter_names_and_value_strings.iteritems():
                 stringio.write(';')
                 stringio.write(str(key))
                 stringio.write('=')

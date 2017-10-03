@@ -70,8 +70,8 @@ class TestRFC4475SIPTortureTest(TestCase):
         self.assertTrue(message.header.header_fields[5].is_cseq)
         self.assertTrue(message.header.header_fields[6].is_via)
         self.assertTrue(message.header.header_fields[7].is_subject)
-        self.assertTrue(message.header.header_fields[8].isUnknown)
-        self.assertTrue(message.header.header_fields[9].isUnknown)
+        self.assertTrue(message.header.header_fields[8].is_unknown)
+        self.assertTrue(message.header.header_fields[9].is_unknown)
         self.assertTrue(message.header.header_fields[10].is_content_type)
         self.assertTrue(message.header.header_fields[11].is_route)
         if self.weHaveImplementedCompactHeaders:
@@ -299,7 +299,7 @@ class TestRFC4475SIPTortureTest(TestCase):
             self.assertTrue(message.header.header_fields[1].is_from)
         self.assertTrue(message.header.header_fields[2].is_call_id)
         self.assertTrue(message.header.header_fields[3].is_cseq)
-        self.assertTrue(message.header.header_fields[4].isUnknown)
+        self.assertTrue(message.header.header_fields[4].is_unknown)
         self.assertTrue(message.header.header_fields[5].is_via)
         if self.weHaveImplementedCompactHeaders:
             self.assertTrue(message.header.header_fields[6].is_via)

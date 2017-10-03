@@ -14,7 +14,7 @@ class SIPMessage(object):
         return answer
 
     @classmethod
-    def _newForAttributes(cls, start_line=None, header=None, content=""):
+    def _new_for_attributes(cls, start_line=None, header=None, content=""):
         answer = cls()
         answer.start_line = start_line
         if header:
@@ -31,7 +31,7 @@ class SIPMessage(object):
         self._rawString = None
 
     @property
-    def deepCopy(self):
+    def deep_copy(self):
         return self.__class__.new_parsed_from(self.raw_string)
 
     @property
@@ -112,24 +112,24 @@ class SIPMessage(object):
         return self.header.vias
 
     @property
-    def viaHeaderFields(self):
-        return self.header.viaHeaderFields
+    def via_header_fields(self):
+        return self.header.via_header_fields
 
     @property
-    def routeURIs(self):
-        return self.header.routeURIs
+    def route_uris(self):
+        return self.header.route_uris
 
     @property
-    def recordRouteURIs(self):
-        return self.header.recordRouteURIs
+    def record_route_uris(self):
+        return self.header.record_route_uris
 
     @property
-    def transactionHash(self):
-        return self.header.transactionHash
+    def transaction_hash(self):
+        return self.header.transaction_hash
 
     @property
-    def dialogHash(self):
-        return self.header.dialogHash
+    def dialog_hash(self):
+        return self.header.dialog_hash
 
     # TODO:  This is a hot method.  Should we cache?
     @property
@@ -144,11 +144,11 @@ class SIPMessage(object):
         return True
 
     @property
-    def isInvalid(self):
+    def is_invalid(self):
         return not self.is_valid
 
     @property
-    def isUnknown(self):
+    def is_unknown(self):
         return not self.is_known
 
     @property

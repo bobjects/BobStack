@@ -60,11 +60,11 @@ do
 	# echo "        elif $CLASS.can_match_string(a_string):"
 	# echo "            return $CLASS.new_parsed_from(a_string)"
 
-	# echo "        elif $CLASS.canMatchFieldName(a_string):"
-	# echo "            return $CLASS.newForFieldNameAndValueString(field_name=a_string)"
+	# echo "        elif $CLASS.can_match_field_name(a_string):"
+	# echo "            return $CLASS.new_for_field_name_and_value_string(field_name=a_string)"
 
-	# echo "        elif $CLASS.canMatchFieldName(field_name):"
-	# echo "            return $CLASS.newForFieldNameAndValueString(field_name=field_name, field_value_string=field_value_string)"
+	# echo "        elif $CLASS.can_match_field_name(field_name):"
+	# echo "            return $CLASS.new_for_field_name_and_value_string(field_name=field_name, field_value_string=field_value_string)"
 
 	# echo "    @property" >> out
 	# echo "    def is$CLASS(self):" >> out
@@ -95,9 +95,9 @@ do
         # echo "        self.basic_test_rendering()" >> out
         # echo "        for field_name in self.canonicalFieldNames:" >> out
         # echo "            for field_value_string in self.canonicalFieldValues:" >> out
-        # echo "                header_field = self.sipHeaderFieldClassUnderTest.newForFieldNameAndValueString(field_name=field_name, field_value_string=field_value_string)" >> out
+        # echo "                header_field = self.sipHeaderFieldClassUnderTest.new_for_field_name_and_value_string(field_name=field_name, field_value_string=field_value_string)" >> out
         # echo "                self.assertTrue(header_field.is$NONHYPHENATED)" >> out
-        # echo "                header_field = self.sipHeaderFieldClassUnderTest.newForValueString(field_value_string=field_value_string)" >> out
+        # echo "                header_field = self.sipHeaderFieldClassUnderTest.new_for_value_string(field_value_string=field_value_string)" >> out
         # echo "                self.assertTrue(header_field.is$NONHYPHENATED)" >> out
         # echo "                header_field = self.sipHeaderFieldClassUnderTest.new_for_attributes(field_value_string=field_value_string)" >> out
         # echo "                self.assertTrue(header_field.is$NONHYPHENATED)" >> out
@@ -122,9 +122,9 @@ do
         # echo "            header_field = SIPHeaderFieldFactory().all_for_stringio(stringio)[0]" >> out
         # echo "            self.assertTrue(header_field.is$NONHYPHENATED, line)" >> out
         # echo "            stringio.close()" >> out
-        # echo "            header_field = SIPHeaderFieldFactory().nextForFieldName(self.canonicalFieldNames[0])" >> out
+        # echo "            header_field = SIPHeaderFieldFactory().next_for_field_name(self.canonicalFieldNames[0])" >> out
         # echo "            self.assertTrue(header_field.is$NONHYPHENATED, line)" >> out
-        # echo '            header_field = SIPHeaderFieldFactory().nextForFieldNameAndFieldValue(self.canonicalFieldNames[0], "foo bar baz blarg")' >> out
+        # echo '            header_field = SIPHeaderFieldFactory().next_for_field_name_and_field_value(self.canonicalFieldNames[0], "foo bar baz blarg")' >> out
         # echo "            self.assertTrue(header_field.is$NONHYPHENATED, line)" >> out
         # echo "" >> out
         # echo "" >> out

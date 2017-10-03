@@ -34,7 +34,7 @@ class AbstractIntegerSIPHeaderFieldTestCase(AbstractSIPHeaderFieldTestCase):
             self.assertEqual(header_field.integer_value, int(self.canonicalFieldValues[0]))
             header_field.raw_string = self.canonicalFieldNames[0] + ': 301'
             self.assertNotEqual(header_field.value, None)
-            self.assertIsInstance(header_field.parameterNamesAndValueStrings, dict)
+            self.assertIsInstance(header_field.parameter_names_and_value_strings, dict)
             self.assertEqual(301, header_field.integer_value)
             self.assertEqual(header_field.field_name.lower(), self.canonicalFieldNames[0].lower())
             self.assertEqual(header_field.field_value_string, "301")
@@ -42,7 +42,7 @@ class AbstractIntegerSIPHeaderFieldTestCase(AbstractSIPHeaderFieldTestCase):
             if self.canonicalCompactFieldNames:
                 header_field.raw_string = self.canonicalCompactFieldNames[0] + ': 301'
                 self.assertNotEqual(header_field.value, None)
-                self.assertIsInstance(header_field.parameterNamesAndValueStrings, dict)
+                self.assertIsInstance(header_field.parameter_names_and_value_strings, dict)
                 self.assertEqual(301, header_field.integer_value)
                 self.assertEqual(header_field.field_name.lower(), self.canonicalCompactFieldNames[0].lower())
                 self.assertEqual(header_field.field_value_string, "301")

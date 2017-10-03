@@ -13,12 +13,12 @@ class IntegerSIPHeaderField(SIPHeaderField):
     regexForParsingInteger = re.compile('\s*(\d*)')
 
     @classmethod
-    def newForFieldNameAndValueString(cls, field_name="", field_value_string="0", use_compact_headers=False):
-        return super(IntegerSIPHeaderField, cls).newForFieldNameAndValueString(field_name, field_value_string, use_compact_headers)
+    def new_for_field_name_and_value_string(cls, field_name="", field_value_string="0", use_compact_headers=False):
+        return super(IntegerSIPHeaderField, cls).new_for_field_name_and_value_string(field_name, field_value_string, use_compact_headers)
 
     @classmethod
     def new_for_integer_value(cls, an_integer):
-        return cls.newForValueString(str(an_integer))
+        return cls.new_for_value_string(str(an_integer))
 
     # noinspection PyNestedDecorators
     @classproperty

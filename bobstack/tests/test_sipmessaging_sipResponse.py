@@ -43,7 +43,7 @@ class TestSIPResponse(AbstractSIPResponseTestCase):
     def runAssertionsForSIPMessage(self, a_sip_response):
         super(TestSIPResponse, self).runAssertionsForSIPMessage(a_sip_response)
         self.assertTrue(a_sip_response.is_known)
-        self.assertFalse(a_sip_response.isUnknown)
+        self.assertFalse(a_sip_response.is_unknown)
         self.assertFalse(a_sip_response.is_ack_request)
         self.assertFalse(a_sip_response.is_bye_request)
         self.assertFalse(a_sip_response.is_cancel_request)

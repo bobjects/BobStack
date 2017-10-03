@@ -84,7 +84,7 @@ class TestStatelessProxyWithSimulatedTransport(AbstractStatelessProxyTestCase):
         self.assertEqual(self.aliceBindPort, self.atlantaReceivedRequests[0].connection.remotePort)
         self.assertEqual(self.atlanta_bind_address, self.atlantaReceivedRequests[0].connection.bind_address)
         self.assertEqual(self.atlanta_bind_port, self.atlantaReceivedRequests[0].connection.bind_port)
-        atlanta_received_request = self.atlantaReceivedRequests[0].sipMessage
+        atlanta_received_request = self.atlantaReceivedRequests[0].sip_message
         ruri = SIPURI.new_parsed_from(atlanta_received_request.start_line.request_uri)
         self.assertEqual(self.aliceRequestString, atlanta_received_request.raw_string)
         self.assertEqual('INVITE', atlanta_received_request.start_line.sip_method)
@@ -97,7 +97,7 @@ class TestStatelessProxyWithSimulatedTransport(AbstractStatelessProxyTestCase):
         self.assertEqual(self.atlanta_bind_port, self.biloxiReceivedRequests[0].connection.remotePort)
         self.assertEqual(self.biloxi_bind_address, self.biloxiReceivedRequests[0].connection.bind_address)
         self.assertEqual(self.biloxi_bind_port, self.biloxiReceivedRequests[0].connection.bind_port)
-        biloxi_received_request = self.biloxiReceivedRequests[0].sipMessage
+        biloxi_received_request = self.biloxiReceivedRequests[0].sip_message
         self.assertEqual(atlanta_received_request.start_line.request_uri, biloxi_received_request.start_line.request_uri)
         self.assertEqual('INVITE', biloxi_received_request.start_line.sip_method)
         self.assertEqual(2, len(biloxi_received_request.vias))
@@ -108,7 +108,7 @@ class TestStatelessProxyWithSimulatedTransport(AbstractStatelessProxyTestCase):
         self.assertEqual(self.biloxi_bind_port, self.atlantaReceivedResponses[0].connection.remotePort)
         self.assertEqual(self.atlanta_bind_address, self.atlantaReceivedResponses[0].connection.bind_address)
         self.assertEqual(self.atlanta_bind_port, self.atlantaReceivedResponses[0].connection.bind_port)
-        atlanta_received_response = self.atlantaReceivedResponses[0].sipMessage
+        atlanta_received_response = self.atlantaReceivedResponses[0].sip_message
         self.assertIsNotNone(atlanta_received_response.header.toTag)
         self.assertEqual(2, len(atlanta_received_response.vias))
 
@@ -116,15 +116,15 @@ class TestStatelessProxyWithSimulatedTransport(AbstractStatelessProxyTestCase):
         self.assertEqual(self.atlanta_bind_port, self.aliceReceivedResponses[0].connection.remotePort)
         self.assertEqual(self.alice_bind_address, self.aliceReceivedResponses[0].connection.bind_address)
         self.assertEqual(self.aliceBindPort, self.aliceReceivedResponses[0].connection.bind_port)
-        alice_received_response = self.aliceReceivedResponses[0].sipMessage
+        alice_received_response = self.aliceReceivedResponses[0].sip_message
         self.assertIsNotNone(alice_received_response.header.toTag)
         self.assertEqual(1, len(alice_received_response.vias))
 
-        self.assertEqual(self.alice_bind_address, atlanta_received_request.viaHeaderFields[0].host)
+        self.assertEqual(self.alice_bind_address, atlanta_received_request.via_header_fields[0].host)
         # TODO: This 404 nonsense is temporary.  Alice sends to a biloxi domain via atlanta, atlanta forwards her request to biloxi,
         # Biloxi sees that it is responsible for the request, and for right now, just answers 404.
-        self.assertEqual(404, self.atlantaReceivedResponses[0].sipMessage.start_line.status_code)
-        self.assertEqual(404, self.aliceReceivedResponses[0].sipMessage.start_line.status_code)
+        self.assertEqual(404, self.atlantaReceivedResponses[0].sip_message.start_line.status_code)
+        self.assertEqual(404, self.aliceReceivedResponses[0].sip_message.start_line.status_code)
 
         # TODO:  Moar!!!
 

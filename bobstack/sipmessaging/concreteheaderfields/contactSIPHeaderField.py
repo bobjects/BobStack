@@ -64,7 +64,7 @@ class ContactSIPHeaderField(SIPHeaderField):
         self._isValid = (self._sipURI is not None)
         self._attributeHasBeenSet = True
         self.clear_raw_string()
-        self.clearFieldNameAndValueString()
+        self.clear_field_name_and_value_string()
 
     @property
     def sip_uri(self):
@@ -78,7 +78,7 @@ class ContactSIPHeaderField(SIPHeaderField):
         self._isValid = (self._sipURI is not None)
         self._attributeHasBeenSet = True
         self.clear_raw_string()
-        self.clearFieldNameAndValueString()
+        self.clear_field_name_and_value_string()
 
     def clear_attributes(self):
         super(ContactSIPHeaderField, self).clear_attributes()

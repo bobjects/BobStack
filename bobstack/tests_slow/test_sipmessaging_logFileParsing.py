@@ -43,7 +43,7 @@ class TestSIPMessageFactoryForSanitizedLogFile(TestCase):
             try:
                 factory = SIPMessageFactory()
                 factory.when_event_do("malformedSIPMessage", self.handleMalformedSIPMessage)
-                factory.when_event_do("sipMessage", self.handleSIPMessage)
+                factory.when_event_do("sip_message", self.handleSIPMessage)
                 factory.when_event_do("sipRequest", self.handleSIPRequest)
                 factory.when_event_do("sipResponse", self.handleSIPResponse)
                 factory.when_event_do("validSIPMessage", self.handleValidSIPMessage)
@@ -133,46 +133,46 @@ class TestSIPMessageFactoryForSanitizedLogFile(TestCase):
         self.assertTrue(a_sip_message.is_valid)
         self.appendStringToFileNamed(a_sip_message.raw_string, 'validSIPMessages')
         self.appendStringToFileNamed(self.messageSeparator, 'validSIPMessages')
-        # print a_sip_message.transactionHash
-        # print a_sip_message.dialogHash
-        if a_sip_message.transactionHash:
+        # print a_sip_message.transaction_hash
+        # print a_sip_message.dialog_hash
+        if a_sip_message.transaction_hash:
             pass
             # TODO:  running into memory issues on small VMs.  Are these dicts the culprit?
-            # if a_sip_message.transactionHash not in self.transactionHashesAndSIPMessages:
-            #     self.transactionHashesAndSIPMessages[a_sip_message.transactionHash] = []
-            # self.transactionHashesAndSIPMessages[a_sip_message.transactionHash].append(a_sip_message.start_line.raw_string)
-        if a_sip_message.header.invariantBranchHash:
+            # if a_sip_message.transaction_hash not in self.transactionHashesAndSIPMessages:
+            #     self.transactionHashesAndSIPMessages[a_sip_message.transaction_hash] = []
+            # self.transactionHashesAndSIPMessages[a_sip_message.transaction_hash].append(a_sip_message.start_line.raw_string)
+        if a_sip_message.header.invariant_branch_hash:
             pass
             # TODO:  running into memory issues on small VMs.  Are these dicts the culprit?
-            # if a_sip_message.header.invariantBranchHash not in self.invariantBranchHashesAndSIPMessages:
-            #     self.invariantBranchHashesAndSIPMessages[a_sip_message.header.invariantBranchHash] = []
-            # self.invariantBranchHashesAndSIPMessages[a_sip_message.header.invariantBranchHash].append(a_sip_message.start_line.raw_string)
-        if a_sip_message.dialogHash:
+            # if a_sip_message.header.invariant_branch_hash not in self.invariantBranchHashesAndSIPMessages:
+            #     self.invariantBranchHashesAndSIPMessages[a_sip_message.header.invariant_branch_hash] = []
+            # self.invariantBranchHashesAndSIPMessages[a_sip_message.header.invariant_branch_hash].append(a_sip_message.start_line.raw_string)
+        if a_sip_message.dialog_hash:
             pass
             # TODO:  running into memory issues on small VMs.  Are these dicts the culprit?
-            # if a_sip_message.dialogHash not in self.dialogHashesAndSIPMessages:
-            #     self.dialogHashesAndSIPMessages[a_sip_message.dialogHash] = []
-            # self.dialogHashesAndSIPMessages[a_sip_message.dialogHash].append(a_sip_message.start_line.raw_string)
+            # if a_sip_message.dialog_hash not in self.dialogHashesAndSIPMessages:
+            #     self.dialogHashesAndSIPMessages[a_sip_message.dialog_hash] = []
+            # self.dialogHashesAndSIPMessages[a_sip_message.dialog_hash].append(a_sip_message.start_line.raw_string)
 
         # TODO:  log these to files?
 #        print a_sip_message.raw_string
 #        print ""
-        if a_sip_message.header.callIDHeaderField:
-            self.assertIsInstance(a_sip_message.header.callID, basestring)
+        if a_sip_message.header.call_id_header_field:
+            self.assertIsInstance(a_sip_message.header.call_id, basestring)
         else:
-            self.assertIsInstance(a_sip_message.header.callID, type(None))
-        if a_sip_message.header.cSeqHeaderField:
-            self.assertIsInstance(a_sip_message.header.cSeq, basestring)
+            self.assertIsInstance(a_sip_message.header.call_id, type(None))
+        if a_sip_message.header.cseq_header_field:
+            self.assertIsInstance(a_sip_message.header.cseq, basestring)
         else:
-            self.assertIsInstance(a_sip_message.header.cSeq, type(None))
+            self.assertIsInstance(a_sip_message.header.cseq, type(None))
         self.assertIsInstance(a_sip_message.header.toTag, (basestring, type(None)))
         self.assertIsInstance(a_sip_message.header.fromTag, (basestring, type(None)))
         if a_sip_message.header.maxForwardsHeaderField:
             self.assertIsInstance(a_sip_message.header.max_forwards, int)
         else:
             self.assertIsInstance(a_sip_message.header.max_forwards, type(None))
-        self.assertIsInstance(a_sip_message.header.routeURIs, list)
-        self.assertIsInstance(a_sip_message.header.recordRouteURIs, list)
+        self.assertIsInstance(a_sip_message.header.route_uris, list)
+        self.assertIsInstance(a_sip_message.header.record_route_uris, list)
 
         for header_field in a_sip_message.header.header_fields:
             if header_field.is_accept:
@@ -228,7 +228,7 @@ class TestSIPMessageFactoryForSanitizedLogFile(TestCase):
             if header_field.is_user_agent:
                 self.appendStringToFileNamed(header_field.raw_string + '\r\n', 'userAgentHeaderFields')
             if header_field.is_via:
-                self.appendStringToFileNamed(header_field.raw_string + '\r\n', 'viaHeaderFields')
+                self.appendStringToFileNamed(header_field.raw_string + '\r\n', 'via_header_fields')
             if header_field.is_warning:
                 self.appendStringToFileNamed(header_field.raw_string + '\r\n', 'warningHeaderFields')
             if header_field.is_www_authenticate:
@@ -291,7 +291,7 @@ class TestSIPMessageFactoryForSanitizedLogFile(TestCase):
                 self.appendStringToFileNamed('\r\n    port:  ' + str(header_field.port), 'viaHeaderFieldsAndAttributes')
                 self.appendStringToFileNamed('\r\n    transport:  ' + str(header_field.transport), 'viaHeaderFieldsAndAttributes')
                 self.appendStringToFileNamed('\r\n    branch:  ' + str(header_field.branch), 'viaHeaderFieldsAndAttributes')
-                self.appendStringToFileNamed('\r\n    headerFieldParameters:  ' + str(header_field.parameterNamesAndValueStrings), 'viaHeaderFieldsAndAttributes')
+                self.appendStringToFileNamed('\r\n    headerFieldParameters:  ' + str(header_field.parameter_names_and_value_strings), 'viaHeaderFieldsAndAttributes')
                 self.appendStringToFileNamed('\r\n', 'viaHeaderFieldsAndAttributes')
                 self.appendStringToFileNamed(str(header_field.branch), 'viaBranches')
                 self.appendStringToFileNamed('\r\n', 'viaBranches')
@@ -303,8 +303,8 @@ class TestSIPMessageFactoryForSanitizedLogFile(TestCase):
                     self.appendStringToFileNamed('\r\n        user:  ' + str(header_field.sip_uri.user), 'contactHeaderFieldsAndAttributes')
                     self.appendStringToFileNamed('\r\n        host:  ' + str(header_field.sip_uri.host), 'contactHeaderFieldsAndAttributes')
                     self.appendStringToFileNamed('\r\n        port:  ' + str(header_field.sip_uri.port), 'contactHeaderFieldsAndAttributes')
-                    self.appendStringToFileNamed('\r\n        uriParameters:  ' + str(header_field.sip_uri.parameterNamesAndValueStrings), 'contactHeaderFieldsAndAttributes')
-                self.appendStringToFileNamed('\r\n    headerFieldParameters:  ' + str(header_field.parameterNamesAndValueStrings), 'contactHeaderFieldsAndAttributes')
+                    self.appendStringToFileNamed('\r\n        uriParameters:  ' + str(header_field.sip_uri.parameter_names_and_value_strings), 'contactHeaderFieldsAndAttributes')
+                self.appendStringToFileNamed('\r\n    headerFieldParameters:  ' + str(header_field.parameter_names_and_value_strings), 'contactHeaderFieldsAndAttributes')
                 self.appendStringToFileNamed('\r\n', 'contactHeaderFieldsAndAttributes')
             if header_field.is_to:
                 self.appendStringToFileNamed(header_field.raw_string, 'toHeaderFieldsAndAttributes')
@@ -315,8 +315,8 @@ class TestSIPMessageFactoryForSanitizedLogFile(TestCase):
                     self.appendStringToFileNamed('\r\n        user:  ' + str(header_field.sip_uri.user), 'toHeaderFieldsAndAttributes')
                     self.appendStringToFileNamed('\r\n        host:  ' + str(header_field.sip_uri.host), 'toHeaderFieldsAndAttributes')
                     self.appendStringToFileNamed('\r\n        port:  ' + str(header_field.sip_uri.port), 'toHeaderFieldsAndAttributes')
-                    self.appendStringToFileNamed('\r\n        uriParameters:  ' + str(header_field.sip_uri.parameterNamesAndValueStrings), 'toHeaderFieldsAndAttributes')
-                self.appendStringToFileNamed('\r\n    headerFieldParameters:  ' + str(header_field.parameterNamesAndValueStrings), 'toHeaderFieldsAndAttributes')
+                    self.appendStringToFileNamed('\r\n        uriParameters:  ' + str(header_field.sip_uri.parameter_names_and_value_strings), 'toHeaderFieldsAndAttributes')
+                self.appendStringToFileNamed('\r\n    headerFieldParameters:  ' + str(header_field.parameter_names_and_value_strings), 'toHeaderFieldsAndAttributes')
                 self.appendStringToFileNamed('\r\n', 'toHeaderFieldsAndAttributes')
                 if header_field.tag:
                     self.appendStringToFileNamed(header_field.tag, 'toAndFromTags')
@@ -330,16 +330,16 @@ class TestSIPMessageFactoryForSanitizedLogFile(TestCase):
                     self.appendStringToFileNamed('\r\n        user:  ' + str(header_field.sip_uri.user), 'fromHeaderFieldsAndAttributes')
                     self.appendStringToFileNamed('\r\n        host:  ' + str(header_field.sip_uri.host), 'fromHeaderFieldsAndAttributes')
                     self.appendStringToFileNamed('\r\n        port:  ' + str(header_field.sip_uri.port), 'fromHeaderFieldsAndAttributes')
-                    self.appendStringToFileNamed('\r\n        uriParameters:  ' + str(header_field.sip_uri.parameterNamesAndValueStrings), 'fromHeaderFieldsAndAttributes')
-                self.appendStringToFileNamed('\r\n    headerFieldParameters:  ' + str(header_field.parameterNamesAndValueStrings), 'fromHeaderFieldsAndAttributes')
+                    self.appendStringToFileNamed('\r\n        uriParameters:  ' + str(header_field.sip_uri.parameter_names_and_value_strings), 'fromHeaderFieldsAndAttributes')
+                self.appendStringToFileNamed('\r\n    headerFieldParameters:  ' + str(header_field.parameter_names_and_value_strings), 'fromHeaderFieldsAndAttributes')
                 self.appendStringToFileNamed('\r\n', 'fromHeaderFieldsAndAttributes')
                 if header_field.tag:
                     self.appendStringToFileNamed(header_field.tag, 'toAndFromTags')
                     self.appendStringToFileNamed('\r\n', 'toAndFromTags')
-            if header_field.parameterNamesAndValueStrings:
+            if header_field.parameter_names_and_value_strings:
                 self.appendStringToFileNamed(header_field.raw_string, 'headerFieldParameters')
                 self.appendStringToFileNamed('\r\n', 'headerFieldParameters')
-                for name, value in header_field.parameterNamesAndValueStrings.iteritems():
+                for name, value in header_field.parameter_names_and_value_strings.iteritems():
                     self.appendStringToFileNamed("    " + name + " : " + value + '\r\n', 'headerFieldParameters')
         for header_field in a_sip_message.header.knownHeaderFields:
             self.appendStringToFileNamed(header_field.raw_string, 'knownHeaderFields')
@@ -374,7 +374,7 @@ class TestSIPMessageFactoryForSanitizedLogFile(TestCase):
         self.appendStringToFileNamed(a_sip_message.raw_string, 'invalidSIPMessages')
         self.appendStringToFileNamed(self.messageSeparator, 'invalidSIPMessages')
         for header_field in a_sip_message.header.header_fields:
-            if header_field.isInvalid:
+            if header_field.is_invalid:
                 self.appendStringToFileNamed(header_field.raw_string, 'invalidHeaderFields')
 
     def handleInvalidSIPRequest(self, a_sip_request):
@@ -435,7 +435,7 @@ class TestSIPMessageFactoryForSanitizedLogFile(TestCase):
     def runAssertionsForSIPMessage(self, a_sip_message):
         self.assertTrue(a_sip_message.raw_string)
         self.assertIsInstance(a_sip_message.is_known, bool)
-        self.assertIsInstance(a_sip_message.isUnknown, bool)
+        self.assertIsInstance(a_sip_message.is_unknown, bool)
         self.assertIsInstance(a_sip_message.is_valid, bool)
         self.assertIsInstance(a_sip_message.is_request, bool)
         self.assertIsInstance(a_sip_message.is_response, bool)
@@ -459,16 +459,16 @@ class TestSIPMessageFactoryForSanitizedLogFile(TestCase):
         self.assertIsInstance(a_sip_message.header.unknownHeaderFields, list)
         self.assertIsInstance(a_sip_message.vias, list)
         self.assertIsInstance(a_sip_message.header.vias, list)
-        self.assertIsInstance(a_sip_message.header.viaHeaderFields, list)
-        self.assertIsInstance(a_sip_message.routeURIs, list)
-        self.assertIsInstance(a_sip_message.header.routeURIs, list)
+        self.assertIsInstance(a_sip_message.header.via_header_fields, list)
+        self.assertIsInstance(a_sip_message.route_uris, list)
+        self.assertIsInstance(a_sip_message.header.route_uris, list)
         self.assertIsInstance(a_sip_message.header.routeHeaderFields, list)
-        for u in a_sip_message.routeURIs:
+        for u in a_sip_message.route_uris:
             self.assertIsInstance(u, SIPURI)
-        self.assertIsInstance(a_sip_message.recordRouteURIs, list)
-        self.assertIsInstance(a_sip_message.header.recordRouteURIs, list)
+        self.assertIsInstance(a_sip_message.record_route_uris, list)
+        self.assertIsInstance(a_sip_message.header.record_route_uris, list)
         self.assertIsInstance(a_sip_message.header.recordRouteHeaderFields, list)
-        for u in a_sip_message.recordRouteURIs:
+        for u in a_sip_message.record_route_uris:
             self.assertIsInstance(u, SIPURI)
         # print a_sip_message.start_line.raw_string
         # print a_sip_message.raw_string

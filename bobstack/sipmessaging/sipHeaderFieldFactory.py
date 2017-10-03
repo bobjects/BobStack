@@ -214,40 +214,40 @@ class SIPHeaderFieldFactory(object):
             cls._regexForGettingHeaderFieldName = re.compile('^([^\s:]*)')
             return cls._regexForGettingHeaderFieldName
 
-    def all_for_stringio(self, aStringIO):
-        lineStrings = []
-        lineString = aStringIO.readline().rstrip('\r\n')
-        while lineString:
-            # lineStrings.append(lineString)
-            if lineString.startswith((' ', '\t')) and lineStrings:
+    def all_for_stringio(self, a_stringio):
+        line_strings = []
+        line_string = a_stringio.readline().rstrip('\r\n')
+        while line_string:
+            # line_strings.append(line_string)
+            if line_string.startswith((' ', '\t')) and line_strings:
                 # line folding!
-                lineStrings[-1] += lineString
+                line_strings[-1] += line_string
             else:
-                lineStrings.append(lineString)
+                line_strings.append(line_string)
 
-            lineString = aStringIO.readline().rstrip('\r\n')
-        return [self.next_for_string(s) for s in lineStrings]
+            line_string = a_stringio.readline().rstrip('\r\n')
+        return [self.next_for_string(s) for s in line_strings]
 
-    def classForString(self, a_string):
+    def class_for_string(self, a_string):
         # This is invalid.  There can be no whitespace before the colon.
         # try:
-        #     return self.classForFieldName(a_string.split()[0])
+        #     return self.class_for_field_name(a_string.split()[0])
         # except IndexError:
         #     return UnknownSIPHeaderField
         match = self.__class__.regex_for_getting_header_field_name.match(a_string)
         if match:
-            return self.classForFieldName(match.group(1))
+            return self.class_for_field_name(match.group(1))
         else:
             return UnknownSIPHeaderField
 
-    def classForFieldName(self, a_string):
+    def class_for_field_name(self, a_string):
         return self.__class__.headerFieldNamesAndClasses.get(a_string.lower(), UnknownSIPHeaderField)
 
     def next_for_string(self, a_string):
-        return self.classForString(a_string).new_parsed_from(a_string)
+        return self.class_for_string(a_string).new_parsed_from(a_string)
 
-    def nextForFieldName(self, a_string):
-        return self.classForFieldName(a_string).newForFieldNameAndValueString(field_name=a_string)
+    def next_for_field_name(self, a_string):
+        return self.class_for_field_name(a_string).new_for_field_name_and_value_string(field_name=a_string)
 
-    def nextForFieldNameAndFieldValue(self, field_name, field_value_string):
-        return self.classForFieldName(field_name).newForFieldNameAndValueString(field_name=field_name, field_value_string=field_value_string)
+    def next_for_field_name_and_field_value(self, field_name, field_value_string):
+        return self.class_for_field_name(field_name).new_for_field_name_and_value_string(field_name=field_name, field_value_string=field_value_string)
