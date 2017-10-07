@@ -4,7 +4,7 @@ sys.path.append("..")
 from sipmessaging import StrongRandomStringServer
 
 
-class test_StrongRandomStringServer(TestCase):
+class TestStrongRandomStringServer(TestCase):
     def testIt(self):
         server = StrongRandomStringServer()
         for i in xrange(10000):

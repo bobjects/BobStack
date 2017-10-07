@@ -31,11 +31,11 @@ class RouteSIPHeaderField(SIPHeaderField):
     def new_for_attributes(cls, sip_uri=None):
         answer = cls()
         answer.sip_uri = sip_uri
-        answer._isValid = (sip_uri is not None)
+        answer._is_valid = (sip_uri is not None)
         return answer
 
     def __init__(self):
-        self._isValid = None
+        self._is_valid = None
         self._sipURI = None
         super(RouteSIPHeaderField, self).__init__()
 
@@ -43,7 +43,7 @@ class RouteSIPHeaderField(SIPHeaderField):
     def is_valid(self):
         if not self._attributeHasBeenSet:
             self.parse_attributes_from_field_value_string()
-        return self._isValid
+        return self._is_valid
 
     @property
     def sip_uri(self):
@@ -54,7 +54,7 @@ class RouteSIPHeaderField(SIPHeaderField):
     @sip_uri.setter
     def sip_uri(self, a_sip_uri):
         self._sipURI = a_sip_uri
-        self._isValid = (self._sipURI is not None)
+        self._is_valid = (self._sipURI is not None)
         self._attributeHasBeenSet = True
         self.clear_raw_string()
         self.clear_field_name_and_value_string()
@@ -62,7 +62,7 @@ class RouteSIPHeaderField(SIPHeaderField):
     def clear_attributes(self):
         super(RouteSIPHeaderField, self).clear_attributes()
         self._sipURI = None
-        self._isValid = None
+        self._is_valid = None
 
     def parse_attributes_from_field_value_string(self):
         self._parameterNamesAndValueStrings = {}
@@ -89,9 +89,9 @@ class RouteSIPHeaderField(SIPHeaderField):
             self._parameterNamesAndValueStrings = dict(self.__class__.regexForFindingParameterNamesAndValues.findall(header_field_parameters_string))
             self._attributeHasBeenSet = True
         except Exception:
-            self._isValid = False
+            self._is_valid = False
         else:
-            self._isValid = True
+            self._is_valid = True
 
     def render_field_name_and_value_string_from_attributes(self):
         self._fieldName = self.canonical_field_name

@@ -45,7 +45,7 @@ class TestSIPMessageFactoryForSanitizedLogFile(TestCase):
                 factory.when_event_do("malformedSIPMessage", self.handleMalformedSIPMessage)
                 factory.when_event_do("sip_message", self.handleSIPMessage)
                 factory.when_event_do("sipRequest", self.handleSIPRequest)
-                factory.when_event_do("sipResponse", self.handleSIPResponse)
+                factory.when_event_do("sip_response", self.handleSIPResponse)
                 factory.when_event_do("validSIPMessage", self.handleValidSIPMessage)
                 factory.when_event_do("validSIPRequest", self.handleValidSIPRequest)
                 factory.when_event_do("validSIPResponse", self.handleValidSIPResponse)
@@ -165,9 +165,9 @@ class TestSIPMessageFactoryForSanitizedLogFile(TestCase):
             self.assertIsInstance(a_sip_message.header.cseq, basestring)
         else:
             self.assertIsInstance(a_sip_message.header.cseq, type(None))
-        self.assertIsInstance(a_sip_message.header.toTag, (basestring, type(None)))
-        self.assertIsInstance(a_sip_message.header.fromTag, (basestring, type(None)))
-        if a_sip_message.header.maxForwardsHeaderField:
+        self.assertIsInstance(a_sip_message.header.to_tag, (basestring, type(None)))
+        self.assertIsInstance(a_sip_message.header.from_tag, (basestring, type(None)))
+        if a_sip_message.header.max_forwards_header_field:
             self.assertIsInstance(a_sip_message.header.max_forwards, int)
         else:
             self.assertIsInstance(a_sip_message.header.max_forwards, type(None))
@@ -208,13 +208,13 @@ class TestSIPMessageFactoryForSanitizedLogFile(TestCase):
             if header_field.is_max_forwards:
                 self.appendStringToFileNamed(header_field.raw_string + '\r\n', 'maxForwardsHeaderFields')
             if header_field.is_record_route:
-                self.appendStringToFileNamed(header_field.raw_string + '\r\n', 'recordRouteHeaderFields')
+                self.appendStringToFileNamed(header_field.raw_string + '\r\n', 'record_route_header_fields')
             if header_field.is_require:
                 self.appendStringToFileNamed(header_field.raw_string + '\r\n', 'requireHeaderFields')
             if header_field.is_retry_after:
                 self.appendStringToFileNamed(header_field.raw_string + '\r\n', 'retryAfterHeaderFields')
             if header_field.is_route:
-                self.appendStringToFileNamed(header_field.raw_string + '\r\n', 'routeHeaderFields')
+                self.appendStringToFileNamed(header_field.raw_string + '\r\n', 'route_header_fields')
             if header_field.is_server:
                 self.appendStringToFileNamed(header_field.raw_string + '\r\n', 'serverHeaderFields')
             if header_field.is_session_expires:
@@ -341,16 +341,16 @@ class TestSIPMessageFactoryForSanitizedLogFile(TestCase):
                 self.appendStringToFileNamed('\r\n', 'headerFieldParameters')
                 for name, value in header_field.parameter_names_and_value_strings.iteritems():
                     self.appendStringToFileNamed("    " + name + " : " + value + '\r\n', 'headerFieldParameters')
-        for header_field in a_sip_message.header.knownHeaderFields:
-            self.appendStringToFileNamed(header_field.raw_string, 'knownHeaderFields')
-            self.appendStringToFileNamed("\r\n", 'knownHeaderFields')
-        for header_field in a_sip_message.header.knownHeaderFields:
+        for header_field in a_sip_message.header.known_header_fields:
+            self.appendStringToFileNamed(header_field.raw_string, 'known_header_fields')
+            self.appendStringToFileNamed("\r\n", 'known_header_fields')
+        for header_field in a_sip_message.header.known_header_fields:
             self.appendStringToFileNamed(header_field.field_name, 'knownHeaderFieldNames')
             self.appendStringToFileNamed("\r\n", 'knownHeaderFieldNames')
-        for header_field in a_sip_message.header.unknownHeaderFields:
-            self.appendStringToFileNamed(header_field.raw_string, 'unknownHeaderFields')
-            self.appendStringToFileNamed("\r\n", 'unknownHeaderFields')
-        for header_field in a_sip_message.header.unknownHeaderFields:
+        for header_field in a_sip_message.header.unknown_header_fields:
+            self.appendStringToFileNamed(header_field.raw_string, 'unknown_header_fields')
+            self.appendStringToFileNamed("\r\n", 'unknown_header_fields')
+        for header_field in a_sip_message.header.unknown_header_fields:
             self.appendStringToFileNamed(header_field.field_name, 'unknownHeaderFieldNames')
             self.appendStringToFileNamed("\r\n", 'unknownHeaderFieldNames')
 
@@ -456,18 +456,18 @@ class TestSIPMessageFactoryForSanitizedLogFile(TestCase):
         self.assertIsInstance(a_sip_message.is_malformed, bool)
         # self.assertIsNotNone(a_sip_message.header.content_length_header_field)
         self.assertIsInstance(a_sip_message.header.content_length, (int, long))
-        self.assertIsInstance(a_sip_message.header.unknownHeaderFields, list)
+        self.assertIsInstance(a_sip_message.header.unknown_header_fields, list)
         self.assertIsInstance(a_sip_message.vias, list)
         self.assertIsInstance(a_sip_message.header.vias, list)
         self.assertIsInstance(a_sip_message.header.via_header_fields, list)
         self.assertIsInstance(a_sip_message.route_uris, list)
         self.assertIsInstance(a_sip_message.header.route_uris, list)
-        self.assertIsInstance(a_sip_message.header.routeHeaderFields, list)
+        self.assertIsInstance(a_sip_message.header.route_header_fields, list)
         for u in a_sip_message.route_uris:
             self.assertIsInstance(u, SIPURI)
         self.assertIsInstance(a_sip_message.record_route_uris, list)
         self.assertIsInstance(a_sip_message.header.record_route_uris, list)
-        self.assertIsInstance(a_sip_message.header.recordRouteHeaderFields, list)
+        self.assertIsInstance(a_sip_message.header.record_route_header_fields, list)
         for u in a_sip_message.record_route_uris:
             self.assertIsInstance(u, SIPURI)
         # print a_sip_message.start_line.raw_string

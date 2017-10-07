@@ -91,7 +91,7 @@ class TestStatelessProxyWithSimulatedTransport(AbstractStatelessProxyTestCase):
         self.assertEqual(self.biloxi_bind_address, ruri.host)
         self.assertEqual(1, len(atlanta_received_request.vias))
         self.assertEqual(self.aliceRequestString, atlanta_received_request.raw_string)
-        self.assertIsNone(atlanta_received_request.header.toTag)
+        self.assertIsNone(atlanta_received_request.header.to_tag)
 
         self.assertEqual(self.atlanta_bind_address, self.biloxiReceivedRequests[0].connection.remoteAddress)
         self.assertEqual(self.atlanta_bind_port, self.biloxiReceivedRequests[0].connection.remotePort)
@@ -102,14 +102,14 @@ class TestStatelessProxyWithSimulatedTransport(AbstractStatelessProxyTestCase):
         self.assertEqual('INVITE', biloxi_received_request.start_line.sip_method)
         self.assertEqual(2, len(biloxi_received_request.vias))
         self.assertNotEqual(self.aliceRequestString, biloxi_received_request.raw_string)
-        self.assertIsNone(biloxi_received_request.header.toTag)
+        self.assertIsNone(biloxi_received_request.header.to_tag)
 
         self.assertEqual(self.biloxi_bind_address, self.atlantaReceivedResponses[0].connection.remoteAddress)
         self.assertEqual(self.biloxi_bind_port, self.atlantaReceivedResponses[0].connection.remotePort)
         self.assertEqual(self.atlanta_bind_address, self.atlantaReceivedResponses[0].connection.bind_address)
         self.assertEqual(self.atlanta_bind_port, self.atlantaReceivedResponses[0].connection.bind_port)
         atlanta_received_response = self.atlantaReceivedResponses[0].sip_message
-        self.assertIsNotNone(atlanta_received_response.header.toTag)
+        self.assertIsNotNone(atlanta_received_response.header.to_tag)
         self.assertEqual(2, len(atlanta_received_response.vias))
 
         self.assertEqual(self.atlanta_bind_address, self.aliceReceivedResponses[0].connection.remoteAddress)
@@ -117,7 +117,7 @@ class TestStatelessProxyWithSimulatedTransport(AbstractStatelessProxyTestCase):
         self.assertEqual(self.alice_bind_address, self.aliceReceivedResponses[0].connection.bind_address)
         self.assertEqual(self.aliceBindPort, self.aliceReceivedResponses[0].connection.bind_port)
         alice_received_response = self.aliceReceivedResponses[0].sip_message
-        self.assertIsNotNone(alice_received_response.header.toTag)
+        self.assertIsNotNone(alice_received_response.header.to_tag)
         self.assertEqual(1, len(alice_received_response.vias))
 
         self.assertEqual(self.alice_bind_address, atlanta_received_request.via_header_fields[0].host)

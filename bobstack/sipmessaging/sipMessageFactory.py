@@ -69,7 +69,7 @@ class SIPMessageFactory(EventSourceMixin):
             else:
                 self.trigger_event("invalidSIPRequest", a_sip_message)
         if a_sip_message.is_response:
-            self.trigger_event("sipResponse", a_sip_message)
+            self.trigger_event("sip_response", a_sip_message)
             if a_sip_message.is_valid:
                 self.trigger_event("validSIPResponse", a_sip_message)
             else:

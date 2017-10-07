@@ -77,9 +77,9 @@ class TestRFC4475SIPTortureTest(TestCase):
         if self.weHaveImplementedCompactHeaders:
             self.assertTrue(message.header.header_fields[12].is_via)
             self.assertTrue(message.header.header_fields[13].is_contact)
-        self.assertEqual('TO : sip:vivekg@chair-dnrc.example.com ;   tag    = 1918181833n', message.header.toHeaderField.raw_string)
+        self.assertEqual('TO : sip:vivekg@chair-dnrc.example.com ;   tag    = 1918181833n', message.header.to_header_field.raw_string)
         # TODO: To tag is not being parsed correctly?
-        # self.assertEqual('1918181833n', message.header.toTag)
+        # self.assertEqual('1918181833n', message.header.to_tag)
         # TODO - more.
 
     def testWideRangeOfValidCharacters(self):

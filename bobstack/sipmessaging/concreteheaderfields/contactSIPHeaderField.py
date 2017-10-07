@@ -37,12 +37,12 @@ class ContactSIPHeaderField(SIPHeaderField):
         answer = cls()
         answer.display_name = display_name
         answer.sip_uri = sip_uri
-        answer._isValid = (sip_uri is not None)
+        answer._is_valid = (sip_uri is not None)
         return answer
 
     def __init__(self):
         self._displayName = None
-        self._isValid = None
+        self._is_valid = None
         self._sipURI = None
         super(ContactSIPHeaderField, self).__init__()
 
@@ -50,7 +50,7 @@ class ContactSIPHeaderField(SIPHeaderField):
     def is_valid(self):
         if not self._attributeHasBeenSet:
             self.parse_attributes_from_field_value_string()
-        return self._isValid
+        return self._is_valid
 
     @property
     def display_name(self):
@@ -61,7 +61,7 @@ class ContactSIPHeaderField(SIPHeaderField):
     @display_name.setter
     def display_name(self, a_string):
         self._displayName = a_string
-        self._isValid = (self._sipURI is not None)
+        self._is_valid = (self._sipURI is not None)
         self._attributeHasBeenSet = True
         self.clear_raw_string()
         self.clear_field_name_and_value_string()
@@ -75,7 +75,7 @@ class ContactSIPHeaderField(SIPHeaderField):
     @sip_uri.setter
     def sip_uri(self, a_sip_uri):
         self._sipURI = a_sip_uri
-        self._isValid = (self._sipURI is not None)
+        self._is_valid = (self._sipURI is not None)
         self._attributeHasBeenSet = True
         self.clear_raw_string()
         self.clear_field_name_and_value_string()
@@ -84,7 +84,7 @@ class ContactSIPHeaderField(SIPHeaderField):
         super(ContactSIPHeaderField, self).clear_attributes()
         self._displayName = None
         self._sipURI = None
-        self._isValid = None
+        self._is_valid = None
 
     def parse_attributes_from_field_value_string(self):
         self._parameterNamesAndValueStrings = {}
@@ -113,9 +113,9 @@ class ContactSIPHeaderField(SIPHeaderField):
             self._parameterNamesAndValueStrings = dict(self.__class__.regexForFindingParameterNamesAndValues.findall(header_field_parameters_string))
             self._attributeHasBeenSet = True
         except Exception:
-            self._isValid = False
+            self._is_valid = False
         else:
-            self._isValid = True
+            self._is_valid = True
 
     def render_field_name_and_value_string_from_attributes(self):
         self._fieldName = self.canonical_field_name

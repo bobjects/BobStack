@@ -38,14 +38,14 @@ class ViaSIPHeaderField(SIPHeaderField):
         answer.port = port
         answer.transport = transport
         answer.branch = branch
-        answer._isValid = True
+        answer._is_valid = True
         return answer
 
     def __init__(self):
         self._host = None
         self._port = None
         self._transport = None
-        self._isValid = None
+        self._is_valid = None
         super(ViaSIPHeaderField, self).__init__()
 
     # TODO: when we do warnings, warn of branch that does not start with "z9hG4bKy", i.e. a non-RFC3261 message.  Also, a full-blown error if SIP/2.0 is not exactly that.
@@ -53,7 +53,7 @@ class ViaSIPHeaderField(SIPHeaderField):
     def is_valid(self):
         if not self._attributeHasBeenSet:
             self.parse_attributes_from_field_value_string()
-        return self._isValid
+        return self._is_valid
 
     @property
     def host(self):
@@ -111,7 +111,7 @@ class ViaSIPHeaderField(SIPHeaderField):
         super(ViaSIPHeaderField, self).clear_attributes()
         self._host = None
         self._port = None
-        self._isValid = None
+        self._is_valid = None
 
     def parse_attributes_from_field_value_string(self):
         self._host = None
@@ -123,9 +123,9 @@ class ViaSIPHeaderField(SIPHeaderField):
             super(ViaSIPHeaderField, self).parse_attributes_from_field_value_string()
             match = self.__class__.regexForViaSpecificValue.match(self.field_value_string)
             if not match:
-                self._isValid = False
+                self._is_valid = False
             else:
-                #  self._isValid = (match.group(1) == 'SIP/2.0')
+                #  self._is_valid = (match.group(1) == 'SIP/2.0')
                 sip_version = match.group(1)
                 self._transport = match.group(2)
                 host_port = match.group(3)
@@ -133,11 +133,11 @@ class ViaSIPHeaderField(SIPHeaderField):
                 self._host = host_port_match_groups[0]
                 if host_port_match_groups[1]:
                     self._port = int(host_port_match_groups[1])
-                self._isValid = (sip_version == '2.0')
+                self._is_valid = (sip_version == '2.0')
             self._attributeHasBeenSet = True
-            self._isValid = self._isValid and bool(self.branch)
+            self._is_valid = self._is_valid and bool(self.branch)
         except Exception:
-            self._isValid = False
+            self._is_valid = False
 
     def render_field_name_and_value_string_from_attributes(self):
         self._fieldName = self.canonical_field_name

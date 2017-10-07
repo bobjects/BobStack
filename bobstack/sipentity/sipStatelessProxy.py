@@ -30,7 +30,7 @@ class SIPStatelessProxy(SIPEntity):
             connected_sip_message_to_send = self.create_connected_sip_message_to_send_for_request(received_connected_sip_message)
             self.preprocess_routing_information_for_request(connected_sip_message_to_send)
             target_uri = self.determine_target_for_request(connected_sip_message_to_send)
-            self.forward_request_to_target(connected_sip_message_to_send, target_uri=target_uri, transportIDForHeader=request_arrival_transport_connection_id)
+            self.forward_request_to_target(connected_sip_message_to_send, target_uri=target_uri, transport_id_for_header=request_arrival_transport_connection_id)
         except DropMessageSIPEntityException:
             pass  # just let it drop.
         except DropMessageAndDropConnectionSIPEntityException:
@@ -47,11 +47,11 @@ class SIPStatelessProxy(SIPEntity):
         try:
             self.validate_response(received_connected_sip_message)
             if self.response_should_be_forwarded(received_connected_sip_message):
-                connected_sip_message_to_send = self.createConnectedSIPMessageToSendForResponse(received_connected_sip_message)
-                self.removeViaForResponse(connected_sip_message_to_send)
-                self.rewriteRecordRouteForResponse(connected_sip_message_to_send)
+                connected_sip_message_to_send = self.create_connected_sip_message_to_send_for_response(received_connected_sip_message)
+                self.remove_via_for_response(connected_sip_message_to_send)
+                self.rewrite_record_route_for_response(connected_sip_message_to_send)
                 target_uri = self.determine_target_for_response(connected_sip_message_to_send)
-                self.forwardResponseToTarget(connected_sip_message_to_send, target_uri=target_uri)
+                self.forward_response_to_target(connected_sip_message_to_send, target_uri=target_uri)
         except DropMessageSIPEntityException:
             pass
         except DropMessageAndDropConnectionSIPEntityException:
@@ -125,8 +125,8 @@ class SIPStatelessProxy(SIPEntity):
         if route_uris:
             if self.sip_uri_matches_us(route_uris[0]):
                 # TODO - remove first route header, because it matches us.
-                # TODO - need to test that removeFirstHeaderFieldOfClass() works correctly.  Header field tests should be written for that.
-                sip_message.removeFirstHeaderFieldOfClass(RouteSIPHeaderField)
+                # TODO - need to test that remove_first_header_field_of_class() works correctly.  Header field tests should be written for that.
+                sip_message.remove_first_header_field_of_class(RouteSIPHeaderField)
                 # TODO:  This line is a work-around for a problem that we really
                 # need to address: when you hack a header or header field value, that
                 # does not clear the SIPMessage's raw_string.  Fixing that is not trivial,
@@ -155,12 +155,12 @@ class SIPStatelessProxy(SIPEntity):
         # own Strategy objects.
         raise SendResponseSIPEntityException(status_code_integer=404, reason_phrase_string='Not Found')
 
-    def forward_request_to_target(self, connected_sip_message_to_send, target_uri=None, transportIDForHeader=None):
+    def forward_request_to_target(self, connected_sip_message_to_send, target_uri=None, transport_id_for_header=None):
         '''
         https://tools.ietf.org/html/rfc3261#section-16.6
         Special consideration for stateless proxies explained in section 16.11
         - The unique branch id must be invariant for requests with identical headers.
-        - Item 10 will send the forwarded message directly to a transportConnection, not transaction.
+        - Item 10 will send the forwarded message directly to a transport_connection, not transaction.
         '''
         sip_message = connected_sip_message_to_send.sip_message
         # TODO: in progress
@@ -174,7 +174,7 @@ class SIPStatelessProxy(SIPEntity):
         # 3.  Update the Max-Forwards header field
         if sip_message.max_forwards is not None:
             # TODO:  When you use -= 1 on an integer sip header field's integer_value parameter, does that work?  Need to write a test.
-            sip_message.header.maxForwardsHeaderField.integer_value -= 1
+            sip_message.header.max_forwards_header_field.integer_value -= 1
         else:
             # TODO: inserting a header field - we should make a method that inserts it using an aesthetically-pleasing order
             # relative to other header fields.  Each header field concrete subclass would have an integer sort attribute for that.
@@ -183,14 +183,14 @@ class SIPStatelessProxy(SIPEntity):
         # TODO: is this the best way to get the URI host?
         # Are record-route header fields only used for INVITE?  Should we only do this if it's an INVITE?
         #    Answer:  No.  See RFC3261 16.6  point 4
-        # TODO: sip or sips scheme?  Should that be derived from the transportConnection?  For now, hard-code to 'sip'
+        # TODO: sip or sips scheme?  Should that be derived from the transport_connection?  For now, hard-code to 'sip'
         record_route_uri = SIPURI.new_for_attributes(host=self.transports[0].bind_address, port=self.transports[0].bind_port, scheme='sip', parameter_names_and_value_strings={'lr': None})
         record_route_header_field = RecordRouteSIPHeaderField.new_for_attributes(record_route_uri)
-        if transportIDForHeader:
+        if transport_id_for_header:
             # Do we want to put that state into this header or the Via?
             #    Answer:  we want it here.  See RFC3261 16.6  point 4
-            record_route_header_field.parameter_named_put('bobstackTransportID', transportIDForHeader)
-        sip_message.header.addHeaderFieldBeforeHeaderFieldsOfSameClass(record_route_header_field)
+            record_route_header_field.parameter_named_put('bobstackTransportID', transport_id_for_header)
+        sip_message.header.add_header_field_before_header_fields_of_same_class(record_route_header_field)
 
         # 5.  Optionally add additional header fields
         # TODO: make the server header field a user-settable parameter.
@@ -201,34 +201,34 @@ class SIPStatelessProxy(SIPEntity):
         if route_uris:
             if 'lr' not in route_uris[0].parameter_names:
                 # TODO: When we set an attribute on the start line, we may need to manually mark the sip message as dirty.
-                sip_message.header.addHeaderFieldAfterHeaderFieldsOfSameClass(RouteSIPHeaderField.new_for_attributes(SIPURI.new_parsed_from(sip_message.start_line.request_uri)))
+                sip_message.header.add_header_field_after_header_fields_of_same_class(RouteSIPHeaderField.new_for_attributes(SIPURI.new_parsed_from(sip_message.start_line.request_uri)))
                 sip_message.start_line.request_uri = route_uris[0].raw_string
                 # TODO: Is the class actually the same object, considering that we're accessing it from a different directory?  Trap for young players.
                 # No, as a matter of fact, it is not the same object, and that's a problem.  We've worked around it over there,
                 # but we need to do better.
-                sip_message.header.removeFirstHeaderFieldOfClass(RouteSIPHeaderField)
-                uriToDetermineNextHop = sip_message.request_uri
+                sip_message.header.remove_first_header_field_of_class(RouteSIPHeaderField)
+                uri_to_determine_next_hop = sip_message.request_uri
             else:
-                uriToDetermineNextHop = route_uris[0]
+                uri_to_determine_next_hop = route_uris[0]
         else:
             # TODO: seriously, we need to make start lines use first-class SIPURIs.
-            uriToDetermineNextHop = SIPURI.new_parsed_from(sip_message.request_uri)
+            uri_to_determine_next_hop = SIPURI.new_parsed_from(sip_message.request_uri)
 
         # 7.  Determine the next-hop address, port, and transport
-        nextHopConnectedTransportConnection = self.connected_transport_connection_for_sip_uri(uriToDetermineNextHop)
-        if not nextHopConnectedTransportConnection:
+        next_hop_connected_transport_connection = self.connected_transport_connection_for_sip_uri(uri_to_determine_next_hop)
+        if not next_hop_connected_transport_connection:
             # TODO:  we could not connect to the next-hop.  Return some error code.  Which error code and reason phrase?  400 and could not connect are NOT correct.
             raise SendResponseSIPEntityException(status_code_integer=400, reason_phrase_string='Could not connect')
 
         # 8.  Add a Via header field value
         # TODO:  For now, don't do the loop / spiral detection stuff.
-        sip_message.header.addHeaderFieldBeforeHeaderFieldsOfSameClass(self.new_via_header_field_for_sip_message(sip_message))
+        sip_message.header.add_header_field_before_header_fields_of_same_class(self.new_via_header_field_for_sip_message(sip_message))
 
         # 9.  Add a Content-Length header field if necessary
         # TODO: if the target transport is stream-oriented, e.g. TLS or TCP, and the message has no Content-Length: header field, add one.
         # TODO: So we'll need to wait until step 7 is done, to know the transport.
         if not sip_message.header.content_length_header_field:
-            if nextHopConnectedTransportConnection.is_stateful:
+            if next_hop_connected_transport_connection.is_stateful:
                 # TODO: if the target transport is stream-oriented, e.g. TLS or TCP, and the message has no Content-Length: header field, add one.
                 sip_message.header.add_header_field(self.new_content_length_header_field_for_sip_message(sip_message))
 
@@ -242,7 +242,7 @@ class SIPStatelessProxy(SIPEntity):
 
         # 10. Forward the new request
         # TODO:  exception handling?
-        nextHopConnectedTransportConnection.send_message(sip_message)
+        next_hop_connected_transport_connection.send_message(sip_message)
 
         # 11. Set timer C - not applicable for stateless.  Huzzah!
 
@@ -259,18 +259,18 @@ class SIPStatelessProxy(SIPEntity):
         # TODO:  because we are just assuming dotted IP addresses for right now, we just assume that host is the dotted IP address,
         # and we do not attempt to resolve it using DNS, SRV, NAPTR, etc.
         # TODO:  We also need to derive / create the next hop transport
-        nextHopAddress = a_sip_uri.host
-        nextHopPort = a_sip_uri.derived_port
+        next_hop_address = a_sip_uri.host
+        next_hop_port = a_sip_uri.derived_port
         # TODO:  Not yet done.  We will return an existing protocol that matches the uri's host, port, and is appropriate
         # for the uri's scheme.  If it doesn't exist, we will create a new one and connect it.  If connection fails, we will
         # return None.
         # TODO:  We also need to check that the transport is compatible with the URI's scheme.
-        existing_connection = self.transports[0].connection_with_address_and_port(nextHopAddress, nextHopPort)
+        existing_connection = self.transports[0].connection_with_address_and_port(next_hop_address, next_hop_port)
         if existing_connection:
             return existing_connection
         else:
             # TODO:  Need to make (and test) exception handler in case the connection could not be made.
-            return self.transports[0].connect_to_address_and_port(nextHopAddress, nextHopPort)
+            return self.transports[0].connect_to_address_and_port(next_hop_address, next_hop_port)
 
     def new_via_header_field_for_sip_message(self, a_sip_message):
         # TODO:  WE NEED TO USE THE TARGET SET ATTRIBUTES!  SEE "7." ABOVE!
@@ -310,35 +310,35 @@ class SIPStatelessProxy(SIPEntity):
     def send_error_response_for_request(received_connected_sip_message, status_code_integer=500, reason_phrase_string='Server Error', description_string='An unknown server error occurred.'):
         # TODO: I believe we need to reliably send this response, including retransmission, etc.  For now, just send the damn thing.
         # Response header fields to include in a response are documented in RFC3261 8.2.6
-        sipRequestReplyingTo = received_connected_sip_message.sip_message
+        sip_request_replying_to = received_connected_sip_message.sip_message
         connection = received_connected_sip_message.connection
-        sipResponse = SIPResponse.new_for_attributes(status_code=status_code_integer, reason_phrase=reason_phrase_string)
-        if sipRequestReplyingTo.header.toTag:
-            sipResponse.header.add_header_field(sipRequestReplyingTo.header.toHeaderField)
+        sip_response = SIPResponse.new_for_attributes(status_code=status_code_integer, reason_phrase=reason_phrase_string)
+        if sip_request_replying_to.header.to_tag:
+            sip_response.header.add_header_field(sip_request_replying_to.header.to_header_field)
         else:
-            hf = sipRequestReplyingTo.header.toHeaderField.deep_copy
+            hf = sip_request_replying_to.header.to_header_field.deep_copy
             # TODO:  See RFC3261 section 8.2.7 last point - tag must be invariant for identical To headers.  So need to write a method to generate an invariant tag.
             hf.generate_tag()
-            sipResponse.header.add_header_field(hf)
-        sipResponse.header.add_header_field(sipRequestReplyingTo.header.fromHeaderField)
-        sipResponse.header.add_header_field(sipRequestReplyingTo.header.call_id_header_field)
-        sipResponse.header.add_header_field(sipRequestReplyingTo.header.cseq_header_field)
-        sipResponse.header.addHeaderFields(sipRequestReplyingTo.via_header_fields)
-        sipResponse.header.add_header_field(ContentLengthSIPHeaderField.new_for_integer_value(0))
-        sipResponse.clear_raw_string()
-        connection.send_message(sipResponse)
+            sip_response.header.add_header_field(hf)
+        sip_response.header.add_header_field(sip_request_replying_to.header.from_header_field)
+        sip_response.header.add_header_field(sip_request_replying_to.header.call_id_header_field)
+        sip_response.header.add_header_field(sip_request_replying_to.header.cseq_header_field)
+        sip_response.header.add_header_fields(sip_request_replying_to.via_header_fields)
+        sip_response.header.add_header_field(ContentLengthSIPHeaderField.new_for_integer_value(0))
+        sip_response.clear_raw_string()
+        connection.send_message(sip_response)
 
     @staticmethod
     def transport_connection_id_from_response(received_connected_sip_message):
-        routeHeaderFields = received_connected_sip_message.sip_message.header.routeHeaderFields
-        if routeHeaderFields:
-            return routeHeaderFields[0].parameter_named('bobstackTransportID')
+        route_header_fields = received_connected_sip_message.sip_message.header.route_header_fields
+        if route_header_fields:
+            return route_header_fields[0].parameter_named('bobstackTransportID')
         return None
 
-    def responseSendTransportConnectionFromConnectionID(self, connectionIDString):
-        if connectionIDString:
+    def response_send_transport_connection_from_connection_id(self, connection_id_string):
+        if connection_id_string:
             # TODO:  We will probably need to iterate over the transports.
-            return self.transports[0].connection_with_id(connectionIDString)
+            return self.transports[0].connection_with_id(connection_id_string)
         return None
 
     def validate_response(self, received_connected_sip_message):
@@ -347,8 +347,8 @@ class SIPStatelessProxy(SIPEntity):
         # and if so, remove it.
         # TODO:  Need to verify transport string as well.
         try:
-            viaHF = received_connected_sip_message.sip_message.via_header_fields[0]
-            if viaHF.host == self.our_host and viaHF.port == self.our_port:
+            via_hf = received_connected_sip_message.sip_message.via_header_fields[0]
+            if via_hf.host == self.our_host and via_hf.port == self.our_port:
                 return
             else:
                 raise DropMessageSIPEntityException(description_string='Received SIP response was not meant for us.')
@@ -359,20 +359,20 @@ class SIPStatelessProxy(SIPEntity):
     def response_should_be_forwarded(received_connected_sip_message):
         # We remove the top Via, and forward to the second Via, if it exists.
         try:
-            viaHF = received_connected_sip_message.sip_message.via_header_fields[1]
-            return viaHF.host is not None and viaHF.port is not None
+            via_hf = received_connected_sip_message.sip_message.via_header_fields[1]
+            return via_hf.host is not None and via_hf.port is not None
         except IndexError:
             return False
 
     @staticmethod
-    def createConnectedSIPMessageToSendForResponse(received_connected_sip_message):
+    def create_connected_sip_message_to_send_for_response(received_connected_sip_message):
         # We do a total copy of the sip_message.  The connection will be replaced later.
         sip_message = received_connected_sip_message.sip_message.deep_copy
         return ConnectedSIPMessage(received_connected_sip_message.connection, sip_message)
 
     @staticmethod
-    def removeViaForResponse(connected_sip_message_to_send):
-        connected_sip_message_to_send.sip_message.header.removeFirstHeaderFieldOfClass(ViaSIPHeaderField)
+    def remove_via_for_response(connected_sip_message_to_send):
+        connected_sip_message_to_send.sip_message.header.remove_first_header_field_of_class(ViaSIPHeaderField)
         # TODO:  This line is a work-around for a problem that we really
         # need to address: when you hack a header or header field value, that
         # does not clear the SIPMessage's raw_string.  Fixing that is not trivial,
@@ -381,30 +381,30 @@ class SIPStatelessProxy(SIPEntity):
         # off, but for now, just manually clear the raw_string.
         connected_sip_message_to_send.sip_message.clear_raw_string()
 
-    def rewriteRecordRouteForResponse(self, connected_sip_message_to_send):
+    def rewrite_record_route_for_response(self, connected_sip_message_to_send):
         # Not applicable for stateless proxies, I guess.
         pass
 
     @staticmethod
     def determine_target_for_response(connected_sip_message_to_send):
         try:
-            viaHF = connected_sip_message_to_send.sip_message.via_header_fields[0]
-            return viaHF.as_sip_uri
+            via_hf = connected_sip_message_to_send.sip_message.via_header_fields[0]
+            return via_hf.as_sip_uri
         except IndexError:
             raise DropMessageSIPEntityException(description_string='Received SIP response had no target Via header.')
 
-    def forwardResponseToTarget(self, connected_sip_message_to_send, target_uri=None):
+    def forward_response_to_target(self, connected_sip_message_to_send, target_uri=None):
         request_arrival_transport_connection_id = self.transport_connection_id_from_response(connected_sip_message_to_send)
         # TODO:  For stateless proxies, do we want to derive the transport connection from the Route header like this:
-        # transportConnection = self.responseSendTransportConnectionFromConnectionID(request_arrival_transport_connection_id)
+        # transport_connection = self.response_send_transport_connection_from_connection_id(request_arrival_transport_connection_id)
         # TODO:  Or from the target_uri like this:
-        transportConnection = self.connected_transport_connection_for_sip_uri(target_uri)
-        if not transportConnection:
+        transport_connection = self.connected_transport_connection_for_sip_uri(target_uri)
+        if not transport_connection:
             # TODO:  we could not connect.  Just drop the response.
             raise DropMessageSIPEntityException
         # 10. Forward the new response
         # TODO:  exception handling?
-        transportConnection.send_message(connected_sip_message_to_send.sip_message)
+        transport_connection.send_message(connected_sip_message_to_send.sip_message)
 
     @staticmethod
     def send_error_response_for_response(received_connected_sip_message, status_code_integer=500, reason_phrase_string='Server Error', description_string='An unknown server error occurred.'):
