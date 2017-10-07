@@ -185,6 +185,35 @@ def processFreeswitchFiles():
     except IOError:
         print('WARNING:  could not create sanitized file named {0}'.format(sanitizedFilePathName))
 
+# @profile
+def processKamailioFiles():
+    try:
+        with open(sanitizedFilePathName, "a") as sanitizedFile:
+            print("processing Kamailio files")
+            for kamailioDirectoryPathName in kamailioDirectoryPathNames:
+                for kamailioFilePathName in sorted(glob.iglob(kamailioDirectoryPathName + '/*')):
+                    print(kamailioFilePathName)
+                    with open(kamailioFilePathName, "r") as kamailioFile:
+                        # TODO
+                        pass
+    except IOError:
+        print('WARNING:  could not create sanitized file named {0}'.format(sanitizedFilePathName))
+
+# @profile
+def processNEC3CFiles():
+    try:
+        with open(sanitizedFilePathName, "a") as sanitizedFile:
+            print("processing NEC 3C files")
+            for nec3cDirectoryPathName in nec3cDirectoryPathNames:
+                for nec3cFilePathName in sorted(glob.iglob(nec3cDirectoryPathName + '/*')):
+                    print(nec3cFilePathName)
+                    with open(nec3cFilePathName, "r") as nec3cFile:
+                        # TODO
+                        pass
+    except IOError:
+        print('WARNING:  could not create sanitized file named {0}'.format(sanitizedFilePathName))
+
+
 def runAll():
     createInterim1File()
     createInterim2File()
@@ -192,6 +221,8 @@ def runAll():
     deleteInterimFiles()
     processPCAPFiles()
     processFreeswitchFiles()
+    processKamailioFiles()
+    processNEC3CFiles()
 
 if __name__ == '__main__':
     for logFileDict in bobstack.tests_slow.testlogfilelocations.logFileDicts:
@@ -212,6 +243,8 @@ if __name__ == '__main__':
         rawLogFileDirectoryPathNames = logFileDict['rawLogFileDirectoryPathNames']
         pcapDirectoryPathNames = logFileDict['pcapDirectoryPathNames']
         freeswitchDirectoryPathNames = logFileDict['freeswitchDirectoryPathNames']
+        kamailioDirectoryPathNames = logFileDict['kamailioLogFileDirectoryPathNames']
+        nec3cDirectoryPathNames = logFileDict['nec3cLogFileDirectoryPathNames']
         interimFile1PathName = logFileDict['interimFile1PathName']
         interimFile2PathName = logFileDict['interimFile2PathName']
         sanitizedFilePathName = logFileDict['sanitizedFilePathName']
