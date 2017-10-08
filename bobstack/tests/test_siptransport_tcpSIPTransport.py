@@ -1,10 +1,10 @@
 import unittest
 from unittest import TestCase
-import sys
-sys.path.append("../..")
-from bobstack.sipmessaging import SIPMessageFactory
-from bobstack.siptransport import TCPSIPTransport
-from bobstack.siptransport import TCPSIPTransportConnection
+# import sys
+# sys.path.append("../..")
+from ..sipmessaging import SIPMessageFactory
+from ..siptransport import TCPSIPTransport
+from ..siptransport import TCPSIPTransportConnection
 from abstractTransportConnectionTestCase import AbstractTransportConnectionTestCase
 
 

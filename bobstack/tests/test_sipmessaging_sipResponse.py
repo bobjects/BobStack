@@ -1,7 +1,7 @@
 from abstractSIPResponseTestCase import AbstractSIPResponseTestCase
-import sys
-sys.path.append("..")
-from sipmessaging import SIPResponse
+# import sys
+# sys.path.append("..")
+from ..sipmessaging import SIPResponse
 
 
 class TestSIPResponse(AbstractSIPResponseTestCase):

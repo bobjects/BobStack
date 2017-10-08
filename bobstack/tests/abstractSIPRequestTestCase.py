@@ -1,5 +1,5 @@
 from abstractSIPMessageTestCase import AbstractSIPMessageTestCase
-from sipmessaging import SIPHeader
+from ..sipmessaging import SIPHeader
 import inspect
 
 

@@ -1,12 +1,12 @@
 from unittest import TestCase
-import sys
-sys.path.append("..")
-sys.path.append("../..")
-from bobstack.sipmessaging import SIPMessageFactory
-from bobstack.sipmessaging import SIPURI
-from bobstack.siptransport import SimulatedSIPTransport
-from bobstack.sipentity import SIPStatelessProxy
-from bobstack.siptransport import SimulatedNetwork
+# import sys
+# sys.path.append("..")
+# sys.path.append("../..")
+from ..sipmessaging import SIPMessageFactory
+from ..sipmessaging import SIPURI
+from ..siptransport import SimulatedSIPTransport
+from ..sipentity import SIPStatelessProxy
+from ..siptransport import SimulatedNetwork
 
 
 class AbstractTransportConnectionTestCase(TestCase):

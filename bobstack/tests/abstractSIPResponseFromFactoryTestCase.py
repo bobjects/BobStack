@@ -1,6 +1,6 @@
 import inspect
 from abstractSIPResponseTestCase import AbstractSIPResponseTestCase
-from sipmessaging import SIPMessageFactory
+from ..sipmessaging import SIPMessageFactory
 
 
 class AbstractSIPResponseFromFactoryTestCase(AbstractSIPResponseTestCase):

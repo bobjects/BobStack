@@ -55,7 +55,7 @@ do
 	
 	# echo from $TARGETFILENAMESANSEXTENSION import $NONHYPHENATED"SIPHeaderField" >> out
 	# echo from concreteheaderfields import $NONHYPHENATED"SIPHeaderField" >> out
-	# echo from sipmessaging import $NONHYPHENATED"SIPHeaderField" >> out
+	# echo from ...sipmessaging import $NONHYPHENATED"SIPHeaderField" >> out
 
 	# echo "        elif $CLASS.can_match_string(a_string):"
 	# echo "            return $CLASS.new_parsed_from(a_string)"

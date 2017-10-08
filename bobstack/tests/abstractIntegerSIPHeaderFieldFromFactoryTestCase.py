@@ -3,9 +3,9 @@ try:
 except ImportError:
     from StringIO import StringIO
 import inspect
-import sys
-sys.path.append("..")
-from sipmessaging import SIPHeaderFieldFactory
+# import sys
+# # sys.path.append("..")
+from ..sipmessaging import SIPHeaderFieldFactory
 from abstractSIPHeaderFieldFromFactoryTestCase import AbstractSIPHeaderFieldFromFactoryTestCase
 
 

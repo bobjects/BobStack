@@ -1,9 +1,9 @@
 from unittest import TestCase
-import sys
-sys.path.append("../..")
-from bobstack.siptransport import SimulatedSIPTransport
-from bobstack.siptransport import SimulatedSIPTransportConnection
-from bobstack.siptransport import SimulatedNetwork
+# import sys
+# sys.path.append("../..")
+from ..siptransport import SimulatedSIPTransport
+from ..siptransport import SimulatedSIPTransportConnection
+from ..siptransport import SimulatedNetwork
 from abstractTransportConnectionTestCase import AbstractTransportConnectionTestCase
 
 

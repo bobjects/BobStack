@@ -3,14 +3,14 @@ try:
 except ImportError:
     from StringIO import StringIO
 import re
-import sys
-sys.path.append("../../..")
-# from bobstack.sipmessaging import SIPHeaderField
-# from bobstack.sipmessaging import SIPURI
-# from bobstack.sipmessaging import classproperty
-from sipmessaging import SIPHeaderField
-from sipmessaging import SIPURI
-from sipmessaging import classproperty
+# import sys
+# sys.path.append("../../..")
+# from ..sipmessaging import SIPHeaderField
+# from ..sipmessaging import SIPURI
+# from ..sipmessaging import classproperty
+from ...sipmessaging import SIPHeaderField
+from ...sipmessaging import SIPURI
+from ...sipmessaging import classproperty
 
 
 # TODO: may want to factor parsing from this, To, and Contact into a mixin.

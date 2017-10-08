@@ -1,21 +1,21 @@
 from abstractSIPRequestTestCase import AbstractSIPRequestTestCase
-import sys
-sys.path.append("..")
-from sipmessaging import UnknownSIPRequest
-from sipmessaging import ACKSIPRequest
-from sipmessaging import BYESIPRequest
-from sipmessaging import CANCELSIPRequest
-from sipmessaging import INFOSIPRequest
-from sipmessaging import INVITESIPRequest
-from sipmessaging import NOTIFYSIPRequest
-from sipmessaging import PRACKSIPRequest
-from sipmessaging import PUBLISHSIPRequest
-from sipmessaging import MESSAGESIPRequest
-from sipmessaging import OPTIONSSIPRequest
-from sipmessaging import REFERSIPRequest
-from sipmessaging import REGISTERSIPRequest
-from sipmessaging import SUBSCRIBESIPRequest
-from sipmessaging import UPDATESIPRequest
+# import sys
+# sys.path.append("..")
+from ..sipmessaging import UnknownSIPRequest
+from ..sipmessaging import ACKSIPRequest
+from ..sipmessaging import BYESIPRequest
+from ..sipmessaging import CANCELSIPRequest
+from ..sipmessaging import INFOSIPRequest
+from ..sipmessaging import INVITESIPRequest
+from ..sipmessaging import NOTIFYSIPRequest
+from ..sipmessaging import PRACKSIPRequest
+from ..sipmessaging import PUBLISHSIPRequest
+from ..sipmessaging import MESSAGESIPRequest
+from ..sipmessaging import OPTIONSSIPRequest
+from ..sipmessaging import REFERSIPRequest
+from ..sipmessaging import REGISTERSIPRequest
+from ..sipmessaging import SUBSCRIBESIPRequest
+from ..sipmessaging import UPDATESIPRequest
 
 
 class TestUnknownSIPRequest(AbstractSIPRequestTestCase):

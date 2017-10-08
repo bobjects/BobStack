@@ -1,14 +1,12 @@
-import sys
-sys.path.append("../..")
-from bobstack.sipmessaging import SIPURI
-from bobstack.sipmessaging import ViaSIPHeaderField
-from bobstack.sipmessaging import ContentLengthSIPHeaderField
-from bobstack.sipmessaging import RouteSIPHeaderField
-from bobstack.sipmessaging import RecordRouteSIPHeaderField
-from bobstack.sipmessaging import MaxForwardsSIPHeaderField
-from bobstack.sipmessaging import ServerSIPHeaderField
-from bobstack.sipmessaging import SIPResponse
-from bobstack.siptransport import ConnectedSIPMessage
+from ..sipmessaging import SIPURI
+from ..sipmessaging import ViaSIPHeaderField
+from ..sipmessaging import ContentLengthSIPHeaderField
+from ..sipmessaging import RouteSIPHeaderField
+from ..sipmessaging import RecordRouteSIPHeaderField
+from ..sipmessaging import MaxForwardsSIPHeaderField
+from ..sipmessaging import ServerSIPHeaderField
+from ..sipmessaging import SIPResponse
+from ..siptransport import ConnectedSIPMessage
 from sipEntity import SIPEntity
 from sipEntityExceptions import DropMessageSIPEntityException, DropMessageAndDropConnectionSIPEntityException, SendResponseSIPEntityException
 

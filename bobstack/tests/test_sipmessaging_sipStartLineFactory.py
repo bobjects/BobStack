@@ -3,9 +3,9 @@ try:
 except ImportError:
     from StringIO import StringIO
 from unittest import TestCase
-import sys
-sys.path.append("..")
-from sipmessaging import SIPStartLineFactory
+# import sys
+# sys.path.append("..")
+from ..sipmessaging import SIPStartLineFactory
 
 
 class TestSIPStartLineFactoryForResponse(TestCase):

@@ -1,127 +1,124 @@
 #!/usr/bin/env python2
 import glob
 import sys
-
 import dpkt
-
-sys.path.append("../bobstack")
-# from sipmessaging.sipMessageFactory import SIPMessageFactory
+import os
+import re
+import timeit
+sys.path.append("../../..")
+from bobstack.sipmessaging import SIPMessageFactory
+import bobstack.tests_slow.testlogfilelocations
 try:
     from cStringIO import StringIO
 except ImportError:
     from StringIO import StringIO
-from bobstack.sipmessaging import SIPMessageFactory
-import os
-import re
-import timeit
-import bobstack.tests_slow.testlogfilelocations
 
-# interimFile1PathName = '../proprietary-test-data/sanitized/interim1.txt'
-# interimFile2PathName = '../proprietary-test-data/sanitized/interim2.txt'
+# interim_file_1PathName = '../proprietary-test-data/sanitized/interim1.txt'
+# interim_file_2PathName = '../proprietary-test-data/sanitized/interim2.txt'
 # sanitizedFilePathName = '../proprietary-test-data/sanitized/sanitized.txt'
-messageSeparator = "__MESSAGESEPARATOR__"
-rawFileMessageSeparatorRegexes = [ "^>>>>>>>>>>  [^>]*>>>>>>>>>>>",
-                                   "^>>>>>>>>>>  [^>]*>>>>>>>>>>",  # for some reason, this is not catching 8 lines.
-                                   "^<<<<<<<<<<  [^<]*<<<<<<<<<<",  # for some reason, this is not catching 32 lines.
-                                   "^\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\* [^\*]*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*",
-                                   "^##################################### [^#]*##########################" ]
-rawFileMessageSeparatorRegexes = [re.compile(s) for s in rawFileMessageSeparatorRegexes]
-sanitizedMessageSeparatorRegex = re.compile("^__MESSAGESEPARATOR__")
-startLineRegexes = ["^SIP/2.0\s+([\d]+)+\s+(.+)\s*$", "^([^\s]+)\s+([^\s]+)\s+SIP/2.0\s*$"]
-startLineRegexes = [re.compile(s) for s in startLineRegexes]
+message_separator = "__MESSAGESEPARATOR__"
+raw_file_message_separator_regexes = ["^>>>>>>>>>>  [^>]*>>>>>>>>>>>",
+                                      "^>>>>>>>>>>  [^>]*>>>>>>>>>>",  # for some reason, this is not catching 8 lines.
+                                      "^<<<<<<<<<<  [^<]*<<<<<<<<<<",  # for some reason, this is not catching 32 lines.
+                                      "^\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\* [^\*]*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*",
+                                      "^##################################### [^#]*##########################"]
+raw_file_message_separator_regexes = [re.compile(s) for s in raw_file_message_separator_regexes]
+sanitized_message_separator_regex = re.compile("^__message_separator__")
+start_line_regexes = ["^SIP/2.0\s+([\d]+)+\s+(.+)\s*$", "^([^\s]+)\s+([^\s]+)\s+SIP/2.0\s*$"]
+start_line_regexes = [re.compile(s) for s in start_line_regexes]
 
 
-
-def createInterim1File():
+def create_interim_1_file():
     try:
-        with open(interimFile1PathName, "w") as interimFile1:
+        with open(interim_file_1PathName, "w") as interim_file_1:
             print("creating interim file 1")
-            for rawLogFileDirectoryPathName in rawLogFileDirectoryPathNames:
-                # for rawLogFilePathName in os.listdir(rawLogFileDirectoryPathName):
-                for rawLogFilePathName in sorted(glob.iglob(rawLogFileDirectoryPathName + '/tlslog*.txt')):
-                    print(rawLogFilePathName)
-                    with open(rawLogFilePathName, "r") as rawLogFile:
-                        for line in rawLogFile:
+            for raw_log_file_directory_path_name in raw_log_file_directory_path_names:
+                # for raw_log_file_path_name in os.listdir(raw_log_file_directory_path_name):
+                for raw_log_file_path_name in sorted(glob.iglob(raw_log_file_directory_path_name + '/tlslog*.txt')):
+                    print(raw_log_file_path_name)
+                    with open(raw_log_file_path_name, "r") as raw_log_file:
+                        for line in raw_log_file:
                             line = line.replace("\r\r\n", "\r\n")
-                            if any(regex.match(line) for regex in rawFileMessageSeparatorRegexes):
-                                line = messageSeparator + "\r\n"
-                            interimFile1.write(line)
-                        interimFile1.write("\r\n")
+                            if any(regex.match(line) for regex in raw_file_message_separator_regexes):
+                                line = message_separator + "\r\n"
+                            interim_file_1.write(line)
+                        interim_file_1.write("\r\n")
     except IOError:
-        print('WARNING:  could not create interim file named {0}'.format(interimFile1PathName))
+        print('WARNING:  could not create interim file named {0}'.format(interim_file_1PathName))
 
 
-def createInterim2File():
+def create_interim_2_file():
     try:
-        with open(interimFile1PathName, "r") as interimFile1:
+        with open(interim_file_1PathName, "r") as interim_file_1:
             print("creating interim file 2")
-            with open(interimFile2PathName, "w") as interimFile2:
-                currentlyInMessage = False
-                totalSIPMessages = 0
-                for line in interimFile1:
-                    if currentlyInMessage:
-                        if sanitizedMessageSeparatorRegex.match(line):
-                            interimFile2.write(line)
-                            currentlyInMessage = False
+            with open(interim_file_2PathName, "w") as interim_file_2:
+                currently_in_message = False
+                total_sip_messages = 0
+                for line in interim_file_1:
+                    if currently_in_message:
+                        if sanitized_message_separator_regex.match(line):
+                            interim_file_2.write(line)
+                            currently_in_message = False
                         else:
-                            interimFile2.write(line)
+                            interim_file_2.write(line)
                     else:
-                        if any(regex.match(line) for regex in startLineRegexes):
+                        if any(regex.match(line) for regex in start_line_regexes):
                             # print "."
-                            totalSIPMessages += 1
-                            currentlyInMessage = True
-                            interimFile2.write(line)
-                print(str(totalSIPMessages) + " total SIP messages")
+                            total_sip_messages += 1
+                            currently_in_message = True
+                            interim_file_2.write(line)
+                print(str(total_sip_messages) + " total SIP messages")
     except IOError:
-        print('WARNING:  could not create interim file named {0}'.format(interimFile1PathName))
+        print('WARNING:  could not create interim file named {0}'.format(interim_file_1PathName))
 
 
-def processInterimFile():
+def process_interim_file():
     try:
         with open(sanitizedFilePathName, "w") as sanitizedFile:
             print("processing interim file 2")
-            with open(interimFile2PathName, "r") as interimFile2:
-                currentlyInMessage = False
-                currentMessageString = ''
-                totalSIPMessages = 0
-                for line in interimFile2:
-                    if currentlyInMessage:
-                        if sanitizedMessageSeparatorRegex.match(line):
+            with open(interim_file_2PathName, "r") as interim_file_2:
+                currently_in_message = False
+                current_message_string = ''
+                total_sip_messages = 0
+                for line in interim_file_2:
+                    if currently_in_message:
+                        if sanitized_message_separator_regex.match(line):
                             # some messages are two bytes too long, because of weirdness in our logging code!
                             # No real way to figure out which
                             # ones, except by instantiating a SIPMessage and checking.  Look for messages
                             # that are exactly two bytes too long, and chop them down.
-                            sip_message = SIPMessageFactory().next_for_string(currentMessageString)
-                            truncateBytes = sip_message.content.__len__() - sip_message.header.content_length
-                            if truncateBytes == 2:
-                                currentMessageString = currentMessageString[:currentMessageString.__len__() - 2]
+                            sip_message = SIPMessageFactory().next_for_string(current_message_string)
+                            truncate_bytes = sip_message.content.__len__() - sip_message.header.content_length
+                            if truncate_bytes == 2:
+                                current_message_string = current_message_string[:current_message_string.__len__() - 2]
 
-                            sanitizedFile.write(currentMessageString)
+                            sanitizedFile.write(current_message_string)
                             sanitizedFile.write(line)
-                            currentlyInMessage = False
+                            currently_in_message = False
                         else:
-                            currentMessageString += line
+                            current_message_string += line
                     else:
-                        if any(regex.match(line) for regex in startLineRegexes):
+                        if any(regex.match(line) for regex in start_line_regexes):
                             # print "."
-                            totalSIPMessages += 1
-                            currentlyInMessage = True
-                            currentMessageString = ''
+                            total_sip_messages += 1
+                            currently_in_message = True
+                            current_message_string = ''
                             sanitizedFile.write(line)
-                print(str(totalSIPMessages) + " total SIP messages")
+                print(str(total_sip_messages) + " total SIP messages")
     except IOError:
         print('WARNING:  could not create sanitized file named {0}'.format(sanitizedFilePathName))
 
 
-def deleteInterimFiles():
+def delete_interim_files():
     try:
-        os.remove(interimFile1PathName)
-        os.remove(interimFile2PathName)
+        os.remove(interim_file_1PathName)
+        os.remove(interim_file_2PathName)
     except OSError:
         pass
 
+
 # @profile
-def processPCAPFiles():
+def process_pcap_files():
     try:
         with open(sanitizedFilePathName, "a") as sanitizedFile:
             print("processing pcap files")
@@ -131,21 +128,21 @@ def processPCAPFiles():
                     with open(pcapFilePathName, "r") as pcapFile:
                         for ts, pkt in dpkt.pcap.Reader(pcapFile):
                             eth = dpkt.ethernet.Ethernet(pkt)
-                            if eth.type!=dpkt.ethernet.ETH_TYPE_IP:
+                            if eth.type != dpkt.ethernet.ETH_TYPE_IP:
                                 continue
                             ip = eth.data
-                            if (ip.p==dpkt.ip.IP_PROTO_UDP or ip.p==dpkt.ip.IP_PROTO_TCP) and ip.data.dport in [5060, 5062, 5080]:
+                            if (ip.p == dpkt.ip.IP_PROTO_UDP or ip.p == dpkt.ip.IP_PROTO_TCP) and ip.data.dport in [5060, 5062, 5080]:
                                 data = ip.data.data
                                 if data.__len__() > 2:
                                     if re.match('[^\s]+', data):  # Bria and some others periodically send CRLFCRLF by itself, presumably as a keepalive.  We don't want those.
                                         sanitizedFile.write(data)
-                                        sanitizedFile.write(messageSeparator + "\r\n")
+                                        sanitizedFile.write(message_separator + "\r\n")
     except IOError:
         print('WARNING:  could not create sanitized file named {0}'.format(sanitizedFilePathName))
 
 
 # @profile
-def processFreeswitchFiles():
+def process_freeswitch_files():
     try:
         with open(sanitizedFilePathName, "a") as sanitizedFile:
             print("processing Freeswitch files")
@@ -155,9 +152,9 @@ def processFreeswitchFiles():
                     with open(freeswitchFilePathName, "r") as freeswitchFile:
                         stringio = StringIO()
                         state = 'outsideOfMessage'
-                        lineNumber = 0
+                        line_number = 0
                         for line in freeswitchFile:
-                            lineNumber += 1
+                            line_number += 1
                             if state == 'outsideOfMessage':
                                 if re.match('^send \d+ bytes to', line) or re.match('^recv \d+ bytes from', line):
                                     state = 'waitingForFirstDashes'
@@ -166,18 +163,18 @@ def processFreeswitchFiles():
                                     stringio = StringIO()
                                     state = 'inMessage'
                                 else:
-                                    print('ERROR!  Line {0} - First dashes not found.'.format(lineNumber))
+                                    print('ERROR!  Line {0} - First dashes not found.'.format(line_number))
                                     stringio.close()
                                     state = 'outsideOfMessage'
                             elif state == 'inMessage':
                                 if re.match('^   ---------------', line):
                                     sanitizedFile.write(stringio.getvalue())
-                                    sanitizedFile.write(messageSeparator + "\r\n")
+                                    sanitizedFile.write(message_separator + "\r\n")
                                     stringio.close()
                                     state = 'outsideOfMessage'
                                 else:
                                     if not re.match('^   ', line):
-                                        print('WARNING!  Line {0} - In message, but line is not preceeded by 3 spaces.  Rejecting message.'.format(lineNumber))
+                                        print('WARNING!  Line {0} - In message, but line is not preceeded by 3 spaces.  Rejecting message.'.format(line_number))
                                         stringio.close()
                                         state = 'outsideOfMessage'
                                     else:
@@ -185,8 +182,9 @@ def processFreeswitchFiles():
     except IOError:
         print('WARNING:  could not create sanitized file named {0}'.format(sanitizedFilePathName))
 
+
 # @profile
-def processKamailioFiles():
+def process_kamailio_files():
     try:
         with open(sanitizedFilePathName, "a") as sanitizedFile:
             print("processing Kamailio files")
@@ -199,8 +197,9 @@ def processKamailioFiles():
     except IOError:
         print('WARNING:  could not create sanitized file named {0}'.format(sanitizedFilePathName))
 
+
 # @profile
-def processNEC3CFiles():
+def process_nec_3c_files():
     try:
         with open(sanitizedFilePathName, "a") as sanitizedFile:
             print("processing NEC 3C files")
@@ -214,23 +213,23 @@ def processNEC3CFiles():
         print('WARNING:  could not create sanitized file named {0}'.format(sanitizedFilePathName))
 
 
-def runAll():
-    createInterim1File()
-    createInterim2File()
-    processInterimFile()
-    deleteInterimFiles()
-    processPCAPFiles()
-    processFreeswitchFiles()
-    processKamailioFiles()
-    processNEC3CFiles()
+def run_all():
+    create_interim_1_file()
+    create_interim_2_file()
+    process_interim_file()
+    delete_interim_files()
+    process_pcap_files()
+    process_freeswitch_files()
+    process_kamailio_files()
+    process_nec_3c_files()
 
 if __name__ == '__main__':
     for logFileDict in bobstack.tests_slow.testlogfilelocations.logFileDicts:
-        # rawLogFileDirectoryPathNames = [ '../proprietary-test-data/big-lab-test-logs-raw',
+        # raw_log_file_directory_path_names = [ '../proprietary-test-data/big-lab-test-logs-raw',
         #                                  '../proprietary-test-data/cust-1-logs-raw',
         #                                  '../proprietary-test-data/cust-3-logs-raw' ]
 
-        # rawLogFileDirectoryPathNames = []
+        # raw_log_file_directory_path_names = []
         # pcapDirectoryPathNames = [ '../proprietary-test-data/cloud',
         #                            '../proprietary-test-data/big-lab-test-logs-pcap',
         #                            '../proprietary-test-data/client-lab-test-logs-pcap',
@@ -240,18 +239,18 @@ if __name__ == '__main__':
         # pcapDirectoryPathNames = [ '../proprietary-test-data/cloud' ]
         # pcapDirectoryPathNames = [ '../proprietary-test-data/cust-2-logs-pcap' ]
         # pcapDirectoryPathNames = [ '../proprietary-test-data/from-bobstack-testbed' ]
-        rawLogFileDirectoryPathNames = logFileDict['rawLogFileDirectoryPathNames']
+        raw_log_file_directory_path_names = logFileDict['rawLogFileDirectoryPathNames']
         pcapDirectoryPathNames = logFileDict['pcapDirectoryPathNames']
         freeswitchDirectoryPathNames = logFileDict['freeswitchDirectoryPathNames']
         kamailioDirectoryPathNames = logFileDict['kamailioLogFileDirectoryPathNames']
         nec3cDirectoryPathNames = logFileDict['nec3cLogFileDirectoryPathNames']
-        interimFile1PathName = logFileDict['interimFile1PathName']
-        interimFile2PathName = logFileDict['interimFile2PathName']
+        interim_file_1PathName = logFileDict['interimFile1PathName']
+        interim_file_2PathName = logFileDict['interimFile2PathName']
         sanitizedFilePathName = logFileDict['sanitizedFilePathName']
 
-        # print timeit.timeit(createInterim1File, number=1)
-        # print timeit.timeit(createInterim2File, number=1)
-        # print timeit.timeit(processInterimFile, number=1)
-        # deleteInterimFiles()
-        # print timeit.timeit(processPCAPFiles, number=1)
-        print(timeit.timeit(runAll, number=1))
+        # print timeit.timeit(create_interim_1_file, number=1)
+        # print timeit.timeit(create_interim_2_file, number=1)
+        # print timeit.timeit(process_interim_file, number=1)
+        # delete_interim_files()
+        # print timeit.timeit(process_pcap_files, number=1)
+        print(timeit.timeit(run_all, number=1))

@@ -1,6 +1,6 @@
 import inspect
 from abstractSIPMessageTestCase import AbstractSIPMessageTestCase
-from sipmessaging import SIPHeader
+from ..sipmessaging import SIPHeader
 
 
 class AbstractSIPResponseTestCase(AbstractSIPMessageTestCase):

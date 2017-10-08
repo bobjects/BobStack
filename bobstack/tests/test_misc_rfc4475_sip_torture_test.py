@@ -1,11 +1,11 @@
 from unittest import TestCase
-import sys
-sys.path.append("..")
-sys.path.append("../..")
-from bobstack.sipmessaging import SIPMessageFactory
-from bobstack.siptransport import SimulatedSIPTransport
-from bobstack.sipentity import SIPStatelessProxy
-from bobstack.siptransport import SimulatedNetwork
+# import sys
+# sys.path.append("..")
+# sys.path.append("../..")
+from ..sipmessaging import SIPMessageFactory
+from ..siptransport import SimulatedSIPTransport
+from ..sipentity import SIPStatelessProxy
+from ..siptransport import SimulatedNetwork
 
 
 class TestRFC4475SIPTortureTest(TestCase):

@@ -1,7 +1,7 @@
 import inspect
 from abstractSIPMessageTestCase import AbstractSIPMessageTestCase
-from sipmessaging import SIPHeader
-from sipmessaging import MalformedSIPStartLine
+from ..sipmessaging import SIPHeader
+from ..sipmessaging import MalformedSIPStartLine
 
 
 class AbstractMalformedSIPMessageTestCase(AbstractSIPMessageTestCase):

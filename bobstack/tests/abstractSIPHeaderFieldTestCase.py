@@ -4,9 +4,9 @@ except ImportError:
     from StringIO import StringIO
 from unittest import TestCase
 import inspect
-import sys
-sys.path.append("..")
-from sipmessaging import UnknownSIPHeaderField
+# import sys
+# sys.path.append("..")
+from ..sipmessaging import UnknownSIPHeaderField
 
 
 class AbstractSIPHeaderFieldTestCase(TestCase):

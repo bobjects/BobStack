@@ -1,7 +1,7 @@
-import sys
-sys.path.append("../../..")
-# from bobstack.sipmessaging import SIPRequest
-from sipmessaging import SIPRequest
+# import sys
+# sys.path.append("../../..")
+# from ..sipmessaging import SIPRequest
+from ...sipmessaging import SIPRequest
 
 
 class SUBSCRIBESIPRequest(SIPRequest):

@@ -1,7 +1,7 @@
 from abstractMalformedSIPMessageTestCase import AbstractMalformedSIPMessageTestCase
-import sys
-sys.path.append("..")
-from sipmessaging import MalformedSIPMessage
+# import sys
+# # sys.path.append("..")
+from ..sipmessaging import MalformedSIPMessage
 
 
 class TestMalformedSipMessage(AbstractMalformedSIPMessageTestCase):

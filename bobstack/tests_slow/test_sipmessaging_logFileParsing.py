@@ -3,7 +3,6 @@ try:
 except ImportError:
     from StringIO import StringIO
 import subprocess
-import sys
 import unittest
 from unittest import TestCase
 
@@ -11,10 +10,13 @@ import testlogfilelocations
 
 import settings
 
-sys.path.append("../..")
-sys.path.append("..")
-from bobstack.sipmessaging import SIPMessageFactory
-from sipmessaging import SIPURI
+import sys
+# sys.path.append("../..")
+# sys.path.append("..")
+from ..sipmessaging import SIPMessageFactory
+from ..sipmessaging import SIPURI
+# from sipmessaging import SIPMessageFactory
+# from sipmessaging import SIPURI
 
 
 class TestSIPMessageFactoryForSanitizedLogFile(TestCase):

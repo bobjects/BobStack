@@ -2,10 +2,10 @@ try:
     from cStringIO import StringIO
 except ImportError:
     from StringIO import StringIO
-import sys
+# import sys
 
-sys.path.append("../..")
-sys.path.append("..")
+# sys.path.append("../..")
+# sys.path.append("..")
 from abstractSIPRequestFromFactoryTestCase import AbstractSIPRequestFromFactoryTestCase
 from abstractSIPResponseFromFactoryTestCase import AbstractSIPResponseFromFactoryTestCase
 from abstractMalformedSIPMessageFromFactoryTestCase import AbstractMalformedSIPMessageFromFactoryTestCase

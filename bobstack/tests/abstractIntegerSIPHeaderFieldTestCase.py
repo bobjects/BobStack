@@ -3,8 +3,8 @@ try:
 except ImportError:
     from StringIO import StringIO
 import inspect
-import sys
-sys.path.append("..")
+# import sys
+# sys.path.append("..")
 from abstractSIPHeaderFieldTestCase import AbstractSIPHeaderFieldTestCase
 
 

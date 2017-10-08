@@ -1,11 +1,11 @@
-import sys
-sys.path.append("..")
-sys.path.append("../..")
+# import sys
+# sys.path.append("..")
+# sys.path.append("../..")
 from abstractStatelessProxyTestCase import AbstractStatelessProxyTestCase
-from bobstack.sipmessaging import SIPURI
-from bobstack.siptransport import SimulatedSIPTransport
-from bobstack.sipentity import SIPStatelessProxy
-from bobstack.siptransport import SimulatedNetwork
+from ..sipmessaging import SIPURI
+from ..siptransport import SimulatedSIPTransport
+from ..sipentity import SIPStatelessProxy
+from ..siptransport import SimulatedNetwork
 
 
 class TestStatelessProxyWithSimulatedTransport(AbstractStatelessProxyTestCase):

@@ -1,6 +1,6 @@
 import inspect
 from abstractMalformedSIPMessageTestCase import AbstractMalformedSIPMessageTestCase
-from sipmessaging import SIPMessageFactory
+from ..sipmessaging import SIPMessageFactory
 
 
 class AbstractMalformedSIPMessageFromFactoryTestCase(AbstractMalformedSIPMessageTestCase):

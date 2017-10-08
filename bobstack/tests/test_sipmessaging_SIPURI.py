@@ -1,7 +1,7 @@
 from unittest import TestCase
-import sys
-sys.path.append("..")
-from sipmessaging import SIPURI
+# import sys
+# sys.path.append("..")
+from ..sipmessaging import SIPURI
 
 
 class TestSIPURI(TestCase):
