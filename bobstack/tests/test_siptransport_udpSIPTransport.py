@@ -1,7 +1,5 @@
 import unittest
 from unittest import TestCase
-# import sys
-# sys.path.append("../..")
 from ..sipmessaging import SIPMessageFactory
 from ..siptransport import UDPSIPTransport
 from ..siptransport import UDPSIPTransportConnection

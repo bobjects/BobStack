@@ -23,6 +23,7 @@ class SIPHeader(object):
         return answer
 
     def __init__(self):
+        self._cache = None
         self._headerFields = []
         self.initialize_cache()
 

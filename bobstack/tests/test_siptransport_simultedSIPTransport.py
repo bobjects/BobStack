@@ -1,6 +1,4 @@
 from unittest import TestCase
-# import sys
-# sys.path.append("../..")
 from ..siptransport import SimulatedSIPTransport
 from ..siptransport import SimulatedSIPTransportConnection
 from ..siptransport import SimulatedNetwork

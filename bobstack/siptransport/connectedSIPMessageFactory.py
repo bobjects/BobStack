@@ -1,5 +1,3 @@
-# import sys
-# sys.path.append("../..")
 from ..sipmessaging import SIPMessageFactory
 from eventSourceMixin import EventSourceMixin
 from connectedSIPMessage import ConnectedSIPMessage

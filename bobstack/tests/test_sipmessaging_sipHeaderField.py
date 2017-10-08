@@ -1,6 +1,4 @@
 from unittest import TestCase
-# import sys
-# sys.path.append("..")
 from abstractSIPHeaderFieldTestCase import AbstractSIPHeaderFieldTestCase
 from abstractIntegerSIPHeaderFieldTestCase import AbstractIntegerSIPHeaderFieldTestCase
 from ..sipmessaging import SIPURI

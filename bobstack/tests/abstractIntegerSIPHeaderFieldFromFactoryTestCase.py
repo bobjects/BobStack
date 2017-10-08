@@ -1,12 +1,10 @@
+import inspect
+from ..sipmessaging import SIPHeaderFieldFactory
+from abstractSIPHeaderFieldFromFactoryTestCase import AbstractSIPHeaderFieldFromFactoryTestCase
 try:
     from cStringIO import StringIO
 except ImportError:
     from StringIO import StringIO
-import inspect
-# import sys
-# # sys.path.append("..")
-from ..sipmessaging import SIPHeaderFieldFactory
-from abstractSIPHeaderFieldFromFactoryTestCase import AbstractSIPHeaderFieldFromFactoryTestCase
 
 
 class AbstractIntegerSIPHeaderFieldFromFactoryTestCase(AbstractSIPHeaderFieldFromFactoryTestCase):

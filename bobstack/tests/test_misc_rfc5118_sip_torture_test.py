@@ -1,7 +1,4 @@
 from unittest import TestCase
-# import sys
-# sys.path.append("..")
-# sys.path.append("../..")
 from ..sipmessaging import SIPMessageFactory
 from ..siptransport import SimulatedSIPTransport
 from ..sipentity import SIPStatelessProxy

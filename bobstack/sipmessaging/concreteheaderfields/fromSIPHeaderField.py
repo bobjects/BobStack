@@ -3,12 +3,6 @@ try:
 except ImportError:
     from StringIO import StringIO
 import re
-# import sys
-# sys.path.append("../../..")
-# from ..sipmessaging import SIPHeaderField
-# from ..sipmessaging import SIPURI
-# from ..sipmessaging import classproperty
-# from ..sipmessaging import StrongRandomStringServer
 from ...sipmessaging import SIPHeaderField
 from ...sipmessaging import SIPURI
 from ...sipmessaging import classproperty

@@ -3,9 +3,6 @@ try:
 except ImportError:
     from StringIO import StringIO
 from unittest import TestCase
-# import sys
-# sys.path.append("..")
-from ..sipmessaging import UnknownSIPHeaderField
 from ..sipmessaging import ContentLengthSIPHeaderField
 from ..sipmessaging import AcceptSIPHeaderField
 from ..sipmessaging import AcceptEncodingSIPHeaderField

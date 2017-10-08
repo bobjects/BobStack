@@ -1,6 +1,3 @@
-# import sys
-# sys.path.append("../../..")
-# from ..sipmessaging import SIPRequest
 from ...sipmessaging import SIPRequest
 
 

@@ -1,6 +1,4 @@
 from abstractMalformedSIPMessageTestCase import AbstractMalformedSIPMessageTestCase
-# import sys
-# # sys.path.append("..")
 from ..sipmessaging import MalformedSIPMessage
 
 

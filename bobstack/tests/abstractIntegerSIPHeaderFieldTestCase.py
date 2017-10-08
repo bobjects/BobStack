@@ -1,11 +1,9 @@
+from abstractSIPHeaderFieldTestCase import AbstractSIPHeaderFieldTestCase
 try:
     from cStringIO import StringIO
 except ImportError:
     from StringIO import StringIO
 import inspect
-# import sys
-# sys.path.append("..")
-from abstractSIPHeaderFieldTestCase import AbstractSIPHeaderFieldTestCase
 
 
 class AbstractIntegerSIPHeaderFieldTestCase(AbstractSIPHeaderFieldTestCase):

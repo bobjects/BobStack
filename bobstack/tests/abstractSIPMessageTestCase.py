@@ -1,11 +1,5 @@
-try:
-    from cStringIO import StringIO
-except ImportError:
-    from StringIO import StringIO
 from unittest import TestCase
 import inspect
-# import sys
-# sys.path.append("..")
 from ..sipmessaging import SIPURI
 from ..sipmessaging import ContentLengthSIPHeaderField
 from ..sipmessaging import ViaSIPHeaderField
@@ -63,6 +57,10 @@ from ..sipmessaging import ReplacesSIPHeaderField
 from ..sipmessaging import SubscriptionStateSIPHeaderField
 from ..sipmessaging import MinExpiresSIPHeaderField
 from ..sipmessaging import UnknownSIPHeaderField
+try:
+    from cStringIO import StringIO
+except ImportError:
+    from StringIO import StringIO
 
 
 class AbstractSIPMessageTestCase(TestCase):

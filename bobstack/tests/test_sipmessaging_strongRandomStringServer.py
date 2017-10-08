@@ -1,6 +1,4 @@
 from unittest import TestCase
-# import sys
-# sys.path.append("..")
 from ..sipmessaging import StrongRandomStringServer
 
 

@@ -1,6 +1,4 @@
 from unittest import TestCase
-# import sys
-# sys.path.append("../..")
 from ..sipmessaging import SIPMessageFactory
 from ..siptransport import TLSSIPTransport
 from ..siptransport import TLSSIPTransportConnection
